@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto-Ecole Breteuil - Marseille 13006 - Permis de conduire</title>
+    <meta name="description" content="Auto-Ecole Breteuil à Marseille 13006. Formation au permis de conduire de qualité. 1 Rue Édouard Delanglade.">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-car"></i>
+                    <span>Auto-Ecole <strong>Breteuil</strong></span>
+                </a>
+                
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="#permis">Permis</a></li>
+                    <li><a href="code.html">Code de la route</a></li>
+                    <li><a href="tarifs.html">Tarifs</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+
+                <div class="nav-actions">
+                    <a href="connexion.html" class="btn-secondary">Se connecter</a>
+                    <a href="inscription.html" class="btn-primary">S'inscrire</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-background">
+            <div class="hero-overlay"></div>
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    Le plus grand réseau d'auto-écoles<br>
+                    <span class="highlight">+ efficace, + flexible et 20% moins cher</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Code de la route dès 0€ • Permis dès 599€ • 85% de réussite
+                </p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-number">85%</div>
+                        <div class="stat-label">Taux de réussite</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">150+</div>
+                        <div class="stat-label">Agences en France</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">50k+</div>
+                        <div class="stat-label">Élèves formés</div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 3rem; text-align: center;">
+                    <a
+                        href="connexion.html"
+                        class="btn-primary btn-large"
+                        style="font-size: 1.25rem; padding: 1.25rem 3rem; box-shadow: 0 10px 30px rgba(255, 105, 180, 0.4); animation: pulse 2s infinite;"
+                        data-auth-required="true"
+                        data-auth-redirect="connexion.html"
+                        data-auth-target="reservation.html"
+                    >
+                        <i class="fas fa-calendar-plus"></i> Réserver des heures de conduite
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">L'auto-école réinventée</h2>
+            <p class="section-subtitle">C'est toi qui pilotes ta formation</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>100% Digital</h3>
+                    <p>Gère ton dossier, révise ton code et planifie tes cours depuis notre app' ou notre site web</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <h3>Flexibilité totale</h3>
+                    <p>Réserve tes heures de conduite quand tu veux, où tu veux, avec le moniteur de ton choix</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>Moniteurs diplômés</h3>
+                    <p>Des professionnels expérimentés et pédagogues pour t'accompagner jusqu'à la réussite</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-euro-sign"></i>
+                    </div>
+                    <h3>Prix transparents</h3>
+                    <p>Tarifs clairs, sans frais cachés. Possibilité de payer en 4 fois sans frais</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Suivi personnalisé</h3>
+                    <p>Suis ta progression en temps réel et prépare tes séances à l'avance</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Packs Section -->
+    <section class="packs" id="packs">
+        <div class="container">
+            <h2 class="section-title">Découvre nos packs permis</h2>
+            <p class="section-subtitle">30% moins chers & possibilité de payer en 4 fois sans frais</p>
+            
+            <div class="packs-grid">
+                <!-- Pack 20h de conduite -->
+                <div class="pack-card">
+                    <div class="pack-badge">Conduite seule</div>
+                    <h3 class="pack-title">20h de conduite</h3>
+                    <div class="pack-price">
+                        <span class="price-amount">880€</span>
+                        <span class="price-label">20 heures de conduite</span>
+                    </div>
+                    <ul class="pack-features">
+                        <li><i class="fas fa-check"></i> 20 heures de conduite</li>
+                        <li><i class="fas fa-check"></i> Choix du moniteur</li>
+                        <li><i class="fas fa-check"></i> Horaires flexibles</li>
+                        <li><i class="fas fa-check"></i> Suivi personnalisé</li>
+                    </ul>
+                    <a href="inscription.html?pack=20h" class="btn-primary btn-block">Choisir ce pack</a>
+                </div>
+
+                <!-- Pack Permis B -->
+                <div class="pack-card pack-featured">
+                    <div class="pack-badge popular">Le plus populaire</div>
+                    <h3 class="pack-title">Permis B complet</h3>
+                    <div class="pack-price">
+                        <span class="price-amount">995€</span>
+                        <span class="price-label">Code + 20h de conduite</span>
+                    </div>
+                    <ul class="pack-features">
+                        <li><i class="fas fa-check"></i> Code en salle 6 mois</li>
+                        <li><i class="fas fa-check"></i> Code en ligne 1 mois</li>
+                        <li><i class="fas fa-check"></i> Évaluation de départ</li>
+                        <li><i class="fas fa-check"></i> 20h de conduite & permis blanc</li>
+                        <li><i class="fas fa-check"></i> Suivi numérique personnalisé</li>
+                    </ul>
+                    <a href="inscription.html?pack=zen" class="btn-primary btn-block">Choisir ce pack</a>
+                </div>
+
+                <!-- Pack Accéléré -->
+                <div class="pack-card">
+                    <div class="pack-badge">Le plus rapide</div>
+                    <h3 class="pack-title">Permis Accéléré</h3>
+                    <div class="pack-price">
+                        <span class="price-amount">999€</span>
+                        <span class="price-label">Code + 20h de conduite</span>
+                    </div>
+                    <ul class="pack-features">
+                        <li><i class="fas fa-check"></i> Tout du pack Premium</li>
+                        <li><i class="fas fa-check"></i> Formation en 30 jours</li>
+                        <li><i class="fas fa-check"></i> Planning intensif garanti</li>
+                        <li><i class="fas fa-check"></i> Examen express</li>
+                        <li><i class="fas fa-check"></i> Accompagnement dédié</li>
+                    </ul>
+                    <a href="inscription.html?pack=accelere" class="btn-primary btn-block">Choisir ce pack</a>
+                </div>
+            </div>
+
+            <div class="pack-options" style="text-align: center;">
+                <a href="tarifs.html" class="btn-secondary btn-large">
+                    <i class="fas fa-star"></i> Consulter nos autres forfaits
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- CPF Section -->
+    <section class="cpf-section">
+        <div class="container">
+            <div class="cpf-content">
+                <div class="cpf-text">
+                    <h2>Passe ton permis grâce à ton CPF</h2>
+                    <p>Utilise ton Compte Personnel de Formation pour financer tout ou partie de ton permis de conduire. Une démarche simple et 100% prise en charge.</p>
+                    <ul class="cpf-benefits">
+                        <li><i class="fas fa-check-circle"></i> Jusqu'à 100% financé</li>
+                        <li><i class="fas fa-check-circle"></i> Démarches simplifiées</li>
+                        <li><i class="fas fa-check-circle"></i> Organisme certifié Qualiopi</li>
+                    </ul>
+                    <a href="cpf.html" class="btn-primary">En savoir plus sur le CPF</a>
+                </div>
+                <div class="cpf-image">
+                    <img src="assets/cpf-card.png.png" alt="Carte CPF" style="max-width: 100%; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">Ils nous font confiance</h2>
+            <p class="section-subtitle">Plus de 50 000 élèves formés avec succès</p>
+            
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"Super auto-école ! J'ai eu mon permis du premier coup grâce à l'accompagnement personnalisé. L'application est vraiment pratique pour gérer ses cours."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">M</div>
+                        <div class="author-info">
+                            <div class="author-name">Marie Dupont</div>
+                            <div class="author-location">Paris 15ème</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"Tarifs très compétitifs et moniteurs au top ! La flexibilité des horaires m'a permis de passer mon permis tout en travaillant."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">T</div>
+                        <div class="author-info">
+                            <div class="author-name">Thomas Martin</div>
+                            <div class="author-location">Lyon 3ème</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"Le pack accéléré m'a permis d'avoir mon permis en 1 mois ! Parfait pour ceux qui ont besoin du permis rapidement."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">S</div>
+                        <div class="author-info">
+                            <div class="author-name">Sarah Benali</div>
+                            <div class="author-location">Marseille 8ème</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="overall-rating" style="background: linear-gradient(135deg, #FF69B4 0%, #E91E63 100%); padding: 2.5rem; border-radius: 20px; box-shadow: 0 15px 40px rgba(255, 105, 180, 0.3);">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 1.5rem; flex-wrap: wrap;">
+                    <div style="text-align: center;">
+                        <div class="rating-score" style="font-size: 4rem; font-weight: 800; color: white; line-height: 1; margin-bottom: 0.5rem;">4.8</div>
+                        <div class="rating-stars" style="font-size: 1.5rem; color: #FFD700; margin-bottom: 0.5rem;">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <div class="rating-count" style="color: white; font-size: 1.1rem; opacity: 0.95;">12 450 avis vérifiés</div>
+                    </div>
+                    <div style="height: 80px; width: 2px; background: rgba(255,255,255,0.3);"></div>
+                    <div style="text-align: center; color: white;">
+                        <div style="font-size: 2.5rem; font-weight: 700; margin-bottom: 0.25rem;">98%</div>
+                        <div style="font-size: 1rem; opacity: 0.9;">Recommandent notre auto-école</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Prêt à passer ton permis ?</h2>
+                <p>Rejoins plus de 50 000 élèves qui nous ont fait confiance</p>
+                <div class="cta-buttons">
+                    <a href="inscription.html" class="btn-primary btn-large">
+                        <i class="fas fa-user-plus"></i> S'inscrire maintenant
+                    </a>
+                    <a href="contact.html" class="btn-secondary btn-large">
+                        <i class="fas fa-phone"></i> Nous contacter
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Auto-Ecole Breteuil</h4>
+                    <p>Votre auto-école à Marseille 13006. Formation de qualité au permis de conduire.</p>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Formations</h4>
+                    <ul>
+                        <li><a href="permis-b.html">Permis B</a></li>
+                        <li><a href="permis-moto.html">Permis Moto</a></li>
+                        <li><a href="code.html">Code de la route</a></li>
+                        <li><a href="conduite-accompagnee.html">Conduite accompagnée</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Informations</h4>
+                    <ul>
+                        <li><a href="tarifs.html">Tarifs</a></li>
+                        <li><a href="cpf.html">Financement CPF</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Notre localisation</h4>
+                    <p style="margin-bottom: 1rem;">1 Rue Édouard Delanglade<br>13006 Marseille</p>
+                    <h4 style="margin-top: 1.5rem;">Contact</h4>
+                    <ul>
+                        <li><i class="fas fa-phone"></i> 04 91 53 36 98</li>
+                        <li><i class="fas fa-envelope"></i> a.e.breteuil@gmail.com</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 Auto-Ecole Breteuil. Tous droits réservés.</p>
+                <div class="footer-links">
+                    <a href="mentions-legales.html">Mentions légales</a>
+                    <a href="cgv.html">CGV</a>
+                    <a href="confidentialite.html">Confidentialité</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

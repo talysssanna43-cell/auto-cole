@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Auto-Ecole Breteuil</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/forms.css">
+    <link rel="stylesheet" href="assets/css/contact.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-car"></i>
+                    <span>Auto-Ecole <strong>Breteuil</strong></span>
+                </a>
+                
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="#permis">Permis</a></li>
+                    <li><a href="code.html">Code de la route</a></li>
+                    <li><a href="tarifs.html">Tarifs</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+
+                <div class="nav-actions">
+                    <a href="connexion.html" class="btn-secondary">Se connecter</a>
+                    <a href="inscription.html" class="btn-primary">S'inscrire</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contact Section -->
+    <section class="contact-section">
+        <div class="container">
+            <div class="contact-grid">
+                <!-- Contact Info -->
+                <div class="contact-info">
+                    <h1>Contacte-nous</h1>
+                    <p>Une question ? Notre équipe est là pour t'accompagner dans ton projet de permis de conduire.</p>
+                    
+                    <div class="contact-methods">
+                        <div class="contact-method">
+                            <div class="method-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="method-content">
+                                <h3>Téléphone</h3>
+                                <p>04 91 53 36 98</p>
+                                <span>Bureau : Lun-Ven 17h-19h | Conduite : Lun-Ven 7h-19h</span>
+                            </div>
+                        </div>
+
+                        <div class="contact-method">
+                            <div class="method-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="method-content">
+                                <h3>Email</h3>
+                                <p>breteuilautoecole@gmail.com</p>
+                                <span>Réponse sous 24h</span>
+                            </div>
+                        </div>
+
+                        <div class="contact-method">
+                            <div class="method-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="method-content">
+                                <h3>Adresse</h3>
+                                <p>1 Rue Édouard Delanglade</p>
+                                <span>13006 Marseille</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="contact-form-wrapper">
+                    <form id="contactForm" class="contact-form" action="https://formspree.io/f/xykygkyz" method="POST">
+                        <h2>Envoie-nous un message</h2>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="prenom">Prénom *</label>
+                                <input type="text" id="prenom" name="prenom" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="nom">Nom *</label>
+                                <input type="text" id="nom" name="nom" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email *</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="telephone">Téléphone</label>
+                            <input type="tel" id="telephone" name="telephone">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sujet">Sujet *</label>
+                            <select id="sujet" name="sujet" required>
+                                <option value="">Sélectionne un sujet</option>
+                                <option value="inscription">Inscription</option>
+                                <option value="tarifs">Tarifs et paiement</option>
+                                <option value="planning">Planning et réservation</option>
+                                <option value="cpf">Financement CPF</option>
+                                <option value="reclamation">Réclamation</option>
+                                <option value="autre">Autre</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message">Message *</label>
+                            <textarea id="message" name="message" rows="6" required></textarea>
+                        </div>
+
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="newsletter" name="newsletter">
+                            <label for="newsletter">
+                                Je souhaite recevoir les actualités et offres d'AutoÉcole Pro
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn-primary btn-block">
+                            <i class="fas fa-paper-plane"></i> Envoyer le message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section class="map-section">
+        <div class="container">
+            <h2 class="section-title">Notre localisation</h2>
+            <p class="section-subtitle">1 Rue Édouard Delanglade, 13006 Marseille</p>
+            
+            <div class="map-container" style="width: 100%; height: 450px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2904.8!2d5.3817!3d43.2896!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12c9c0c6e1e6e6e7%3A0x1e1e1e1e1e1e1e1e!2s1%20Rue%20%C3%89douard%20Delanglade%2C%2013006%20Marseille!5e0!3m2!1sfr!2sfr!4v1234567890!5m2!1sfr!2sfr"
+                    width="100%" 
+                    height="450" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Quick -->
+    <section class="faq-quick">
+        <div class="container">
+            <h2 class="section-title">Questions fréquentes</h2>
+            
+            <div class="faq-quick-grid">
+                <div class="faq-quick-card">
+                    <i class="fas fa-clock"></i>
+                    <h3>Quels sont vos horaires ?</h3>
+                    <p>Bureau : Lundi au vendredi de 17h à 19h. Cours de conduite : Lundi au vendredi de 7h à 19h.</p>
+                </div>
+
+                <div class="faq-quick-card">
+                    <i class="fas fa-euro-sign"></i>
+                    <h3>Quels modes de paiement acceptez-vous ?</h3>
+                    <p>Carte bancaire, virement, paiement en 4 fois sans frais, et financement CPF.</p>
+                </div>
+
+                <div class="faq-quick-card">
+                    <i class="fas fa-calendar"></i>
+                    <h3>Combien de temps pour obtenir le permis ?</h3>
+                    <p>En moyenne 3 à 6 mois selon ton rythme. Avec notre pack accéléré, c'est possible en 30 jours.</p>
+                </div>
+
+                <div class="faq-quick-card">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h3>Comment réserver mes heures ?</h3>
+                    <p>Via notre application mobile ou notre site web, 24h/24. Tu choisis ton moniteur et ton créneau.</p>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: var(--spacing-xl);">
+                <a href="faq.html" class="btn-secondary">Voir toutes les questions</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2024 Auto-Ecole Breteuil. Tous droits réservés.</p>
+                <div class="footer-links">
+                    <a href="mentions-legales.html">Mentions légales</a>
+                    <a href="cgv.html">CGV</a>
+                    <a href="confidentialite.html">Confidentialité</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

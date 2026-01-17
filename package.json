@@ -1,0 +1,15 @@
+{
+  "name": "auto-ecole-site",
+  "version": "1.0.0",
+  "description": "Site internet moderne pour une auto-école, inspiré des meilleures pratiques du secteur.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "stripe": "^14.10.0"
+  }
+}

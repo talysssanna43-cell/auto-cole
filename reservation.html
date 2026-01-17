@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto-Ecole Breteuil - Réserver ses heures</title>
+    <meta name="description" content="Réserve tes heures de conduite en choisissant entre l'inscription et la connexion à ton espace élève.">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, rgba(255,105,180,0.08), rgba(233,30,99,0.08));
+        }
+        .reservation-hero {
+            padding-top: 140px;
+            padding-bottom: 80px;
+        }
+        .reservation-hero .container {
+            max-width: 1000px;
+        }
+        .reservation-wrapper {
+            background: white;
+            border-radius: 30px;
+            padding: 3rem;
+            box-shadow: 0 30px 80px rgba(233, 30, 99, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        .reservation-wrapper::after {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            opacity: 0.08;
+            top: -60px;
+            right: -60px;
+        }
+        .reservation-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        .reservation-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .reservation-header p {
+            color: var(--text-light);
+            font-size: 1.15rem;
+        }
+        .reservation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+        }
+        .reservation-card {
+            background: var(--bg-light);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid rgba(255,105,180,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .reservation-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(255,105,180,0.15);
+        }
+        .reservation-card .icon-circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--primary-color);
+            background: rgba(255,105,180,0.12);
+        }
+        .reservation-card p {
+            color: var(--text-light);
+            margin: 1rem 0 1.5rem;
+        }
+        .reservation-footer {
+            margin-top: 2.5rem;
+            text-align: center;
+            color: var(--text-light);
+        }
+        .reservation-footer a {
+            color: var(--primary-dark);
+            font-weight: 600;
+            text-decoration: none;
+        }
+        @media (max-width: 768px) {
+            .reservation-wrapper {
+                padding: 2rem;
+            }
+            .reservation-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-car"></i>
+                    <span>Auto-Ecole <strong>Breteuil</strong></span>
+                </a>
+                <div class="nav-actions">
+                    <a href="connexion.html" class="btn-secondary">Se connecter</a>
+                    <a href="inscription.html" class="btn-primary">S'inscrire</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="reservation-hero">
+        <div class="container">
+            <div class="reservation-wrapper">
+                <div class="reservation-header">
+                    <h1>Réserve facilement tes heures de conduite</h1>
+                    <p>Choisis l'option qui te correspond pour accéder à ton espace élève et planifier ta formation en toute autonomie.</p>
+                </div>
+
+                <div class="reservation-grid">
+                    <div class="reservation-card">
+                        <div class="icon-circle">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <h3>Nouveau chez nous ?</h3>
+                        <p>Crée ton espace élève en quelques clics, choisis ton pack et commence ta formation.</p>
+                        <a href="inscription.html" class="btn-primary btn-block">S'inscrire</a>
+                    </div>
+
+                    <div class="reservation-card">
+                        <div class="icon-circle">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <h3>Déjà inscrit</h3>
+                        <p>Connecte-toi pour réserver tes heures, suivre ta progression et contacter ton moniteur.</p>
+                        <a href="connexion.html" class="btn-secondary btn-block">Se connecter</a>
+                    </div>
+                </div>
+
+                <div class="reservation-footer">
+                    Besoin d'aide ? <a href="contact.html">Contacte notre équipe pédagogique</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

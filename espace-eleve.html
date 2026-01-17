@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace élève - Auto-Ecole Breteuil</title>
+    <meta name="description" content="Consulte tes heures de conduite, tes prochaines séances et tes statistiques personnelles.">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .student-dashboard {
+            padding: 4rem 0;
+            background: linear-gradient(180deg, rgba(255,105,180,0.08), rgba(233,30,99,0.03));
+            min-height: 100vh;
+        }
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .dashboard-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        .stat-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 1.75rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        }
+        .stat-card h3 {
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+        .stat-value {
+            font-size: 2.4rem;
+            font-weight: 700;
+        }
+        .sessions-panel {
+            background: #fff;
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.08);
+        }
+        .sessions-panel h2 {
+            margin-bottom: 1.5rem;
+        }
+        .sessions-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .sessions-table th,
+        .sessions-table td {
+            padding: 0.9rem 0.5rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+        }
+        .sessions-table th {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-light);
+        }
+        .booking-panel {
+            margin-top: 3rem;
+            background: #fff;
+            border-radius: 24px;
+            padding: 2.25rem;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.07);
+        }
+        .booking-panel h2 {
+            margin-bottom: 0.5rem;
+        }
+        .booking-panel p {
+            color: var(--text-light);
+        }
+        .booking-panel ol {
+            margin: 1rem 0 1.5rem;
+            color: var(--text-light);
+        }
+        .slot-picker {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(0,0,0,0.08);
+            border-radius: 20px;
+            background: #fff9fb;
+        }
+        .slot-picker h3 {
+            margin-bottom: 0.25rem;
+        }
+        .slot-note {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+        .slot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        .instructor-toggle {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .coach-card {
+            border: 1px solid rgba(233,30,99,0.2);
+            background: #fff;
+            border-radius: 18px;
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-align: left;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+        .coach-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 30px rgba(233,30,99,0.15);
+        }
+        .coach-card.is-active {
+            border-color: transparent;
+            background: rgba(233,30,99,0.08);
+            box-shadow: 0 18px 35px rgba(233,30,99,0.25);
+        }
+        .coach-card:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 3px;
+        }
+        .coach-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid rgba(255,255,255,0.6);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+            background: #f7f7f7;
+        }
+        .coach-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .coach-avatar.female {
+            background: linear-gradient(135deg, #ff7eb3, #ff758c);
+        }
+        .coach-avatar.male {
+            background: linear-gradient(135deg, #2b7de9, #5ac8fa);
+        }
+        .coach-avatar svg {
+            width: 100%;
+            height: 100%;
+        }
+        .coach-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.15rem;
+        }
+        .coach-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        .coach-role {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        .slot-card {
+            border: 1px solid rgba(233,30,99,0.25);
+            border-radius: 18px;
+            padding: 1rem 1.25rem;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            cursor: pointer;
+            text-align: left;
+        }
+        .slot-card.available {
+            background: #10b981;
+        }
+        .slot-card.available .slot-day,
+        .slot-card.available .slot-time,
+        .slot-card.available .slot-meta {
+            color: white;
+        }
+        .slot-card:not(.is-booked):hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 35px rgba(233,30,99,0.12);
+        }
+        .slot-card .slot-day {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--primary-dark);
+        }
+        .slot-card .slot-time {
+            font-size: 1.35rem;
+            font-weight: 700;
+        }
+        .slot-card .slot-meta {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        .slot-card.is-booked {
+            opacity: 0.5;
+            cursor: not-allowed;
+            border-style: dashed;
+        }
+        .slot-card.is-selected {
+            border-color: var(--primary-dark);
+            background: rgba(233,30,99,0.08);
+            box-shadow: 0 18px 35px rgba(233,30,99,0.2);
+        }
+        .calendar-wrapper {
+            border: 1px solid rgba(0,0,0,0.08);
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 1.25rem;
+            background: #fefefe;
+        }
+        .calendar-wrapper iframe {
+            width: 100%;
+            min-height: 500px;
+            border: 0;
+        }
+        .calendar-note {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+        .calendar-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+        .calendar-actions a {
+            flex: 1;
+            min-width: 220px;
+            text-align: center;
+        }
+        .confirmation-section {
+            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+            border-radius: 24px;
+            padding: 2.5rem;
+            margin-top: 3rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            border: 2px solid rgba(233, 30, 99, 0.1);
+        }
+        .confirmation-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid rgba(233, 30, 99, 0.1);
+        }
+        .confirmation-header i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: block;
+        }
+        .confirmation-header h3 {
+            font-size: 1.75rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-dark);
+        }
+        .confirmation-header p {
+            color: var(--text-light);
+            font-size: 1.05rem;
+        }
+        .modern-booking-form {
+            max-width: 100%;
+        }
+        .booking-form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.75rem;
+        }
+        .form-field {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-field.full-width {
+            grid-column: 1 / -1;
+        }
+        .form-field label {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+        .form-field label i {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+        .form-field input,
+        .form-field select,
+        .form-field textarea {
+            width: 100%;
+            border: 2px solid rgba(0, 0, 0, 0.08);
+            border-radius: 16px;
+            padding: 1rem 1.25rem;
+            font-size: 1rem;
+            background: white;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        .form-field input:focus,
+        .form-field select:focus,
+        .form-field textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(233, 30, 99, 0.1);
+        }
+        .form-field textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .booking-form-actions {
+            margin-top: 2.5rem;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+        }
+        .btn-confirm {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #e91e63 100%);
+            color: white;
+            border: none;
+            padding: 1.25rem 3rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(233, 30, 99, 0.3);
+        }
+        .btn-confirm:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(233, 30, 99, 0.4);
+        }
+        .btn-confirm:active {
+            transform: translateY(-1px);
+        }
+        .btn-confirm i {
+            font-size: 1.2rem;
+        }
+        .form-feedback {
+            margin-top: 1rem;
+            font-weight: 600;
+        }
+        .form-feedback.success {
+            color: #0a8e47;
+        }
+        .form-feedback.error {
+            color: #b71c1c;
+        }
+        .booking-notification {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+        .booking-notification.show {
+            opacity: 1;
+        }
+        .notification-content {
+            background: white;
+            border-radius: 24px;
+            padding: 2.5rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        .booking-notification.show .notification-content {
+            transform: scale(1);
+        }
+        .notification-icon {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .notification-icon i {
+            font-size: 4rem;
+            color: #10b981;
+            animation: checkBounce 0.6s ease;
+        }
+        @keyframes checkBounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        .notification-content h3 {
+            text-align: center;
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+        }
+        .notification-details {
+            background: #f8f9fa;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .notification-details p {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+        .notification-details p:last-child {
+            margin-bottom: 0;
+        }
+        .notification-details i {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            width: 20px;
+        }
+        .btn-close-notification {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #e91e63 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        .btn-close-notification:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(233, 30, 99, 0.3);
+        }
+        .form-feedback.info {
+            color: var(--primary-dark);
+        }
+        .status-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.25rem 0.85rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .status-done { background: rgba(19,206,102,0.15); color: #0a8e47; }
+        .status-upcoming { background: rgba(255,193,7,0.18); color: #a07000; }
+        .status-missed { background: rgba(244,67,54,0.15); color: #b71c1c; }
+        .cta-area {
+            margin-top: 2.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+        .cta-area a {
+            min-width: 220px;
+            text-align: center;
+        }
+        @media (max-width: 768px) {
+            .sessions-panel {
+                padding: 1.25rem;
+            }
+            .stat-value {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-car"></i>
+                    <span>Auto-Ecole <strong>Breteuil</strong></span>
+                </a>
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <span></span><span></span><span></span>
+                </button>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="tarifs.html">Tarifs</a></li>
+                    <li><a href="reservation.html">Réservations</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+                <div class="nav-actions">
+                    <a href="connexion.html" class="btn-secondary">Se connecter</a>
+                    <a href="inscription.html" class="btn-primary">S'inscrire</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="student-dashboard">
+        <div class="container">
+            <div class="dashboard-header">
+                <p class="highlight" id="studentEmail">Espace personnel</p>
+                <h1>Bienvenue, <span id="studentName">élève</span></h1>
+                <p>Retrouve tes heures de conduite passées et à venir, ainsi que ta progression.</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Heures réalisées</h3>
+                    <div class="stat-value" id="hoursCompleted">0h</div>
+                    <p class="stat-note">Total des séances effectuées</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Heures restantes</h3>
+                    <div class="stat-value" id="hoursRemaining">0h</div>
+                    <p class="stat-note">Objectif basé sur ton pack</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Prochain cours</h3>
+                    <div class="stat-value" id="nextSession">--</div>
+                    <p class="stat-note">Date et heure</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Moniteur favori</h3>
+                    <div class="stat-value" id="favoriteInstructor">--</div>
+                    <p class="stat-note">Réservé en priorité</p>
+                </div>
+            </div>
+
+            <div class="sessions-panel">
+                <div class="panel-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+                    <h2>Mes séances de conduite</h2>
+                    <button class="btn-secondary" type="button" onclick="document.getElementById('bookingPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });">
+                        <i class="fas fa-calendar-plus"></i> Planifier une nouvelle heure
+                    </button>
+                </div>
+                <div class="table-responsive">
+                    <table class="sessions-table" id="sessionsTable">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Créneau</th>
+                                <th>Durée</th>
+                                <th>Moniteur</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="5" style="text-align:center; padding: 2rem 0; color: var(--text-light);">
+                                    Chargement de tes séances...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="booking-panel" id="bookingPanel">
+                <h2>Planifier une nouvelle séance</h2>
+                <p>Choisis un créneau proposé ci-dessous, il sera automatiquement ajouté au formulaire de confirmation. Les créneaux déjà réservés ou passés sont grisés.</p>
+
+                <div class="slot-picker" id="slotPicker">
+                    <h3>Choisis ton moniteur</h3>
+                    <p class="slot-note">Sélectionne un moniteur pour voir ses disponibilités et verrouiller ton créneau.</p>
+                    <div class="instructor-toggle" id="instructorToggle">
+                        <button type="button" class="coach-card is-active" data-instructor-key="mylene">
+                            <span class="coach-avatar female">
+                                <img src="assets/avatar-mylene.png" alt="Avatar de Mylène" loading="lazy">
+                            </span>
+                            <span class="coach-meta">
+                                <span class="coach-name">Mylène</span>
+                            </span>
+                        </button>
+                        <button type="button" class="coach-card" data-instructor-key="sammy">
+                            <span class="coach-avatar male">
+                                <img src="assets/avatar-sammy.png" alt="Avatar de Sammy" loading="lazy">
+                            </span>
+                            <span class="coach-meta">
+                                <span class="coach-name">Sammy</span>
+                            </span>
+                        </button>
+                    </div>
+                    <div class="slot-grid" id="slotGrid">
+                        <p style="grid-column: 1 / -1; color: var(--text-light);">Chargement des créneaux...</p>
+                    </div>
+                </div>
+
+                <div class="confirmation-section">
+                    <div class="confirmation-header">
+                        <i class="fas fa-check-circle"></i>
+                        <h3>Confirmation de ta réservation</h3>
+                        <p>Vérifie ou ajuste les informations avant de valider ta séance.</p>
+                    </div>
+
+                    <form id="bookingForm" class="modern-booking-form">
+                        <div class="booking-form-grid">
+                            <div class="form-field">
+                                <label for="bookingDate">
+                                    <i class="fas fa-calendar-day"></i>
+                                    Date souhaitée *
+                                </label>
+                                <input type="date" id="bookingDate" name="date" required>
+                            </div>
+                            <div class="form-field">
+                                <label for="bookingInstructor">
+                                    <i class="fas fa-user-tie"></i>
+                                    Moniteur *
+                                </label>
+                                <select id="bookingInstructor" name="instructor" required>
+                                    <option value="">Choisis un moniteur</option>
+                                    <option value="Mylène">Mylène</option>
+                                    <option value="Sammy">Sammy</option>
+                                </select>
+                            </div>
+                            <div class="form-field">
+                                <label for="bookingStart">
+                                    <i class="fas fa-clock"></i>
+                                    Créneau horaire *
+                                </label>
+                                <select id="bookingStart" name="start" required disabled>
+                                    <option value="">Choisis d'abord un moniteur</option>
+                                </select>
+                            </div>
+                            <div class="form-field">
+                                <label for="bookingStatus">
+                                    <i class="fas fa-info-circle"></i>
+                                    Statut *
+                                </label>
+                                <select id="bookingStatus" name="status" required>
+                                    <option value="upcoming">À venir</option>
+                                    <option value="done">Déjà réalisée</option>
+                                    <option value="missed">Annulée ou manquée</option>
+                                </select>
+                            </div>
+                            <div class="form-field full-width">
+                                <label for="bookingNotes">
+                                    <i class="fas fa-sticky-note"></i>
+                                    Note personnelle (optionnel)
+                                </label>
+                                <textarea id="bookingNotes" name="notes" placeholder="Point de rendez-vous, remarques..." rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="booking-form-actions">
+                            <button type="submit" class="btn-confirm">
+                                <i class="fas fa-check"></i>
+                                Confirmer ma réservation
+                            </button>
+                        </div>
+                        <p class="form-feedback" id="bookingFeedback" aria-live="polite"></p>
+                    </form>
+                </div>
+            </div>
+
+            <div class="cta-area">
+                <a href="reservation.html" class="btn-primary" data-auth-required="true" data-auth-target="reservation.html">
+                    <i class="fas fa-calendar-check"></i> Réserver une heure
+                </a>
+                <a href="contact.html" class="btn-secondary">
+                    <i class="fas fa-headset"></i> Contacter l'auto-école
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
+    <script src="assets/js/supabaseClient.js?v=2"></script>
+    <script src="assets/js/main.js?v=2"></script>
+    <script src="assets/js/espace-eleve.js?v=4"></script>
+</body>
+</html>

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription - Auto-Ecole Breteuil</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/forms.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-car"></i>
+                    <span>Auto-Ecole <strong>Breteuil</strong></span>
+                </a>
+                
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="#permis">Permis</a></li>
+                    <li><a href="code.html">Code de la route</a></li>
+                    <li><a href="tarifs.html">Tarifs</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+
+                <div class="nav-actions">
+                    <a href="connexion.html" class="btn-secondary">Se connecter</a>
+                    <a href="inscription.html" class="btn-primary">S'inscrire</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Inscription Form Section -->
+    <section class="form-section">
+        <div class="container">
+            <div class="form-wrapper">
+                <div class="form-header">
+                    <h1>Inscription</h1>
+                    <p>Commence ton aventure vers le permis de conduire</p>
+                </div>
+
+                <div class="form-progress">
+                    <div class="progress-step active">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Informations</div>
+                    </div>
+                    <div class="progress-line"></div>
+                    <div class="progress-step">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Pack</div>
+                    </div>
+                    <div class="progress-line"></div>
+                    <div class="progress-step">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Paiement</div>
+                    </div>
+                </div>
+
+                <form id="inscriptionForm" class="form-container" onsubmit="handleSubmit(event)">
+                    <!-- Step 1: Personal Information -->
+                    <div class="form-step active" data-step="1">
+                        <h2>Informations personnelles</h2>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="prenom">Prénom *</label>
+                                <input type="text" id="prenom" name="prenom" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="nom">Nom *</label>
+                                <input type="text" id="nom" name="nom" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email *</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="motdepasse">Mot de passe *</label>
+                            <input type="password" id="motdepasse" name="password" minlength="6" placeholder="Créer un mot de passe" required>
+                            <small style="color: var(--text-light); display: block; margin-top: 0.25rem;">6 caractères minimum</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="telephone">Téléphone *</label>
+                            <input type="tel" id="telephone" name="telephone" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dateNaissance">Date de naissance *</label>
+                            <input type="date" id="dateNaissance" name="dateNaissance" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="adresse">Adresse *</label>
+                            <input type="text" id="adresse" name="adresse" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="codePostal">Code postal *</label>
+                                <input type="text" id="codePostal" name="codePostal" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ville">Ville *</label>
+                                <input type="text" id="ville" name="ville" required>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn-primary" onclick="nextStep()">
+                                Suivant <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Pack Selection -->
+                    <div class="form-step" data-step="2">
+                        <h2>Choisis ton pack</h2>
+                        
+                        <div class="pack-selection">
+                            <div class="pack-option" data-pack="zen">
+                                <input type="radio" name="pack" id="pack-zen" value="zen">
+                                <label for="pack-zen">
+                                    <div class="pack-option-header">
+                                        <h3>Permis Zen</h3>
+                                        <div class="pack-option-price">599€</div>
+                                    </div>
+                                    <p>Le plus économique</p>
+                                    <ul>
+                                        <li><i class="fas fa-check"></i> Code de la route en ligne</li>
+                                        <li><i class="fas fa-check"></i> 20 heures de conduite</li>
+                                        <li><i class="fas fa-check"></i> Accès application mobile</li>
+                                    </ul>
+                                </label>
+                            </div>
+
+                            <div class="pack-option featured" data-pack="premium">
+                                <div class="pack-option-badge">Populaire</div>
+                                <input type="radio" name="pack" id="pack-premium" value="premium" checked>
+                                <label for="pack-premium">
+                                    <div class="pack-option-header">
+                                        <h3>Permis Premium</h3>
+                                        <div class="pack-option-price">799€</div>
+                                    </div>
+                                    <p>Le plus populaire</p>
+                                    <ul>
+                                        <li><i class="fas fa-check"></i> Tout du pack Zen</li>
+                                        <li><i class="fas fa-check"></i> Examen sous 30 jours</li>
+                                        <li><i class="fas fa-check"></i> Priorité de réservation</li>
+                                    </ul>
+                                </label>
+                            </div>
+
+                            <div class="pack-option" data-pack="accelere">
+                                <input type="radio" name="pack" id="pack-accelere" value="accelere">
+                                <label for="pack-accelere">
+                                    <div class="pack-option-header">
+                                        <h3>Permis Accéléré</h3>
+                                        <div class="pack-option-price">999€</div>
+                                    </div>
+                                    <p>Le plus rapide</p>
+                                    <ul>
+                                        <li><i class="fas fa-check"></i> Tout du pack Premium</li>
+                                        <li><i class="fas fa-check"></i> Formation en 30 jours</li>
+                                        <li><i class="fas fa-check"></i> Planning intensif</li>
+                                    </ul>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn-secondary" onclick="prevStep()">
+                                <i class="fas fa-arrow-left"></i> Précédent
+                            </button>
+                            <button type="button" class="btn-primary" onclick="nextStep()">
+                                Suivant <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Payment -->
+                    <div class="form-step" data-step="3">
+                        <h2>Paiement</h2>
+                        
+                        <div class="order-summary">
+                            <h3>Récapitulatif de ta commande</h3>
+                            <div class="summary-item">
+                                <span>Pack sélectionné</span>
+                                <span id="selectedPack">Permis Premium</span>
+                            </div>
+                            <div class="summary-item">
+                                <span>Nombre d'heures</span>
+                                <span id="selectedHours">20 heures</span>
+                            </div>
+                            <div class="summary-divider"></div>
+                            <div class="summary-item total">
+                                <span>Total</span>
+                                <span id="totalPrice">799€</span>
+                            </div>
+                        </div>
+
+                        <div class="payment-methods">
+                            <h3>Mode de paiement</h3>
+                            
+                            <div class="payment-option">
+                                <input type="radio" name="payment" id="payment-card" value="card" checked>
+                                <label for="payment-card">
+                                    <i class="fas fa-credit-card"></i>
+                                    <span>Carte bancaire</span>
+                                </label>
+                            </div>
+
+                            <div class="payment-option">
+                                <input type="radio" name="payment" id="payment-4x" value="4x">
+                                <label for="payment-4x">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>Paiement en 4 fois sans frais</span>
+                                </label>
+                            </div>
+
+                            <div class="payment-option">
+                                <input type="radio" name="payment" id="payment-cpf" value="cpf">
+                                <label for="payment-cpf">
+                                    <i class="fas fa-wallet"></i>
+                                    <span>Financement CPF</span>
+                                </label>
+                            </div>
+
+                            <div class="card-payment-block" id="cardPaymentBlock">
+                                <div class="form-group">
+                                    <label for="cardholderName">Nom complet sur la carte</label>
+                                    <input type="text" id="cardholderName" placeholder="Prénom Nom">
+                                </div>
+                                <div class="form-group">
+                                    <label>Moyen de paiement</label>
+                                    <div id="card-element" class="stripe-card-element"></div>
+                                    <p id="card-errors" class="stripe-card-errors"></p>
+                                </div>
+                                <p class="payment-feedback" id="paymentFeedback"></p>
+                            </div>
+                        </div>
+
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="cgv" name="cgv" required>
+                            <label for="cgv">
+                                J'accepte les <a href="cgv.html" target="_blank">conditions générales de vente</a> *
+                            </label>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn-secondary" onclick="prevStep()">
+                                <i class="fas fa-arrow-left"></i> Précédent
+                            </button>
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-check"></i> Finaliser l'inscription
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2024 Auto-Ecole Breteuil. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+        
+        <script src="https://unpkg.com/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
+        <script src="https://js.stripe.com/v3/"></script>
+        <script src="assets/js/supabaseClient.js"></script>
+        <script src="assets/js/main.js"></script>
+        <script src="assets/js/inscription.js"></script>
+    </body>
+</html>

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarifs - Auto-Ecole Breteuil</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-car"></i>
+                    <span>Auto-Ecole <strong>Breteuil</strong></span>
+                </a>
+                
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="#permis">Permis</a></li>
+                    <li><a href="code.html">Code de la route</a></li>
+                    <li><a href="tarifs.html">Tarifs</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+
+                <div class="nav-actions">
+                    <a href="connexion.html" class="btn-secondary">Se connecter</a>
+                    <a href="inscription.html" class="btn-primary">S'inscrire</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="page-hero">
+        <div class="container">
+            <h1>Nos tarifs</h1>
+            <p>Des prix transparents et compétitifs, sans frais cachés</p>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="packs">
+        <div class="container">
+            <div class="packs-grid">
+                <!-- Pack Voiture sans permis -->
+                <div class="pack-card">
+                    <div class="pack-badge">Voiture sans permis</div>
+                    <h3 class="pack-title">Voiture sans permis (Permis AM)</h3>
+                    <div class="pack-price">
+                        <span class="price-amount">350€</span>
+                        <span class="price-label">Formation complète</span>
+                    </div>
+                    <ul class="pack-features">
+                        <li><i class="fas fa-check"></i> Dossier administratif</li>
+                        <li><i class="fas fa-check"></i> Suivi numérique</li>
+                        <li><i class="fas fa-check"></i> 8h de pratique</li>
+                        <li><i class="fas fa-check"></i> Module code</li>
+                        <li><i class="fas fa-check"></i> Module manœuvres</li>
+                    </ul>
+                    <a href="inscription.html?pack=am4" class="btn-primary btn-block">Choisir ce pack</a>
+                </div>
+
+                <!-- Pack Permis B boîte auto -->
+                <div class="pack-card">
+                    <div class="pack-badge">Boîte auto</div>
+                    <h3 class="pack-title">Permis B automatique</h3>
+                    <div class="pack-price">
+                        <span class="price-amount">859€</span>
+                        <span class="price-label">Code + 13h de conduite</span>
+                    </div>
+                    <ul class="pack-features">
+                        <li><i class="fas fa-check"></i> Code en salle 6 mois</li>
+                        <li><i class="fas fa-check"></i> Code en ligne 1 mois</li>
+                        <li><i class="fas fa-check"></i> Suivi numérique</li>
+                        <li><i class="fas fa-check"></i> Évaluation de départ</li>
+                        <li><i class="fas fa-check"></i> 13h de conduite</li>
+                        <li><i class="fas fa-check"></i> Permis blanc</li>
+                    </ul>
+                    <a href="inscription.html?pack=boite-auto" class="btn-primary btn-block">Choisir ce pack</a>
+                </div>
+
+                <!-- Pack 20h de conduite -->
+                <div class="pack-card">
+                    <div class="pack-badge">Conduite seule</div>
+                    <h3 class="pack-title">20h de conduite</h3>
+                    <div class="pack-price">
+                        <span class="price-amount">880€</span>
+                        <span class="price-label">20 heures de conduite</span>
+                    </div>
+                    <ul class="pack-features">
+                        <li><i class="fas fa-check"></i> 20 heures de conduite</li>
+                        <li><i class="fas fa-check"></i> Choix du moniteur</li>
+                        <li><i class="fas fa-check"></i> Horaires flexibles</li>
+                        <li><i class="fas fa-check"></i> Suivi personnalisé</li>
+                        <li><i class="fas fa-check"></i> Paiement en 4x sans frais</li>
+                    </ul>
+                    <a href="inscription.html?pack=20h" class="btn-primary btn-block">Choisir ce pack</a>
+                </div>
+
+                <!-- Pack Permis B -->
+                <div class="pack-card pack-featured">
+                    <div class="pack-badge popular">Le plus populaire</div>
+                    <h3 class="pack-title">Permis B complet</h3>
+                    <div class="pack-price">
+                        <span class="price-amount">995€</span>
+                        <span class="price-label">Code + 20h de conduite</span>
+                    </div>
+                    <ul class="pack-features">
+                        <li><i class="fas fa-check"></i> Code en salle 6 mois</li>
+                        <li><i class="fas fa-check"></i> Code en ligne 1 mois</li>
+                        <li><i class="fas fa-check"></i> Évaluation de départ</li>
+                        <li><i class="fas fa-check"></i> 20h de conduite & permis blanc</li>
+                        <li><i class="fas fa-check"></i> Suivi numérique personnalisé</li>
+                    </ul>
+                    <a href="inscription.html?pack=zen" class="btn-primary btn-block">Choisir ce pack</a>
+                </div>
+
+                <!-- Pack Accéléré -->
+                <div class="pack-card">
+                    <div class="pack-badge">Le plus rapide</div>
+                    <h3 class="pack-title">Permis Accéléré</h3>
+                    <div class="pack-price">
+                        <span class="price-amount">999€</span>
+                        <span class="price-label">Code + 20h de conduite</span>
+                    </div>
+                    <ul class="pack-features">
+                        <li><i class="fas fa-check"></i> Tout du pack Premium</li>
+                        <li><i class="fas fa-check"></i> Formation en 30 jours</li>
+                        <li><i class="fas fa-check"></i> Planning intensif garanti</li>
+                        <li><i class="fas fa-check"></i> Examen express</li>
+                        <li><i class="fas fa-check"></i> Accompagnement dédié</li>
+                        <li><i class="fas fa-check"></i> Coach personnel</li>
+                    </ul>
+                    <a href="inscription.html?pack=accelere" class="btn-primary btn-block">Choisir ce pack</a>
+                </div>
+
+                <!-- Pack AAC -->
+                <div class="pack-card">
+                    <div class="pack-badge">Conduite accompagnée</div>
+                    <h3 class="pack-title">Forfait AAC (Conduite accompagnée)</h3>
+                    <div class="pack-price">
+                        <span class="price-amount">1190€</span>
+                        <span class="price-label">Code + 20h de conduite</span>
+                    </div>
+                    <ul class="pack-features">
+                        <li><i class="fas fa-check"></i> Dès 15 ans (moins de 18 ans)</li>
+                        <li><i class="fas fa-check"></i> Code en ligne 1 mois</li>
+                        <li><i class="fas fa-check"></i> Code en salle 6 mois</li>
+                        <li><i class="fas fa-check"></i> Évaluation de départ</li>
+                        <li><i class="fas fa-check"></i> 20h de conduite</li>
+                        <li><i class="fas fa-check"></i> RDV préalable obligatoire</li>
+                        <li><i class="fas fa-check"></i> Suivi numérique complet</li>
+                    </ul>
+                    <a href="inscription.html?pack=aac" class="btn-primary btn-block">Choisir ce pack</a>
+                </div>
+
+                <!-- Pack Conduite supervisée -->
+                <div class="pack-card">
+                    <div class="pack-badge">Autonomie</div>
+                    <h3 class="pack-title">Conduite supervisée</h3>
+                    <div class="pack-price">
+                        <span class="price-amount">1190€</span>
+                        <span class="price-label">Code + 20h de conduite</span>
+                    </div>
+                    <ul class="pack-features">
+                        <li><i class="fas fa-check"></i> Pour les +18 ans</li>
+                        <li><i class="fas fa-check"></i> Code en salle 6 mois</li>
+                        <li><i class="fas fa-check"></i> Code en ligne 1 mois</li>
+                        <li><i class="fas fa-check"></i> Évaluation de départ</li>
+                        <li><i class="fas fa-check"></i> 20h de conduite</li>
+                        <li><i class="fas fa-check"></i> RDV préalable</li>
+                    </ul>
+                    <a href="inscription.html?pack=supervisee" class="btn-primary btn-block">Choisir ce pack</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Additional Services -->
+    <section class="services-section">
+        <div class="container">
+            <h2 class="section-title">Services à la carte</h2>
+            <p class="section-subtitle">Personnalise ta formation selon tes besoins</p>
+            
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <h3>Heure de conduite</h3>
+                    <div class="service-price">40€</div>
+                    <p>Ajoute des heures de conduite supplémentaires à ton pack</p>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h3>Code de la route seul</h3>
+                    <div class="service-price">15€ / mois</div>
+                    <p>Accès gratuit à notre plateforme d'apprentissage du code</p>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-redo"></i>
+                    </div>
+                    <h3>Présentation examen code</h3>
+                    <div class="service-price">30€</div>
+                    <p>Frais de présentation à l'examen du code de la route</p>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-clipboard-check"></i>
+                    </div>
+                    <h3>Présentation examen conduite</h3>
+                    <div class="service-price">Inclus</div>
+                    <p>Frais de présentation inclus dans tous nos packs</p>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-motorcycle"></i>
+                    </div>
+                    <h3>Permis Moto (A2)</h3>
+                    <div class="service-price">899€</div>
+                    <p>Formation complète pour le permis moto A2</p>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Conduite accompagnée</h3>
+                    <div class="service-price">+100€</div>
+                    <p>Option conduite accompagnée (AAC) dès 15 ans</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Payment Options -->
+    <section class="payment-section">
+        <div class="container">
+            <h2 class="section-title">Options de paiement</h2>
+            <p class="section-subtitle">Plusieurs solutions pour financer ton permis</p>
+            
+            <div class="payment-options-grid">
+                <div class="payment-card">
+                    <div class="payment-icon">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <h3>Paiement en 4 fois</h3>
+                    <p>Sans frais, par carte bancaire. Répartis ton paiement sur 4 mensualités égales.</p>
+                </div>
+
+                <div class="payment-card">
+                    <div class="payment-icon">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <h3>Financement CPF</h3>
+                    <p>Utilise ton Compte Personnel de Formation pour financer jusqu'à 100% de ton permis.</p>
+                </div>
+
+                <div class="payment-card">
+                    <div class="payment-icon">
+                        <i class="fas fa-hand-holding-usd"></i>
+                    </div>
+                    <h3>Aide au permis</h3>
+                    <p>Renseigne-toi sur les aides disponibles : permis à 1€/jour, aide Pôle Emploi, etc.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="container">
+            <h2 class="section-title">Questions fréquentes</h2>
+            
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Combien d'heures de conduite sont nécessaires ?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>La loi impose un minimum de 20 heures de conduite. Cependant, la moyenne nationale est de 35 heures. Nos moniteurs évalueront ton niveau et te conseilleront le nombre d'heures adapté.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Y a-t-il des frais cachés ?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Non, nos tarifs sont 100% transparents. Tous les frais sont inclus dans nos packs : inscription, livret d'apprentissage, présentation aux examens, etc.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Puis-je changer de pack après inscription ?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Oui, tu peux passer à un pack supérieur à tout moment. La différence de prix sera simplement ajustée.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Que se passe-t-il si j'échoue à l'examen ?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Les frais de re-présentation à l'examen pratique sont de 80€. Nous te proposerons également des heures de conduite supplémentaires si nécessaire.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Prêt à commencer ?</h2>
+                <p>Inscris-toi maintenant et bénéficie de nos tarifs avantageux</p>
+                <div class="cta-buttons">
+                    <a href="inscription.html" class="btn-primary btn-large">
+                        <i class="fas fa-user-plus"></i> S'inscrire maintenant
+                    </a>
+                    <a href="contact.html" class="btn-secondary btn-large">
+                        <i class="fas fa-phone"></i> Contacter un conseiller
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2024 Auto-Ecole Breteuil. Tous droits réservés.</p>
+                <div class="footer-links">
+                    <a href="mentions-legales.html">Mentions légales</a>
+                    <a href="cgv.html">CGV</a>
+                    <a href="confidentialite.html">Confidentialité</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/tarifs.js"></script>
+</body>
+</html>

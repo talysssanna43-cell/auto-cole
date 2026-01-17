@@ -1,0 +1,58 @@
+/* Notifications */
+.notification {
+    position: fixed;
+    top: 100px;
+    right: -400px;
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    max-width: 400px;
+    z-index: 10000;
+    transition: right 0.3s ease;
+}
+
+.notification.show {
+    right: 20px;
+}
+
+.notification-success {
+    border-left: 4px solid #06D6A0;
+}
+
+.notification-success i:first-child {
+    color: #06D6A0;
+    font-size: 1.5rem;
+}
+
+.notification-error {
+    border-left: 4px solid #EF4444;
+}
+
+.notification-error i:first-child {
+    color: #EF4444;
+    font-size: 1.5rem;
+}
+
+.notification span {
+    flex: 1;
+    color: #1A1A2E;
+    line-height: 1.5;
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    color: #6B7280;
+    cursor: pointer;
+    padding: 0.25rem;
+    font-size: 1rem;
+    transition: color 0.2s;
+}
+
+.notification-close:hover {
+    color: #1A1A2E;
+}

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription réussie - Auto-Ecole Breteuil</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at top, rgba(255,105,180,0.15), rgba(233,30,99,0.1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .success-card {
+            background: white;
+            border-radius: 30px;
+            padding: 3rem;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 40px 90px rgba(233,30,99,0.2);
+        }
+        .success-icon {
+            font-size: 4rem;
+            color: var(--success-color, #13ce66);
+            margin-bottom: 1.5rem;
+        }
+        h1 {
+            font-size: 2.4rem;
+            margin-bottom: 1rem;
+        }
+        p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+        .actions a {
+            min-width: 220px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="success-card">
+        <div class="success-icon"><i class="fas fa-check-circle"></i></div>
+        <h1>Inscription validée</h1>
+        <p>Bienvenue chez Auto-Ecole Breteuil ! Ton espace élève est prêt. Tu peux maintenant te connecter pour réserver tes heures de conduite.</p>
+        <div class="actions">
+            <a href="connexion.html" class="btn-primary btn-large"><i class="fas fa-sign-in-alt"></i> Se connecter</a>
+            <a href="index.html" class="btn-secondary btn-large"><i class="fas fa-home"></i> Retour à l'accueil</a>
+        </div>
+    </div>
+</body>
+</html>
