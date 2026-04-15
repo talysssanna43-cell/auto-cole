@@ -101,10 +101,194 @@
             margin-bottom: 1rem;
         }
         .slot-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1rem;
-            margin-top: 0.5rem;
+            margin-top: 1.5rem;
+            overflow-x: auto;
+        }
+        
+        .weekly-planning-grid {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .weekly-planning-grid thead {
+            background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+            color: white;
+        }
+        
+        .weekly-planning-grid th {
+            padding: 1rem;
+            font-weight: 600;
+            text-align: center;
+            font-size: 0.95rem;
+            border-right: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .weekly-planning-grid th:last-child {
+            border-right: none;
+        }
+        
+        .time-header {
+            background: rgba(0,0,0,0.1);
+            min-width: 100px;
+        }
+        
+        .day-header {
+            min-width: 140px;
+        }
+        
+        .weekly-planning-grid tbody tr {
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .weekly-planning-grid tbody tr:last-child {
+            border-bottom: none;
+        }
+        
+        .time-cell {
+            padding: 1rem;
+            font-weight: 600;
+            text-align: center;
+            background: #f8f9fa;
+            color: #495057;
+            border-right: 1px solid #e0e0e0;
+            font-size: 0.9rem;
+        }
+        
+        .slot-cell {
+            padding: 0.5rem;
+            text-align: center;
+            border-right: 1px solid #e0e0e0;
+            vertical-align: middle;
+        }
+        
+        .slot-cell:last-child {
+            border-right: none;
+        }
+        
+        .slot-cell.empty {
+            background: #fafafa;
+        }
+        
+        .planning-slot {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            min-height: 70px;
+        }
+        
+        .planning-slot.available {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-color: #4caf50;
+        }
+        
+        .planning-slot.available:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+            border-color: #2e7d32;
+        }
+        
+        .planning-slot.is-booked {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-color: #ff9800;
+            cursor: default;
+            opacity: 1;
+        }
+        
+        .planning-slot.is-booked .slot-label {
+            color: #e65100;
+            font-weight: 600;
+        }
+        
+        .planning-slot.is-ferie {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-color: #2196f3;
+            cursor: not-allowed;
+            opacity: 1;
+        }
+        
+        .planning-slot.is-ferie .slot-label {
+            color: #1565c0;
+            font-weight: 600;
+        }
+        
+        .planning-slot.is-ferie .slot-status {
+            color: #1976d2;
+            font-weight: 700;
+        }
+        
+        .planning-slot .slot-student-name {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #000;
+            text-transform: uppercase;
+        }
+        
+        .planning-slot .slot-phone {
+            font-size: 0.75rem;
+            color: #666;
+        }
+        
+        .planning-slot .slot-status {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #ff9800;
+            text-transform: uppercase;
+        }
+        
+        .planning-slot.is-selected {
+            background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+            border-color: #e91e63;
+            color: white;
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(233, 30, 99, 0.4);
+        }
+        
+        .planning-slot .slot-label {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .planning-slot .slot-instructor {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        
+        .planning-slot.is-selected .slot-label,
+        .planning-slot.is-selected .slot-instructor {
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .weekly-planning-grid {
+                font-size: 0.85rem;
+            }
+            
+            .day-header {
+                min-width: 100px;
+                padding: 0.75rem 0.5rem;
+            }
+            
+            .time-cell {
+                min-width: 80px;
+                padding: 0.75rem 0.5rem;
+            }
+            
+            .planning-slot {
+                padding: 0.5rem;
+                min-height: 60px;
+                font-size: 0.8rem;
+            }
         }
         .instructor-toggle {
             display: grid;
@@ -477,6 +661,8 @@
         .status-done { background: rgba(19,206,102,0.15); color: #0a8e47; }
         .status-upcoming { background: rgba(255,193,7,0.18); color: #a07000; }
         .status-missed { background: rgba(244,67,54,0.15); color: #b71c1c; }
+        .status-accepted { background: rgba(52,199,89,0.15); color: #0a8e47; }
+        .status-refused { background: rgba(255,59,48,0.15); color: #d32f2f; }
         .cta-area {
             margin-top: 2.5rem;
             display: flex;
@@ -488,12 +674,38 @@
             min-width: 220px;
             text-align: center;
         }
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
         @media (max-width: 768px) {
             .sessions-panel {
-                padding: 1.25rem;
+                padding: 1rem;
             }
             .stat-value {
                 font-size: 2rem;
+            }
+            .sessions-table {
+                font-size: 0.85rem;
+                min-width: 600px;
+            }
+            .sessions-table th,
+            .sessions-table td {
+                padding: 0.75rem 0.4rem;
+                white-space: nowrap;
+            }
+            .panel-header {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+            }
+            .panel-header h2 {
+                font-size: 1.5rem;
+            }
+            .panel-header .btn-secondary {
+                width: 100%;
+                margin-top: 0.5rem;
             }
         }
     </style>
@@ -503,7 +715,7 @@
         <div class="container">
             <div class="nav-wrapper">
                 <a href="index.html" class="logo">
-                    <i class="fas fa-car"></i>
+                    <img src="assets/logo.png" alt="Auto-Ecole Breteuil">
                     <span>Auto-Ecole <strong>Breteuil</strong></span>
                 </a>
                 <button class="mobile-menu-toggle" id="mobileMenuToggle">
@@ -511,10 +723,12 @@
                 </button>
                 <ul class="nav-menu" id="navMenu">
                     <li><a href="index.html">Accueil</a></li>
+                    <li><a href="recrutement.html">Recrutement</a></li>
+                    <li><a href="qui-sommes-nous.html">Qui sommes-nous</a></li>
                     <li><a href="tarifs.html">Tarifs</a></li>
-                    <li><a href="reservation.html">Réservations</a></li>
                     <li><a href="contact.html">Contact</a></li>
                 </ul>
+
                 <div class="nav-actions">
                     <a href="connexion.html" class="btn-secondary">Se connecter</a>
                     <a href="inscription.html" class="btn-primary">S'inscrire</a>
@@ -541,10 +755,13 @@
                     <h3>Heures restantes</h3>
                     <div class="stat-value" id="hoursRemaining">0h</div>
                     <p class="stat-note">Objectif basé sur ton pack</p>
+                    <button onclick="openBuyHoursModal()" style="margin-top: 0.75rem; padding: 0.5rem 1rem; background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white; border: none; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: transform 0.2s;">
+                        <i class="fas fa-plus-circle"></i> Prendre des heures
+                    </button>
                 </div>
                 <div class="stat-card">
                     <h3>Prochain cours</h3>
-                    <div class="stat-value" id="nextSession">--</div>
+                    <div class="stat-value" id="nextSession" style="font-size: 1rem; line-height: 1.2; white-space: nowrap;">--</div>
                     <p class="stat-note">Date et heure</p>
                 </div>
                 <div class="stat-card">
@@ -554,13 +771,29 @@
                 </div>
             </div>
 
-            <div class="sessions-panel">
-                <div class="panel-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
-                    <h2>Mes séances de conduite</h2>
-                    <button class="btn-secondary" type="button" onclick="document.getElementById('bookingPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });">
-                        <i class="fas fa-calendar-plus"></i> Planifier une nouvelle heure
-                    </button>
-                </div>
+            <!-- Navigation Tabs -->
+            <div class="tabs-navigation">
+                <button class="tab-btn active" data-tab="sessions">
+                    <i class="fas fa-calendar-check"></i> Mes séances
+                </button>
+                <button class="tab-btn" data-tab="driving-log" id="drivingLogTabBtn" style="display: none;">
+                    <i class="fas fa-book"></i> Carnet de bord
+                </button>
+                <button class="tab-btn referral-btn" onclick="openReferralModal()" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%); color: white; font-weight: 600; position: relative; overflow: hidden; border-radius: 25px;">
+                    <i class="fas fa-gift"></i> 🎁 Parraine & Gagne <strong>1h gratuite</strong> !
+                    <span class="referral-pulse"></span>
+                </button>
+            </div>
+
+            <!-- Tab: Séances de conduite -->
+            <div class="tab-content active" id="sessionsTab">
+                <div class="sessions-panel">
+                    <div class="panel-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+                        <h2>Mes séances de conduite</h2>
+                        <button class="btn-secondary" type="button" onclick="document.getElementById('bookingPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });">
+                            <i class="fas fa-calendar-plus"></i> Planifier une nouvelle heure
+                        </button>
+                    </div>
                 <div class="table-responsive">
                     <table class="sessions-table" id="sessionsTable">
                         <thead>
@@ -570,11 +803,12 @@
                                 <th>Durée</th>
                                 <th>Moniteur</th>
                                 <th>Statut</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td colspan="5" style="text-align:center; padding: 2rem 0; color: var(--text-light);">
+                                <td colspan="6" style="text-align:center; padding: 2rem 0; color: var(--text-light);">
                                     Chargement de tes séances...
                                 </td>
                             </tr>
@@ -590,6 +824,23 @@
                 <div class="slot-picker" id="slotPicker">
                     <h3>Choisis ton moniteur</h3>
                     <p class="slot-note">Sélectionne un moniteur pour voir ses disponibilités et verrouiller ton créneau.</p>
+                    
+                    <!-- Navigation de semaine -->
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin: 1.5rem 0; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                        <button type="button" id="prevWeekBtn" onclick="goToPreviousWeek()" style="padding: 0.5rem 1rem; background: white; border: 1px solid #dee2e6; border-radius: 6px; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-chevron-left"></i>
+                            Semaine précédente
+                        </button>
+                        <div style="font-weight: 600; color: #495057; min-width: 150px; text-align: center;">
+                            <i class="fas fa-calendar-week"></i>
+                            <span id="weekLabel">Chargement...</span>
+                        </div>
+                        <button type="button" id="nextWeekBtn" onclick="goToNextWeek()" style="padding: 0.5rem 1rem; background: white; border: 1px solid #dee2e6; border-radius: 6px; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
+                            Semaine suivante
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    
                     <div class="instructor-toggle" id="instructorToggle">
                         <button type="button" class="coach-card is-active" data-instructor-key="mylene">
                             <span class="coach-avatar female">
@@ -607,6 +858,15 @@
                                 <span class="coach-name">Sammy</span>
                             </span>
                         </button>
+                        <!-- Nail temporairement indisponible -->
+                        <!-- <button type="button" class="coach-card" data-instructor-key="nail">
+                            <span class="coach-avatar male">
+                                <img src="assets/Nail.png" alt="Avatar de Nail" loading="lazy">
+                            </span>
+                            <span class="coach-meta">
+                                <span class="coach-name">Nail</span>
+                            </span>
+                        </button> -->
                     </div>
                     <div class="slot-grid" id="slotGrid">
                         <p style="grid-column: 1 / -1; color: var(--text-light);">Chargement des créneaux...</p>
@@ -638,6 +898,7 @@
                                     <option value="">Choisis un moniteur</option>
                                     <option value="Mylène">Mylène</option>
                                     <option value="Sammy">Sammy</option>
+                                    <!-- <option value="Nail">Nail</option> -->
                                 </select>
                             </div>
                             <div class="form-field">
@@ -679,20 +940,1339 @@
                 </div>
             </div>
 
-            <div class="cta-area">
-                <a href="reservation.html" class="btn-primary" data-auth-required="true" data-auth-target="reservation.html">
-                    <i class="fas fa-calendar-check"></i> Réserver une heure
-                </a>
-                <a href="contact.html" class="btn-secondary">
-                    <i class="fas fa-headset"></i> Contacter l'auto-école
-                </a>
+                <!-- Section disponibilités pour désistements -->
+                <div class="booking-panel" id="availabilityPanel" style="margin-top: 3rem; background: linear-gradient(135deg, #fff9fb 0%, #fff 100%); display: none;">
+                    <h2><i class="fas fa-bell"></i> Liste d'attente pour les désistements</h2>
+                    <p style="color: var(--text-light); margin-bottom: 1.5rem;">
+                        Tu souhaites être contacté(e) en priorité si un créneau se libère suite à un désistement ? 
+                        Configure tes disponibilités ci-dessous et nous te contacterons dès qu'un créneau correspondant se libère !
+                    </p>
+
+                    <div style="background: #fff; border-radius: 16px; padding: 2rem; border: 2px solid rgba(233,30,99,0.1);">
+                        <div style="margin-bottom: 2rem;">
+                            <label style="display: flex; align-items: center; gap: 1rem; cursor: pointer; font-size: 1.1rem;">
+                                <input type="checkbox" id="wantsCancellationNotif" style="width: 20px; height: 20px; cursor: pointer;">
+                                <span style="font-weight: 600;">
+                                    <i class="fas fa-check-circle" style="color: var(--primary-color);"></i>
+                                    Oui, je veux être contacté(e) en cas de désistement
+                                </span>
+                            </label>
+                        </div>
+
+                        <div id="availabilityConfig" style="display: none;">
+                            <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">
+                                <i class="fas fa-calendar-check"></i> Mes créneaux disponibles
+                            </h3>
+                            <p style="color: var(--text-light); margin-bottom: 1.5rem; font-size: 0.95rem;">
+                                Sélectionne les jours et les plages horaires où tu es disponible pour une séance de conduite.
+                            </p>
+
+                            <div id="availabilitySlots" style="display: grid; gap: 1.5rem;">
+                                <!-- Lundi -->
+                                <div class="day-availability" style="background: #f8f9fa; padding: 1.25rem; border-radius: 12px;">
+                                    <label style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; font-weight: 600;">
+                                        <input type="checkbox" class="day-checkbox" data-day="lundi" style="width: 18px; height: 18px;">
+                                        <span>Lundi</span>
+                                    </label>
+                                    <div class="time-slots" data-day="lundi" style="display: none; padding-left: 2rem;">
+                                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.75rem;">
+                                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                                                <input type="checkbox" value="08:00-10:00"> 08h-10h
+                                            </label>
+                                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                                                <input type="checkbox" value="10:00-12:00"> 10h-12h
+                                            </label>
+                                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                                                <input type="checkbox" value="14:00-16:00"> 14h-16h
+                                            </label>
+                                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                                                <input type="checkbox" value="16:00-18:00"> 16h-18h
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Mardi -->
+                                <div class="day-availability" style="background: #f8f9fa; padding: 1.25rem; border-radius: 12px;">
+                                    <label style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; font-weight: 600;">
+                                        <input type="checkbox" class="day-checkbox" data-day="mardi" style="width: 18px; height: 18px;">
+                                        <span>Mardi</span>
+                                    </label>
+                                    <div class="time-slots" data-day="mardi" style="display: none; padding-left: 2rem;">
+                                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.75rem;">
+                                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                                                <input type="checkbox" value="08:00-10:00"> 08h-10h
+                                            </label>
+                                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                                                <input type="checkbox" value="10:00-12:00"> 10h-12h
+                                            </label>
+                                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                                                <input type="checkbox" value="14:00-16:00"> 14h-16h
+                                            </label>
+                                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                                                <input type="checkbox" value="16:00-18:00"> 16h-18h
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Mercredi -->
+                                <div class="day-availability" style="background: #f8f9fa; padding: 1.25rem; border-radius: 12px;">
+                                    <label style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; font-weight: 600;">
+                                        <input type="checkbox" class="day-checkbox" data-day="mercredi" style="width: 18px; height: 18px;">
+                                        <span>Mercredi</span>
+                                    </label>
+                                    <div class="time-slots" data-day="mercredi" style="display: none; padding-left: 2rem;">
+                                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.75rem;">
+                                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                                                <input type="checkbox" value="08:00-10:00"> 08h-10h
+                                            </label>
+                                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                                                <input type="checkbox" value="10:00-12:00"> 10h-12h
+                                            </label>
+                                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                                                <input type="checkbox" value="14:00-16:00"> 14h-16h
+                                            </label>
+                                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                                                <input type="checkbox" value="16:00-18:00"> 16h-18h
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Jeudi -->
+                                <div class="day-availability" style="background: #f8f9fa; padding: 1.25rem; border-radius: 12px;">
+                                    <label style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; font-weight: 600;">
+                                        <input type="checkbox" class="day-checkbox" data-day="jeudi" style="width: 18px; height: 18px;">
+                                        <span>Jeudi</span>
+                                    </label>
+                                    <div class="time-slots" data-day="jeudi" style="display: none; padding-left: 2rem;">
+                                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.75rem;">
+                                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                                                <input type="checkbox" value="08:00-10:00"> 08h-10h
+                                            </label>
+                                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                                                <input type="checkbox" value="10:00-12:00"> 10h-12h
+                                            </label>
+                                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                                                <input type="checkbox" value="14:00-16:00"> 14h-16h
+                                            </label>
+                                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                                                <input type="checkbox" value="16:00-18:00"> 16h-18h
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Vendredi -->
+                                <div class="day-availability" style="background: #f8f9fa; padding: 1.25rem; border-radius: 12px;">
+                                    <label style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; font-weight: 600;">
+                                        <input type="checkbox" class="day-checkbox" data-day="vendredi" style="width: 18px; height: 18px;">
+                                        <span>Vendredi</span>
+                                    </label>
+                                    <div class="time-slots" data-day="vendredi" style="display: none; padding-left: 2rem;">
+                                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.75rem;">
+                                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                                                <input type="checkbox" value="08:00-10:00"> 08h-10h
+                                            </label>
+                                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                                                <input type="checkbox" value="10:00-12:00"> 10h-12h
+                                            </label>
+                                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                                                <input type="checkbox" value="14:00-16:00"> 14h-16h
+                                            </label>
+                                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                                                <input type="checkbox" value="16:00-18:00"> 16h-18h
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Samedi -->
+                                <div class="day-availability" style="background: #f8f9fa; padding: 1.25rem; border-radius: 12px;">
+                                    <label style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; font-weight: 600;">
+                                        <input type="checkbox" class="day-checkbox" data-day="samedi" style="width: 18px; height: 18px;">
+                                        <span>Samedi</span>
+                                    </label>
+                                    <div class="time-slots" data-day="samedi" style="display: none; padding-left: 2rem;">
+                                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.75rem;">
+                                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                                                <input type="checkbox" value="08:00-10:00"> 08h-10h
+                                            </label>
+                                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                                                <input type="checkbox" value="10:00-12:00"> 10h-12h
+                                            </label>
+                                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                                                <input type="checkbox" value="14:00-16:00"> 14h-16h
+                                            </label>
+                                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                                                <input type="checkbox" value="16:00-18:00"> 16h-18h
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="button" id="saveAvailability" class="btn-confirm" style="margin-top: 2rem; width: 100%;">
+                                <i class="fas fa-save"></i> Enregistrer mes disponibilités
+                            </button>
+                            <p id="availabilityFeedback" style="margin-top: 1rem; text-align: center; font-weight: 600;"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cta-area">
+                    <button onclick="openExamResultModal()" style="padding: 1rem 2rem; background: linear-gradient(135deg, #FF6B6B 0%, #FF5252 100%); color: white; border: none; border-radius: 30px; font-size: 1.1rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3); transition: all 0.3s;">
+                        <i class="fas fa-trophy"></i> J'ai passé mon permis !
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab: Carnet de bord (AAC/Supervisée uniquement) -->
+            <div class="tab-content" id="drivingLogTab">
+                <div id="drivingLogSection">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">🚗</div>
+                        <div class="stat-value" id="totalTrips">0</div>
+                        <div class="stat-label">Trajets</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⏱️</div>
+                        <div class="stat-value" id="totalHours">0h</div>
+                        <div class="stat-label">Heures</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📍</div>
+                        <div class="stat-value" id="totalKm">0 km</div>
+                        <div class="stat-label">Distance</div>
+                    </div>
+                </div>
+
+                <!-- Add Trip Card -->
+                <div class="add-trip-card">
+                    <div class="card-title">
+                        <h3>Nouveau trajet</h3>
+                        <p>Enregistrez vos heures de conduite</p>
+                    </div>
+                    <form id="drivingLogForm">
+                        <div class="input-group">
+                            <div class="input-row">
+                                <div class="input-field">
+                                    <label for="logDate">Date</label>
+                                    <input type="date" id="logDate" name="date" required>
+                                </div>
+                                <div class="input-field">
+                                    <label for="logDuration">Durée (min)</label>
+                                    <input type="number" id="logDuration" name="duration" min="1" placeholder="60" required>
+                                </div>
+                                <div class="input-field">
+                                    <label for="logDistance">Distance (km)</label>
+                                    <input type="number" id="logDistance" name="distance" step="0.1" min="0" placeholder="25.5" required>
+                                </div>
+                            </div>
+                            <div class="input-field full">
+                                <label for="logRoute">Itinéraire</label>
+                                <input type="text" id="logRoute" name="route" placeholder="Marseille → Aix-en-Provence" required>
+                            </div>
+                            <div class="input-field full">
+                                <label for="logConditions">Conditions</label>
+                                <input type="text" id="logConditions" name="conditions" placeholder="Temps clair, circulation fluide">
+                            </div>
+                            <div class="input-field full">
+                                <label for="logRemarks">Notes</label>
+                                <textarea id="logRemarks" name="remarks" rows="3" placeholder="Vos observations et points d'amélioration..."></textarea>
+                            </div>
+                        </div>
+                        <button type="submit" class="submit-btn">
+                            <span>Enregistrer</span>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M4 10h12M10 4v12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Trips List -->
+                <div class="trips-list">
+                    <h3 class="list-title">Historique</h3>
+                    <div id="tripsContainer">
+                        <div class="empty-state">
+                            <div class="empty-icon">📝</div>
+                            <p>Aucun trajet enregistré</p>
+                            <span>Commencez à enregistrer vos heures de conduite</span>
+                        </div>
+                    </div>
+                </div>
+                </div>
             </div>
         </div>
     </section>
 
+    <!-- Modal: Demande d'annulation avec justificatif -->
+    <div class="modal-overlay" id="cancelModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-calendar-times" style="margin-right:8px;color:var(--primary-color);"></i> Demande d'annulation</h3>
+                <button class="modal-close" id="closeCancelModal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="cancel-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p><strong>Attention :</strong> Vous annulez moins de 48h ouvrées (hors week-ends) avant la séance. Un justificatif est requis pour éviter que l'heure soit déduite de votre forfait.</p>
+                </div>
+                <form id="cancelJustificationForm">
+                    <input type="hidden" id="cancelSessionId" value="">
+                    <div class="form-group">
+                        <label for="cancelReason">Motif de l'annulation</label>
+                        <textarea id="cancelReason" name="reason" rows="3" placeholder="Expliquez brièvement la raison de votre annulation..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="cancelJustification">Justificatif (certificat médical, etc.)</label>
+                        <input type="file" id="cancelJustification" name="justification" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" required>
+                        <small>Formats acceptés : PDF, JPG, PNG, DOC (max 5 Mo)</small>
+                    </div>
+                    <p class="cancel-info">
+                        <i class="fas fa-info-circle"></i>
+                        Votre demande sera étudiée par l'auto-école. Vous serez informé(e) de la décision par email. En attendant, votre séance restera affichée avec le statut "En attente".
+                    </p>
+                    <div class="modal-actions">
+                        <button type="button" class="btn-secondary" id="cancelModalCancel">Retour</button>
+                        <button type="submit" class="btn-primary">Envoyer la demande</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Achat heures supplémentaires -->
+    <div class="modal-overlay" id="extraHoursModal">
+        <div class="modal" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-clock" style="margin-right:8px;color:var(--primary-color);"></i> Réserver des heures de conduite</h3>
+                <button class="modal-close" onclick="closeExtraHoursModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 1.5rem; color: var(--text-light);">Choisis le nombre d'heures et le type de boîte</p>
+                
+                <form id="extraHoursForm" onsubmit="submitExtraHours(event)">
+                    <div class="form-group">
+                        <label>Nombre d'heures *</label>
+                        <input type="number" id="extraHoursInput" min="2" step="2" placeholder="Ex: 2, 4, 6, 8..." required 
+                               oninput="updateExtraHoursPrice()" 
+                               style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem;">
+                        <small><i class="fas fa-info-circle"></i> Le nombre d'heures doit être pair (2, 4, 6, 8, etc.)</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Type de boîte *</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <label class="transmission-choice-eleve" style="display: flex; align-items: center; padding: 1rem; border: 2px solid #ddd; border-radius: 10px; cursor: pointer;">
+                                <input type="radio" name="extraTransmission" value="manual" data-price="45" required onchange="updateExtraHoursPrice()" style="margin-right: 0.75rem;">
+                                <div>
+                                    <div style="font-weight: 700;"><i class="fas fa-cog" style="color: var(--primary-color); margin-right: 0.5rem;"></i>Boîte manuelle</div>
+                                    <div style="color: var(--primary-color); font-weight: 700;">45€/h</div>
+                                </div>
+                            </label>
+                            
+                            <label class="transmission-choice-eleve" style="display: flex; align-items: center; padding: 1rem; border: 2px solid #ddd; border-radius: 10px; cursor: pointer;">
+                                <input type="radio" name="extraTransmission" value="auto" data-price="50" required onchange="updateExtraHoursPrice()" style="margin-right: 0.75rem;">
+                                <div>
+                                    <div style="font-weight: 700;"><i class="fas fa-magic" style="color: var(--primary-color); margin-right: 0.5rem;"></i>Boîte automatique</div>
+                                    <div style="color: var(--primary-color); font-weight: 700;">50€/h</div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(255, 105, 180, 0.1), rgba(233, 30, 99, 0.1)); padding: 1.5rem; border-radius: 10px; text-align: center; margin-bottom: 1.5rem;">
+                        <div style="font-size: 0.9rem; color: var(--text-light); margin-bottom: 0.5rem;">Prix total</div>
+                        <div id="extraHoursTotalPrice" style="font-size: 2rem; font-weight: 700; color: var(--primary-color);">0€</div>
+                    </div>
+                    
+                    <div class="modal-actions">
+                        <button type="button" class="btn-secondary" onclick="closeExtraHoursModal()">Annuler</button>
+                        <button type="submit" class="btn-primary">Payer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+            display: none; align-items: center; justify-content: center; z-index: 1000;
+        }
+        
+        .transmission-choice-eleve:has(input:checked) {
+            border-color: var(--primary-color);
+            background: rgba(255, 105, 180, 0.05);
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: #fff; border-radius: 16px; width: 90%; max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden;
+            animation: modalSlideIn 0.3s ease;
+        }
+        @keyframes modalSlideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .modal-header {
+            padding: 16px 20px; border-bottom: 1px solid #eee;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .modal-header h3 { font-size: 1.1rem; font-weight: 600; margin: 0; }
+        .modal-close {
+            width: 32px; height: 32px; border-radius: 50%; border: none;
+            background: #f5f5f5; cursor: pointer; font-size: 0.9rem;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .modal-close:hover { background: #eee; }
+        .modal-body { padding: 20px; }
+        .cancel-warning {
+            background: #fff3cd; border: 1px solid #ffc107; border-radius: 10px;
+            padding: 12px 16px; margin-bottom: 20px; display: flex; gap: 12px; align-items: flex-start;
+        }
+        .cancel-warning i { color: #856404; font-size: 1.2rem; margin-top: 2px; }
+        .cancel-warning p { margin: 0; font-size: 0.9rem; color: #856404; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.9rem; }
+        .form-group textarea, .form-group input[type="file"] {
+            width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px;
+            font-size: 0.95rem; font-family: inherit;
+        }
+        .form-group textarea:focus { border-color: var(--primary-color); outline: none; }
+        .form-group small { display: block; margin-top: 4px; color: #888; font-size: 0.8rem; }
+        .cancel-info {
+            background: #e3f2fd; border-radius: 8px; padding: 12px; font-size: 0.85rem;
+            color: #1565c0; display: flex; gap: 8px; align-items: flex-start; margin-bottom: 20px;
+        }
+        .cancel-info i { margin-top: 2px; }
+        .modal-actions { display: flex; gap: 12px; justify-content: flex-end; }
+        .modal-actions .btn-secondary, .modal-actions .btn-primary {
+            padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none;
+        }
+        .modal-actions .btn-secondary { background: #f5f5f5; color: #333; }
+        .modal-actions .btn-primary { background: var(--primary-color); color: #fff; }
+        .status-pending { background: rgba(33,150,243,0.15); color: #1565c0; }
+
+        /* Tabs Navigation */
+        .tabs-navigation {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e5e5e7;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #86868b;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tab-btn:hover {
+            color: #1d1d1f;
+        }
+
+        .tab-btn.active {
+            color: var(--primary-color);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Carnet de bord - Apple-like Design */
+        #drivingLogSection {
+            margin-top: 3rem;
+        }
+
+        .driving-log-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .header-icon {
+            flex-shrink: 0;
+        }
+
+        .header-text h2 {
+            color: white;
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0 0 0.5rem 0;
+            letter-spacing: -0.5px;
+        }
+
+        .header-text p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1d1d1f;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #86868b;
+            font-weight: 500;
+        }
+
+        .add-trip-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .card-title h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1d1d1f;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .card-title p {
+            color: #86868b;
+            margin: 0 0 2rem 0;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .input-field label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-field input,
+        .input-field textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e5e5e7;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            transition: all 0.2s ease;
+            background: #fafafa;
+        }
+
+        .input-field input:focus,
+        .input-field textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .input-field textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .input-field.full {
+            grid-column: 1 / -1;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            margin-top: 1rem;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .trips-list {
+            margin-top: 2rem;
+        }
+
+        .list-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1d1d1f;
+            margin-bottom: 1.5rem;
+        }
+
+        .empty-state {
+            background: white;
+            border-radius: 20px;
+            padding: 4rem 2rem;
+            text-align: center;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state p {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .empty-state span {
+            color: #86868b;
+            font-size: 0.95rem;
+        }
+
+        .trip-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        .trip-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .trip-date {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            min-width: 80px;
+        }
+
+        .trip-date-day {
+            font-size: 1.75rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .trip-date-month {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            opacity: 0.9;
+            margin-top: 0.25rem;
+        }
+
+        .trip-details {
+            flex: 1;
+        }
+
+        .trip-route {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 0.75rem;
+        }
+
+        .trip-meta {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.5rem;
+        }
+
+        .trip-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #86868b;
+            font-size: 0.9rem;
+        }
+
+        .trip-meta-item strong {
+            color: #1d1d1f;
+            font-weight: 600;
+        }
+
+        .trip-conditions,
+        .trip-remarks {
+            color: #6e6e73;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            line-height: 1.5;
+        }
+
+        .trip-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .delete-btn {
+            background: #ff3b30;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .delete-btn:hover {
+            background: #ff2d20;
+            transform: scale(1.05);
+        }
+
+        /* Jours fériés en bleu */
+        .day-header.jour-ferie {
+            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+            color: white;
+            font-weight: 700;
+        }
+        
+        .slot-cell.jour-ferie-cell {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-color: #2196f3;
+        }
+        
+        /* Bouton de parrainage attractif */
+        .referral-btn {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+        
+        .referral-pulse {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: inherit;
+            animation: pulse-wave 2s ease-out infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 4px 15px rgba(238, 90, 111, 0.4);
+            }
+            50% {
+                box-shadow: 0 6px 25px rgba(238, 90, 111, 0.7);
+            }
+        }
+        
+        @keyframes pulse-wave {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.5;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.5);
+                opacity: 0;
+            }
+        }
+        
+        /* Modal de parrainage */
+        .referral-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+        
+        .referral-modal.active {
+            display: flex;
+        }
+        
+        .referral-modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideUp 0.3s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .referral-modal-header {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 20px 20px 0 0;
+            text-align: center;
+            position: relative;
+        }
+        
+        .referral-modal-header h2 {
+            margin: 0;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .referral-modal-header p {
+            margin: 0;
+            opacity: 0.95;
+            font-size: 1.1rem;
+        }
+        
+        .referral-close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.2s ease;
+        }
+        
+        .referral-close-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+        
+        .referral-modal-body {
+            padding: 2rem;
+        }
+        
+        .referral-steps {
+            margin-bottom: 2rem;
+        }
+        
+        .referral-step {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            align-items: start;
+        }
+        
+        .step-number {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .step-content h3 {
+            margin: 0 0 0.5rem 0;
+            color: #333;
+            font-size: 1.1rem;
+        }
+        
+        .step-content p {
+            margin: 0;
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        .referral-qr-section {
+            background: linear-gradient(135deg, #fff5f7 0%, #fff 100%);
+            border: 2px solid rgba(233,30,99,0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .referral-qr-section h3 {
+            margin: 0 0 1rem 0;
+            color: #333;
+        }
+        
+        .qr-code-box {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+        }
+        
+        .qr-code-box img {
+            width: 200px;
+            height: 200px;
+            display: block;
+        }
+        
+        .referral-link {
+            background: white;
+            border: 2px solid #e91e63;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        
+        .referral-link input {
+            border: none;
+            background: transparent;
+            flex: 1;
+            font-size: 0.9rem;
+            color: #333;
+        }
+        
+        .copy-link-btn {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        
+        .copy-link-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(238, 90, 111, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .trip-card {
+                grid-template-columns: 1fr;
+            }
+
+            .trip-date {
+                justify-self: start;
+            }
+            
+            .referral-modal-content {
+                margin: 1rem;
+            }
+            
+            .referral-btn {
+                font-size: 0.85rem;
+                padding: 0.75rem 1rem;
+            }
+        }
+    </style>
+
+    <!-- Modal de parrainage -->
+    <div class="referral-modal" id="referralModal">
+        <div class="referral-modal-content">
+            <div class="referral-modal-header">
+                <button class="referral-close-btn" onclick="closeReferralModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+                <h2>🎁 Programme de Parrainage</h2>
+                <p>Gagne <strong>1h de conduite gratuite</strong> !</p>
+            </div>
+            <div class="referral-modal-body">
+                <div class="referral-steps">
+                    <div class="referral-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>Partage ton lien</h3>
+                            <p>Envoie ton lien de parrainage ou ton QR code à tes amis qui veulent passer le permis.</p>
+                        </div>
+                    </div>
+                    <div class="referral-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>Ton ami s'inscrit à un forfait conduite</h3>
+                            <p>Ton ami doit s'inscrire à un forfait incluant des heures de conduite (pas seulement le code).</p>
+                        </div>
+                    </div>
+                    <div class="referral-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3>Reçois 1h gratuite</h3>
+                            <p>Dès que l'inscription de ton filleul est validée, tu reçois automatiquement <strong>1h de conduite offerte</strong> !</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="referral-qr-section">
+                    <h3>📱 Ton QR Code de Parrainage</h3>
+                    <div class="qr-code-box">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://autoecolebreteuil.com/inscription.html?ref=ELEVE" alt="QR Code Parrainage">
+                    </div>
+                    <p style="color: #666; font-size: 0.9rem; margin: 0;">Fais scanner ce QR code à tes amis</p>
+                    
+                    <div class="referral-link">
+                        <input type="text" value="https://autoecolebreteuil.com/inscription.html?ref=ELEVE" readonly id="referralLinkInput">
+                        <button class="copy-link-btn" onclick="copyReferralLink()">
+                            <i class="fas fa-copy"></i> Copier
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Achat d'heures supplémentaires -->
+    <div id="buyHoursModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 500px;">
+            <button class="modal-close" onclick="closeBuyHoursModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="modal-body">
+                <h2 style="text-align: center; color: #1976d2; margin-bottom: 1rem;">
+                    <i class="fas fa-plus-circle"></i> Prendre des heures supplémentaires
+                </h2>
+                
+                <p style="text-align: center; color: #666; margin-bottom: 2rem;">
+                    Sélectionne le type de boîte et le nombre d'heures que tu souhaites ajouter à ton forfait
+                </p>
+                
+                <div style="background: #f5f5f5; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+                    <label style="display: block; font-weight: 600; color: #333; margin-bottom: 0.75rem;">
+                        Type de boîte
+                    </label>
+                    <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                        <label style="flex: 1; cursor: pointer;">
+                            <input type="radio" name="gearboxType" value="manual" checked onchange="updateBuyHoursPrice()" style="margin-right: 0.5rem;">
+                            <span style="font-weight: 600;">Manuelle</span>
+                            <div style="font-size: 0.85rem; color: #666;">45€/h</div>
+                        </label>
+                        <label style="flex: 1; cursor: pointer;">
+                            <input type="radio" name="gearboxType" value="automatic" onchange="updateBuyHoursPrice()" style="margin-right: 0.5rem;">
+                            <span style="font-weight: 600;">Automatique</span>
+                            <div style="font-size: 0.85rem; color: #666;">50€/h</div>
+                        </label>
+                    </div>
+                    
+                    <label style="display: block; font-weight: 600; color: #333; margin-bottom: 0.75rem;">
+                        Nombre d'heures
+                    </label>
+                    <input type="number" id="hoursQuantity" min="1" max="50" value="5" 
+                        oninput="updateBuyHoursPrice()"
+                        style="width: 100%; padding: 0.75rem; border: 2px solid #1976d2; border-radius: 8px; font-size: 1.1rem; text-align: center;">
+                    
+                    <div style="margin-top: 1rem; text-align: center;">
+                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 0.25rem;">Prix unitaire</div>
+                        <div id="buyHoursUnitPrice" style="font-size: 1.2rem; font-weight: 600; color: #1976d2;">45€ / heure</div>
+                    </div>
+                    
+                    <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid #ddd; text-align: center;">
+                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 0.25rem;">Total à payer</div>
+                        <div id="buyHoursTotal" style="font-size: 2rem; font-weight: 700; color: #4CAF50;">225€</div>
+                    </div>
+                </div>
+                
+                <button onclick="processBuyHours()" class="btn-primary btn-block" style="padding: 1rem; font-size: 1.1rem;">
+                    <i class="fas fa-credit-card"></i> Procéder au paiement
+                </button>
+                
+                <p style="text-align: center; color: #999; font-size: 0.85rem; margin-top: 1rem;">
+                    <i class="fas fa-lock"></i> Paiement sécurisé par carte bancaire
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Résultat d'examen -->
+    <div id="examResultModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 550px; max-height: 90vh; overflow-y: auto;">
+            <button class="modal-close" onclick="closeExamResultModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="modal-body" style="padding: 1.5rem;">
+                <h2 style="text-align: center; color: #FF6B6B; margin-bottom: 1rem; font-size: 1.5rem;">
+                    <i class="fas fa-trophy"></i> Résultat de l'examen
+                </h2>
+                
+                <form id="examResultForm" onsubmit="submitExamResult(event)">
+                    <!-- Résultat -->
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; font-weight: 600; color: #333; margin-bottom: 0.75rem;">
+                            Résultat de l'examen *
+                        </label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <label style="display: flex; align-items: center; padding: 1rem; border: 2px solid #ddd; border-radius: 12px; cursor: pointer; transition: all 0.3s;">
+                                <input type="radio" name="examResult" value="passed" required style="margin-right: 0.75rem;">
+                                <div>
+                                    <div style="font-weight: 600; color: #4CAF50;">
+                                        <i class="fas fa-check-circle"></i> Réussi
+                                    </div>
+                                </div>
+                            </label>
+                            <label style="display: flex; align-items: center; padding: 1rem; border: 2px solid #ddd; border-radius: 12px; cursor: pointer; transition: all 0.3s;">
+                                <input type="radio" name="examResult" value="failed" required style="margin-right: 0.75rem;">
+                                <div>
+                                    <div style="font-weight: 600; color: #FF5252;">
+                                        <i class="fas fa-times-circle"></i> Échoué
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Date de l'examen -->
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; font-weight: 600; color: #333; margin-bottom: 0.5rem; font-size: 0.9rem;">
+                            Date de l'examen *
+                        </label>
+                        <input type="date" name="examDate" required style="width: 100%; padding: 0.6rem; border: 2px solid #ddd; border-radius: 8px; font-size: 0.95rem;">
+                    </div>
+                    
+                    <!-- Moniteur principal -->
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; font-weight: 600; color: #333; margin-bottom: 0.5rem; font-size: 0.9rem;">
+                            Moniteur principal *
+                        </label>
+                        <div id="instructorInfo" style="padding: 0.75rem; background: #f5f5f5; border-radius: 8px; margin-bottom: 0.5rem; font-size: 0.9rem;">
+                            <i class="fas fa-spinner fa-spin"></i> Calcul en cours...
+                        </div>
+                        <input type="hidden" name="instructor" id="selectedInstructor">
+                        <p style="font-size: 0.8rem; color: #666; margin: 0;">
+                            <i class="fas fa-info-circle"></i> Moniteur avec qui tu as fait au moins 75% de tes heures
+                        </p>
+                    </div>
+                    
+                    <!-- Note du moniteur -->
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; font-weight: 600; color: #333; margin-bottom: 0.5rem; font-size: 0.9rem;">
+                            Note du moniteur *
+                        </label>
+                        <div style="display: flex; gap: 0.5rem; justify-content: center; font-size: 1.75rem; margin: 0.5rem 0;">
+                            <i class="far fa-star rating-star" data-rating="1" onclick="setRating(1)" style="cursor: pointer; color: #ddd; transition: color 0.2s;"></i>
+                            <i class="far fa-star rating-star" data-rating="2" onclick="setRating(2)" style="cursor: pointer; color: #ddd; transition: color 0.2s;"></i>
+                            <i class="far fa-star rating-star" data-rating="3" onclick="setRating(3)" style="cursor: pointer; color: #ddd; transition: color 0.2s;"></i>
+                            <i class="far fa-star rating-star" data-rating="4" onclick="setRating(4)" style="cursor: pointer; color: #ddd; transition: color 0.2s;"></i>
+                            <i class="far fa-star rating-star" data-rating="5" onclick="setRating(5)" style="cursor: pointer; color: #ddd; transition: color 0.2s;"></i>
+                        </div>
+                        <input type="hidden" name="rating" id="ratingValue" required>
+                    </div>
+                    
+                    <!-- Appréciation -->
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; font-weight: 600; color: #333; margin-bottom: 0.5rem; font-size: 0.9rem;">
+                            Ton appréciation (facultatif)
+                        </label>
+                        <textarea name="appreciation" rows="3" placeholder="Un mot sur ta formation, ton moniteur, ton expérience..." style="width: 100%; padding: 0.6rem; border: 2px solid #ddd; border-radius: 8px; font-size: 0.9rem; font-family: inherit; resize: vertical;"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary btn-block" style="padding: 1rem; font-size: 1.1rem;">
+                        <i class="fas fa-paper-plane"></i> Envoyer mon résultat
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://js.stripe.com/v3/"></script>
     <script src="https://unpkg.com/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
-    <script src="assets/js/supabaseClient.js?v=2"></script>
-    <script src="assets/js/main.js?v=2"></script>
-    <script src="assets/js/espace-eleve.js?v=4"></script>
+    <script src="assets/js/supabaseClient.js?v=3"></script>
+    <script src="assets/js/espace-eleve-exam-check.js"></script>
+    <script src="assets/js/espace-eleve.js?v=51"></script>
+    <script src="assets/js/buy-hours.js"></script>
+    <script src="assets/js/exam-result.js"></script>
+    <script src="assets/js/support-ticket.js?v=7"></script>
+    
+    <script>
+        function openReferralModal() {
+            document.getElementById('referralModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeReferralModal() {
+            document.getElementById('referralModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        function copyReferralLink() {
+            const input = document.getElementById('referralLinkInput');
+            input.select();
+            document.execCommand('copy');
+            
+            const btn = event.target.closest('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> Copié !';
+            btn.style.background = '#4CAF50';
+            
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.style.background = '';
+            }, 2000);
+        }
+        
+        function openBuyHoursModal() {
+            document.getElementById('buyHoursModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            updateBuyHoursPrice();
+        }
+        
+        function closeBuyHoursModal() {
+            document.getElementById('buyHoursModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        function updateBuyHoursPrice() {
+            const quantity = parseInt(document.getElementById('hoursQuantity').value) || 0;
+            const gearboxType = document.querySelector('input[name="gearboxType"]:checked')?.value || 'manual';
+            const pricePerHour = gearboxType === 'automatic' ? 50 : 45;
+            const total = quantity * pricePerHour;
+            
+            document.getElementById('buyHoursUnitPrice').textContent = pricePerHour + '€ / heure';
+            document.getElementById('buyHoursTotal').textContent = total + '€';
+        }
+        
+        async function processBuyHours() {
+            const quantity = parseInt(document.getElementById('hoursQuantity').value);
+            const gearboxType = document.querySelector('input[name="gearboxType"]:checked')?.value || 'manual';
+            const pricePerHour = gearboxType === 'automatic' ? 50 : 45;
+            const total = quantity * pricePerHour;
+            const gearboxLabel = gearboxType === 'automatic' ? 'boîte automatique' : 'boîte manuelle';
+            
+            if (!quantity || quantity < 1) {
+                alert('Veuillez sélectionner au moins 1 heure');
+                return;
+            }
+            
+            if (!confirm(`Confirmer l'achat de ${quantity} heure(s) en ${gearboxLabel} pour ${total}€ ?`)) {
+                return;
+            }
+            
+            // Appeler la fonction dans buy-hours.js
+            if (window.buyAdditionalHours) {
+                await window.buyAdditionalHours(quantity, total, gearboxType);
+            } else {
+                alert('Erreur : fonction d\'achat non disponible');
+            }
+        }
+        
+        // Fermer le modal en cliquant à l'extérieur
+        document.getElementById('referralModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeReferralModal();
+            }
+        });
+    </script>
 </body>
 </html>
