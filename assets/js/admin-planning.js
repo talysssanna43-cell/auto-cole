@@ -43,7 +43,7 @@ function buildSlotId(dateStr, startTime) {
 // Variable d'état globale pour le planning
 let state = {
     weekStart: startOfWeek(new Date()),
-    instructor: 'Mylène'
+    instructor: 'Nail' // Nail par défaut à partir du 1er mai 2026
 };
 
 function getTimeRows(instructor) {
@@ -2893,6 +2893,16 @@ window.deleteStudentAvailability = async function(userEmail) {
 
 // Charger la liste d'attente au chargement de la page
 document.addEventListener('DOMContentLoaded', () => {
+    // Masquer Mylène à partir du 1er mai 2026
+    const today = new Date();
+    const mayFirst2026 = new Date('2026-05-01T00:00:00');
+    const myleneBtn = document.getElementById('myleneBtn');
+    
+    if (myleneBtn && today >= mayFirst2026) {
+        myleneBtn.style.display = 'none';
+        console.log('🚫 Mylène masquée - indisponible à partir du 1er mai 2026');
+    }
+    
     // Attendre un peu pour s'assurer que Supabase est chargé
     setTimeout(() => {
         loadWaitlist();
