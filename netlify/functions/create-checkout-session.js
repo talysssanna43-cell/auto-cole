@@ -76,8 +76,8 @@ exports.handler = async function handler(event) {
                 }
             ],
             mode: 'payment',
-            success_url: `${event.headers.origin || 'http://localhost:8000'}/espace-eleve.html?payment_success=true`,
-            cancel_url: `${event.headers.origin || 'http://localhost:8000'}/espace-eleve.html?payment_success=false`,
+            success_url: `${event.headers.origin || 'https://autoecolebreteuil.com'}/espace-eleve.html?payment_success=true`,
+            cancel_url: `${event.headers.origin || 'https://autoecolebreteuil.com'}/espace-eleve.html?payment_success=false`,
             customer_email: customerEmail || undefined,
             client_reference_id: `${customerEmail}_${quantity}h_${gearboxType}`,
             metadata: {
