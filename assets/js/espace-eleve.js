@@ -311,8 +311,8 @@ function renderSlotGrid() {
     // Trier les horaires
     let sortedTimes = Array.from(timeSlots).sort();
     
-    // Pour Mylène, ne pas afficher les créneaux du matin (elle commence à 13h)
-    if (dashboardState.activeInstructorKey === 'mylene') {
+    // Pour Mylène et Nail, ne pas afficher les créneaux du matin (elles commencent à 13h)
+    if (dashboardState.activeInstructorKey === 'mylene' || dashboardState.activeInstructorKey === 'nail') {
         sortedTimes = sortedTimes.filter(time => {
             const hour = parseInt(time.split(':')[0]);
             return hour >= 13; // Seulement 13h et après
