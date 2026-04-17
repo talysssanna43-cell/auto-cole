@@ -314,13 +314,10 @@ function renderPlanning(grid, instructor, weekStart, bookedSet) {
             const icon = isDone ? 'fa-check' : isBooked ? 'fa-user' : 'fa-minus';
             
             // Déterminer le type de véhicule depuis transmission_type
-            const pack = isBooked ? (booking?.student?.pack || '') : '';
             const transmissionType = isBooked ? (booking?.student?.transmission_type || null) : null;
             let vehicleType = '';
             
-            if (pack === 'am') {
-                vehicleType = 'VSP';
-            } else if (transmissionType === 'auto') {
+            if (transmissionType === 'auto') {
                 vehicleType = 'BA';
             } else if (transmissionType === 'manual') {
                 vehicleType = 'BM';

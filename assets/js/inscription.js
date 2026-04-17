@@ -1047,8 +1047,13 @@ async function processInscription(data) {
                         notifData.hours_purchased = heuresIncluses;
                         notifData.amount_paid = packPrices[selectedPackValue] || 0;
                         notifData.transmission_type = packTransmission ? packTransmission.value : 'manual';
+                    } else if (selectedPackValue === 'am') {
+                        // Pack AM (VSP) → BA
+                        notifData.hours_purchased = heuresIncluses;
+                        notifData.amount_paid = packPrices[selectedPackValue] || 0;
+                        notifData.transmission_type = 'auto';
                     } else {
-                        // Autres packs (zen, am, etc.) → BM par défaut
+                        // Autres packs (zen, etc.) → BM par défaut
                         notifData.hours_purchased = heuresIncluses;
                         notifData.amount_paid = packPrices[selectedPackValue] || 0;
                         notifData.transmission_type = 'manual';
