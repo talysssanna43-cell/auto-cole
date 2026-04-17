@@ -168,6 +168,13 @@ function generateUpcomingSlots(instructorKey = dashboardState.activeInstructorKe
         const jsDay = day.getDay();
         if (jsDay === 0) return;
         
+        // Bloquer les créneaux de Mylène à partir du 1er mai 2026
+        if (instructor === 'Mylène') {
+            const slotDate = new Date(dateStr);
+            const mayFirst2026 = new Date('2026-05-01T00:00:00');
+            if (slotDate >= mayFirst2026) return;
+        }
+        
         // Pour les jours fériés, créer des créneaux spéciaux marqués comme fériés
         if (isJourFerie(dateStr)) {
             times.forEach((start) => {
@@ -242,6 +249,12 @@ async function refreshSlotsForCurrentWeek() {
         const slotDate = new Date(bookedSlot.date);
         const jsDay = slotDate.getDay();
         if (jsDay === 0) return;
+        
+        // Bloquer les créneaux de Mylène à partir du 1er mai 2026
+        if (bookedSlot.instructor === 'Mylène') {
+            const mayFirst2026 = new Date('2026-05-01T00:00:00');
+            if (slotDate >= mayFirst2026) return;
+        }
         
         // Ajouter le slot réservé seulement s'il n'existe pas déjà dans les slots générés
         if (!allSlots.find(s => s.id === bookedSlot.id)) {
