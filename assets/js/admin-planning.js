@@ -1389,10 +1389,10 @@ window.handleInscriptionDecision = async function(notificationId, decision) {
                     hoursGoal = 0;
                 }
                 
-                // Créer le compte utilisateur
+                // Créer ou mettre à jour le compte utilisateur (upsert pour éviter les doublons)
                 const { data: userData, error: userError } = await window.supabaseClient
                     .from('users')
-                    .insert({
+                    .upsert({
                         prenom: notification.user_prenom,
                         nom: notification.user_nom,
                         email: notification.user_email,
@@ -1405,7 +1405,7 @@ window.handleInscriptionDecision = async function(notificationId, decision) {
                         forfait: notification.pack || null,
                         hours_goal: hoursGoal,
                         hours_completed_initial: 0
-                    });
+                    }, { onConflict: 'email' });
                 
                 if (userError) {
                     console.error('❌ Erreur création compte utilisateur:', userError);
