@@ -1357,6 +1357,65 @@ window.handleInscriptionDecision = async function(notificationId, decision) {
         
         console.log('Notification updated successfully:', updateData[0]);
         
+        // Si l'inscription est approuvée, créer le compte utilisateur
+        if (decision === 'approved') {
+            console.log('✅ Inscription approuvée - Création du compte utilisateur...');
+            
+            try {
+                // Hasher le mot de passe
+                const passwordHash = await window.hashPassword(notification.user_password);
+                
+                // Calculer hours_goal selon le pack
+                let hoursGoal = 20; // Par défaut
+                if (notification.pack) {
+                    if (notification.pack === 'heures-conduite') {
+                        hoursGoal = notification.hours_purchased || 0;
+                    } else if (notification.pack === 'boite-auto') {
+                        hoursGoal = 13;
+                    } else if (notification.pack === 'am') {
+                        hoursGoal = 8;
+                    } else if (notification.pack === 'second-chance') {
+                        hoursGoal = 6;
+                    } else if (notification.pack === 'code') {
+                        hoursGoal = 0;
+                    }
+                } else {
+                    // Pas de pack = pas d'heures
+                    hoursGoal = 0;
+                }
+                
+                // Créer le compte utilisateur
+                const { data: userData, error: userError } = await window.supabaseClient
+                    .from('users')
+                    .insert({
+                        prenom: notification.user_prenom,
+                        nom: notification.user_nom,
+                        email: notification.user_email,
+                        password_hash: passwordHash,
+                        telephone: notification.user_telephone,
+                        date_nais: notification.user_date_naissance,
+                        adresse: notification.user_adresse,
+                        code_postal: notification.user_code_postal,
+                        ville: notification.user_ville,
+                        forfait: notification.pack || null,
+                        hours_goal: hoursGoal,
+                        hours_completed_initial: 0
+                    });
+                
+                if (userError) {
+                    console.error('❌ Erreur création compte utilisateur:', userError);
+                    alert(`Erreur lors de la création du compte: ${userError.message}`);
+                    return;
+                }
+                
+                console.log('✅ Compte utilisateur créé avec succès');
+            } catch (createError) {
+                console.error('❌ Erreur lors de la création du compte:', createError);
+                alert('Erreur lors de la création du compte utilisateur.');
+                return;
+            }
+        }
+        
         // Si l'inscription est approuvée, créditer l'heure de parrainage si applicable
         if (decision === 'approved' && notification.referral_code) {
             console.log('🎁 Inscription approuvée avec code de parrainage:', notification.referral_code);
