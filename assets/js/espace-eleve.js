@@ -64,14 +64,12 @@ function getTimeRows(instructor) {
     if (instructor === 'Sammy') {
         return ['07:00', '09:00', '11:00'];
     }
-    if (instructor === 'Nail') {
-        return ['07:00', '09:00', '11:00', '13:00', '15:00', '17:00'];
-    }
-    return ['13:00', '15:00', '17:00']; // Mylène
+    // Nail et Mylène ont les mêmes horaires (après-midi uniquement)
+    return ['13:00', '15:00', '17:00'];
 }
 
 function getEndForStart(instructor, start) {
-    if (instructor === 'Sammy' || instructor === 'Nail') {
+    if (instructor === 'Sammy') {
         if (start === '07:00') return '09:00';
         if (start === '09:00') return '11:00';
         if (start === '11:00') return '13:00';
@@ -1981,11 +1979,9 @@ function ensureTimeSlotsForInstructor(instructor) {
             <option value="17:00">17h00 - 19h00</option>
         `;
     } else if (instructor === 'Nail') {
+        // Nail a les mêmes horaires que Mylène (après-midi uniquement)
         startSelect.innerHTML = `
             <option value="">Sélectionne une heure</option>
-            <option value="07:00">07h00 - 09h00</option>
-            <option value="09:00">09h00 - 11h00</option>
-            <option value="11:00">11h00 - 13h00</option>
             <option value="13:00">13h00 - 15h00</option>
             <option value="15:00">15h00 - 17h00</option>
             <option value="17:00">17h00 - 19h00</option>

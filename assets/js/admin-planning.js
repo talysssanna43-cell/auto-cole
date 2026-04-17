@@ -50,14 +50,12 @@ function getTimeRows(instructor) {
     if (instructor === 'Sammy') {
         return ['07:00', '09:00', '11:00'];
     }
-    if (instructor === 'Nail') {
-        return ['07:00', '09:00', '11:00', '13:00', '15:00', '17:00'];
-    }
+    // Nail et Mylène ont les mêmes horaires (après-midi uniquement)
     return ['13:00', '15:00', '17:00'];
 }
 
 function getEndForStart(instructor, start) {
-    if (instructor === 'Sammy' || instructor === 'Nail') {
+    if (instructor === 'Sammy') {
         if (start === '07:00') return '09:00';
         if (start === '09:00') return '11:00';
         if (start === '11:00') return '13:00';
