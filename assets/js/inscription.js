@@ -974,33 +974,33 @@ async function processInscription(data) {
             console.log('⚠️ Parrainage non traité. Code:', window.referralCode, 'AdminMode:', window.adminInscriptionMode, 'PaymentRecord:', !!paymentRecord, 'LocalTest:', isLocalTest);
         }
 
-        // Create admin notification if pack was selected
+        // Create admin notification (même sans pack pour permettre validation admin)
         console.log('🔍 selectedPackValue:', selectedPackValue);
-        if (selectedPackValue) {
-            console.log('✅ Pack sélectionné, création de la notification...');
-            try {
-                const notifData = {
-                    user_email: data.email,
-                    user_name: `${data.prenom} ${data.nom}`,
-                    user_prenom: data.prenom,
-                    user_nom: data.nom,
-                    user_telephone: data.telephone,
-                    user_date_naissance: data.dateNaissance,
-                    user_adresse: data.adresse,
-                    user_code_postal: data.codePostal,
-                    user_ville: data.ville,
-                    pack: selectedPackValue,
-                    documents_count: Object.keys(documents).length,
-                    status: 'pending',
-                    payment_method: window.adminInscriptionMode ? 'cash' : 'card',
-                    user_password: data.password,
-                    parent_prenom: data.parentPrenom || null,
-                    parent_nom: data.parentNom || null,
-                    is_heberge: data.heberge || null,
-                    permis_invalide: data.permisInvalide || null
-                };
-                
-                // Calculer heures restantes pour tous les packs
+        console.log('✅ Création de la notification d\'inscription...');
+        try {
+            const notifData = {
+                user_email: data.email,
+                user_name: `${data.prenom} ${data.nom}`,
+                user_prenom: data.prenom,
+                user_nom: data.nom,
+                user_telephone: data.telephone,
+                user_date_naissance: data.dateNaissance,
+                user_adresse: data.adresse,
+                user_code_postal: data.codePostal,
+                user_ville: data.ville,
+                pack: selectedPackValue || null,
+                documents_count: Object.keys(documents).length,
+                status: 'pending',
+                payment_method: window.adminInscriptionMode ? 'cash' : 'card',
+                user_password: data.password,
+                parent_prenom: data.parentPrenom || null,
+                parent_nom: data.parentNom || null,
+                is_heberge: data.heberge || null,
+                permis_invalide: data.permisInvalide || null
+            };
+            
+            // Calculer heures selon le pack
+            if (selectedPackValue) {
                 const seancesEffectuees = document.getElementById('seancesEffectuees');
                 const seances = parseInt(seancesEffectuees?.value) || 0;
                 const heuresEffectuees = seances * 2;
@@ -1037,27 +1037,28 @@ async function processInscription(data) {
                         notifData.transmission_type = 'manual'; // Par défaut boîte manuelle
                     }
                 }
-                
-                // Note: hours_remaining n'existe pas dans inscription_notifications
-                // const heuresRestantes = Math.max(0, heuresIncluses - heuresEffectuees);
-                // notifData.hours_remaining = heuresRestantes;
-                
-                console.log('📦 notifData à insérer:', notifData);
-                
-                const notifResult = await window.supabaseClient
-                    .from('inscription_notifications')
-                    .insert(notifData);
-                
-                if (notifResult.error) {
-                    console.error('❌ Erreur notification:', notifResult.error);
-                    console.error('📋 Détails erreur:', JSON.stringify(notifResult.error, null, 2));
-                } else {
-                    console.log('✅ Notification créée avec succès');
-                }
-            } catch (notifError) {
-                console.error('Error creating notification:', notifError);
-                // Don't block registration if notification fails
+            } else {
+                // Pas de pack sélectionné - inscription sans forfait
+                notifData.hours_purchased = 0;
+                notifData.amount_paid = 0;
+                notifData.transmission_type = null;
             }
+            
+            console.log('📦 notifData à insérer:', notifData);
+            
+            const notifResult = await window.supabaseClient
+                .from('inscription_notifications')
+                .insert(notifData);
+            
+            if (notifResult.error) {
+                console.error('❌ Erreur notification:', notifResult.error);
+                console.error('📋 Détails erreur:', JSON.stringify(notifResult.error, null, 2));
+            } else {
+                console.log('✅ Notification créée avec succès');
+            }
+        } catch (notifError) {
+            console.error('Error creating notification:', notifError);
+            // Don't block registration if notification fails
         }
 
         // Success - show success message
