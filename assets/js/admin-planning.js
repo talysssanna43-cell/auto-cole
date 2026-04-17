@@ -1413,6 +1413,11 @@ window.handleInscriptionDecision = async function(notificationId, decision) {
 
 async function sendInscriptionEmail(userEmail, userName, decision, rejectionMessage, userPassword = null) {
     try {
+        // Détecter l'URL du site selon l'environnement
+        const siteUrl = window.location.hostname === 'localhost' 
+            ? 'http://localhost:8888'  // Netlify Dev
+            : 'https://autoecolebreteuil.com';
+        
         const isApproved = decision === 'approved';
         const subject = isApproved 
             ? '✅ Votre inscription a été validée - Auto-École Breteuil'
@@ -1456,7 +1461,7 @@ async function sendInscriptionEmail(userEmail, userName, decision, rejectionMess
                             <li>Suivre votre progression</li>
                         </ul>
                         <p style="text-align: center;">
-                            <a href="https://autoecolebreteuil.com/connexion.html" class="button">Accéder à mon espace</a>
+                            <a href="${siteUrl}/connexion.html" class="button">Accéder à mon espace</a>
                         </p>
                         <p>Bienvenue dans notre auto-école ! 🚗</p>
                     </div>

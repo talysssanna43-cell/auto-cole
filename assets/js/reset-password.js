@@ -20,6 +20,11 @@ async function localHashPassword(password) {
 // Fonction pour envoyer l'email avec le nouveau mot de passe
 async function sendPasswordResetEmail(userEmail, userName, newPassword) {
     try {
+        // Détecter l'URL du site selon l'environnement
+        const siteUrl = window.location.hostname === 'localhost' 
+            ? 'http://localhost:8888'  // Netlify Dev
+            : 'https://autoecolebreteuil.com';
+        
         const htmlContent = `
             <!DOCTYPE html>
             <html>
@@ -53,7 +58,7 @@ async function sendPasswordResetEmail(userEmail, userName, newPassword) {
                         
                         <p>Tu peux maintenant te connecter à ton espace élève avec ces nouveaux identifiants.</p>
                         <p style="text-align: center;">
-                            <a href="https://autoecolebreteuil.com/connexion.html" class="button">Se connecter</a>
+                            <a href="${siteUrl}/connexion.html" class="button">Se connecter</a>
                         </p>
                         
                         <p style="font-size: 0.9em; color: #666; margin-top: 20px;">
