@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscription - Auto-Ecole Breteuil</title>
     <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/forms.css">
+    <link rel="stylesheet" href="assets/css/forms.css?v=2">
+    <link rel="stylesheet" href="assets/css/file-upload.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -14,7 +15,7 @@
         <div class="container">
             <div class="nav-wrapper">
                 <a href="index.html" class="logo">
-                    <i class="fas fa-car"></i>
+                    <img src="assets/logo.png" alt="Auto-Ecole Breteuil">
                     <span>Auto-Ecole <strong>Breteuil</strong></span>
                 </a>
                 
@@ -26,8 +27,8 @@
 
                 <ul class="nav-menu" id="navMenu">
                     <li><a href="index.html">Accueil</a></li>
-                    <li><a href="#permis">Permis</a></li>
-                    <li><a href="code.html">Code de la route</a></li>
+                    <li><a href="recrutement.html">Recrutement</a></li>
+                    <li><a href="qui-sommes-nous.html">Qui sommes-nous</a></li>
                     <li><a href="tarifs.html">Tarifs</a></li>
                     <li><a href="contact.html">Contact</a></li>
                 </ul>
@@ -66,7 +67,7 @@
                     </div>
                 </div>
 
-                <form id="inscriptionForm" class="form-container" onsubmit="handleSubmit(event)">
+                <form id="inscriptionForm" class="form-container">
                     <!-- Step 1: Personal Information -->
                     <div class="form-step active" data-step="1">
                         <h2>Informations personnelles</h2>
@@ -103,6 +104,27 @@
                             <input type="date" id="dateNaissance" name="dateNaissance" required>
                         </div>
 
+                        <!-- Champs pour représentant légal (si mineur) -->
+                        <div id="representantLegalSection" style="display: none; margin-top: 1rem; padding: 1.5rem; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 8px;">
+                            <h4 style="margin-top: 0; color: #856404; font-size: 1.1rem;">
+                                <i class="fas fa-user-shield"></i> Représentant légal (mineur)
+                            </h4>
+                            <p style="color: #856404; font-size: 0.95rem; margin-bottom: 1rem;">
+                                Vous êtes mineur(e). Merci de fournir les informations de votre représentant légal.
+                            </p>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="parentPrenom">Prénom du parent *</label>
+                                    <input type="text" id="parentPrenom" name="parentPrenom">
+                                </div>
+                                <div class="form-group">
+                                    <label for="parentNom">Nom du parent *</label>
+                                    <input type="text" id="parentNom" name="parentNom">
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label for="adresse">Adresse *</label>
                             <input type="text" id="adresse" name="adresse" required>
@@ -129,37 +151,103 @@
                     <!-- Step 2: Pack Selection -->
                     <div class="form-step" data-step="2">
                         <h2>Choisis ton pack</h2>
+                        <p class="step-subtitle">Choisis le pack adapté à ton rythme et démarre ta formation en toute sérénité ! (Optionnel)</p>
+                        
+                        <!-- Question sur l'invalidation du permis -->
+                        <div style="margin-bottom: 2rem; padding: 1.5rem; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 8px;">
+                            <label style="display: block; margin-bottom: 1rem; font-weight: 600; color: #856404;">
+                                <i class="fas fa-exclamation-triangle"></i> Avez-vous déjà eu un permis invalidé ou annulé ?
+                            </label>
+                            <div style="display: flex; gap: 2rem;">
+                                <label style="display: flex; align-items: center; cursor: pointer;">
+                                    <input type="radio" name="permisInvalide" value="oui" style="margin-right: 0.5rem;">
+                                    <span>Oui</span>
+                                </label>
+                                <label style="display: flex; align-items: center; cursor: pointer;">
+                                    <input type="radio" name="permisInvalide" value="non" checked style="margin-right: 0.5rem;">
+                                    <span>Non</span>
+                                </label>
+                            </div>
+                        </div>
                         
                         <div class="pack-selection">
-                            <div class="pack-option" data-pack="zen">
-                                <input type="radio" name="pack" id="pack-zen" value="zen">
-                                <label for="pack-zen">
+                            <div class="pack-option" data-pack="code">
+                                <input type="radio" name="pack" id="pack-code" value="code">
+                                <label for="pack-code">
                                     <div class="pack-option-header">
-                                        <h3>Permis Zen</h3>
-                                        <div class="pack-option-price">599€</div>
+                                        <h3>Code de la route</h3>
+                                        <div class="pack-option-price">20€</div>
                                     </div>
-                                    <p>Le plus économique</p>
+                                    <p>Formation code uniquement</p>
                                     <ul>
-                                        <li><i class="fas fa-check"></i> Code de la route en ligne</li>
-                                        <li><i class="fas fa-check"></i> 20 heures de conduite</li>
-                                        <li><i class="fas fa-check"></i> Accès application mobile</li>
+                                        <li><i class="fas fa-check"></i> Accès code en salle 6 mois</li>
+                                        <li><i class="fas fa-check"></i> Cours théoriques</li>
+                                        <li><i class="fas fa-check"></i> Tests d'entraînement</li>
                                     </ul>
                                 </label>
                             </div>
 
-                            <div class="pack-option featured" data-pack="premium">
-                                <div class="pack-option-badge">Populaire</div>
-                                <input type="radio" name="pack" id="pack-premium" value="premium" checked>
-                                <label for="pack-premium">
+                            <div class="pack-option" data-pack="am">
+                                <input type="radio" name="pack" id="pack-am" value="am">
+                                <label for="pack-am">
                                     <div class="pack-option-header">
-                                        <h3>Permis Premium</h3>
-                                        <div class="pack-option-price">799€</div>
+                                        <h3>Voiture sans permis (AM)</h3>
+                                        <div class="pack-option-price">350€</div>
                                     </div>
-                                    <p>Le plus populaire</p>
+                                    <p>Formation complète</p>
                                     <ul>
-                                        <li><i class="fas fa-check"></i> Tout du pack Zen</li>
-                                        <li><i class="fas fa-check"></i> Examen sous 30 jours</li>
-                                        <li><i class="fas fa-check"></i> Priorité de réservation</li>
+                                        <li><i class="fas fa-check"></i> Dossier administratif</li>
+                                        <li><i class="fas fa-check"></i> 8h de pratique</li>
+                                        <li><i class="fas fa-check"></i> Module code & manœuvres</li>
+                                    </ul>
+                                </label>
+                            </div>
+
+                            <div class="pack-option" data-pack="boite-auto">
+                                <input type="radio" name="pack" id="pack-boite-auto" value="boite-auto">
+                                <label for="pack-boite-auto">
+                                    <div class="pack-option-header">
+                                        <h3>Boîte Automatique</h3>
+                                        <div class="pack-option-price">859€</div>
+                                    </div>
+                                    <p>Code + 13h de conduite</p>
+                                    <ul>
+                                        <li><i class="fas fa-check"></i> Code en salle 6 mois</li>
+                                        <li><i class="fas fa-check"></i> 13h de conduite</li>
+                                        <li><i class="fas fa-check"></i> Permis blanc inclus</li>
+                                    </ul>
+                                </label>
+                            </div>
+
+                            <div class="pack-option" data-pack="20h">
+                                <input type="radio" name="pack" id="pack-20h" value="20h">
+                                <label for="pack-20h">
+                                    <div class="pack-option-header">
+                                        <h3>20h de conduite</h3>
+                                        <div class="pack-option-price">900€</div>
+                                    </div>
+                                    <p>Conduite seule</p>
+                                    <ul>
+                                        <li><i class="fas fa-check"></i> 20 heures de conduite</li>
+                                        <li><i class="fas fa-check"></i> Choix du moniteur</li>
+                                        <li><i class="fas fa-check"></i> Horaires flexibles</li>
+                                    </ul>
+                                </label>
+                            </div>
+
+                            <div class="pack-option featured" data-pack="zen">
+                                <div class="pack-option-badge">Populaire</div>
+                                <input type="radio" name="pack" id="pack-zen" value="zen">
+                                <label for="pack-zen">
+                                    <div class="pack-option-header">
+                                        <h3>Boîte Manuelle</h3>
+                                        <div class="pack-option-price">995€</div>
+                                    </div>
+                                    <p>Code + 20h de conduite</p>
+                                    <ul>
+                                        <li><i class="fas fa-check"></i> Code en salle 6 mois</li>
+                                        <li><i class="fas fa-check"></i> 20h de conduite</li>
+                                        <li><i class="fas fa-check"></i> Suivi numérique</li>
                                     </ul>
                                 </label>
                             </div>
@@ -173,11 +261,356 @@
                                     </div>
                                     <p>Le plus rapide</p>
                                     <ul>
-                                        <li><i class="fas fa-check"></i> Tout du pack Premium</li>
                                         <li><i class="fas fa-check"></i> Formation en 30 jours</li>
                                         <li><i class="fas fa-check"></i> Planning intensif</li>
+                                        <li><i class="fas fa-check"></i> Coach personnel</li>
                                     </ul>
                                 </label>
+                            </div>
+
+                            <div class="pack-option" data-pack="aac">
+                                <input type="radio" name="pack" id="pack-aac" value="aac">
+                                <label for="pack-aac">
+                                    <div class="pack-option-header">
+                                        <h3>Conduite accompagnée (AAC)</h3>
+                                        <div class="pack-option-price">1190€</div>
+                                    </div>
+                                    <p>Dès 15 ans</p>
+                                    <ul>
+                                        <li><i class="fas fa-check"></i> Code + 20h de conduite</li>
+                                        <li><i class="fas fa-check"></i> RDV préalable inclus</li>
+                                        <li><i class="fas fa-check"></i> Suivi numérique</li>
+                                    </ul>
+                                </label>
+                            </div>
+
+                            <div class="pack-option" data-pack="supervisee">
+                                <input type="radio" name="pack" id="pack-supervisee" value="supervisee">
+                                <label for="pack-supervisee">
+                                    <div class="pack-option-header">
+                                        <h3>Conduite supervisée</h3>
+                                        <div class="pack-option-price">1190€</div>
+                                    </div>
+                                    <p>Pour les +18 ans</p>
+                                    <ul>
+                                        <li><i class="fas fa-check"></i> Code + 20h de conduite</li>
+                                        <li><i class="fas fa-check"></i> RDV préalable inclus</li>
+                                        <li><i class="fas fa-check"></i> Autonomie garantie</li>
+                                    </ul>
+                                </label>
+                            </div>
+
+                            <div class="pack-option" data-pack="heures-conduite">
+                                <input type="radio" name="pack" id="pack-heures-conduite" value="heures-conduite">
+                                <label for="pack-heures-conduite">
+                                    <div class="pack-option-header">
+                                        <h3>Heures de conduite</h3>
+                                        <div class="pack-option-price" id="heures-conduite-price">-</div>
+                                    </div>
+                                    <p>À l'unité</p>
+                                    <ul>
+                                        <li><i class="fas fa-check"></i> Boîte manuelle : 45€/h</li>
+                                        <li><i class="fas fa-check"></i> Boîte automatique : 50€/h</li>
+                                        <li><i class="fas fa-check"></i> Réservation flexible</li>
+                                    </ul>
+                                </label>
+                            </div>
+
+                            <div class="pack-option" data-pack="second-chance">
+                                <input type="radio" name="pack" id="pack-second-chance" value="second-chance">
+                                <label for="pack-second-chance">
+                                    <div class="pack-option-header">
+                                        <h3>Forfait Second Chance</h3>
+                                        <div class="pack-option-price">569€</div>
+                                    </div>
+                                    <p>Votre nouvelle opportunité</p>
+                                    <ul>
+                                        <li><i class="fas fa-check"></i> Récupération du dossier</li>
+                                        <li><i class="fas fa-check"></i> 3 séances (bilan, correction, permis blanc)</li>
+                                        <li><i class="fas fa-check"></i> Nouvelle date d'examen</li>
+                                    </ul>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Type de boîte pour certains packs -->
+                        <div id="transmissionTypeSection" style="display: none; margin-top: 2rem; padding: 2rem; background: linear-gradient(135deg, rgba(255, 105, 180, 0.05), rgba(233, 30, 99, 0.05)); border: 2px solid var(--primary-color); border-radius: 12px;">
+                            <h3 style="margin-bottom: 1.5rem; color: var(--primary-color); font-size: 1.5rem;">
+                                <i class="fas fa-cog"></i> Choisis ton type de boîte
+                            </h3>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <label class="transmission-choice-pack" style="display: flex; align-items: center; padding: 1.5rem; border: 2px solid var(--border-color); border-radius: 10px; cursor: pointer; transition: all 0.3s ease;">
+                                    <input type="radio" name="packTransmissionType" value="manual" style="margin-right: 0.75rem;" checked>
+                                    <div>
+                                        <div style="font-weight: 700; margin-bottom: 0.25rem; font-size: 1.1rem;">
+                                            <i class="fas fa-cog" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                                            Boîte manuelle (BM)
+                                        </div>
+                                        <div style="color: var(--text-light); font-size: 0.9rem;">Formation complète sur boîte manuelle</div>
+                                    </div>
+                                </label>
+                                
+                                <label class="transmission-choice-pack" style="display: flex; align-items: center; padding: 1.5rem; border: 2px solid var(--border-color); border-radius: 10px; cursor: pointer; transition: all 0.3s ease;">
+                                    <input type="radio" name="packTransmissionType" value="auto" style="margin-right: 0.75rem;">
+                                    <div>
+                                        <div style="font-weight: 700; margin-bottom: 0.25rem; font-size: 1.1rem;">
+                                            <i class="fas fa-magic" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                                            Boîte automatique (BA)
+                                        </div>
+                                        <div style="color: var(--text-light); font-size: 0.9rem;">Formation complète sur boîte automatique</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Admin: Séances déjà effectuées (shown for all packs in admin mode) -->
+                        <div id="adminSeancesSection" style="display: none; margin-top: 2rem; padding: 2rem; background: #e3f2fd; border: 2px solid #1976d2; border-radius: 12px;">
+                            <h3 style="margin-bottom: 1rem; color: #1976d2; font-size: 1.3rem;">
+                                <i class="fas fa-user-check"></i> Historique de l'élève
+                            </h3>
+                            <div style="margin-bottom: 1rem;">
+                                <label for="seancesEffectuees" style="display: block; font-weight: 600; margin-bottom: 0.75rem; font-size: 1rem;">
+                                    Séances déjà effectuées
+                                </label>
+                                <input 
+                                    type="number" 
+                                    id="seancesEffectuees" 
+                                    name="seancesEffectuees" 
+                                    min="0" 
+                                    value="0"
+                                    oninput="updateHeuresRestantes()"
+                                    style="width: 100%; padding: 0.75rem; border: 2px solid #1976d2; border-radius: 8px; font-size: 1.1rem; text-align: center;"
+                                >
+                                <small style="color: #1976d2; display: block; margin-top: 0.5rem;">
+                                    <i class="fas fa-info-circle"></i> Nombre de séances de 2h déjà faites
+                                </small>
+                            </div>
+                            
+                            <div id="heuresRestantesDisplay" style="display: none; background: white; padding: 1rem; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 0.9rem; color: #1976d2; margin-bottom: 0.25rem;">Heures restantes</div>
+                                <div id="heuresRestantesValue" style="font-size: 1.5rem; font-weight: 700; color: #1976d2;">0h</div>
+                            </div>
+                        </div>
+
+                        <!-- Heures de conduite configuration (shown only if heures-conduite is selected) -->
+                        <div id="heuresConduiteConfig" style="display: none; margin-top: 2rem; padding: 2rem; background: linear-gradient(135deg, rgba(255, 105, 180, 0.05), rgba(233, 30, 99, 0.05)); border: 2px solid var(--primary-color); border-radius: 12px;">
+                            <h3 style="margin-bottom: 1.5rem; color: var(--primary-color); font-size: 1.5rem;">
+                                <i class="fas fa-cog"></i> Configure ton pack d'heures
+                            </h3>
+                            
+                            <div style="margin-bottom: 1.5rem;">
+                                <label style="display: block; font-weight: 600; margin-bottom: 0.75rem; font-size: 1rem;">
+                                    Type de boîte *
+                                </label>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                    <label class="transmission-choice" style="display: flex; align-items: center; padding: 1rem; border: 2px solid var(--border-color); border-radius: 10px; cursor: pointer; transition: all 0.3s ease;">
+                                        <input type="radio" name="transmissionType" value="manual" data-price="45" style="margin-right: 0.75rem;" onchange="updateHeuresPrice()">
+                                        <div>
+                                            <div style="font-weight: 700; margin-bottom: 0.25rem;">
+                                                <i class="fas fa-cog" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                                                Boîte manuelle
+                                            </div>
+                                            <div style="color: var(--primary-color); font-weight: 700;">45€/h</div>
+                                        </div>
+                                    </label>
+                                    
+                                    <label class="transmission-choice" style="display: flex; align-items: center; padding: 1rem; border: 2px solid var(--border-color); border-radius: 10px; cursor: pointer; transition: all 0.3s ease;">
+                                        <input type="radio" name="transmissionType" value="auto" data-price="50" style="margin-right: 0.75rem;" onchange="updateHeuresPrice()">
+                                        <div>
+                                            <div style="font-weight: 700; margin-bottom: 0.25rem;">
+                                                <i class="fas fa-magic" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                                                Boîte automatique
+                                            </div>
+                                            <div style="color: var(--primary-color); font-weight: 700;">50€/h</div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div style="margin-bottom: 1.5rem;">
+                                <label for="nombreHeures" style="display: block; font-weight: 600; margin-bottom: 0.75rem; font-size: 1rem;">
+                                    Nombre d'heures à acheter *
+                                </label>
+                                <input 
+                                    type="number" 
+                                    id="nombreHeures" 
+                                    name="nombreHeures" 
+                                    min="2" 
+                                    step="2" 
+                                    placeholder="Ex: 2, 4, 6, 8..." 
+                                    oninput="updateHeuresPrice()"
+                                    style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px; font-size: 1.1rem; text-align: center;"
+                                >
+                                <small style="color: var(--text-light); display: block; margin-top: 0.5rem;">
+                                    <i class="fas fa-info-circle"></i> Le nombre d'heures doit être pair (2, 4, 6, 8, etc.)
+                                </small>
+                            </div>
+                            
+                            
+                            <div style="background: white; padding: 1.5rem; border-radius: 10px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                                <div style="font-size: 0.9rem; color: var(--text-light); margin-bottom: 0.5rem;">Prix total</div>
+                                <div id="heuresConduiteTotalPrice" style="font-size: 2rem; font-weight: 700; color: var(--primary-color);">0€</div>
+                            </div>
+                        </div>
+
+                        <!-- Documents Section (shown only if pack is selected) -->
+                        <div id="documentsSection" style="display: none; margin-top: 2rem; padding: 2rem; background: #f8f9fa; border-radius: 12px;">
+                            <h3 style="margin-bottom: 0.5rem; color: #ff1493; font-size: 1.75rem;">
+                                <i class="fas fa-file-upload"></i> Documents requis pour l'inscription
+                            </h3>
+                            <p style="margin-bottom: 1.5rem; color: #6c757d; font-size: 1rem;">
+                                Pour finaliser ton inscription, merci de fournir les documents suivants :
+                            </p>
+
+                            <div class="file-upload-wrapper">
+                                <label for="pieceIdentite" class="file-upload-label">
+                                    <i class="fas fa-id-card"></i> Pièce d'identité (recto-verso) *
+                                </label>
+                                <div class="custom-file-upload">
+                                    <input type="file" id="pieceIdentite" name="pieceIdentite" accept="image/*,.pdf" class="file-input-hidden">
+                                    <div class="file-upload-area" onclick="document.getElementById('pieceIdentite').click()">
+                                        <i class="fas fa-folder" style="font-size: 2.5rem; color: #4285f4;"></i>
+                                        <p class="file-upload-text">Glissez vos fichiers ici ou cliquez pour parcourir</p>
+                                        <p class="file-upload-subtext"><span class="file-link">Choisir des fichiers</span> • 2 fichiers max • 10 Mo par fichier</p>
+                                        <p class="file-selected-name" style="display: none;"></p>
+                                    </div>
+                                </div>
+                                <small style="color: #6c757d; display: block; margin-top: 0.5rem;">Carte d'identité ou passeport</small>
+                            </div>
+
+                            <div class="file-upload-wrapper">
+                                <label for="assr" class="file-upload-label">
+                                    <i class="fas fa-certificate"></i> ASSR (Attestation Scolaire de Sécurité Routière) *
+                                </label>
+                                <div class="custom-file-upload">
+                                    <input type="file" id="assr" name="assr" accept="image/*,.pdf" class="file-input-hidden">
+                                    <div class="file-upload-area" onclick="document.getElementById('assr').click()">
+                                        <i class="fas fa-folder" style="font-size: 2.5rem; color: #4285f4;"></i>
+                                        <p class="file-upload-text">Glissez vos fichiers ici ou cliquez pour parcourir</p>
+                                        <p class="file-upload-subtext"><span class="file-link">Choisir des fichiers</span> • 2 fichiers max • 10 Mo par fichier</p>
+                                        <p class="file-selected-name" style="display: none;"></p>
+                                    </div>
+                                </div>
+                                <small style="color: #6c757d; display: block; margin-top: 0.5rem;">ASSR 1 ou ASSR 2</small>
+                            </div>
+
+                            <div class="file-upload-wrapper">
+                                <label for="jdc" class="file-upload-label">
+                                    <i class="fas fa-flag"></i> Journée Défense et Citoyenneté (JDC) ou Attestation de recensement *
+                                </label>
+                                <div class="custom-file-upload">
+                                    <input type="file" id="jdc" name="jdc" accept="image/*,.pdf" class="file-input-hidden">
+                                    <div class="file-upload-area" onclick="document.getElementById('jdc').click()">
+                                        <i class="fas fa-folder" style="font-size: 2.5rem; color: #4285f4;"></i>
+                                        <p class="file-upload-text">Glissez vos fichiers ici ou cliquez pour parcourir</p>
+                                        <p class="file-upload-subtext"><span class="file-link">Choisir des fichiers</span> • 2 fichiers max • 10 Mo par fichier</p>
+                                        <p class="file-selected-name" style="display: none;"></p>
+                                    </div>
+                                </div>
+                                <small style="color: #6c757d; display: block; margin-top: 0.5rem;">Certificat JDC ou attestation de recensement si pas encore effectuée</small>
+                            </div>
+
+                            <div class="file-upload-wrapper">
+                                <label for="justifDomicile" class="file-upload-label">
+                                    <i class="fas fa-home"></i> Justificatif de domicile (moins de 6 mois) *
+                                </label>
+                                <div class="custom-file-upload">
+                                    <input type="file" id="justifDomicile" name="justifDomicile" accept="image/*,.pdf" class="file-input-hidden">
+                                    <div class="file-upload-area" onclick="document.getElementById('justifDomicile').click()">
+                                        <i class="fas fa-folder" style="font-size: 2.5rem; color: #4285f4;"></i>
+                                        <p class="file-upload-text">Glissez vos fichiers ici ou cliquez pour parcourir</p>
+                                        <p class="file-upload-subtext"><span class="file-link">Choisir des fichiers</span> • 2 fichiers max • 10 Mo par fichier</p>
+                                        <p class="file-selected-name" style="display: none;"></p>
+                                    </div>
+                                </div>
+                                <small style="color: #6c757d; display: block; margin-top: 0.5rem;">Facture EDF, gaz, box internet, ou feuille d'impôts</small>
+                            </div>
+
+                            <div class="form-group" style="margin-top: 1.5rem;">
+                                <label style="font-weight: 600; color: #333; font-size: 1rem; margin-bottom: 0.75rem; display: block;">
+                                    <i class="fas fa-question-circle"></i> Êtes-vous hébergé(e) ?
+                                </label>
+                                <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+                                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 1rem;">
+                                        <input type="radio" name="heberge" value="non" checked onchange="toggleHebergementDocs()">
+                                        <span>Non</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 1rem;">
+                                        <input type="radio" name="heberge" value="oui" onchange="toggleHebergementDocs()">
+                                        <span>Oui</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div id="hebergementDocs" style="display: none;">
+                                <div class="file-upload-wrapper">
+                                    <label for="certifHebergement" class="file-upload-label">
+                                        <i class="fas fa-file-signature"></i> Certificat d'hébergement daté et signé *
+                                    </label>
+                                    <div class="custom-file-upload">
+                                        <input type="file" id="certifHebergement" name="certifHebergement" accept="image/*,.pdf" class="file-input-hidden">
+                                        <div class="file-upload-area" onclick="document.getElementById('certifHebergement').click()">
+                                            <i class="fas fa-folder" style="font-size: 2.5rem; color: #4285f4;"></i>
+                                            <p class="file-upload-text">Glissez vos fichiers ici ou cliquez pour parcourir</p>
+                                            <p class="file-upload-subtext"><span class="file-link">Choisir des fichiers</span> • 2 fichiers max • 10 Mo par fichier</p>
+                                            <p class="file-selected-name" style="display: none;"></p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="file-upload-wrapper">
+                                    <label for="pieceHebergeur" class="file-upload-label">
+                                        <i class="fas fa-id-card"></i> Pièce d'identité de l'hébergeur *
+                                    </label>
+                                    <div class="custom-file-upload">
+                                        <input type="file" id="pieceHebergeur" name="pieceHebergeur" accept="image/*,.pdf" class="file-input-hidden">
+                                        <div class="file-upload-area" onclick="document.getElementById('pieceHebergeur').click()">
+                                            <i class="fas fa-folder" style="font-size: 2.5rem; color: #4285f4;"></i>
+                                            <p class="file-upload-text">Glissez vos fichiers ici ou cliquez pour parcourir</p>
+                                            <p class="file-upload-subtext"><span class="file-link">Choisir des fichiers</span> • 2 fichiers max • 10 Mo par fichier</p>
+                                            <p class="file-selected-name" style="display: none;"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="file-upload-wrapper">
+                                <label for="ephoto" class="file-upload-label">
+                                    <i class="fas fa-camera"></i> E-photo (photo d'identité numérique) *
+                                </label>
+                                <div class="custom-file-upload">
+                                    <input type="file" id="ephoto" name="ephoto" accept="image/*" class="file-input-hidden">
+                                    <div class="file-upload-area" onclick="document.getElementById('ephoto').click()">
+                                        <i class="fas fa-folder" style="font-size: 2.5rem; color: #4285f4;"></i>
+                                        <p class="file-upload-text">Glissez vos fichiers ici ou cliquez pour parcourir</p>
+                                        <p class="file-upload-subtext"><span class="file-link">Choisir des fichiers</span> • 2 fichiers max • 10 Mo par fichier</p>
+                                        <p class="file-selected-name" style="display: none;"></p>
+                                    </div>
+                                </div>
+                                <small style="color: #6c757d; display: block; margin-top: 0.5rem;">Photo d'identité au format numérique (e-photo ANTS)</small>
+                            </div>
+
+                            <!-- Document du représentant légal (si mineur) -->
+                            <div class="file-upload-wrapper" id="parentIdDoc" style="display: none;">
+                                <label for="pieceIdentiteParent" class="file-upload-label">
+                                    <i class="fas fa-id-card"></i> Pièce d'identité du représentant légal *
+                                </label>
+                                <div class="custom-file-upload">
+                                    <input type="file" id="pieceIdentiteParent" name="pieceIdentiteParent" accept="image/*,.pdf" class="file-input-hidden">
+                                    <div class="file-upload-area" onclick="document.getElementById('pieceIdentiteParent').click()">
+                                        <i class="fas fa-folder" style="font-size: 2.5rem; color: #4285f4;"></i>
+                                        <p class="file-upload-text">Glissez vos fichiers ici ou cliquez pour parcourir</p>
+                                        <p class="file-upload-subtext"><span class="file-link">Choisir des fichiers</span> • 2 fichiers max • 10 Mo par fichier</p>
+                                        <p class="file-selected-name" style="display: none;"></p>
+                                    </div>
+                                </div>
+                                <small style="color: #6c757d; display: block; margin-top: 0.5rem;">Carte d'identité ou passeport du parent/tuteur légal</small>
+                            </div>
+
+                            <div style="background: #fff3cd; padding: 1rem; border-radius: 8px; margin-top: 1.5rem; border-left: 4px solid #ffc107;">
+                                <p style="margin: 0; color: #856404; font-size: 0.9rem;">
+                                    <i class="fas fa-info-circle"></i> <strong>Important :</strong> Tous les documents doivent être lisibles et au format PDF ou image (JPG, PNG).
+                                </p>
                             </div>
                         </div>
 
@@ -185,9 +618,14 @@
                             <button type="button" class="btn-secondary" onclick="prevStep()">
                                 <i class="fas fa-arrow-left"></i> Précédent
                             </button>
-                            <button type="button" class="btn-primary" onclick="nextStep()">
-                                Suivant <i class="fas fa-arrow-right"></i>
+                            <button type="button" class="btn-primary btn-large" onclick="nextStep()">
+                                <i class="fas fa-check"></i> Continuer
                             </button>
+                        </div>
+                        <div class="skip-option">
+                            <a href="javascript:void(0)" onclick="skipPackSelection()" class="skip-link">
+                                Je choisirai mon pack plus tard
+                            </a>
                         </div>
                     </div>
 
@@ -216,26 +654,21 @@
                             <h3>Mode de paiement</h3>
                             
                             <div class="payment-option">
-                                <input type="radio" name="payment" id="payment-card" value="card" checked>
+                                <input type="radio" name="payment" id="payment-card" value="card" checked onchange="updatePaymentMethod()">
                                 <label for="payment-card">
                                     <i class="fas fa-credit-card"></i>
-                                    <span>Carte bancaire</span>
+                                    <span>Paiement comptant</span>
                                 </label>
                             </div>
-
+                            
                             <div class="payment-option">
-                                <input type="radio" name="payment" id="payment-4x" value="4x">
-                                <label for="payment-4x">
+                                <input type="radio" name="payment" id="payment-installments" value="installments" onchange="updatePaymentMethod()">
+                                <label for="payment-installments">
                                     <i class="fas fa-calendar-alt"></i>
-                                    <span>Paiement en 4 fois sans frais</span>
-                                </label>
-                            </div>
-
-                            <div class="payment-option">
-                                <input type="radio" name="payment" id="payment-cpf" value="cpf">
-                                <label for="payment-cpf">
-                                    <i class="fas fa-wallet"></i>
-                                    <span>Financement CPF</span>
+                                    <span>Paiement en plusieurs fois</span>
+                                    <small style="display: block; color: #666; font-size: 0.85rem; margin-top: 0.25rem;">
+                                        2x: +4,32% • 3x: +4,56% • 4x: +5,76%
+                                    </small>
                                 </label>
                             </div>
 
@@ -246,10 +679,66 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Moyen de paiement</label>
-                                    <div id="card-element" class="stripe-card-element"></div>
+                                    <div class="card-info-box">
+                                        <div class="stripe-split-card">
+                                            <div id="card-number" class="stripe-card-element"></div>
+                                            <div class="stripe-split-row">
+                                                <div id="card-expiry" class="stripe-card-element"></div>
+                                                <div id="card-cvc" class="stripe-card-element"></div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <p id="card-errors" class="stripe-card-errors"></p>
                                 </div>
                                 <p class="payment-feedback" id="paymentFeedback"></p>
+                            </div>
+
+                            <div class="installments-payment-block" id="installmentsPaymentBlock" style="display: none;">
+                                <div class="installments-info-box" style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem;">
+                                    <h4 style="margin: 0 0 0.5rem 0; color: #333; font-size: 1rem;">
+                                        <i class="fas fa-calendar-check" style="color: #635BFF;"></i>
+                                        Paiement en plusieurs fois
+                                    </h4>
+                                    <p style="margin: 0; color: #666; font-size: 0.9rem;">
+                                        Paye en 2x, 3x ou 4x. Le paiement sera effectué en une seule fois via Stripe, puis nous gérerons les échéances selon ton choix.
+                                    </p>
+                                </div>
+                                <div class="form-group">
+                                    <label for="installmentsCount">Nombre de mensualités</label>
+                                    <select id="installmentsCount" class="form-control" onchange="updateInstallmentsPreview()">
+                                        <option value="2">2x - frais de 4,32%</option>
+                                        <option value="3" selected>3x - frais de 4,56%</option>
+                                        <option value="4">4x - frais de 5,76%</option>
+                                    </select>
+                                </div>
+                                <div id="installmentsPreview" style="background: white; padding: 1rem; border: 1px solid #e0e0e0; border-radius: 6px; margin-top: 1rem;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                        <span style="color: #666;">Montant total avec frais</span>
+                                        <strong id="installmentsTotal">0€</strong>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span style="color: #666;">Montant par mensualité</span>
+                                        <strong id="installmentsMonthly" style="color: #28a745;">0€</strong>
+                                    </div>
+                                </div>
+                                <div class="form-group" style="margin-top: 1.5rem;">
+                                    <label for="installmentsCardholderName">Nom complet sur la carte</label>
+                                    <input type="text" id="installmentsCardholderName" placeholder="Prénom Nom">
+                                </div>
+                                <div class="form-group">
+                                    <label>Moyen de paiement</label>
+                                    <div class="card-info-box">
+                                        <div class="stripe-split-card">
+                                            <div id="installments-card-number" class="stripe-card-element"></div>
+                                            <div class="stripe-split-row">
+                                                <div id="installments-card-expiry" class="stripe-card-element"></div>
+                                                <div id="installments-card-cvc" class="stripe-card-element"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p id="installments-card-errors" class="stripe-card-errors"></p>
+                                </div>
+                                <p class="payment-feedback" id="installmentsPaymentFeedback"></p>
                             </div>
                         </div>
 
@@ -276,16 +765,58 @@
 
     <footer class="footer">
         <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Auto-Ecole Breteuil</h4>
+                    <p>Votre auto-école à Marseille 13006. Formation de qualité au permis de conduire.</p>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Formations</h4>
+                    <ul>
+                        <li><a href="permis-b.html">Permis B</a></li>
+                        <li><a href="qui-sommes-nous.html">Qui sommes-nous</a></li>
+                        <li><a href="conduite-accompagnee.html">Conduite accompagnée</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Informations</h4>
+                    <ul>
+                        <li><a href="tarifs.html">Tarifs</a></li>
+                        <li><a href="tarifs.html#faq">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Notre localisation</h4>
+                    <p style="margin-bottom: 1rem;">1 Rue Édouard Delanglade<br>13006 Marseille</p>
+                    <h4 style="margin-top: 1.5rem;">Contact</h4>
+                    <ul>
+                        <li><i class="fas fa-phone"></i> 04 91 53 36 98</li>
+                        <li><i class="fas fa-envelope"></i> a.e.breteuil@gmail.com</li>
+                    </ul>
+                </div>
+            </div>
+
             <div class="footer-bottom">
                 <p>&copy; 2024 Auto-Ecole Breteuil. Tous droits réservés.</p>
+                <div class="footer-links">
+                    <a href="mentions-legales.html">Mentions légales</a>
+                    <a href="cgv.html">CGV</a>
+                    <a href="confidentialite.html">Confidentialité</a>
+                </div>
             </div>
         </div>
     </footer>
         
         <script src="https://unpkg.com/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
-        <script src="https://js.stripe.com/v3/"></script>
-        <script src="assets/js/supabaseClient.js"></script>
-        <script src="assets/js/main.js"></script>
-        <script src="assets/js/inscription.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="assets/js/supabaseClient.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/april-notice.js"></script>
+    <script src="assets/js/stripe-installments-payment.js"></script>
+    <script src="assets/js/inscription.js"></script>
+    <script src="assets/js/support-ticket.js?v=6"></script>
     </body>
 </html>

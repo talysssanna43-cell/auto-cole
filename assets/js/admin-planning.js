@@ -172,21 +172,23 @@ async function fetchBookedSlots(instructor, weekStart, weekEnd) {
         }
     }
 
-    // Récupérer les emails des élèves pour obtenir leur pack
+    // Récupérer les emails des élèves pour obtenir leur pack et transmission_type
     const emails = (data || []).map(row => {
         const res = Array.isArray(row.reservations) ? row.reservations[0] : row.reservations;
         return res?.email;
     }).filter(Boolean);
 
     let packMap = new Map();
+    let transmissionMap = new Map();
     if (emails.length > 0) {
         const { data: inscriptions } = await window.supabaseClient
             .from('inscription_notifications')
-            .select('user_email, pack')
+            .select('user_email, pack, transmission_type')
             .in('user_email', [...new Set(emails)]);
         
         (inscriptions || []).forEach(ins => {
             packMap.set(ins.user_email, ins.pack);
+            transmissionMap.set(ins.user_email, ins.transmission_type);
         });
     }
 
@@ -204,6 +206,7 @@ async function fetchBookedSlots(instructor, weekStart, weekEnd) {
         const res = Array.isArray(row.reservations) ? row.reservations[0] : row.reservations;
         const email = res?.email || '';
         const pack = packMap.get(email) || '';
+        const transmissionType = transmissionMap.get(email) || null;
         
         // Log détaillé pour déboguer les réservations sans nom
         if (!res?.first_name || !res?.last_name) {
@@ -224,7 +227,8 @@ async function fetchBookedSlots(instructor, weekStart, weekEnd) {
                 last_name: res?.last_name || '(sans détails)',
                 phone: res?.phone || '',
                 email: email,
-                pack: pack
+                pack: pack,
+                transmission_type: transmissionType
             }
         });
     });
@@ -309,12 +313,18 @@ function renderPlanning(grid, instructor, weekStart, bookedSet) {
 
             const icon = isDone ? 'fa-check' : isBooked ? 'fa-user' : 'fa-minus';
             
-            // Déterminer le type de véhicule
+            // Déterminer le type de véhicule depuis transmission_type
             const pack = isBooked ? (booking?.student?.pack || '') : '';
+            const transmissionType = isBooked ? (booking?.student?.transmission_type || null) : null;
             let vehicleType = '';
-            if (pack === 'am') vehicleType = 'VSP';
-            else if (pack === 'boite-auto') vehicleType = 'BA';
-            else if (['aac', 'supervisee'].includes(pack)) vehicleType = 'BM';
+            
+            if (pack === 'am') {
+                vehicleType = 'VSP';
+            } else if (transmissionType === 'auto') {
+                vehicleType = 'BA';
+            } else if (transmissionType === 'manual') {
+                vehicleType = 'BM';
+            }
             
             const studentData = isBooked ? JSON.stringify({
                 prenom: booking.student?.first_name,

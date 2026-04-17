@@ -80,6 +80,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             updateSummary();
             toggleDocumentsSection();
             toggleHeuresConduiteConfig();
+            toggleTransmissionTypeSection();
             updateHeuresRestantes();
         });
     });
@@ -1030,11 +1031,27 @@ async function processInscription(data) {
                         notifData.hours_purchased = 0;
                         notifData.amount_paid = packPrices[selectedPackValue] || 0;
                         notifData.transmission_type = null;
-                    } else {
-                        // Pour tous les autres packs (avec conduite)
+                    } else if (selectedPackValue === 'boite-auto') {
+                        // Pack boîte auto → toujours BA
                         notifData.hours_purchased = heuresIncluses;
                         notifData.amount_paid = packPrices[selectedPackValue] || 0;
-                        notifData.transmission_type = 'manual'; // Par défaut boîte manuelle
+                        notifData.transmission_type = 'auto';
+                    } else if (selectedPackValue === '20h') {
+                        // Pack 20h de conduite → toujours BM
+                        notifData.hours_purchased = heuresIncluses;
+                        notifData.amount_paid = packPrices[selectedPackValue] || 0;
+                        notifData.transmission_type = 'manual';
+                    } else if (['aac', 'supervisee', 'accelere', 'second-chance'].includes(selectedPackValue)) {
+                        // Packs avec choix BM/BA
+                        const packTransmission = document.querySelector('input[name="packTransmissionType"]:checked');
+                        notifData.hours_purchased = heuresIncluses;
+                        notifData.amount_paid = packPrices[selectedPackValue] || 0;
+                        notifData.transmission_type = packTransmission ? packTransmission.value : 'manual';
+                    } else {
+                        // Autres packs (zen, am, etc.) → BM par défaut
+                        notifData.hours_purchased = heuresIncluses;
+                        notifData.amount_paid = packPrices[selectedPackValue] || 0;
+                        notifData.transmission_type = 'manual';
                     }
                 }
             } else {
@@ -1442,6 +1459,21 @@ function toggleHeuresConduiteConfig() {
         heuresConfig.style.display = 'block';
     } else {
         heuresConfig.style.display = 'none';
+    }
+}
+
+// Toggle transmission type section for packs that need it
+function toggleTransmissionTypeSection() {
+    const selectedPack = document.querySelector('input[name="pack"]:checked');
+    const transmissionSection = document.getElementById('transmissionTypeSection');
+    
+    // Packs qui nécessitent un choix BM/BA
+    const packsNeedingChoice = ['aac', 'supervisee', 'accelere', 'second-chance'];
+    
+    if (selectedPack && packsNeedingChoice.includes(selectedPack.value)) {
+        transmissionSection.style.display = 'block';
+    } else {
+        transmissionSection.style.display = 'none';
     }
 }
 
