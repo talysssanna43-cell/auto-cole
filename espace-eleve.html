@@ -394,6 +394,51 @@
             font-size: 0.9rem;
             color: var(--text-light);
         }
+        
+        /* Navigation de semaine */
+        .week-navigation {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .week-nav-btn {
+            padding: 0.5rem 1rem;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        
+        .week-nav-btn:hover {
+            background: #e9ecef;
+            border-color: #adb5bd;
+        }
+        
+        .week-nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .week-label {
+            font-weight: 600;
+            color: #495057;
+            min-width: 150px;
+            text-align: center;
+        }
+        
         .slot-card {
             border: 1px solid rgba(233,30,99,0.25);
             border-radius: 18px;
@@ -861,17 +906,17 @@
                     <p class="slot-note">Sélectionne un moniteur pour voir ses disponibilités et verrouiller ton créneau.</p>
                     
                     <!-- Navigation de semaine -->
-                    <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin: 1.5rem 0; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
-                        <button type="button" id="prevWeekBtn" onclick="goToPreviousWeek()" style="padding: 0.5rem 1rem; background: white; border: 1px solid #dee2e6; border-radius: 6px; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <div class="week-navigation">
+                        <button type="button" id="prevWeekBtn" onclick="goToPreviousWeek()" class="week-nav-btn">
                             <i class="fas fa-chevron-left"></i>
-                            Semaine précédente
+                            <span class="btn-text">Semaine précédente</span>
                         </button>
-                        <div style="font-weight: 600; color: #495057; min-width: 150px; text-align: center;">
+                        <div class="week-label">
                             <i class="fas fa-calendar-week"></i>
                             <span id="weekLabel">Chargement...</span>
                         </div>
-                        <button type="button" id="nextWeekBtn" onclick="goToNextWeek()" style="padding: 0.5rem 1rem; background: white; border: 1px solid #dee2e6; border-radius: 6px; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
-                            Semaine suivante
+                        <button type="button" id="nextWeekBtn" onclick="goToNextWeek()" class="week-nav-btn">
+                            <span class="btn-text">Semaine suivante</span>
                             <i class="fas fa-chevron-right"></i>
                         </button>
                     </div>
@@ -2108,6 +2153,33 @@
             .tab-btn {
                 font-size: 0.85rem;
                 padding: 0.6rem 0.8rem;
+            }
+            
+            /* Navigation de semaine responsive */
+            .week-navigation {
+                flex-direction: column;
+                gap: 0.75rem;
+                padding: 0.75rem;
+            }
+            
+            .week-nav-btn {
+                width: 100%;
+                justify-content: center;
+                padding: 0.75rem 1rem;
+                font-size: 0.85rem;
+            }
+            
+            .week-nav-btn .btn-text {
+                display: inline;
+            }
+            
+            .week-label {
+                order: -1;
+                width: 100%;
+                font-size: 0.9rem;
+                padding: 0.5rem;
+                background: white;
+                border-radius: 6px;
             }
         }
     </style>
