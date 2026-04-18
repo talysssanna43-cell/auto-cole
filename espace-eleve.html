@@ -9,9 +9,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .student-dashboard {
-            padding: 4rem 0;
+            padding: 4rem 1rem;
             background: linear-gradient(180deg, rgba(255,105,180,0.08), rgba(233,30,99,0.03));
             min-height: 100vh;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
         }
         .dashboard-header {
             text-align: center;
@@ -103,10 +111,13 @@
         .slot-grid {
             margin-top: 1.5rem;
             overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            width: 100%;
         }
         
         .weekly-planning-grid {
             width: 100%;
+            min-width: 100%;
             border-collapse: collapse;
             background: white;
             border-radius: 12px;
@@ -1995,11 +2006,108 @@
             
             .referral-modal-content {
                 margin: 1rem;
+                padding: 1.5rem;
             }
             
             .referral-btn {
                 font-size: 0.85rem;
                 padding: 0.75rem 1rem;
+            }
+            
+            /* Amélioration responsive général */
+            .student-dashboard {
+                padding: 2rem 0;
+            }
+            
+            .dashboard-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .stat-card {
+                padding: 1.25rem;
+            }
+            
+            .stat-value {
+                font-size: 2rem;
+            }
+            
+            .sessions-panel,
+            .booking-panel {
+                padding: 1.25rem;
+                margin-left: 0.5rem;
+                margin-right: 0.5rem;
+            }
+            
+            .sessions-table {
+                font-size: 0.85rem;
+            }
+            
+            .sessions-table th,
+            .sessions-table td {
+                padding: 0.6rem 0.3rem;
+            }
+            
+            /* Grille planning responsive */
+            .weekly-planning-grid {
+                display: block;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .weekly-planning-grid table {
+                min-width: 600px;
+            }
+            
+            /* Coach cards responsive */
+            .instructor-toggle {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+            
+            .coach-card {
+                padding: 0.875rem 1rem;
+            }
+            
+            .coach-avatar {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .coach-name {
+                font-size: 1rem;
+            }
+            
+            .coach-role {
+                font-size: 0.8rem;
+            }
+            
+            /* Formulaire de réservation */
+            .slot-picker {
+                padding: 1rem;
+            }
+            
+            /* Boutons et actions */
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+            
+            /* Modal responsive */
+            .modal-content {
+                margin: 1rem;
+                max-width: calc(100% - 2rem) !important;
+            }
+            
+            /* Tabs responsive */
+            .tab-btn {
+                font-size: 0.85rem;
+                padding: 0.6rem 0.8rem;
             }
         }
     </style>
