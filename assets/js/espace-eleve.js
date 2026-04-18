@@ -164,15 +164,35 @@ function generateUpcomingSlots(instructorKey = dashboardState.activeInstructorKe
     days.forEach((day) => {
         const dateStr = toInputDate(day);
         
-        // Pas de créneaux le dimanche (0) et lundi (1)
+        // Afficher les dimanches et lundis mais les marquer comme fermés
         const jsDay = day.getDay();
-        if (jsDay === 0 || jsDay === 1) return;
+        const isJourFerme = (jsDay === 0 || jsDay === 1);
         
         // Bloquer les créneaux de Mylène à partir du 1er mai 2026
         if (instructor === 'Mylène') {
             const slotDate = new Date(dateStr);
             const mayFirst2026 = new Date('2026-05-01T00:00:00');
             if (slotDate >= mayFirst2026) return;
+        }
+        
+        // Pour les jours fermés (dimanche et lundi), créer des créneaux marqués comme fermés
+        if (isJourFerme) {
+            times.forEach((start) => {
+                const end = getEndForStart(instructor, start);
+                if (!end) return;
+                
+                slots.push({
+                    id: buildSlotId(dateStr, start),
+                    date: dateStr,
+                    start: start,
+                    end: end,
+                    instructor: instructor,
+                    dayLabel: day.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'long' }),
+                    label: `${start.replace(':', 'h')} - ${end.replace(':', 'h')}`,
+                    isJourFerme: true
+                });
+            });
+            return;
         }
         
         // Pour les jours fériés, créer des créneaux spéciaux marqués comme fériés
@@ -244,11 +264,10 @@ async function refreshSlotsForCurrentWeek() {
     // Fusionner les slots générés avec les slots réservés
     const allSlots = [...generatedSlots];
     bookedData.slots.forEach(bookedSlot => {
-        // Ne pas ajouter les slots dimanche et lundi à la grille élève
-        // (seul l'admin peut placer des séances le dimanche et lundi)
+        // Afficher tous les slots, y compris dimanche et lundi
+        // (mais ils seront marqués comme non réservables)
         const slotDate = new Date(bookedSlot.date);
         const jsDay = slotDate.getDay();
-        if (jsDay === 0 || jsDay === 1) return;
         
         // Bloquer les créneaux de Mylène à partir du 1er mai 2026
         if (bookedSlot.instructor === 'Mylène') {
@@ -348,13 +367,23 @@ function renderSlotGrid() {
     // En-tête avec les jours
     html += '<thead><tr><th class="time-header">Horaire</th>';
     days.forEach(day => {
-        // Extraire la date du slot pour vérifier si c'est un jour férié
+        // Extraire la date du slot pour vérifier si c'est un jour férié ou fermé
         const daySlots = slotsByDay[day];
         const firstSlot = daySlots ? Object.values(daySlots)[0] : null;
         const isFerie = firstSlot && isJourFerie(firstSlot.date);
+        const isJourFerme = firstSlot && firstSlot.isJourFerme;
         
-        const ferieClass = isFerie ? ' jour-ferie' : '';
-        html += `<th class="day-header${ferieClass}">${day}${isFerie ? ' 🎉' : ''}</th>`;
+        let headerClass = '';
+        let emoji = '';
+        if (isJourFerme) {
+            headerClass = ' jour-ferme';
+            emoji = ' 🔒';
+        } else if (isFerie) {
+            headerClass = ' jour-ferie';
+            emoji = ' 🎉';
+        }
+        
+        html += `<th class="day-header${headerClass}">${day}${emoji}</th>`;
     });
     html += '</tr></thead>';
     
@@ -401,9 +430,16 @@ function renderSlotGrid() {
                 const endTime = getEndForStart(instructor, slot.start);
                 const label = endTime ? `${slot.start.replace(':', 'h')} - ${endTime.replace(':', 'h')}` : slot.start;
                 
-                // Affichage simple : FÉRIÉ, RÉSERVÉ ou disponible
+                // Affichage simple : FERMÉ, FÉRIÉ, RÉSERVÉ ou disponible
                 let slotContent = '';
-                if (slot.isFerie) {
+                if (slot.isJourFerme) {
+                    // Jour fermé (dimanche/lundi) : afficher en rouge avec "FERMÉ"
+                    classes = ['planning-slot', 'jour-ferme'];
+                    slotContent = `
+                        <span class="slot-label">${label}</span>
+                        <span class="slot-status">FERMÉ 🔒</span>
+                    `;
+                } else if (slot.isFerie) {
                     // Jour férié : afficher en bleu avec "Férié"
                     classes = ['planning-slot', 'is-ferie'];
                     slotContent = `
@@ -430,7 +466,7 @@ function renderSlotGrid() {
                             data-slot-date="${slot.date}"
                             data-slot-start="${slot.start}"
                             data-slot-instructor="${slot.instructor}"
-                            ${isDisabled ? 'disabled' : ''}>
+                            ${(isDisabled || slot.isJourFerme) ? 'disabled' : ''}>
                             ${slotContent}
                         </button>
                     </td>
