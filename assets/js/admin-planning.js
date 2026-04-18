@@ -2182,14 +2182,16 @@ window.bookStudentOnSlot = async function(student, slotInfo) {
         
         const hoursReserved = (reservations || []).length * 2;
         const hoursRemaining = hoursGoal - hoursCompleted - hoursReserved;
+        const hoursRemainingAfter = Math.max(0, hoursRemaining - 2);
         
         if (hoursRemaining < 2) {
             const shouldContinue = confirm(
-                `Attention : ${student.prenom} ${student.nom} n'a plus d'heures disponibles dans son forfait.\n\n` +
-                `Heures totales : ${hoursGoal}h\n` +
-                `Heures effectuées : ${hoursCompleted}h\n` +
-                `Heures réservées : ${hoursReserved}h\n` +
-                `Heures restantes : ${hoursRemaining}h\n\n` +
+                `⚠️ ATTENTION : ${student.prenom} ${student.nom} n'a plus d'heures disponibles dans son forfait.\n\n` +
+                `📊 Heures totales : ${hoursGoal}h\n` +
+                `✅ Heures effectuées : ${hoursCompleted}h\n` +
+                `📅 Heures réservées : ${hoursReserved}h\n` +
+                `⏰ Heures restantes : ${Math.max(0, hoursRemaining)}h\n\n` +
+                `❗ Après cette réservation : ${hoursRemainingAfter}h (forfait épuisé)\n\n` +
                 `Voulez-vous quand même placer cet élève sur ce créneau ?`
             );
             
@@ -2206,7 +2208,7 @@ window.bookStudentOnSlot = async function(student, slotInfo) {
             `Moniteur : ${slotInfo.instructor}\n` +
             `Date : ${slotDate.toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })}\n` +
             `Horaire : ${slotInfo.start} - ${slotInfo.end}\n\n` +
-            `Heures restantes après cette réservation : ${hoursRemaining - 2}h`;
+            `⏰ Heures restantes après cette réservation : ${hoursRemainingAfter}h / ${hoursGoal}h`;
         
         if (!confirm(confirmMsg)) {
             return;
@@ -2257,9 +2259,11 @@ window.bookStudentOnSlot = async function(student, slotInfo) {
         console.log('✅ Réservation créée avec succès! Slot ID:', bookingResult.slot_id, 'Reservation ID:', bookingResult.reservation_id);
         
         // Afficher un message de succès
+        const finalHoursRemaining = Math.max(0, hoursRemaining - 2);
         alert(`✅ Créneau réservé avec succès !\n\n` +
             `${student.prenom} ${student.nom} a été placé(e) sur le planning de ${slotInfo.instructor}.\n\n` +
-            `Heures restantes : ${hoursRemaining - 2}h / ${hoursGoal}h`);
+            `⏰ Heures restantes : ${finalHoursRemaining}h / ${hoursGoal}h` +
+            (finalHoursRemaining === 0 ? '\n\n⚠️ Forfait épuisé - L\'élève devra acheter des heures supplémentaires.' : ''));
         
         // Mettre à jour l'état pour afficher la semaine et le moniteur du créneau ajouté
         state.instructor = normalizedInstructor;
