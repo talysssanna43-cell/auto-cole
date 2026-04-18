@@ -1480,10 +1480,9 @@ window.handleInscriptionDecision = async function(notificationId, decision) {
 
 async function sendInscriptionEmail(userEmail, userName, decision, rejectionMessage, userPassword = null) {
     try {
-        // Détecter l'URL du site selon l'environnement
-        const siteUrl = window.location.hostname === 'localhost' 
-            ? 'http://localhost:8888'  // Netlify Dev
-            : 'https://autoecolebreteuil.com';
+        // Toujours utiliser l'URL de production dans les emails
+        // (même si l'admin valide depuis localhost)
+        const siteUrl = 'https://autoecolebreteuil.com';
         
         const isApproved = decision === 'approved';
         const subject = isApproved 
