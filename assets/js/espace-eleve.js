@@ -164,9 +164,9 @@ function generateUpcomingSlots(instructorKey = dashboardState.activeInstructorKe
     days.forEach((day) => {
         const dateStr = toInputDate(day);
         
-        // Pas de créneaux le dimanche (0) uniquement
+        // Pas de créneaux le dimanche (0) et lundi (1)
         const jsDay = day.getDay();
-        if (jsDay === 0) return;
+        if (jsDay === 0 || jsDay === 1) return;
         
         // Bloquer les créneaux de Mylène à partir du 1er mai 2026
         if (instructor === 'Mylène') {
@@ -244,11 +244,11 @@ async function refreshSlotsForCurrentWeek() {
     // Fusionner les slots générés avec les slots réservés
     const allSlots = [...generatedSlots];
     bookedData.slots.forEach(bookedSlot => {
-        // Ne pas ajouter les slots dimanche à la grille élève
-        // (seul l'admin peut placer des séances le dimanche)
+        // Ne pas ajouter les slots dimanche et lundi à la grille élève
+        // (seul l'admin peut placer des séances le dimanche et lundi)
         const slotDate = new Date(bookedSlot.date);
         const jsDay = slotDate.getDay();
-        if (jsDay === 0) return;
+        if (jsDay === 0 || jsDay === 1) return;
         
         // Bloquer les créneaux de Mylène à partir du 1er mai 2026
         if (bookedSlot.instructor === 'Mylène') {
@@ -1351,11 +1351,11 @@ function handleBookingSubmission(event) {
             const startAt = new Date(`${dateValue}T${startValue}:00`);
             const endAt = new Date(`${dateValue}T${endValue}:00`);
             
-            // Vérifier que ce n'est pas un dimanche (réservé à l'admin)
+            // Vérifier que ce n'est pas un dimanche ou lundi (réservé à l'admin)
             const bookingDay = startAt.getDay();
-            if (bookingDay === 0) {
+            if (bookingDay === 0 || bookingDay === 1) {
                 if (feedback) {
-                    feedback.textContent = '⚠️ Les réservations ne sont pas possibles le dimanche.';
+                    feedback.textContent = '⚠️ Les réservations ne sont pas possibles le dimanche et lundi.';
                     feedback.className = 'form-feedback error';
                 }
                 if (submitBtn) {
@@ -2010,21 +2010,22 @@ function initBookingForm() {
     if (!form) return;
     form.addEventListener('submit', handleBookingSubmission);
 
-    // Bloquer la sélection de dimanche sur le champ date
+    // Bloquer la sélection de dimanche et lundi sur le champ date
     const dateInput = document.getElementById('bookingDate');
     if (dateInput) {
         dateInput.addEventListener('change', function() {
-            const feedback = document.getElementById('bookingFeedback');
-            if (this.value) {
-                const selectedDate = new Date(this.value + 'T00:00:00');
+            const selectedDate = new Date(this.value + 'T00:00:00');
+            if (!isNaN(selectedDate)) {
                 const day = selectedDate.getDay();
-                if (day === 0) {
+                
+                if (day === 0 || day === 1) {
                     this.value = '';
+                    const feedback = document.getElementById('bookingFeedback');
                     if (feedback) {
-                        feedback.textContent = '⚠️ Les réservations ne sont pas possibles le dimanche.';
+                        feedback.textContent = '⚠️ Les réservations ne sont pas possibles le dimanche et lundi.';
                         feedback.className = 'form-feedback error';
                     }
-                } else if (feedback && feedback.textContent.includes('dimanche')) {
+                } else if (feedback && (feedback.textContent.includes('dimanche') || feedback.textContent.includes('lundi'))) {
                     feedback.textContent = '';
                     feedback.className = 'form-feedback';
                 }

@@ -227,6 +227,30 @@
             font-weight: 700;
         }
         
+        /* Dimanche et Lundi - Jours fermés (rouge) */
+        .day-header.jour-ferme {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            color: #c62828;
+            font-weight: 700;
+        }
+        
+        .planning-slot.jour-ferme {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            border-color: #ef5350;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        .planning-slot.jour-ferme .slot-label {
+            color: #c62828;
+            font-weight: 600;
+        }
+        
+        .planning-slot.jour-ferme .slot-status {
+            color: #d32f2f;
+            font-weight: 700;
+        }
+        
         .planning-slot .slot-student-name {
             font-size: 0.85rem;
             font-weight: 700;
