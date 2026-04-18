@@ -316,11 +316,14 @@ function renderPlanning(grid, instructor, weekStart, bookedSet) {
             // Déterminer le type de véhicule depuis transmission_type
             const transmissionType = isBooked ? (booking?.student?.transmission_type || null) : null;
             let vehicleType = '';
+            let transmissionClass = '';
             
             if (transmissionType === 'auto') {
                 vehicleType = 'BA';
+                transmissionClass = 'transmission-auto';
             } else if (transmissionType === 'manual') {
                 vehicleType = 'BM';
+                transmissionClass = 'transmission-manual';
             }
             
             const studentData = isBooked ? JSON.stringify({
@@ -346,12 +349,12 @@ function renderPlanning(grid, instructor, weekStart, bookedSet) {
             
             return `
                 <div class="cal-cell${todayCol}">
-                    <div class="ev ${statusClass}" ${isBooked ? `onclick="showStudent(${studentData})" style="cursor:pointer;"` : !isPast ? `onclick="openStudentSearchModal(${slotData})" style="cursor:pointer;"` : ''}>
+                    <div class="ev ${statusClass} ${transmissionClass}" ${isBooked ? `onclick="showStudent(${studentData})" style="cursor:pointer;"` : !isPast ? `onclick="openStudentSearchModal(${slotData})" style="cursor:pointer;"` : ''}>
                         ${!isBooked && !isPast ? `<button class="add-student-btn" onclick="event.stopPropagation(); openStudentSearchModal(${slotData});" title="Placer un élève"><i class="fas fa-plus"></i></button>` : ''}
                         <span class="ev-icon"><i class="fas ${icon}"></i></span>
                         <div class="ev-status">${statusLabel}</div>
                         <div class="ev-time">${start} – ${end}</div>
-                        ${isBooked ? `<div class="ev-name">${studentName || 'Élève'}${vehicleType ? ` <span style="font-weight:600;color:#0066cc;">[${vehicleType}]</span>` : ''}</div>` : ''}
+                        ${isBooked ? `<div class="ev-name">${studentName || 'Élève'}${vehicleType ? ` <span class="vehicle-badge">[${vehicleType}]</span>` : ''}</div>` : ''}
                         ${isBooked && studentPhone ? `<div class="ev-phone"><i class="fas fa-phone" style="font-size:0.55rem;margin-right:3px;"></i>${studentPhone}</div>` : ''}
                     </div>
                 </div>

@@ -292,6 +292,21 @@
         .ev.available { background: rgba(0,0,0,0.03); }
         .ev.available::before { background: #999; }
 
+        /* Couleurs différentes pour BA et BM */
+        .ev.booked.transmission-auto { background: rgba(0, 113, 227, 0.08); }
+        .ev.booked.transmission-auto::before { background: #0071e3; }
+        .ev.booked.transmission-auto .ev-status { color: #0071e3; }
+        
+        .ev.booked.transmission-manual { background: rgba(255, 149, 0, 0.08); }
+        .ev.booked.transmission-manual::before { background: #ff9500; }
+        .ev.booked.transmission-manual .ev-status { color: #ff9500; }
+
+        .ev.done.transmission-auto { background: rgba(0, 113, 227, 0.06); }
+        .ev.done.transmission-auto::before { background: #0071e3; }
+        
+        .ev.done.transmission-manual { background: rgba(52, 199, 89, 0.06); }
+        .ev.done.transmission-manual::before { background: var(--green); }
+
         .ev .ev-status {
             font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
             letter-spacing: 0.04em;
@@ -299,6 +314,24 @@
         .ev.booked .ev-status { color: var(--orange); }
         .ev.done .ev-status { color: var(--green); }
         .ev.available .ev-status { color: #666; font-weight: 600; }
+        
+        /* Badge pour BA/BM */
+        .vehicle-badge {
+            font-weight: 700;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 4px;
+            display: inline-block;
+        }
+        .ev.transmission-auto .vehicle-badge {
+            background: rgba(0, 113, 227, 0.15);
+            color: #0071e3;
+        }
+        .ev.transmission-manual .vehicle-badge {
+            background: rgba(255, 149, 0, 0.15);
+            color: #ff9500;
+        }
 
         .ev .ev-time { font-size: 0.68rem; color: var(--text2); font-weight: 500; }
         .ev.available .ev-time { color: #888; }

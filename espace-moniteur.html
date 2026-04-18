@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace Moniteur - Auto-Ecole Breteuil</title>
+    <meta name="robots" content="noindex,nofollow">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #f5f5f7;
+            --card: #ffffff;
+            --border: rgba(0,0,0,0.06);
+            --text: #1d1d1f;
+            --text2: #86868b;
+            --blue: #0071e3;
+            --green: #34c759;
+            --orange: #ff9500;
+            --red: #ff3b30;
+            --purple: #af52de;
+            --radius: 14px;
+            --shadow: 0 4px 24px rgba(0,0,0,0.06);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Topbar ── */
+        .topbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            height: 52px;
+            background: rgba(255,255,255,0.72);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; padding: 0 24px;
+        }
+        .topbar-inner {
+            max-width: 1440px; width: 100%; margin: 0 auto;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .topbar-brand { font-size: 1.05rem; font-weight: 600; color: var(--text); text-decoration: none; }
+        .topbar-tabs {
+            display: flex; gap: 4px; background: rgba(0,0,0,0.04); border-radius: 8px; padding: 3px;
+        }
+        .topbar-tabs button {
+            padding: 6px 16px; border-radius: 6px; font-size: 0.82rem; font-weight: 500;
+            color: var(--text2); background: none; border: none; cursor: pointer; transition: all 0.15s;
+        }
+        .topbar-tabs button:hover { color: var(--text); }
+        .topbar-tabs button.active {
+            background: var(--card); color: var(--text); font-weight: 600;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        .topbar-right { display: flex; align-items: center; gap: 14px; }
+        .topbar-right a { font-size: 0.82rem; color: var(--text2); text-decoration: none; }
+        .topbar-right a:hover { color: var(--text); }
+        .btn-logout {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 5px 12px; border-radius: 980px; border: none; background: none;
+            font-size: 0.82rem; font-weight: 500; color: var(--text2); cursor: pointer;
+        }
+        .btn-logout:hover { color: var(--red); background: rgba(255,59,48,0.06); }
+
+        /* ── Layout ── */
+        .main { padding: 72px 24px 48px; max-width: 1440px; margin: 0 auto; }
+
+        /* ── Header ── */
+        .header-row {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 24px; flex-wrap: wrap; gap: 16px;
+        }
+        .header-row h1 {
+            font-size: 2rem; font-weight: 700; letter-spacing: -0.025em;
+        }
+        .header-row h1 span { color: var(--text2); font-weight: 400; }
+        .user-badge {
+            display: flex; align-items: center; gap: 10px;
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 12px; padding: 8px 14px; box-shadow: var(--shadow);
+        }
+        .user-badge .avatar {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--blue), var(--purple));
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-weight: 700; font-size: 0.9rem;
+        }
+        .user-badge .user-info { display: flex; flex-direction: column; }
+        .user-badge .user-name { font-weight: 600; font-size: 0.9rem; }
+        .user-badge .user-role { font-size: 0.72rem; color: var(--text2); }
+
+        /* ── Quick Stats ── */
+        .quick-stats { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+        .stat-card {
+            flex: 1; min-width: 180px;
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 14px; padding: 18px 20px; box-shadow: var(--shadow);
+            position: relative; overflow: hidden;
+        }
+        .stat-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+        }
+        .stat-card:nth-child(1)::before { background: var(--blue); }
+        .stat-card:nth-child(2)::before { background: var(--orange); }
+        .stat-card:nth-child(3)::before { background: var(--green); }
+        .stat-card:nth-child(4)::before { background: var(--red); }
+        .stat-card .stat-icon {
+            width: 32px; height: 32px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; margin-bottom: 12px;
+        }
+        .stat-card:nth-child(1) .stat-icon { background: rgba(0,113,227,0.08); color: var(--blue); }
+        .stat-card:nth-child(2) .stat-icon { background: rgba(255,149,0,0.08); color: var(--orange); }
+        .stat-card:nth-child(3) .stat-icon { background: rgba(52,199,89,0.08); color: var(--green); }
+        .stat-card:nth-child(4) .stat-icon { background: rgba(255,59,48,0.08); color: var(--red); }
+        .stat-card .stat-value { font-size: 1.8rem; font-weight: 700; line-height: 1; }
+        .stat-card .stat-label { font-size: 0.72rem; color: var(--text2); margin-top: 4px; }
+
+        /* ── Tabs Content ── */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* ── Section Card ── */
+        .section-card {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: var(--radius); box-shadow: var(--shadow);
+            margin-bottom: 20px; overflow: hidden;
+        }
+        .section-header {
+            padding: 16px 20px; border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .section-header h2 { font-size: 1rem; font-weight: 600; }
+        .section-body { padding: 16px 20px; }
+
+        /* ── Week Navigation ── */
+        .week-nav { display: flex; align-items: center; gap: 4px; }
+        .week-nav button {
+            width: 30px; height: 30px; border-radius: 50%; border: none;
+            background: none; cursor: pointer; display: flex; align-items: center;
+            justify-content: center; color: var(--text); font-size: 0.75rem;
+        }
+        .week-nav button:hover { background: rgba(0,0,0,0.05); }
+        .week-label { font-size: 0.85rem; font-weight: 600; padding: 0 8px; min-width: 160px; text-align: center; }
+        .btn-today {
+            padding: 5px 12px; border-radius: 980px; border: 1px solid var(--border);
+            background: var(--card); font-size: 0.75rem; font-weight: 600;
+            color: var(--blue); cursor: pointer; margin-right: 8px;
+        }
+        .btn-today:hover { background: rgba(0,113,227,0.06); }
+
+        /* ── Calendar Grid ── */
+        .cal-grid {
+            display: grid;
+            grid-template-columns: 60px repeat(7, minmax(0, 1fr));
+        }
+        .cal-head {
+            padding: 12px 4px 8px; text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+        .cal-head .day-name { font-size: 0.65rem; font-weight: 600; color: var(--text2); text-transform: uppercase; }
+        .cal-head .day-num { font-size: 1.2rem; font-weight: 700; margin-top: 2px; }
+        .cal-head.today .day-num {
+            background: var(--blue); color: #fff;
+            width: 28px; height: 28px; border-radius: 50%;
+            display: inline-flex; align-items: center; justify-content: center;
+        }
+        .cal-time {
+            padding: 10px 6px; font-size: 0.68rem; font-weight: 600; color: var(--text2);
+            border-bottom: 1px solid var(--border); border-right: 1px solid var(--border);
+            display: flex; align-items: flex-start; justify-content: center;
+        }
+        .cal-cell {
+            padding: 4px; min-height: 75px;
+            border-bottom: 1px solid var(--border); border-right: 1px solid var(--border);
+        }
+        .cal-cell.today-col { background: rgba(0,113,227,0.015); }
+
+        /* ── Event Cards ── */
+        .ev {
+            border-radius: 6px; padding: 6px 8px;
+            display: flex; flex-direction: column; gap: 1px;
+            height: 100%; position: relative; cursor: pointer;
+            transition: transform 0.12s, box-shadow 0.12s;
+        }
+        .ev::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+            width: 3px; border-radius: 3px 0 0 3px;
+        }
+        .ev:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .ev.booked { background: rgba(255,149,0,0.06); }
+        .ev.booked::before { background: var(--orange); }
+        .ev.done { background: rgba(52,199,89,0.06); }
+        .ev.done::before { background: var(--green); }
+        .ev.cancelled { background: rgba(255,59,48,0.06); }
+        .ev.cancelled::before { background: var(--red); }
+        .ev.available { background: rgba(0,0,0,0.015); }
+        .ev.available::before { background: #d1d1d6; }
+        
+        /* Couleurs différentes pour BA et BM */
+        .ev.booked.transmission-auto { background: rgba(0, 113, 227, 0.08); }
+        .ev.booked.transmission-auto::before { background: #0071e3; }
+        .ev.booked.transmission-auto .ev-status { color: #0071e3; }
+        
+        .ev.booked.transmission-manual { background: rgba(255, 149, 0, 0.08); }
+        .ev.booked.transmission-manual::before { background: #ff9500; }
+        .ev.booked.transmission-manual .ev-status { color: #ff9500; }
+
+        .ev.done.transmission-auto { background: rgba(0, 113, 227, 0.06); }
+        .ev.done.transmission-auto::before { background: #0071e3; }
+        
+        .ev.done.transmission-manual { background: rgba(52, 199, 89, 0.06); }
+        .ev.done.transmission-manual::before { background: var(--green); }
+        
+        .ev .ev-status { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; }
+        .ev.booked .ev-status { color: var(--orange); }
+        .ev.done .ev-status { color: var(--green); }
+        .ev.cancelled .ev-status { color: var(--red); }
+        .ev.available .ev-status { color: #c7c7cc; }
+        .ev .ev-time { font-size: 0.62rem; color: var(--text2); }
+        .ev .ev-name { font-size: 0.72rem; font-weight: 600; color: var(--text); margin-top: 2px; }
+        
+        /* Badge pour BA/BM */
+        .vehicle-badge {
+            font-weight: 700;
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 4px;
+            display: inline-block;
+        }
+        .ev.transmission-auto .vehicle-badge {
+            background: rgba(0, 113, 227, 0.15);
+            color: #0071e3;
+        }
+        .ev.transmission-manual .vehicle-badge {
+            background: rgba(255, 149, 0, 0.15);
+            color: #ff9500;
+        }
+
+        /* ── List Items ── */
+        .list-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 0; border-bottom: 1px solid var(--border);
+        }
+        .list-item:last-child { border-bottom: none; }
+        .list-item .item-icon {
+            width: 36px; height: 36px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem;
+        }
+        .list-item .item-icon.orange { background: rgba(255,149,0,0.1); color: var(--orange); }
+        .list-item .item-icon.red { background: rgba(255,59,48,0.1); color: var(--red); }
+        .list-item .item-icon.blue { background: rgba(0,113,227,0.1); color: var(--blue); }
+        .list-item .item-icon.purple { background: rgba(175,82,222,0.1); color: var(--purple); }
+        .list-item .item-content { flex: 1; }
+        .list-item .item-title { font-weight: 600; font-size: 0.88rem; }
+        .list-item .item-subtitle { font-size: 0.75rem; color: var(--text2); margin-top: 2px; }
+        .list-item .item-time { font-size: 0.72rem; color: var(--text2); text-align: right; }
+        .list-item .item-badge {
+            padding: 3px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 600;
+        }
+        .list-item .item-badge.new { background: rgba(255,59,48,0.1); color: var(--red); }
+        .list-item .item-badge.read { background: rgba(0,0,0,0.04); color: var(--text2); }
+
+        /* ── Modal ── */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.4); backdrop-filter: blur(4px);
+            display: none; align-items: center; justify-content: center; z-index: 200;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: var(--card); border-radius: 16px; width: 90%; max-width: 420px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden;
+        }
+        .modal-header {
+            padding: 16px 20px; border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .modal-header h3 { font-size: 1rem; font-weight: 600; }
+        .modal-close {
+            width: 28px; height: 28px; border-radius: 50%; border: none;
+            background: rgba(0,0,0,0.05); cursor: pointer; font-size: 0.8rem;
+        }
+        .modal-body { padding: 20px; }
+        .modal-body .info-row {
+            display: flex; justify-content: space-between; padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .modal-body .info-row:last-child { border-bottom: none; }
+        .modal-body .info-label { font-size: 0.82rem; color: var(--text2); }
+        .modal-body .info-value { font-size: 0.88rem; font-weight: 600; }
+        .modal-body .info-value a { color: var(--blue); text-decoration: none; }
+
+        /* ── Empty State ── */
+        .empty-state {
+            text-align: center; padding: 40px 20px; color: var(--text2);
+        }
+        .empty-state i { font-size: 2rem; margin-bottom: 12px; opacity: 0.3; }
+        .empty-state p { font-size: 0.9rem; }
+
+        /* ── Responsive ── */
+        @media (max-width: 1024px) {
+            .cal-grid { grid-template-columns: 50px repeat(7, minmax(100px, 1fr)); overflow-x: auto; }
+            .main { padding: 68px 16px 32px; }
+            .header-row h1 { font-size: 1.5rem; }
+            .quick-stats { flex-direction: column; }
+        }
+        @media (max-width: 600px) {
+            .topbar-tabs { display: none; }
+            .topbar { padding: 0 16px; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="topbar">
+        <div class="topbar-inner">
+            <a href="index.html" class="topbar-brand">Auto-Ecole Breteuil</a>
+            <div class="topbar-tabs">
+                <button class="active" data-tab="planning">Mon Planning</button>
+                <button data-tab="messages">Messages</button>
+                <button data-tab="annulations">Annulations</button>
+            </div>
+            <div class="topbar-right">
+                <a href="index.html"><i class="fas fa-arrow-left"></i> Retour au site</a>
+                <button class="btn-logout" id="logoutBtn"><i class="fas fa-right-from-bracket"></i> Quitter</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main">
+        <div class="header-row">
+            <h1>Planning <span id="userName"></span></h1>
+            <div class="user-badge">
+                <div class="avatar" id="userAvatar">M</div>
+                <div class="user-info">
+                    <span class="user-name" id="userFullName">Moniteur</span>
+                    <span class="user-role">Moniteur de conduite</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="quick-stats">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+                <div class="stat-value" id="statWeek">0</div>
+                <div class="stat-label">Cours cette semaine</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                <div class="stat-value" id="statToday">0</div>
+                <div class="stat-label">Cours aujourd'hui</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="stat-value" id="statDone">0</div>
+                <div class="stat-label">Réalisés ce mois</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-times-circle"></i></div>
+                <div class="stat-value" id="statCancelled">0</div>
+                <div class="stat-label">Annulations</div>
+            </div>
+        </div>
+
+        <!-- Progression des Primes -->
+        <div class="section-card" id="bonusProgressCard" style="display: none;">
+            <div class="section-header">
+                <h2><i class="fas fa-trophy"></i> Progression vers la prime</h2>
+                <a href="moniteur-primes.html" style="font-size: 0.85rem; color: var(--blue); text-decoration: none; font-weight: 600;">
+                    Voir le détail <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            <div class="section-body">
+                <div style="display: grid; grid-template-columns: 1fr auto; gap: 2rem; align-items: center;">
+                    <div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+                            <span style="font-size: 0.85rem; font-weight: 600; color: var(--text2);">
+                                <span id="bonusStudentCount">0</span>/20 élèves évalués
+                            </span>
+                            <span style="font-size: 0.85rem; font-weight: 600; color: var(--text);" id="bonusNextLevel">
+                                Prochain palier : 80%
+                            </span>
+                        </div>
+                        
+                        <!-- Barre de progression style Apple -->
+                        <div style="position: relative; margin: 1.5rem 0;">
+                            <!-- Track de fond -->
+                            <div style="position: relative; height: 12px; background: linear-gradient(to right, rgba(0,0,0,0.06), rgba(0,0,0,0.04)); border-radius: 6px; overflow: visible; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);">
+                                <!-- Barre de progression colorée -->
+                                <div id="bonusProgressBar" style="position: absolute; left: 0; top: 0; bottom: 0; width: 0%; background: linear-gradient(90deg, #ff3b30 0%, #ff9500 20%, #ffd700 40%, #34c759 60%, #34c759 80%, #ffd700 100%); border-radius: 6px; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 2px 8px rgba(52, 199, 89, 0.4);"></div>
+                                
+                                <!-- Curseur indicateur -->
+                                <div id="bonusCursor" style="position: absolute; left: 0%; top: 50%; transform: translate(-50%, -50%); width: 32px; height: 32px; background: white; border-radius: 50%; box-shadow: 0 4px 16px rgba(0,0,0,0.2), 0 0 0 4px rgba(52, 199, 89, 0.2); transition: left 1s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10;">
+                                    <div style="width: 16px; height: 16px; background: linear-gradient(135deg, #34c759 0%, #30d158 100%); border-radius: 50%; box-shadow: inset 0 1px 2px rgba(255,255,255,0.3);"></div>
+                                </div>
+                                
+                                <!-- Tooltip du curseur -->
+                                <div id="bonusTooltip" style="position: absolute; left: 50%; bottom: calc(100% + 20px); transform: translateX(-50%); background: rgba(0,0,0,0.9); color: white; padding: 10px 16px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; white-space: nowrap; opacity: 0; transition: all 0.3s; pointer-events: none; backdrop-filter: blur(10px);">
+                                    <div id="bonusTooltipText">0/20 élèves</div>
+                                    <div style="position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%) rotate(45deg); width: 8px; height: 8px; background: rgba(0,0,0,0.9);"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Marqueurs de paliers -->
+                            <div style="position: relative; margin-top: 1.5rem; height: 50px; padding: 0 2px;">
+                                <div style="text-align: center; position: absolute; left: 0%; transform: translateX(0%);">
+                                    <div style="width: 2px; height: 8px; background: rgba(0,0,0,0.15); margin: 0 auto 4px;"></div>
+                                    <div style="font-size: 0.7rem; color: var(--text2); font-weight: 600; white-space: nowrap;">0</div>
+                                    <div style="font-size: 0.65rem; color: var(--text2); margin-top: 2px; white-space: nowrap;">0€</div>
+                                </div>
+                                <div style="text-align: center; position: absolute; left: 80%; transform: translateX(-50%);">
+                                    <div style="width: 2px; height: 8px; background: rgba(0,0,0,0.15); margin: 0 auto 4px;"></div>
+                                    <div style="font-size: 0.7rem; color: var(--text2); font-weight: 600; white-space: nowrap;">16</div>
+                                    <div style="font-size: 0.65rem; color: var(--text2); margin-top: 2px; white-space: nowrap;">120€</div>
+                                </div>
+                                <div style="text-align: center; position: absolute; left: 90%; transform: translateX(-50%);">
+                                    <div style="width: 2px; height: 8px; background: rgba(0,0,0,0.15); margin: 0 auto 4px;"></div>
+                                    <div style="font-size: 0.7rem; color: var(--text2); font-weight: 600; white-space: nowrap;">18</div>
+                                    <div style="font-size: 0.65rem; color: var(--text2); margin-top: 2px; white-space: nowrap;">200€</div>
+                                </div>
+                                <div style="text-align: center; position: absolute; right: 0%; transform: translateX(0%);">
+                                    <div style="width: 2px; height: 8px; background: rgba(0,0,0,0.15); margin: 0 auto 4px;"></div>
+                                    <div style="font-size: 0.7rem; color: var(--text2); font-weight: 600; white-space: nowrap;">20</div>
+                                    <div style="font-size: 0.65rem; color: var(--text2); margin-top: 2px; white-space: nowrap;">300€</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Paliers de primes -->
+                            <div style="display: flex; gap: 0.5rem; margin-top: 1rem; padding: 0.75rem; background: rgba(0,0,0,0.02); border-radius: 8px;">
+                                <div style="flex: 1; text-align: center; padding: 0.75rem 0.5rem; background: white; border-radius: 6px; border: 1px solid rgba(0,0,0,0.06);">
+                                    <div style="font-size: 0.65rem; color: var(--text2); margin-bottom: 8px;">80%</div>
+                                    <div style="font-size: 0.85rem; font-weight: 700; color: #ff9500;">120€</div>
+                                </div>
+                                <div style="flex: 1; text-align: center; padding: 0.75rem 0.5rem; background: white; border-radius: 6px; border: 1px solid rgba(0,0,0,0.06);">
+                                    <div style="font-size: 0.65rem; color: var(--text2); margin-bottom: 8px;">90%</div>
+                                    <div style="font-size: 0.85rem; font-weight: 700; color: #ffd700;">200€</div>
+                                </div>
+                                <div style="flex: 1; text-align: center; padding: 0.75rem 0.5rem; background: white; border-radius: 6px; border: 1px solid rgba(0,0,0,0.06);">
+                                    <div style="font-size: 0.65rem; color: var(--text2); margin-bottom: 8px;">100%</div>
+                                    <div style="font-size: 0.85rem; font-weight: 700; color: #34c759;">300€</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Planning -->
+        <div class="tab-content active" id="tab-planning">
+            <div class="section-card">
+                <div class="section-header">
+                    <h2><i class="fas fa-calendar-alt" style="margin-right:8px;color:var(--blue);"></i> Mon Planning</h2>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <button class="btn-today" id="todayBtn">Aujourd'hui</button>
+                        <div class="week-nav">
+                            <button id="prevWeekBtn"><i class="fas fa-chevron-left"></i></button>
+                            <span class="week-label" id="weekLabel">Semaine</span>
+                            <button id="nextWeekBtn"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="section-body" style="padding:0;">
+                    <div class="cal-grid" id="planningGrid"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Messages -->
+        <div class="tab-content" id="tab-messages">
+            <div class="section-card">
+                <div class="section-header">
+                    <h2><i class="fas fa-envelope" style="margin-right:8px;color:var(--purple);"></i> Messages des élèves</h2>
+                </div>
+                <div class="section-body" id="messagesList">
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>Aucun message pour le moment</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Annulations -->
+        <div class="tab-content" id="tab-annulations">
+            <div class="section-card">
+                <div class="section-header">
+                    <h2><i class="fas fa-calendar-times" style="margin-right:8px;color:var(--red);"></i> Annulations récentes</h2>
+                </div>
+                <div class="section-body" id="annulationsList">
+                    <div class="empty-state">
+                        <i class="fas fa-calendar-check"></i>
+                        <p>Aucune annulation récente</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal: Student Details -->
+    <div class="modal-overlay" id="studentModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-user" style="margin-right:8px;"></i> Détails de l'élève</h3>
+                <button class="modal-close" id="closeModal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" id="studentDetails">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
+    <script src="assets/js/supabaseClient.js"></script>
+    <script src="assets/js/espace-moniteur-bonus.js"></script>
+    <script src="assets/js/espace-moniteur.js?v=6"></script>
+</body>
+</html>
