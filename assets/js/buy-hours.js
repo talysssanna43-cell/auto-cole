@@ -6,13 +6,20 @@ const PRICE_PER_HOUR = {
 
 // Fonction pour acheter des heures supplémentaires avec Checkout Session dynamique
 window.buyAdditionalHours = async function(quantity, totalAmount, gearboxType = 'manual') {
+    console.log('🟢 buyAdditionalHours appelée avec:', { quantity, totalAmount, gearboxType });
+    
     try {
+        // Vérifier que l'utilisateur est connecté
+        console.log('🔍 Vérification dashboardState:', dashboardState);
         const user = dashboardState?.user;
         
         if (!user || !user.email) {
-            alert('Erreur : utilisateur non connecté');
+            console.error('❌ Utilisateur non connecté ou dashboardState manquant');
+            alert('❌ Erreur : Vous devez être connecté pour acheter des heures.\n\nVeuillez vous reconnecter.');
             return;
         }
+        
+        console.log('✅ Utilisateur connecté:', user.email);
         
         // Sauvegarder les infos pour après le paiement
         sessionStorage.setItem('pendingHoursPurchase', JSON.stringify({
@@ -21,10 +28,13 @@ window.buyAdditionalHours = async function(quantity, totalAmount, gearboxType = 
             gearboxType: gearboxType,
             timestamp: Date.now()
         }));
+        console.log('💾 Infos sauvegardées dans sessionStorage');
         
         // Créer une Checkout Session Stripe dynamique
         const pricePerHour = PRICE_PER_HOUR[gearboxType];
+        console.log('💰 Prix par heure:', pricePerHour);
         
+        console.log('📡 Appel API Stripe...');
         const response = await fetch('/.netlify/functions/create-checkout-session', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -36,21 +46,29 @@ window.buyAdditionalHours = async function(quantity, totalAmount, gearboxType = 
             })
         });
         
-        const { url, message } = await response.json();
+        console.log('📥 Réponse Stripe reçue:', response.status);
+        const data = await response.json();
+        console.log('📦 Données:', data);
         
-        if (!url) {
-            throw new Error(message || 'Impossible de créer la session de paiement');
+        if (!data.url) {
+            throw new Error(data.message || 'Impossible de créer la session de paiement');
         }
         
+        console.log('✅ URL Stripe obtenue:', data.url);
+        
         // Fermer le modal
-        closeBuyHoursModal();
+        if (typeof closeBuyHoursModal === 'function') {
+            closeBuyHoursModal();
+        }
         
         // Rediriger vers Stripe Checkout
-        window.location.href = url;
+        console.log('🔄 Redirection vers Stripe...');
+        window.location.href = data.url;
         
     } catch (err) {
-        console.error('Erreur achat heures:', err);
-        alert('❌ Une erreur est survenue. Veuillez réessayer.');
+        console.error('❌ Erreur achat heures:', err);
+        alert(`❌ Une erreur est survenue:\n\n${err.message}\n\nVeuillez réessayer ou contacter le support.`);
+        throw err;
     }
 };
 

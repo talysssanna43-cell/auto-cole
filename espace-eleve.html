@@ -2517,26 +2517,39 @@
         }
         
         async function processBuyHours() {
+            console.log('🔵 processBuyHours appelée');
+            
             const quantity = parseInt(document.getElementById('hoursQuantity').value);
             const gearboxType = document.querySelector('input[name="gearboxType"]:checked')?.value || 'manual';
             const pricePerHour = gearboxType === 'automatic' ? 50 : 45;
             const total = quantity * pricePerHour;
             const gearboxLabel = gearboxType === 'automatic' ? 'boîte automatique' : 'boîte manuelle';
             
+            console.log('📊 Données:', { quantity, gearboxType, pricePerHour, total });
+            
             if (!quantity || quantity < 1) {
-                alert('Veuillez sélectionner au moins 1 heure');
+                alert('⚠️ Veuillez sélectionner au moins 1 heure');
                 return;
             }
             
             if (!confirm(`Confirmer l'achat de ${quantity} heure(s) en ${gearboxLabel} pour ${total}€ ?`)) {
+                console.log('❌ Achat annulé par l\'utilisateur');
                 return;
             }
             
+            console.log('✅ Confirmation reçue, appel de buyAdditionalHours...');
+            
             // Appeler la fonction dans buy-hours.js
             if (window.buyAdditionalHours) {
-                await window.buyAdditionalHours(quantity, total, gearboxType);
+                try {
+                    await window.buyAdditionalHours(quantity, total, gearboxType);
+                } catch (error) {
+                    console.error('❌ Erreur lors de l\'achat:', error);
+                    alert(`❌ Erreur: ${error.message}`);
+                }
             } else {
-                alert('Erreur : fonction d\'achat non disponible');
+                console.error('❌ window.buyAdditionalHours non disponible');
+                alert('❌ Erreur : fonction d\'achat non disponible. Veuillez recharger la page.');
             }
         }
         
