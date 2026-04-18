@@ -2257,34 +2257,61 @@
                     <label style="display: block; font-weight: 600; color: #333; margin-bottom: 0.75rem;">
                         Type de boîte
                     </label>
-                    <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
-                        <label style="flex: 1; cursor: pointer;">
-                            <input type="radio" name="gearboxType" value="manual" checked onchange="updateBuyHoursPrice()" style="margin-right: 0.5rem;">
-                            <span style="font-weight: 600;">Manuelle</span>
-                            <div style="font-size: 0.85rem; color: #666;">45€/h</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                        <label class="gearbox-option" style="padding: 1rem; border: 2px solid #1976d2; border-radius: 8px; cursor: pointer; text-align: center; background: white; transition: all 0.2s;">
+                            <input type="radio" name="gearboxType" value="manual" checked onchange="updateBuyHoursPrice()" style="display: none;">
+                            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🚗</div>
+                            <div style="font-weight: 600; color: #333;">Manuelle (BM)</div>
+                            <div style="font-size: 1.2rem; color: #1976d2; font-weight: 700; margin-top: 0.5rem;">45€/h</div>
                         </label>
-                        <label style="flex: 1; cursor: pointer;">
-                            <input type="radio" name="gearboxType" value="automatic" onchange="updateBuyHoursPrice()" style="margin-right: 0.5rem;">
-                            <span style="font-weight: 600;">Automatique</span>
-                            <div style="font-size: 0.85rem; color: #666;">50€/h</div>
+                        <label class="gearbox-option" style="padding: 1rem; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; text-align: center; background: white; transition: all 0.2s;">
+                            <input type="radio" name="gearboxType" value="automatic" onchange="updateBuyHoursPrice()" style="display: none;">
+                            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🚙</div>
+                            <div style="font-weight: 600; color: #333;">Automatique (BA)</div>
+                            <div style="font-size: 1.2rem; color: #1976d2; font-weight: 700; margin-top: 0.5rem;">50€/h</div>
                         </label>
                     </div>
                     
                     <label style="display: block; font-weight: 600; color: #333; margin-bottom: 0.75rem;">
                         Nombre d'heures
                     </label>
-                    <input type="number" id="hoursQuantity" min="1" max="50" value="5" 
-                        oninput="updateBuyHoursPrice()"
-                        style="width: 100%; padding: 0.75rem; border: 2px solid #1976d2; border-radius: 8px; font-size: 1.1rem; text-align: center;">
                     
-                    <div style="margin-top: 1rem; text-align: center;">
-                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 0.25rem;">Prix unitaire</div>
-                        <div id="buyHoursUnitPrice" style="font-size: 1.2rem; font-weight: 600; color: #1976d2;">45€ / heure</div>
+                    <!-- Boutons rapides -->
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin-bottom: 1rem;">
+                        <button type="button" onclick="setHoursQuantity(1)" class="quick-hours-btn" style="padding: 0.5rem; border: 2px solid #ddd; border-radius: 6px; background: white; cursor: pointer; font-weight: 600; transition: all 0.2s;">
+                            1h
+                        </button>
+                        <button type="button" onclick="setHoursQuantity(5)" class="quick-hours-btn" style="padding: 0.5rem; border: 2px solid #ddd; border-radius: 6px; background: white; cursor: pointer; font-weight: 600; transition: all 0.2s;">
+                            5h
+                        </button>
+                        <button type="button" onclick="setHoursQuantity(10)" class="quick-hours-btn" style="padding: 0.5rem; border: 2px solid #ddd; border-radius: 6px; background: white; cursor: pointer; font-weight: 600; transition: all 0.2s;">
+                            10h
+                        </button>
+                        <button type="button" onclick="setHoursQuantity(20)" class="quick-hours-btn" style="padding: 0.5rem; border: 2px solid #ddd; border-radius: 6px; background: white; cursor: pointer; font-weight: 600; transition: all 0.2s;">
+                            20h
+                        </button>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <button type="button" onclick="decrementHours()" style="width: 40px; height: 40px; border: 2px solid #1976d2; border-radius: 8px; background: white; cursor: pointer; font-size: 1.5rem; font-weight: 700; color: #1976d2;">
+                            −
+                        </button>
+                        <input type="number" id="hoursQuantity" min="1" max="50" value="5" 
+                            oninput="updateBuyHoursPrice()"
+                            style="flex: 1; padding: 0.75rem; border: 2px solid #1976d2; border-radius: 8px; font-size: 1.5rem; text-align: center; font-weight: 700;">
+                        <button type="button" onclick="incrementHours()" style="width: 40px; height: 40px; border: 2px solid #1976d2; border-radius: 8px; background: white; cursor: pointer; font-size: 1.5rem; font-weight: 700; color: #1976d2;">
+                            +
+                        </button>
                     </div>
                     
                     <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid #ddd; text-align: center;">
-                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 0.25rem;">Total à payer</div>
-                        <div id="buyHoursTotal" style="font-size: 2rem; font-weight: 700; color: #4CAF50;">225€</div>
+                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 0.5rem;">
+                            <span id="buyHoursQuantityDisplay">5</span> heure(s) × <span id="buyHoursUnitPrice">45€</span>
+                        </div>
+                        <div style="font-size: 2.5rem; font-weight: 700; color: #4CAF50; margin-top: 0.5rem;">
+                            <span id="buyHoursTotal">225€</span>
+                        </div>
+                        <div style="font-size: 0.85rem; color: #999; margin-top: 0.5rem;">Total à payer</div>
                     </div>
                 </div>
                 
@@ -2443,8 +2470,45 @@
             const pricePerHour = gearboxType === 'automatic' ? 50 : 45;
             const total = quantity * pricePerHour;
             
-            document.getElementById('buyHoursUnitPrice').textContent = pricePerHour + '€ / heure';
+            // Mettre à jour les éléments d'affichage
+            document.getElementById('buyHoursUnitPrice').textContent = pricePerHour + '€';
             document.getElementById('buyHoursTotal').textContent = total + '€';
+            document.getElementById('buyHoursQuantityDisplay').textContent = quantity;
+            
+            // Mettre à jour le style des options de boîte
+            document.querySelectorAll('.gearbox-option').forEach(option => {
+                const radio = option.querySelector('input[type="radio"]');
+                if (radio.checked) {
+                    option.style.borderColor = '#1976d2';
+                    option.style.background = '#e3f2fd';
+                } else {
+                    option.style.borderColor = '#ddd';
+                    option.style.background = 'white';
+                }
+            });
+        }
+        
+        function setHoursQuantity(hours) {
+            document.getElementById('hoursQuantity').value = hours;
+            updateBuyHoursPrice();
+        }
+        
+        function incrementHours() {
+            const input = document.getElementById('hoursQuantity');
+            const currentValue = parseInt(input.value) || 0;
+            if (currentValue < 50) {
+                input.value = currentValue + 1;
+                updateBuyHoursPrice();
+            }
+        }
+        
+        function decrementHours() {
+            const input = document.getElementById('hoursQuantity');
+            const currentValue = parseInt(input.value) || 0;
+            if (currentValue > 1) {
+                input.value = currentValue - 1;
+                updateBuyHoursPrice();
+            }
         }
         
         async function processBuyHours() {
