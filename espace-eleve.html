@@ -2239,7 +2239,7 @@
 
     <!-- Modal Achat d'heures supplémentaires -->
     <div id="buyHoursModal" class="modal-overlay">
-        <div class="modal-content" style="max-width: 500px; max-height: 90vh; overflow-y: auto;">
+        <div class="modal-content" style="max-width: 500px;">
             <button class="modal-close" onclick="closeBuyHoursModal()">
                 <i class="fas fa-times"></i>
             </button>
@@ -2315,12 +2315,17 @@
                     </div>
                 </div>
                 
-                <button onclick="processBuyHours()" class="btn-primary btn-block" style="padding: 1rem; font-size: 1.1rem;">
-                    <i class="fas fa-credit-card"></i> Procéder au paiement
+                <button onclick="processBuyHours()" 
+                    style="width: 100%; padding: 1.25rem; font-size: 1.2rem; font-weight: 700; 
+                           background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); 
+                           color: white; border: none; border-radius: 12px; cursor: pointer; 
+                           transition: all 0.3s; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+                           margin-top: 1.5rem;">
+                    <i class="fas fa-credit-card"></i> Valider et payer
                 </button>
                 
                 <p style="text-align: center; color: #999; font-size: 0.85rem; margin-top: 1rem;">
-                    <i class="fas fa-lock"></i> Paiement sécurisé par carte bancaire
+                    <i class="fas fa-lock"></i> Paiement sécurisé par Stripe
                 </p>
             </div>
         </div>
