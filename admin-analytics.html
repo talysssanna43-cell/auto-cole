@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - Auto-Ecole Breteuil</title>
+    <meta name="robots" content="noindex,nofollow">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/admin-mobile.css">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --apple-bg: #f5f5f7;
+            --apple-card: #ffffff;
+            --apple-border: rgba(0,0,0,0.06);
+            --apple-text: #1d1d1f;
+            --apple-secondary: #86868b;
+            --apple-blue: #0071e3;
+            --apple-green: #34c759;
+            --apple-orange: #ff9500;
+            --apple-red: #ff3b30;
+            --apple-purple: #af52de;
+            --apple-radius: 12px;
+            --apple-radius-lg: 16px;
+            --apple-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            --apple-shadow-lg: 0 4px 24px rgba(0,0,0,0.06);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+            background: var(--apple-bg);
+            color: var(--apple-text);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Top Navigation ── */
+        .topbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            height: 52px;
+            background: rgba(255,255,255,0.72);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 1px solid var(--apple-border);
+            display: flex; align-items: center; padding: 0 24px;
+        }
+        .topbar-inner {
+            max-width: 1400px; width: 100%; margin: 0 auto;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .topbar-brand { font-size: 1.05rem; font-weight: 600; color: var(--apple-text); text-decoration: none; }
+        .topbar-tabs {
+            display: flex; gap: 4px; background: rgba(0,0,0,0.04); border-radius: 8px; padding: 3px;
+            flex-wrap: nowrap; overflow-x: auto;
+        }
+        .topbar-tabs a {
+            padding: 6px 12px; border-radius: 6px; font-size: 0.78rem; font-weight: 500;
+            color: var(--apple-text2); text-decoration: none; transition: all 0.15s; white-space: nowrap;
+        }
+        .topbar-tabs a:hover { color: var(--apple-text); }
+        .topbar-tabs a.active {
+            background: var(--apple-card); color: var(--apple-text); font-weight: 600;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        .notif-badge {
+            display: inline-flex; align-items: center; justify-content: center;
+            min-width: 18px; height: 18px; padding: 0 5px;
+            background: #ff3b30; color: white; border-radius: 9px;
+            font-size: 0.7rem; font-weight: 700; margin-left: 6px; vertical-align: middle;
+        }
+        .topbar-right { display: flex; align-items: center; gap: 14px; }
+        .topbar-right a { font-size: 0.82rem; color: var(--apple-secondary); text-decoration: none; }
+        .topbar-right a:hover { color: var(--apple-text); }
+        .btn-inscription {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 14px; border-radius: 8px; border: none;
+            background: #34c759; color: white; font-size: 0.82rem; font-weight: 500;
+            cursor: pointer; text-decoration: none; transition: all 0.2s;
+        }
+        .btn-inscription:hover { background: #2fb04f; transform: translateY(-1px); color: white; }
+        .btn-logout {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 5px 12px; border-radius: 980px; border: none; background: none;
+            font-size: 0.82rem; font-weight: 500; color: var(--apple-secondary); cursor: pointer;
+        }
+        .btn-logout:hover { color: var(--apple-red); background: rgba(255,59,48,0.06); }
+
+        /* ── Main Content ── */
+        .admin-main {
+            padding: 76px 24px 48px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* ── Page Header ── */
+        .page-header {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .page-header-left h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            margin-bottom: 4px;
+        }
+
+        .page-header-left p {
+            font-size: 1.05rem;
+            color: var(--apple-secondary);
+            font-weight: 400;
+        }
+
+        .year-nav {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .year-nav button {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: none;
+            background: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--apple-text);
+            transition: background 0.15s;
+            font-size: 0.85rem;
+        }
+
+        .year-nav button:hover {
+            background: rgba(0,0,0,0.06);
+        }
+
+        .range-label {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--apple-text);
+            padding: 0 12px;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        /* ── KPI Cards ── */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .kpi {
+            background: var(--apple-card);
+            border-radius: var(--apple-radius-lg);
+            padding: 24px;
+            box-shadow: var(--apple-shadow-lg);
+            border: 1px solid var(--apple-border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+
+        .kpi:nth-child(1)::after { background: var(--apple-blue); }
+        .kpi:nth-child(2)::after { background: var(--apple-green); }
+        .kpi:nth-child(3)::after { background: var(--apple-orange); }
+
+        .kpi-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+        }
+
+        .kpi:nth-child(1) .kpi-icon { background: rgba(0,113,227,0.08); color: var(--apple-blue); }
+        .kpi:nth-child(2) .kpi-icon { background: rgba(52,199,89,0.08); color: var(--apple-green); }
+        .kpi:nth-child(3) .kpi-icon { background: rgba(255,149,0,0.08); color: var(--apple-orange); }
+
+        .kpi .label {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--apple-secondary);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .kpi .value {
+            font-size: 2.4rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            color: var(--apple-text);
+            line-height: 1;
+        }
+
+        /* ── Chart Cards ── */
+        .charts {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .chart-card {
+            background: var(--apple-card);
+            border-radius: var(--apple-radius-lg);
+            padding: 20px;
+            box-shadow: var(--apple-shadow-lg);
+            border: 1px solid var(--apple-border);
+        }
+
+        .chart-card h3 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--apple-secondary);
+            margin-bottom: 12px;
+        }
+
+        /* ── Dashboard ── */
+        .dashboard {
+            display: none;
+        }
+
+        .dashboard.visible {
+            display: block;
+        }
+
+        /* ── Feedback ── */
+        .feedback {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--apple-secondary);
+            margin-top: 12px;
+        }
+
+        .feedback.error { color: var(--apple-red); }
+        .feedback.success { color: var(--apple-green); }
+
+        /* ── Responsive ── */
+        @media (max-width: 960px) {
+            .kpi-grid { grid-template-columns: 1fr; }
+            .charts { grid-template-columns: 1fr; }
+            .admin-main { padding: 68px 16px 32px; }
+            .page-header-left h1 { font-size: 1.5rem; }
+        }
+
+        @media (max-width: 600px) {
+            .topbar { padding: 0 16px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Bar -->
+    <nav class="topbar">
+        <div class="topbar-inner">
+            <a href="index.html" class="topbar-brand">Auto-Ecole Breteuil</a>
+            <button class="admin-menu-toggle" id="adminMenuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="topbar-tabs" id="adminTabs">
+                <a href="admin-planning.html">Planning</a>
+                <a href="admin-candidatures.html">Candidatures <span class="notif-badge" id="candidaturesBadge" style="display: none;">0</span></a>
+                <a href="admin-analytics.html" class="active">Analytics</a>
+                <a href="admin-support.html">Support <span class="notif-badge" id="supportBadge" style="display: none;">0</span></a>
+                <a href="admin-contact.html">Contact <span class="notif-badge" id="contactBadge" style="display: none;">0</span></a>
+                <a href="admin-code-rousseau.html">Code Rousseau <span class="notif-badge" id="codeRousseuBadge" style="display: none;">0</span></a>
+            </div>
+            <div class="topbar-right">
+                <a href="inscription.html?admin=true" class="btn-inscription">
+                    <i class="fas fa-user-plus"></i> Nouvelle inscription
+                </a>
+                <a href="index.html"><i class="fas fa-arrow-left"></i> Retour au site</a>
+                <button class="btn-logout" id="logoutBtn"><i class="fas fa-right-from-bracket"></i> Quitter</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main -->
+    <main class="admin-main">
+        <div class="page-header">
+            <div class="page-header-left">
+                <h1>Analytics</h1>
+                <p>Indicateurs essentiels et évolution</p>
+            </div>
+            <div class="year-nav">
+                <button type="button" id="prevRangeBtn"><i class="fas fa-chevron-left"></i></button>
+                <span class="range-label" id="rangeLabel">2026</span>
+                <button type="button" id="nextRangeBtn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+
+        <section class="dashboard" id="dashboardSection">
+            <!-- KPI 1: Inscriptions + son graphique -->
+            <div class="kpi">
+                <div class="kpi-icon"><i class="fas fa-user-plus"></i></div>
+                <div class="label">Inscriptions cette année</div>
+                <div class="value" id="kpiSignups">0</div>
+            </div>
+            <div class="chart-card">
+                <h3>Inscriptions / mois</h3>
+                <div style="margin-bottom: 30px;">
+                    <h4 style="font-size: 15px; color: #1d1d1f; font-weight: 600; margin-bottom: 10px;">Total</h4>
+                    <canvas id="chartSignupsTotal" height="160"></canvas>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <h4 style="font-size: 14px; color: #86868b; margin-bottom: 10px;">Boîte manuelle</h4>
+                    <canvas id="chartSignupsManual" height="120"></canvas>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <h4 style="font-size: 14px; color: #86868b; margin-bottom: 10px;">Boîte auto</h4>
+                    <canvas id="chartSignupsAuto" height="120"></canvas>
+                </div>
+                <div>
+                    <h4 style="font-size: 14px; color: #86868b; margin-bottom: 10px;">Sans permis (AM)</h4>
+                    <canvas id="chartSignupsAm" height="120"></canvas>
+                </div>
+            </div>
+
+            <!-- KPI 2: Chiffre d'affaires + son graphique -->
+            <div class="kpi">
+                <div class="kpi-icon"><i class="fas fa-euro-sign"></i></div>
+                <div class="label">Chiffre d'affaires</div>
+                <div class="value" id="kpiRevenue">0€</div>
+            </div>
+            <div class="chart-card">
+                <h3>Chiffre d'affaires / mois</h3>
+                <div style="margin-bottom: 30px;">
+                    <h4 style="font-size: 15px; color: #1d1d1f; font-weight: 600; margin-bottom: 10px;">💰 CA Total (en ligne + admin)</h4>
+                    <canvas id="chartRevenueTotal" height="160"></canvas>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <h4 style="font-size: 14px; color: #4CAF50; font-weight: 600; margin-bottom: 10px;">🌐 CA en ligne (paiements Stripe)</h4>
+                    <canvas id="chartRevenueOnline" height="140"></canvas>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <h4 style="font-size: 14px; color: #FF9800; font-weight: 600; margin-bottom: 10px;">👤 CA admin (paiements cash)</h4>
+                    <canvas id="chartRevenueAdmin" height="140"></canvas>
+                </div>
+            </div>
+
+            <!-- KPI 3: Heures réalisées + son graphique -->
+            <div class="kpi">
+                <div class="kpi-icon"><i class="fas fa-clock"></i></div>
+                <div class="label">Heures réalisées</div>
+                <div class="value" id="kpiHours">0h</div>
+            </div>
+            <div class="chart-card">
+                <h3>Heures réalisées / mois</h3>
+                <div style="margin-bottom: 30px;">
+                    <h4 style="font-size: 15px; color: #1d1d1f; font-weight: 600; margin-bottom: 10px;">Total</h4>
+                    <canvas id="chartHoursTotal" height="160"></canvas>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <h4 style="font-size: 14px; color: #86868b; margin-bottom: 10px;">Boîte manuelle</h4>
+                    <canvas id="chartHoursManual" height="120"></canvas>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <h4 style="font-size: 14px; color: #86868b; margin-bottom: 10px;">Boîte auto</h4>
+                    <canvas id="chartHoursAuto" height="120"></canvas>
+                </div>
+                <div>
+                    <h4 style="font-size: 14px; color: #86868b; margin-bottom: 10px;">Sans permis (AM)</h4>
+                    <canvas id="chartHoursAm" height="120"></canvas>
+                </div>
+            </div>
+
+            <p class="feedback" id="analyticsFeedback"></p>
+        </section>
+    </main>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="assets/js/supabaseClient.js?v=3"></script>
+    <script src="assets/js/admin-analytics.js?v=17"></script>
+    <script src="assets/js/admin-notif-badge.js"></script>
+    <script src="assets/js/admin-mobile-menu.js"></script>
+</body>
+</html>
