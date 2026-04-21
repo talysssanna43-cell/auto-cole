@@ -1210,40 +1210,67 @@ window.loadInscriptionNotifications = async function() {
 
 window.viewInscriptionDocuments = async function(userEmail) {
     try {
-        const { data: user, error } = await window.supabaseClient
-            .from('users')
+        // D'abord essayer de récupérer depuis inscription_notifications (pour les inscriptions en attente)
+        const { data: notification, error: notifError } = await window.supabaseClient
+            .from('inscription_notifications')
             .select('*')
-            .eq('email', userEmail)
+            .eq('user_email', userEmail)
+            .eq('status', 'pending')
+            .order('created_at', { ascending: false })
+            .limit(1)
             .maybeSingle();
         
-        if (error) {
-            console.error('Error fetching user:', error);
-            alert('Erreur lors du chargement des documents.');
-            return;
-        }
-        
-        if (!user) {
-            console.log('Utilisateur non trouvé - inscription probablement en attente de validation');
-            alert('⚠️ Compte utilisateur non encore créé.\n\nCette inscription est en attente de validation. Les documents sont stockés dans la notification d\'inscription.\n\nValide d\'abord l\'inscription pour créer le compte utilisateur.');
-            return;
-        }
-        
-        console.log('User data:', user);
-        console.log('Documents field:', user.documents);
-        console.log('Documents type:', typeof user.documents);
-        
         let documents = {};
+        let source = '';
         
-        // Handle different document formats
-        if (user.documents) {
-            if (typeof user.documents === 'string') {
+        if (notification && notification.documents) {
+            console.log('Documents trouvés dans inscription_notifications');
+            source = 'notification';
+            
+            // Handle different document formats
+            if (typeof notification.documents === 'string') {
                 try {
-                    documents = JSON.parse(user.documents);
+                    documents = JSON.parse(notification.documents);
                 } catch (e) {
                     console.error('Error parsing documents JSON:', e);
                 }
-            } else if (typeof user.documents === 'object') {
-                documents = user.documents;
+            } else if (typeof notification.documents === 'object') {
+                documents = notification.documents;
+            }
+        } else {
+            // Si pas trouvé dans notifications, chercher dans users (compte validé)
+            const { data: user, error: userError } = await window.supabaseClient
+                .from('users')
+                .select('*')
+                .eq('email', userEmail)
+                .maybeSingle();
+            
+            if (userError) {
+                console.error('Error fetching user:', userError);
+                alert('Erreur lors du chargement des documents.');
+                return;
+            }
+            
+            if (!user) {
+                console.log('Aucun document trouvé pour cet utilisateur');
+                alert('⚠️ Aucun document trouvé.\n\nCette inscription ne contient pas de documents ou ils n\'ont pas été uploadés.');
+                return;
+            }
+            
+            console.log('Documents trouvés dans users');
+            source = 'user';
+            
+            // Handle different document formats
+            if (user.documents) {
+                if (typeof user.documents === 'string') {
+                    try {
+                        documents = JSON.parse(user.documents);
+                    } catch (e) {
+                        console.error('Error parsing documents JSON:', e);
+                    }
+                } else if (typeof user.documents === 'object') {
+                    documents = user.documents;
+                }
             }
         }
         
