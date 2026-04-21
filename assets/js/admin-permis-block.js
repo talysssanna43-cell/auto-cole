@@ -45,7 +45,8 @@ window.submitPermisBlock = async function(event) {
             const nextHours = hours + 2;
             const nextTime = `${String(nextHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
             
-            // Ne pas dépasser l'heure de fin
+            // Si le prochain créneau dépasse l'heure de fin, on s'arrête
+            // Mais on accepte si nextTime == endTime (ex: 11h-13h quand endTime = 13h)
             if (nextTime > endTime) break;
             
             slots.push({
