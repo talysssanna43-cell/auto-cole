@@ -1052,6 +1052,20 @@ async function fetchBookedSlotsFromSupabase() {
             .select('slot_id, slots(start_at, end_at, instructor, status)')
             .gte('slots.start_at', weekStart.toISOString())
             .lt('slots.start_at', weekEnd.toISOString());
+        
+        // Récupérer aussi les créneaux bloqués pour permis
+        const { data: permisSlots, error: permisError } = await window.supabaseClient
+            .from('slots')
+            .select('start_at, end_at, instructor, status')
+            .eq('status', 'permis')
+            .gte('start_at', weekStart.toISOString())
+            .lt('start_at', weekEnd.toISOString());
+        
+        if (permisError) {
+            console.warn('Erreur récupération créneaux permis:', permisError);
+        } else if (permisSlots && permisSlots.length > 0) {
+            console.log('🚫 Créneaux bloqués pour permis:', permisSlots.length);
+        }
 
         if (error) {
             console.warn('Supabase slots fetch error:', error);
@@ -1090,6 +1104,35 @@ async function fetchBookedSlotsFromSupabase() {
                 dayLabel: d.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'long' }),
                 label: `${startStr.replace(':', 'h')} - ${endStr.replace(':', 'h')}`,
                 isBooked: true
+            });
+        });
+        
+        // Ajouter les créneaux bloqués pour permis
+        (permisSlots || []).forEach((slot) => {
+            if (!slot || !slot.start_at) return;
+            
+            const d = new Date(slot.start_at);
+            const endD = new Date(slot.end_at);
+            if (Number.isNaN(d.getTime())) return;
+
+            const dateStr = toInputDate(d);
+            const startStr = `${padNumber(d.getHours())}:${padNumber(d.getMinutes())}`;
+            const endStr = `${padNumber(endD.getHours())}:${padNumber(endD.getMinutes())}`;
+            const slotId = buildSlotId(dateStr, startStr);
+            
+            console.log(`🚫 Créneau bloqué (permis): ${dateStr} ${startStr} → ID: ${slotId} (Instructeur: ${slot.instructor})`);
+            
+            ids.add(slotId);
+            slots.push({
+                id: slotId,
+                date: dateStr,
+                start: startStr,
+                end: endStr,
+                instructor: slot.instructor,
+                dayLabel: d.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'long' }),
+                label: `${startStr.replace(':', 'h')} - ${endStr.replace(':', 'h')}`,
+                isBooked: true,
+                isPermis: true
             });
         });
 

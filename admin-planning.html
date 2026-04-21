@@ -169,6 +169,14 @@
             font-size: 0.88rem; font-weight: 600; color: var(--text);
             padding: 0 10px; min-width: 190px; text-align: center;
         }
+        .btn-permis {
+            padding: 6px 14px; border-radius: 980px; border: 1px solid var(--border);
+            background: #ffc107; font-size: 0.78rem; font-weight: 600;
+            color: #000; cursor: pointer; transition: all 0.12s;
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+        .btn-permis:hover { background: #ffb300; transform: translateY(-1px); }
+        
         .btn-today {
             padding: 6px 14px; border-radius: 980px; border: 1px solid var(--border);
             background: var(--card); font-size: 0.78rem; font-weight: 600;
@@ -291,6 +299,10 @@
 
         .ev.available { background: rgba(0,0,0,0.03); }
         .ev.available::before { background: #999; }
+
+        .ev.permis { background: rgba(255, 193, 7, 0.15); cursor: not-allowed; }
+        .ev.permis::before { background: #ffc107; }
+        .ev.permis .ev-status { color: #f57c00; font-weight: 700; }
 
         /* Couleurs différentes pour BA et BM */
         .ev.booked.transmission-auto { background: rgba(0, 113, 227, 0.08); }
@@ -802,6 +814,17 @@
             </div>
         </div>
 
+        <!-- Panneau des nouvelles inscriptions -->
+        <div class="cancellation-panel" id="inscriptionPanel" style="display:none;">
+            <div class="panel-header">
+                <h2><i class="fas fa-user-plus" style="color:#9c27b0;margin-right:8px;"></i> Nouvelles inscriptions avec documents</h2>
+                <button class="btn-close-panel" onclick="toggleInscriptionPanel()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="cancellation-list" id="inscriptionList">
+                <p class="empty-message">Aucune nouvelle inscription en attente.</p>
+            </div>
+        </div>
+
         <!-- Taux de réussite des moniteurs -->
         <div id="instructorSuccessRates" style="margin-bottom: 24px;"></div>
         
@@ -819,17 +842,6 @@
             </div>
         </div>
 
-        <!-- Panneau des nouvelles inscriptions -->
-        <div class="cancellation-panel" id="inscriptionPanel" style="display:none;">
-            <div class="panel-header">
-                <h2><i class="fas fa-user-plus" style="color:#9c27b0;margin-right:8px;"></i> Nouvelles inscriptions avec documents</h2>
-                <button class="btn-close-panel" onclick="toggleInscriptionPanel()"><i class="fas fa-times"></i></button>
-            </div>
-            <div class="cancellation-list" id="inscriptionList">
-                <p class="empty-message">Aucune nouvelle inscription en attente.</p>
-            </div>
-        </div>
-
         <!-- Controls -->
         <div class="controls">
             <div class="controls-left">
@@ -842,10 +854,14 @@
                 <div class="legend">
                     <span class="legend-item"><span class="legend-dot dot-booked"></span> Réservé</span>
                     <span class="legend-item"><span class="legend-dot dot-done"></span> Réalisé</span>
+                    <span class="legend-item"><span class="legend-dot" style="background: #ffc107;"></span> Permis</span>
                     <span class="legend-item"><span class="legend-dot dot-free"></span> Libre</span>
                 </div>
             </div>
             <div class="controls-right">
+                <button class="btn-permis" id="permisBtn" onclick="openPermisModal()">
+                    <i class="fas fa-id-card"></i> Permis
+                </button>
                 <button class="btn-today" id="todayBtn">Aujourd'hui</button>
                 <div class="week-nav">
                     <button type="button" id="prevWeekBtn"><i class="fas fa-chevron-left"></i></button>
@@ -916,6 +932,70 @@
         </div>
     </div>
 
+    <!-- Modal: Bloquer créneau pour Permis -->
+    <div class="modal-overlay" id="permisModal" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-id-card" style="margin-right:8px;"></i> Bloquer un créneau pour Permis</h3>
+                <button class="modal-close" onclick="closePermisModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="permisForm" onsubmit="submitPermisBlock(event)">
+                    <div style="display: grid; gap: 16px;">
+                        <div>
+                            <label style="display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.9rem;">
+                                Date
+                            </label>
+                            <input type="date" id="permisDate" required
+                                style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem;">
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div>
+                                <label style="display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.9rem;">
+                                    Heure de départ
+                                </label>
+                                <input type="time" id="permisStartTime" required
+                                    style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.9rem;">
+                                    Heure de fin
+                                </label>
+                                <input type="time" id="permisEndTime" required
+                                    style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem;">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label style="display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.9rem;">
+                                Moniteur
+                            </label>
+                            <select id="permisInstructor" required
+                                style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem;">
+                                <option value="">Sélectionner un moniteur</option>
+                                <option value="Mylène">Mylène</option>
+                                <option value="Sammy">Sammy</option>
+                                <option value="Nail">Nail</option>
+                            </select>
+                        </div>
+                        
+                        <div style="display: flex; gap: 10px; margin-top: 8px;">
+                            <button type="button" onclick="closePermisModal()"
+                                style="flex: 1; padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); font-weight: 600; cursor: pointer;">
+                                Annuler
+                            </button>
+                            <button type="submit"
+                                style="flex: 1; padding: 12px; border: none; border-radius: 8px; background: #ffc107; color: #000; font-weight: 600; cursor: pointer;">
+                                <i class="fas fa-check"></i> Bloquer
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal: Inscription Documents -->
     <div class="student-details-modal" id="inscriptionDocumentsModal">
         <div class="student-details-content" style="max-width: 900px;">
@@ -936,6 +1016,7 @@
     <script src="assets/js/admin-instructor-success.js"></script>
     <script src="assets/js/admin-planning.js?v=44"></script>
     <script src="assets/js/admin-cancel-slot.js"></script>
+    <script src="assets/js/admin-permis-block.js"></script>
     <script src="assets/js/admin-notif-badge.js"></script>
     <script src="assets/js/admin-mobile-menu.js"></script>
 </body>
