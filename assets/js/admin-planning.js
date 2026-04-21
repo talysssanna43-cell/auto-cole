@@ -197,6 +197,18 @@ async function fetchBookedSlots(instructor, weekStart, weekEnd) {
         // Inclure les slots réservés, permis OU ceux qui ont des réservations (même si status != 'booked')
         const hasReservation = Array.isArray(row.reservations) ? row.reservations.length > 0 : !!row.reservations;
         const isPermis = row.status === 'permis';
+        
+        // Debug: log pour voir les créneaux permis
+        if (row.status === 'permis' || (row.notes && row.notes.includes('PERMIS'))) {
+            console.log('🟡 Créneau PERMIS détecté:', {
+                id: row.id,
+                start_at: row.start_at,
+                status: row.status,
+                notes: row.notes,
+                isPermis: isPermis
+            });
+        }
+        
         if (row.status !== 'booked' && !hasReservation && !isPermis) return;
         
         const d = new Date(row.start_at);
