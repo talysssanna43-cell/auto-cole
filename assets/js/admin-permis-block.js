@@ -1,7 +1,90 @@
 // Gestion du blocage de créneaux pour les examens de permis
 
-window.clearAllPermisSlots = async function() {
-    if (!confirm('⚠️ Supprimer TOUS les créneaux bloqués pour permis ?\n\nCette action est irréversible.')) {
+window.openDeletePermisModal = async function() {
+    // Récupérer tous les créneaux permis depuis la base de données
+    try {
+        const { data: permisSlots, error } = await window.supabaseClient
+            .from('slots')
+            .select('id, start_at, end_at, instructor, notes')
+            .eq('status', 'permis')
+            .order('start_at', { ascending: true });
+        
+        if (error) {
+            alert('❌ Erreur lors de la récupération: ' + error.message);
+            return;
+        }
+        
+        if (!permisSlots || permisSlots.length === 0) {
+            alert('ℹ️ Aucun créneau permis à supprimer.');
+            return;
+        }
+        
+        // Construire la liste HTML
+        const listHtml = permisSlots.map(slot => {
+            const startDate = new Date(slot.start_at);
+            const endDate = new Date(slot.end_at);
+            const dateStr = startDate.toLocaleDateString('fr-FR', { 
+                weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' 
+            });
+            const startTime = `${String(startDate.getHours()).padStart(2, '0')}h${String(startDate.getMinutes()).padStart(2, '0')}`;
+            const endTime = `${String(endDate.getHours()).padStart(2, '0')}h${String(endDate.getMinutes()).padStart(2, '0')}`;
+            const location = slot.notes ? slot.notes.replace('PERMIS - ', '') : 'Non renseigné';
+            
+            return `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; background: rgba(255, 193, 7, 0.08);">
+                    <div style="flex: 1;">
+                        <div style="font-weight: 600; color: #f57c00; font-size: 0.9rem;">
+                            <i class="fas fa-id-card"></i> ${dateStr}
+                        </div>
+                        <div style="font-size: 0.85rem; color: var(--text2); margin-top: 4px;">
+                            ${startTime} - ${endTime} · ${slot.instructor} · ${location}
+                        </div>
+                    </div>
+                    <button onclick="deletePermisSlot('${slot.id}')"
+                        style="padding: 8px 14px; border: none; border-radius: 6px; background: #dc3545; color: white; font-weight: 600; cursor: pointer; font-size: 0.85rem;">
+                        <i class="fas fa-trash"></i> Supprimer
+                    </button>
+                </div>
+            `;
+        }).join('');
+        
+        // Créer / afficher la modal
+        let modal = document.getElementById('deletePermisModal');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'deletePermisModal';
+            modal.className = 'student-details-modal';
+            modal.style.display = 'flex';
+            document.body.appendChild(modal);
+        }
+        modal.innerHTML = `
+            <div class="student-details-content" style="max-width: 600px; max-height: 80vh; overflow-y: auto;">
+                <div class="student-details-header">
+                    <h3><i class="fas fa-id-card" style="margin-right:8px; color: #ffc107;"></i> Supprimer un créneau permis</h3>
+                    <button class="modal-close" onclick="closeDeletePermisModal()"><i class="fas fa-times"></i></button>
+                </div>
+                <div style="padding: 20px;">
+                    <p style="margin-bottom: 16px; color: var(--text2); font-size: 0.9rem;">
+                        Sélectionne le créneau à supprimer. Il redeviendra disponible pour les élèves.
+                    </p>
+                    ${listHtml}
+                </div>
+            </div>
+        `;
+        modal.style.display = 'flex';
+    } catch (err) {
+        console.error('Erreur:', err);
+        alert('❌ Erreur: ' + err.message);
+    }
+};
+
+window.closeDeletePermisModal = function() {
+    const modal = document.getElementById('deletePermisModal');
+    if (modal) modal.style.display = 'none';
+};
+
+window.deletePermisSlot = async function(slotId) {
+    if (!confirm('Supprimer ce créneau permis ?\n\nIl redeviendra disponible pour les élèves.')) {
         return;
     }
     
@@ -9,15 +92,15 @@ window.clearAllPermisSlots = async function() {
         const { error } = await window.supabaseClient
             .from('slots')
             .delete()
-            .eq('status', 'permis');
+            .eq('id', slotId);
         
         if (error) {
-            console.error('Erreur suppression:', error);
             alert('❌ Erreur lors de la suppression: ' + error.message);
             return;
         }
         
-        alert('✅ Tous les créneaux permis ont été supprimés !');
+        alert('✅ Créneau supprimé ! Il est à nouveau disponible.');
+        closeDeletePermisModal();
         if (typeof window.loadWeekSlots === 'function') {
             window.loadWeekSlots();
         } else {
