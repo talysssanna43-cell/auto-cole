@@ -1,5 +1,34 @@
 // Gestion du blocage de créneaux pour les examens de permis
 
+window.clearAllPermisSlots = async function() {
+    if (!confirm('⚠️ Supprimer TOUS les créneaux bloqués pour permis ?\n\nCette action est irréversible.')) {
+        return;
+    }
+    
+    try {
+        const { error } = await window.supabaseClient
+            .from('slots')
+            .delete()
+            .eq('status', 'permis');
+        
+        if (error) {
+            console.error('Erreur suppression:', error);
+            alert('❌ Erreur lors de la suppression: ' + error.message);
+            return;
+        }
+        
+        alert('✅ Tous les créneaux permis ont été supprimés !');
+        if (typeof window.loadWeekSlots === 'function') {
+            window.loadWeekSlots();
+        } else {
+            location.reload();
+        }
+    } catch (err) {
+        console.error('Erreur:', err);
+        alert('❌ Erreur: ' + err.message);
+    }
+};
+
 window.openPermisModal = function() {
     const modal = document.getElementById('permisModal');
     if (modal) {
