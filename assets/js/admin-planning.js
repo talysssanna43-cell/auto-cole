@@ -246,6 +246,14 @@ async function fetchBookedSlots(instructor, weekStart, weekEnd) {
             }
         });
     });
+    
+    // Debug: afficher tous les créneaux permis dans la map
+    console.log('📋 Créneaux dans bookedMap:', bookedMap.size);
+    bookedMap.forEach((value, key) => {
+        if (value.status === 'permis') {
+            console.log(`  🟡 ${key} → PERMIS (${value.notes})`);
+        }
+    });
 
     return bookedMap;
 }
