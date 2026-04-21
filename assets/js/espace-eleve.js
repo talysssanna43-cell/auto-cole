@@ -659,7 +659,7 @@ function renderSessionsTable() {
     if (!dashboardState.sessions.length) {
         tbody.innerHTML = `
             <tr>
-                <td colspan="6" style="text-align:center; padding: 2rem 0; color: var(--text-light);">
+                <td colspan="7" style="text-align:center; padding: 2rem 0; color: var(--text-light);">
                     Aucune séance enregistrée pour le moment.
                 </td>
             </tr>
@@ -709,6 +709,7 @@ function renderSessionsTable() {
                 <td>${session.slot}</td>
                 <td>${session.durationHours}h</td>
                 <td>${session.instructor}</td>
+                <td>Métro Saint-Barnabé</td>
                 <td><span class="${statusClass}">${statusLabel}</span></td>
                 <td>${cancelBtn}</td>
             </tr>
