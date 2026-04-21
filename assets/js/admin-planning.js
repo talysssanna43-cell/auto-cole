@@ -1214,11 +1214,17 @@ window.viewInscriptionDocuments = async function(userEmail) {
             .from('users')
             .select('*')
             .eq('email', userEmail)
-            .single();
+            .maybeSingle();
         
-        if (error || !user) {
+        if (error) {
             console.error('Error fetching user:', error);
-            alert('Impossible de charger les documents.');
+            alert('Erreur lors du chargement des documents.');
+            return;
+        }
+        
+        if (!user) {
+            console.log('Utilisateur non trouvé - inscription probablement en attente de validation');
+            alert('⚠️ Compte utilisateur non encore créé.\n\nCette inscription est en attente de validation. Les documents sont stockés dans la notification d\'inscription.\n\nValide d\'abord l\'inscription pour créer le compte utilisateur.');
             return;
         }
         
