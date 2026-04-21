@@ -1258,7 +1258,12 @@ window.viewInscriptionDocuments = async function(userEmail) {
             
             if (!user) {
                 console.log('Aucun document trouvé pour cet utilisateur');
-                alert('⚠️ Aucun document trouvé.\n\nCette inscription ne contient pas de documents ou ils n\'ont pas été uploadés.');
+                // Si la notification existe avec documents_count > 0 mais pas de champ documents
+                if (notification && notification.documents_count > 0) {
+                    alert(`⚠️ Documents non accessibles\n\nCette inscription a ${notification.documents_count} document(s) déclaré(s), mais ils n'ont pas été enregistrés dans la base de données (bug corrigé).\n\n📧 Solution : Demande à l'élève de renvoyer ses documents par email à l'auto-école.\n\n✅ Les futures inscriptions auront leurs documents accessibles directement ici.`);
+                } else {
+                    alert('⚠️ Aucun document trouvé.\n\nCette inscription ne contient pas de documents ou ils n\'ont pas été uploadés.');
+                }
                 return;
             }
             
