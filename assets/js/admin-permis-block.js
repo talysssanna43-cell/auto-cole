@@ -69,8 +69,10 @@ window.submitPermisBlock = async function(event) {
         
         // Insérer les créneaux bloqués dans la base de données
         for (const slot of slots) {
-            const startAt = `${slot.date}T${slot.start_time}:00`;
-            const endAt = `${slot.date}T${slot.end_time}:00`;
+            // Convertir l'heure locale en UTC pour éviter les décalages horaires
+            const startAt = new Date(`${slot.date}T${slot.start_time}:00`).toISOString();
+            const endAt = new Date(`${slot.date}T${slot.end_time}:00`).toISOString();
+            console.log(`🕐 Créneau ${slot.start_time}-${slot.end_time} (local) → ${startAt} (UTC)`);
             
             // Vérifier si un créneau existe déjà
             const { data: existingSlot, error: checkError } = await window.supabaseClient
