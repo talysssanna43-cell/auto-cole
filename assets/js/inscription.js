@@ -1745,18 +1745,47 @@ async function sendReferralConfirmationEmail(refereeEmail, refereeName, referrer
 
 // ===== GESTION PACK CODE ÉTUDIANT =====
 document.addEventListener('DOMContentLoaded', () => {
+    const packCodeRadio = document.getElementById('pack-code');
+    const codeStudentSection = document.getElementById('codeStudentSection');
     const codeStudentCheckbox = document.getElementById('codeStudentCheckbox');
     const codeStudentCardUpload = document.getElementById('codeStudentCardUpload');
     const codeStudentCardFile = document.getElementById('codeStudentCardFile');
     const codePriceDisplay = document.getElementById('codePriceDisplay');
     
+    // Afficher/masquer la section étudiant quand le pack Code est sélectionné
+    const allPackRadios = document.querySelectorAll('input[name="pack"]');
+    allPackRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (codeStudentSection) {
+                if (this.value === 'code' && this.checked) {
+                    codeStudentSection.style.display = 'block';
+                    console.log('✅ Section étudiant affichée pour pack Code');
+                } else {
+                    codeStudentSection.style.display = 'none';
+                    // Réinitialiser la case étudiant si on change de pack
+                    if (codeStudentCheckbox) {
+                        codeStudentCheckbox.checked = false;
+                        if (codeStudentCardUpload) codeStudentCardUpload.style.display = 'none';
+                        if (codePriceDisplay) codePriceDisplay.textContent = '20€';
+                        packPrices.code = 20;
+                    }
+                }
+            }
+        });
+    });
+    
+    // Gérer la case à cocher étudiant
     if (codeStudentCheckbox) {
-        codeStudentCheckbox.addEventListener('change', function() {
+        codeStudentCheckbox.addEventListener('change', function(e) {
+            e.stopPropagation(); // Empêcher la propagation de l'événement
             const isStudent = this.checked;
+            
+            console.log('📚 Case étudiant changée:', isStudent);
             
             // Afficher/masquer l'upload de carte étudiante
             if (codeStudentCardUpload) {
                 codeStudentCardUpload.style.display = isStudent ? 'block' : 'none';
+                console.log('Upload carte étudiante:', isStudent ? 'visible' : 'caché');
             }
             
             // Rendre le champ obligatoire ou non

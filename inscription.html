@@ -183,26 +183,26 @@
                                         <li><i class="fas fa-check"></i> Cours théoriques</li>
                                         <li><i class="fas fa-check"></i> Tests d'entraînement</li>
                                     </ul>
-                                    
-                                    <!-- Case à cocher Étudiant -->
-                                    <div style="margin-top: 1rem; padding: 0.75rem; background: #f0f9ff; border-radius: 8px; border: 1px solid #bae6fd;">
-                                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.95rem;">
-                                            <input type="checkbox" id="codeStudentCheckbox" style="width: 18px; height: 18px; cursor: pointer;">
-                                            <span style="font-weight: 600; color: #0369a1;">🎓 Je suis étudiant(e) - 15€ au lieu de 20€</span>
-                                        </label>
-                                        
-                                        <!-- Upload carte étudiante (caché par défaut) -->
-                                        <div id="codeStudentCardUpload" style="display: none; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #bae6fd;">
-                                            <label style="display: block; font-size: 0.9rem; color: #0369a1; margin-bottom: 0.5rem; font-weight: 600;">
-                                                📎 Carte étudiante (obligatoire) *
-                                            </label>
-                                            <input type="file" id="codeStudentCardFile" accept="image/*,.pdf" style="width: 100%; padding: 0.5rem; border: 1px solid #bae6fd; border-radius: 6px; font-size: 0.9rem; background: white;">
-                                            <p style="font-size: 0.85rem; color: #64748b; margin-top: 0.5rem; margin-bottom: 0;">
-                                                Formats acceptés : JPG, PNG, PDF. Photo lisible de ta carte étudiante en cours de validité.
-                                            </p>
-                                        </div>
-                                    </div>
                                 </label>
+                                
+                                <!-- Case à cocher Étudiant (en dehors du label pour éviter les conflits) -->
+                                <div id="codeStudentSection" style="margin-top: 1rem; padding: 0.75rem; background: #f0f9ff; border-radius: 8px; border: 1px solid #bae6fd; display: none;">
+                                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.95rem;" onclick="event.stopPropagation();">
+                                        <input type="checkbox" id="codeStudentCheckbox" style="width: 18px; height: 18px; cursor: pointer;" onclick="event.stopPropagation();">
+                                        <span style="font-weight: 600; color: #0369a1;">🎓 Je suis étudiant(e) - 15€ au lieu de 20€</span>
+                                    </label>
+                                    
+                                    <!-- Upload carte étudiante (caché par défaut) -->
+                                    <div id="codeStudentCardUpload" style="display: none; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #bae6fd;">
+                                        <label style="display: block; font-size: 0.9rem; color: #0369a1; margin-bottom: 0.5rem; font-weight: 600;">
+                                            📎 Carte étudiante ou certificat de scolarité (obligatoire) *
+                                        </label>
+                                        <input type="file" id="codeStudentCardFile" accept="image/*,.pdf" style="width: 100%; padding: 0.5rem; border: 1px solid #bae6fd; border-radius: 6px; font-size: 0.9rem; background: white;">
+                                        <p style="font-size: 0.85rem; color: #64748b; margin-top: 0.5rem; margin-bottom: 0;">
+                                            Formats acceptés : JPG, PNG, PDF. Photo lisible de ta carte étudiante ou certificat de scolarité en cours de validité.
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="pack-option" data-pack="am">
