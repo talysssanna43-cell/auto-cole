@@ -25,8 +25,9 @@ window.submitPermisBlock = async function(event) {
     const startTime = document.getElementById('permisStartTime').value;
     const endTime = document.getElementById('permisEndTime').value;
     const instructor = document.getElementById('permisInstructor').value;
+    const location = document.getElementById('permisLocation').value;
     
-    console.log('📝 Blocage de créneaux pour permis:', { date, startTime, endTime, instructor });
+    console.log('📝 Blocage de créneaux pour permis:', { date, startTime, endTime, instructor, location });
     
     // Vérifier que l'heure de fin est après l'heure de début
     if (endTime <= startTime) {
@@ -51,7 +52,8 @@ window.submitPermisBlock = async function(event) {
                 date: date,
                 start_time: currentTime,
                 end_time: nextTime,
-                instructor: instructor
+                instructor: instructor,
+                location: location
             });
             
             currentTime = nextTime;
@@ -88,14 +90,15 @@ window.submitPermisBlock = async function(event) {
                     .from('slots')
                     .update({
                         status: 'permis',
-                        end_at: endAt
+                        end_at: endAt,
+                        notes: `PERMIS - ${slot.location}`
                     })
                     .eq('id', existingSlot.id);
                 
                 if (updateError) {
                     console.error('Erreur lors de la mise à jour:', updateError);
                 } else {
-                    console.log(`✅ Créneau ${slot.start_time} mis à jour en "permis"`);
+                    console.log(`✅ Créneau ${slot.start_time} mis à jour en "permis" (${slot.location})`);
                 }
             } else {
                 // Créer un nouveau créneau
@@ -105,18 +108,19 @@ window.submitPermisBlock = async function(event) {
                         start_at: startAt,
                         end_at: endAt,
                         instructor: slot.instructor,
-                        status: 'permis'
+                        status: 'permis',
+                        notes: `PERMIS - ${slot.location}`
                     });
                 
                 if (insertError) {
                     console.error('Erreur lors de l\'insertion:', insertError);
                 } else {
-                    console.log(`✅ Créneau ${slot.start_time} créé avec statut "permis"`);
+                    console.log(`✅ Créneau ${slot.start_time} créé avec statut "permis" (${slot.location})`);
                 }
             }
         }
         
-        alert(`✅ ${slots.length} créneau(x) bloqué(s) pour le permis !\n\nDate: ${date}\nHoraire: ${startTime} - ${endTime}\nMoniteur: ${instructor}`);
+        alert(`✅ ${slots.length} créneau(x) bloqué(s) pour le permis !\n\nDate: ${date}\nHoraire: ${startTime} - ${endTime}\nMoniteur: ${instructor}\nLieu: ${location}`);
         
         closePermisModal();
         

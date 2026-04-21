@@ -98,7 +98,7 @@ async function fetchBookedSlots(instructor, weekStart, weekEnd) {
 
     const { data, error } = await window.supabaseClient
         .from('slots')
-        .select('id, start_at, end_at, status, instructor, reservations(first_name,last_name,phone,email)')
+        .select('id, start_at, end_at, status, instructor, notes, reservations(first_name,last_name,phone,email)')
         .eq('instructor', instructor)
         .gte('start_at', start.toISOString())
         .lte('start_at', end.toISOString())
@@ -194,9 +194,10 @@ async function fetchBookedSlots(instructor, weekStart, weekEnd) {
 
     const bookedMap = new Map();
     (data || []).forEach((row) => {
-        // Inclure les slots réservés OU ceux qui ont des réservations (même si status != 'booked')
+        // Inclure les slots réservés, permis OU ceux qui ont des réservations (même si status != 'booked')
         const hasReservation = Array.isArray(row.reservations) ? row.reservations.length > 0 : !!row.reservations;
-        if (row.status !== 'booked' && !hasReservation) return;
+        const isPermis = row.status === 'permis';
+        if (row.status !== 'booked' && !hasReservation && !isPermis) return;
         
         const d = new Date(row.start_at);
         const dateStr = toInputDate(d);
@@ -221,6 +222,7 @@ async function fetchBookedSlots(instructor, weekStart, weekEnd) {
         bookedMap.set(id, {
             start_at: row.start_at,
             status: row.status,
+            notes: row.notes || '',
             slot_uuid: row.id, // Stocker le vrai UUID du slot
             student: {
                 first_name: res?.first_name || 'Réservé',
@@ -289,6 +291,10 @@ function renderPlanning(grid, instructor, weekStart, bookedSet) {
             const isBooked = !!booking;
             const slotStart = new Date(`${dateStr}T${start}:00`).getTime();
             
+            // Vérifier si c'est un créneau permis
+            const isPermis = booking && booking.status === 'permis';
+            const permisLocation = isPermis && booking.notes ? booking.notes.replace('PERMIS - ', '') : '';
+            
             // Un créneau est passé seulement si la DATE est antérieure à aujourd'hui
             // Cela permet de placer des élèves sur tous les créneaux de la semaine affichée
             const slotDate = new Date(dateStr);
@@ -296,22 +302,22 @@ function renderPlanning(grid, instructor, weekStart, bookedSet) {
             const isPast = slotDate.getTime() < todayTimestamp;
             
             // Un créneau est "done" si réservé ET l'heure est passée
-            const isDone = isBooked && (slotStart < now);
+            const isDone = isBooked && !isPermis && (slotStart < now);
 
             totalSlots++;
             if (isDone) doneCount++;
-            else if (isBooked) bookedCount++;
+            else if (isBooked && !isPermis) bookedCount++;
 
-            const statusClass = isDone ? 'done' : isBooked ? 'booked' : 'available';
-            const statusLabel = isDone ? 'Réalisé' : isBooked ? 'Réservé' : 'Libre';
+            const statusClass = isPermis ? 'permis' : isDone ? 'done' : isBooked ? 'booked' : 'available';
+            const statusLabel = isPermis ? `PERMIS - ${permisLocation}` : isDone ? 'Réalisé' : isBooked ? 'Réservé' : 'Libre';
             const todayCol = isToday(d) ? ' today-col' : '';
 
-            const studentName = isBooked
+            const studentName = isBooked && !isPermis
                 ? `${(booking.student?.first_name || '').trim()} ${(booking.student?.last_name || '').trim()}`.trim()
                 : '';
-            const studentPhone = isBooked ? (booking.student?.phone || '') : '';
+            const studentPhone = isBooked && !isPermis ? (booking.student?.phone || '') : '';
 
-            const icon = isDone ? 'fa-check' : isBooked ? 'fa-user' : 'fa-minus';
+            const icon = isPermis ? 'fa-id-card' : isDone ? 'fa-check' : isBooked ? 'fa-user' : 'fa-minus';
             
             // Déterminer le type de véhicule depuis transmission_type
             const transmissionType = isBooked ? (booking?.student?.transmission_type || null) : null;
@@ -349,13 +355,13 @@ function renderPlanning(grid, instructor, weekStart, bookedSet) {
             
             return `
                 <div class="cal-cell${todayCol}">
-                    <div class="ev ${statusClass} ${transmissionClass}" ${isBooked ? `onclick="showStudent(${studentData})" style="cursor:pointer;"` : !isPast ? `onclick="openStudentSearchModal(${slotData})" style="cursor:pointer;"` : ''}>
-                        ${!isBooked && !isPast ? `<button class="add-student-btn" onclick="event.stopPropagation(); openStudentSearchModal(${slotData});" title="Placer un élève"><i class="fas fa-plus"></i></button>` : ''}
+                    <div class="ev ${statusClass} ${transmissionClass}" ${isPermis ? '' : isBooked ? `onclick="showStudent(${studentData})" style="cursor:pointer;"` : !isPast ? `onclick="openStudentSearchModal(${slotData})" style="cursor:pointer;"` : ''}>
+                        ${!isBooked && !isPast && !isPermis ? `<button class="add-student-btn" onclick="event.stopPropagation(); openStudentSearchModal(${slotData});" title="Placer un élève"><i class="fas fa-plus"></i></button>` : ''}
                         <span class="ev-icon"><i class="fas ${icon}"></i></span>
                         <div class="ev-status">${statusLabel}</div>
                         <div class="ev-time">${start} – ${end}</div>
-                        ${isBooked ? `<div class="ev-name">${studentName || 'Élève'}${vehicleType ? ` <span class="vehicle-badge">[${vehicleType}]</span>` : ''}</div>` : ''}
-                        ${isBooked && studentPhone ? `<div class="ev-phone"><i class="fas fa-phone" style="font-size:0.55rem;margin-right:3px;"></i>${studentPhone}</div>` : ''}
+                        ${isBooked && !isPermis ? `<div class="ev-name">${studentName || 'Élève'}${vehicleType ? ` <span class="vehicle-badge">[${vehicleType}]</span>` : ''}</div>` : ''}
+                        ${isBooked && !isPermis && studentPhone ? `<div class="ev-phone"><i class="fas fa-phone" style="font-size:0.55rem;margin-right:3px;"></i>${studentPhone}</div>` : ''}
                     </div>
                 </div>
             `;

@@ -91,7 +91,7 @@ async function fetchMySlots(instructor, weekStart, weekEnd) {
 
     const { data, error } = await window.supabaseClient
         .from('slots')
-        .select('id, start_at, end_at, status, reservations(id, email, first_name, last_name, phone)')
+        .select('id, start_at, end_at, status, notes, reservations(id, email, first_name, last_name, phone)')
         .eq('instructor', instructor)
         .gte('start_at', start.toISOString())
         .lte('start_at', end.toISOString());
@@ -202,6 +202,8 @@ function renderPlanning(grid, instructor, weekStart, slots) {
             const slot = slotMap.get(id);
             const isBooked = slot && slot.status === 'booked';
             const isCancelled = slot && slot.status === 'cancelled';
+            const isPermis = slot && slot.status === 'permis';
+            const permisLocation = isPermis && slot.notes ? slot.notes.replace('PERMIS - ', '') : '';
             const slotStart = new Date(`${dateStr}T${start}:00`).getTime();
             const isPast = slotStart < now;
             const isDone = isBooked && isPast;
@@ -212,7 +214,10 @@ function renderPlanning(grid, instructor, weekStart, slots) {
 
             let statusClass = 'available';
             let statusLabel = 'Libre';
-            if (isCancelled) {
+            if (isPermis) {
+                statusClass = 'permis';
+                statusLabel = `PERMIS - ${permisLocation}`;
+            } else if (isCancelled) {
                 statusClass = 'cancelled';
                 statusLabel = 'Annulé';
             } else if (isDone) {
