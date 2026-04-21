@@ -1035,8 +1035,15 @@ async function processInscription(data) {
                     
                     // Ajouter des valeurs par défaut pour tous les packs
                     if (selectedPackValue === 'code') {
+                        // Vérifier si l'utilisateur est étudiant pour le pack Code
+                        const codeStudentCheckbox = document.getElementById('codeStudentCheckbox');
+                        const isStudent = codeStudentCheckbox && codeStudentCheckbox.checked;
+                        const codePrice = isStudent ? 15 : 20;
+                        
+                        console.log(`📚 Pack Code - Étudiant: ${isStudent}, Prix: ${codePrice}€`);
+                        
                         notifData.hours_purchased = 0;
-                        notifData.amount_paid = packPrices[selectedPackValue] || 0;
+                        notifData.amount_paid = codePrice;
                         notifData.transmission_type = null;
                     } else if (selectedPackValue === 'boite-auto') {
                         // Pack boîte auto → toujours BA
@@ -1395,7 +1402,16 @@ async function processStripePayment(formData) {
     try {
         const selectedPack = document.querySelector('input[name="pack"]:checked');
         const packName = selectedPack.value;
-        const packPrice = packPrices[packName];
+        
+        // Vérifier si l'utilisateur est étudiant pour le pack Code
+        let packPrice = packPrices[packName];
+        if (packName === 'code') {
+            const codeStudentCheckbox = document.getElementById('codeStudentCheckbox');
+            const isStudent = codeStudentCheckbox && codeStudentCheckbox.checked;
+            packPrice = isStudent ? 15 : 20;
+            console.log(`💳 Paiement Pack Code - Étudiant: ${isStudent}, Prix: ${packPrice}€`);
+        }
+        
         const amountInCents = packPrice * 100;
         
         const paymentIntentResponse = await fetch('/.netlify/functions/create-payment-intent', {
