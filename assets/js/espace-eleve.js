@@ -455,6 +455,7 @@ function renderSlotGrid() {
                     slotContent = `
                         <span class="slot-label">${label}</span>
                         <span class="slot-instructor">${slot.instructor}</span>
+                        <span class="slot-location">📍 Métro Saint-Barnabé</span>
                     `;
                 }
                 
