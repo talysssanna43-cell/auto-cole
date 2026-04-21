@@ -547,6 +547,14 @@ function updateSummary() {
         // For heures-conduite pack, get the calculated price
         let totalPrice = packPrices[packName];
         
+        // Vérifier si l'utilisateur est étudiant pour le pack Code
+        if (packName === 'code') {
+            const codeStudentCheckbox = document.getElementById('codeStudentCheckbox');
+            const isStudent = codeStudentCheckbox && codeStudentCheckbox.checked;
+            totalPrice = isStudent ? 15 : 20;
+            console.log(`📊 Récapitulatif - Pack Code - Étudiant: ${isStudent}, Prix: ${totalPrice}€`);
+        }
+        
         // For heures-conduite, also show the number of hours and transmission type
         if (packName === 'heures-conduite') {
             const nombreHeures = document.getElementById('nombreHeures');
@@ -1818,6 +1826,11 @@ document.addEventListener('DOMContentLoaded', () => {
             packPrices.code = isStudent ? 15 : 20;
             
             console.log(`📚 Pack Code: ${isStudent ? 'Étudiant (15€)' : 'Classique (20€)'}`);
+            
+            // Mettre à jour le récapitulatif de commande
+            if (typeof updateSummary === 'function') {
+                updateSummary();
+            }
         });
     }
 });
