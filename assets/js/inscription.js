@@ -688,6 +688,12 @@ async function processInscription(data) {
             }
         }
         
+        // Ajouter la carte étudiante si pack Code et case étudiant cochée
+        const codeStudentCheckbox = document.getElementById('codeStudentCheckbox');
+        if (selectedPackValue === 'code' && codeStudentCheckbox && codeStudentCheckbox.checked) {
+            requiredFields.push('codeStudentCardFile');
+        }
+        
         console.log('Documents obligatoires:', requiredFields);
         
         // Vérifier que tous les documents obligatoires sont présents
@@ -709,7 +715,8 @@ async function processInscription(data) {
                 'ephoto': 'E-photo',
                 'certifHebergement': 'Certificat d\'hébergement',
                 'pieceHebergeur': 'Pièce d\'identité de l\'hébergeur',
-                'pieceIdentiteParent': 'Pièce d\'identité du représentant légal'
+                'pieceIdentiteParent': 'Pièce d\'identité du représentant légal',
+                'codeStudentCardFile': 'Carte étudiante'
             };
             
             const missingNames = missingDocs.map(doc => docNames[doc] || doc).join(', ');
@@ -1735,3 +1742,37 @@ async function sendReferralConfirmationEmail(refereeEmail, refereeName, referrer
         console.error('❌ Erreur lors de l\'envoi de l\'email:', error);
     }
 }
+
+// ===== GESTION PACK CODE ÉTUDIANT =====
+document.addEventListener('DOMContentLoaded', () => {
+    const codeStudentCheckbox = document.getElementById('codeStudentCheckbox');
+    const codeStudentCardUpload = document.getElementById('codeStudentCardUpload');
+    const codeStudentCardFile = document.getElementById('codeStudentCardFile');
+    const codePriceDisplay = document.getElementById('codePriceDisplay');
+    
+    if (codeStudentCheckbox) {
+        codeStudentCheckbox.addEventListener('change', function() {
+            const isStudent = this.checked;
+            
+            // Afficher/masquer l'upload de carte étudiante
+            if (codeStudentCardUpload) {
+                codeStudentCardUpload.style.display = isStudent ? 'block' : 'none';
+            }
+            
+            // Rendre le champ obligatoire ou non
+            if (codeStudentCardFile) {
+                codeStudentCardFile.required = isStudent;
+            }
+            
+            // Mettre à jour le prix affiché
+            if (codePriceDisplay) {
+                codePriceDisplay.textContent = isStudent ? '15€' : '20€';
+            }
+            
+            // Mettre à jour le prix dans packPrices pour le calcul
+            packPrices.code = isStudent ? 15 : 20;
+            
+            console.log(`📚 Pack Code: ${isStudent ? 'Étudiant (15€)' : 'Classique (20€)'}`);
+        });
+    }
+});
