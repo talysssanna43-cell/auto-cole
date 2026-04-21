@@ -1220,11 +1220,16 @@ window.viewInscriptionDocuments = async function(userEmail) {
             .limit(1)
             .maybeSingle();
         
+        console.log('🔍 Notification récupérée:', notification);
+        console.log('📄 Documents dans notification:', notification?.documents);
+        console.log('📊 Type de documents:', typeof notification?.documents);
+        console.log('📦 Documents_count:', notification?.documents_count);
+        
         let documents = {};
         let source = '';
         
         if (notification && notification.documents) {
-            console.log('Documents trouvés dans inscription_notifications');
+            console.log('✅ Documents trouvés dans inscription_notifications');
             source = 'notification';
             
             // Handle different document formats
