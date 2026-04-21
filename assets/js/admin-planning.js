@@ -1291,6 +1291,15 @@ window.viewInscriptionDocuments = async function(userEmail) {
         
         if (!modalBody) return;
         
+        // Utiliser les données de la notification ou du user selon la source
+        const userData = source === 'notification' ? {
+            prenom: notification.user_prenom,
+            nom: notification.user_nom,
+            email: notification.user_email,
+            telephone: notification.user_telephone,
+            forfait: notification.pack
+        } : user;
+        
         const documentLabels = {
             pieceIdentite: 'Pièce d\'identité',
             assr: 'ASSR',
@@ -1298,16 +1307,17 @@ window.viewInscriptionDocuments = async function(userEmail) {
             justifDomicile: 'Justificatif de domicile',
             ephoto: 'E-photo',
             certifHebergement: 'Certificat d\'hébergement',
-            pieceHebergeur: 'Pièce d\'identité hébergeur'
+            pieceHebergeur: 'Pièce d\'identité hébergeur',
+            codeStudentCardFile: 'Carte étudiant / Certificat de scolarité'
         };
         
         modalBody.innerHTML = `
             <div style="margin-bottom: 1.5rem;">
-                <h3 style="margin-bottom: 0.5rem;">${user.prenom} ${user.nom}</h3>
+                <h3 style="margin-bottom: 0.5rem;">${userData.prenom} ${userData.nom}</h3>
                 <p style="color: var(--text2); margin: 0;">
-                    <i class="fas fa-envelope"></i> ${user.email}<br>
-                    <i class="fas fa-phone"></i> ${user.telephone || '-'}<br>
-                    <i class="fas fa-box"></i> Pack: <strong>${user.forfait || '-'}</strong>
+                    <i class="fas fa-envelope"></i> ${userData.email}<br>
+                    <i class="fas fa-phone"></i> ${userData.telephone || '-'}<br>
+                    <i class="fas fa-box"></i> Pack: <strong>${userData.forfait || '-'}</strong>
                 </p>
             </div>
             
