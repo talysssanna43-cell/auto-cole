@@ -3,9 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tarifs - Auto-Ecole Breteuil</title>
+    <meta name="description" content="Nos tarifs pour le permis de conduire à Marseille 13006. Packs adaptés à tous les besoins. Paiement en plusieurs fois possible.">
+    
+    <!-- Favicon et Open Graph -->
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="shortcut icon" href="assets/logo.png">
+    <link rel="apple-touch-icon" href="assets/logo.png">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://auto-ecole-breteuil.fr/tarifs.html">
+    <meta property="og:title" content="Tarifs - Auto-Ecole Breteuil - Marseille 13006">
+    <meta property="og:description" content="Nos tarifs pour le permis de conduire à Marseille 13006. Packs adaptés à tous les besoins. Paiement en plusieurs fois possible.">
+    <meta property="og:image" content="https://auto-ecole-breteuil.fr/assets/logo.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    
+    <!-- Twitter Card -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://auto-ecole-breteuil.fr/tarifs.html">
+    <meta property="twitter:title" content="Tarifs - Auto-Ecole Breteuil - Marseille 13006">
+    <meta property="twitter:description" content="Nos tarifs pour le permis de conduire à Marseille 13006. Packs adaptés à tous les besoins. Paiement en plusieurs fois possible.">
+    <meta property="twitter:image" content="https://auto-ecole-breteuil.fr/assets/logo.png">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Tarifs - Auto-Ecole Breteuil</title>
 </head>
 <body>
     <!-- Navigation -->
@@ -13,7 +40,7 @@
         <div class="container">
             <div class="nav-wrapper">
                 <a href="index.html" class="logo">
-                    <i class="fas fa-car"></i>
+                    <img src="assets/logo.png" alt="Auto-Ecole Breteuil">
                     <span>Auto-Ecole <strong>Breteuil</strong></span>
                 </a>
                 
@@ -25,8 +52,8 @@
 
                 <ul class="nav-menu" id="navMenu">
                     <li><a href="index.html">Accueil</a></li>
-                    <li><a href="#permis">Permis</a></li>
-                    <li><a href="code.html">Code de la route</a></li>
+                    <li><a href="recrutement.html">Recrutement</a></li>
+                    <li><a href="qui-sommes-nous.html">Qui sommes-nous</a></li>
                     <li><a href="tarifs.html">Tarifs</a></li>
                     <li><a href="contact.html">Contact</a></li>
                 </ul>
@@ -51,6 +78,23 @@
     <section class="packs">
         <div class="container">
             <div class="packs-grid">
+                <!-- Pack Code de la route -->
+                <div class="pack-card">
+                    <div class="pack-badge">Code seul</div>
+                    <h3 class="pack-title">Code de la route</h3>
+                    <div class="pack-price">
+                        <span class="price-amount">20€</span>
+                        <span class="price-label">15€ pour les étudiants</span>
+                    </div>
+                    <ul class="pack-features">
+                        <li><i class="fas fa-check"></i> Accès illimité 7j/7 (mobile & PC)</li>
+                        <li><i class="fas fa-check"></i> Coaching personnalisé</li>
+                        <li><i class="fas fa-check"></i> Simulations d'examen</li>
+                        <li><i class="fas fa-check"></i> Suivi de progression</li>
+                    </ul>
+                    <button type="button" class="btn-primary btn-block" onclick="openCodeModal()">Choisir ce pack</button>
+                </div>
+
                 <!-- Pack Voiture sans permis -->
                 <div class="pack-card">
                     <div class="pack-badge">Voiture sans permis</div>
@@ -60,32 +104,34 @@
                         <span class="price-label">Formation complète</span>
                     </div>
                     <ul class="pack-features">
-                        <li><i class="fas fa-check"></i> Dossier administratif</li>
+                        <li><i class="fas fa-check"></i> Inscription administrative offerte</li>
                         <li><i class="fas fa-check"></i> Suivi numérique</li>
                         <li><i class="fas fa-check"></i> 8h de pratique</li>
                         <li><i class="fas fa-check"></i> Module code</li>
-                        <li><i class="fas fa-check"></i> Module manœuvres</li>
+                        <li><i class="fas fa-check"></i> <strong>Permis blanc</strong></li>
                     </ul>
-                    <a href="inscription.html?pack=am4" class="btn-primary btn-block">Choisir ce pack</a>
+                    <button type="button" class="btn-primary btn-block" onclick="selectPack('am', 'Voiture sans permis (Permis AM)', 350)">Choisir ce pack</button>
                 </div>
 
                 <!-- Pack Permis B boîte auto -->
                 <div class="pack-card">
                     <div class="pack-badge">Boîte auto</div>
-                    <h3 class="pack-title">Permis B automatique</h3>
+                    <h3 class="pack-title">Boîte Automatique</h3>
                     <div class="pack-price">
+                        <span class="price-old">1 050€</span>
                         <span class="price-amount">859€</span>
                         <span class="price-label">Code + 13h de conduite</span>
                     </div>
                     <ul class="pack-features">
+                        <li><i class="fas fa-check"></i> Inscription administrative offerte</li>
                         <li><i class="fas fa-check"></i> Code en salle 6 mois</li>
                         <li><i class="fas fa-check"></i> Code en ligne 1 mois</li>
                         <li><i class="fas fa-check"></i> Suivi numérique</li>
                         <li><i class="fas fa-check"></i> Évaluation de départ</li>
                         <li><i class="fas fa-check"></i> 13h de conduite</li>
-                        <li><i class="fas fa-check"></i> Permis blanc</li>
+                        <li><i class="fas fa-check"></i> <strong>Permis blanc</strong></li>
                     </ul>
-                    <a href="inscription.html?pack=boite-auto" class="btn-primary btn-block">Choisir ce pack</a>
+                    <button type="button" class="btn-primary btn-block" onclick="selectPack('boite-auto', 'Boîte Automatique', 859)">Choisir ce pack</button>
                 </div>
 
                 <!-- Pack 20h de conduite -->
@@ -93,7 +139,7 @@
                     <div class="pack-badge">Conduite seule</div>
                     <h3 class="pack-title">20h de conduite</h3>
                     <div class="pack-price">
-                        <span class="price-amount">880€</span>
+                        <span class="price-amount">900€</span>
                         <span class="price-label">20 heures de conduite</span>
                     </div>
                     <ul class="pack-features">
@@ -103,55 +149,62 @@
                         <li><i class="fas fa-check"></i> Suivi personnalisé</li>
                         <li><i class="fas fa-check"></i> Paiement en 4x sans frais</li>
                     </ul>
-                    <a href="inscription.html?pack=20h" class="btn-primary btn-block">Choisir ce pack</a>
+                    <button type="button" class="btn-primary btn-block" onclick="selectPack('20h', '20h de conduite', 900)">Choisir ce pack</button>
                 </div>
 
                 <!-- Pack Permis B -->
                 <div class="pack-card pack-featured">
                     <div class="pack-badge popular">Le plus populaire</div>
-                    <h3 class="pack-title">Permis B complet</h3>
+                    <h3 class="pack-title">Boîte Manuelle</h3>
                     <div class="pack-price">
+                        <span class="price-old">1 250€</span>
                         <span class="price-amount">995€</span>
                         <span class="price-label">Code + 20h de conduite</span>
                     </div>
                     <ul class="pack-features">
+                        <li><i class="fas fa-check"></i> Inscription administrative offerte</li>
                         <li><i class="fas fa-check"></i> Code en salle 6 mois</li>
                         <li><i class="fas fa-check"></i> Code en ligne 1 mois</li>
                         <li><i class="fas fa-check"></i> Évaluation de départ</li>
-                        <li><i class="fas fa-check"></i> 20h de conduite & permis blanc</li>
+                        <li><i class="fas fa-check"></i> 20h de conduite</li>
                         <li><i class="fas fa-check"></i> Suivi numérique personnalisé</li>
+                        <li><i class="fas fa-check"></i> <strong>Permis blanc</strong></li>
                     </ul>
-                    <a href="inscription.html?pack=zen" class="btn-primary btn-block">Choisir ce pack</a>
+                    <button type="button" class="btn-primary btn-block" onclick="selectPack('zen', 'Boîte Manuelle', 995)">Choisir ce pack</button>
                 </div>
 
                 <!-- Pack Accéléré -->
-                <div class="pack-card">
+                <div class="pack-card pack-promo">
                     <div class="pack-badge">Le plus rapide</div>
                     <h3 class="pack-title">Permis Accéléré</h3>
                     <div class="pack-price">
+                        <span class="price-old">1 250€</span>
                         <span class="price-amount">999€</span>
                         <span class="price-label">Code + 20h de conduite</span>
                     </div>
                     <ul class="pack-features">
+                        <li><i class="fas fa-check"></i> Inscription administrative offerte</li>
                         <li><i class="fas fa-check"></i> Tout du pack Premium</li>
                         <li><i class="fas fa-check"></i> Formation en 30 jours</li>
                         <li><i class="fas fa-check"></i> Planning intensif garanti</li>
                         <li><i class="fas fa-check"></i> Examen express</li>
                         <li><i class="fas fa-check"></i> Accompagnement dédié</li>
                         <li><i class="fas fa-check"></i> Coach personnel</li>
+                        <li><i class="fas fa-check"></i> <strong>Permis blanc</strong></li>
                     </ul>
-                    <a href="inscription.html?pack=accelere" class="btn-primary btn-block">Choisir ce pack</a>
+                    <button type="button" class="btn-primary btn-block" onclick="selectPack('accelere', 'Permis Accéléré', 999)">Choisir ce pack</button>
                 </div>
 
                 <!-- Pack AAC -->
                 <div class="pack-card">
                     <div class="pack-badge">Conduite accompagnée</div>
-                    <h3 class="pack-title">Forfait AAC (Conduite accompagnée)</h3>
+                    <h3 class="pack-title">Conduite Accompagnée</h3>
                     <div class="pack-price">
                         <span class="price-amount">1190€</span>
                         <span class="price-label">Code + 20h de conduite</span>
                     </div>
                     <ul class="pack-features">
+                        <li><i class="fas fa-check"></i> Inscription administrative offerte</li>
                         <li><i class="fas fa-check"></i> Dès 15 ans (moins de 18 ans)</li>
                         <li><i class="fas fa-check"></i> Code en ligne 1 mois</li>
                         <li><i class="fas fa-check"></i> Code en salle 6 mois</li>
@@ -159,8 +212,9 @@
                         <li><i class="fas fa-check"></i> 20h de conduite</li>
                         <li><i class="fas fa-check"></i> RDV préalable obligatoire</li>
                         <li><i class="fas fa-check"></i> Suivi numérique complet</li>
+                        <li><i class="fas fa-check"></i> <strong>Permis blanc</strong></li>
                     </ul>
-                    <a href="inscription.html?pack=aac" class="btn-primary btn-block">Choisir ce pack</a>
+                    <button type="button" class="btn-primary btn-block" onclick="selectPack('aac', 'Conduite Accompagnée', 1190)">Choisir ce pack</button>
                 </div>
 
                 <!-- Pack Conduite supervisée -->
@@ -172,119 +226,58 @@
                         <span class="price-label">Code + 20h de conduite</span>
                     </div>
                     <ul class="pack-features">
+                        <li><i class="fas fa-check"></i> Inscription administrative offerte</li>
                         <li><i class="fas fa-check"></i> Pour les +18 ans</li>
                         <li><i class="fas fa-check"></i> Code en salle 6 mois</li>
                         <li><i class="fas fa-check"></i> Code en ligne 1 mois</li>
                         <li><i class="fas fa-check"></i> Évaluation de départ</li>
                         <li><i class="fas fa-check"></i> 20h de conduite</li>
                         <li><i class="fas fa-check"></i> RDV préalable</li>
+                        <li><i class="fas fa-check"></i> <strong>Permis blanc</strong></li>
                     </ul>
-                    <a href="inscription.html?pack=supervisee" class="btn-primary btn-block">Choisir ce pack</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Additional Services -->
-    <section class="services-section">
-        <div class="container">
-            <h2 class="section-title">Services à la carte</h2>
-            <p class="section-subtitle">Personnalise ta formation selon tes besoins</p>
-            
-            <div class="services-grid">
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-car"></i>
-                    </div>
-                    <h3>Heure de conduite</h3>
-                    <div class="service-price">40€</div>
-                    <p>Ajoute des heures de conduite supplémentaires à ton pack</p>
+                    <button type="button" class="btn-primary btn-block" onclick="selectPack('supervisee', 'Conduite supervisée', 1190)">Choisir ce pack</button>
                 </div>
 
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-book"></i>
+                <!-- Pack Heure de conduite -->
+                <div class="pack-card">
+                    <div class="pack-badge">À l'unité</div>
+                    <h3 class="pack-title">Heure de conduite</h3>
+                    <div class="pack-price">
+                        <span class="price-amount">45€ - 50€</span>
+                        <span class="price-label">Par heure</span>
                     </div>
-                    <h3>Code de la route seul</h3>
-                    <div class="service-price">15€ / mois</div>
-                    <p>Accès gratuit à notre plateforme d'apprentissage du code</p>
+                    <ul class="pack-features">
+                        <li><i class="fas fa-check"></i> Boîte manuelle : 45€/h</li>
+                        <li><i class="fas fa-check"></i> Boîte automatique : 50€/h</li>
+                        <li><i class="fas fa-check"></i> Réservation flexible</li>
+                    </ul>
+                    <button type="button" class="btn-primary btn-block" onclick="openDrivingHourModal()">Choisir ce pack</button>
                 </div>
 
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-redo"></i>
+                <!-- Pack Second Chance -->
+                <div class="pack-card">
+                    <div class="pack-badge">Seconde chance</div>
+                    <h3 class="pack-title">Forfait Second Chance</h3>
+                    <div class="pack-price">
+                        <span class="price-amount">569€</span>
+                        <span class="price-label">Votre nouvelle opportunité</span>
                     </div>
-                    <h3>Présentation examen code</h3>
-                    <div class="service-price">30€</div>
-                    <p>Frais de présentation à l'examen du code de la route</p>
-                </div>
-
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-clipboard-check"></i>
-                    </div>
-                    <h3>Présentation examen conduite</h3>
-                    <div class="service-price">Inclus</div>
-                    <p>Frais de présentation inclus dans tous nos packs</p>
-                </div>
-
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-motorcycle"></i>
-                    </div>
-                    <h3>Permis Moto (A2)</h3>
-                    <div class="service-price">899€</div>
-                    <p>Formation complète pour le permis moto A2</p>
-                </div>
-
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <h3>Conduite accompagnée</h3>
-                    <div class="service-price">+100€</div>
-                    <p>Option conduite accompagnée (AAC) dès 15 ans</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Payment Options -->
-    <section class="payment-section">
-        <div class="container">
-            <h2 class="section-title">Options de paiement</h2>
-            <p class="section-subtitle">Plusieurs solutions pour financer ton permis</p>
-            
-            <div class="payment-options-grid">
-                <div class="payment-card">
-                    <div class="payment-icon">
-                        <i class="fas fa-credit-card"></i>
-                    </div>
-                    <h3>Paiement en 4 fois</h3>
-                    <p>Sans frais, par carte bancaire. Répartis ton paiement sur 4 mensualités égales.</p>
-                </div>
-
-                <div class="payment-card">
-                    <div class="payment-icon">
-                        <i class="fas fa-wallet"></i>
-                    </div>
-                    <h3>Financement CPF</h3>
-                    <p>Utilise ton Compte Personnel de Formation pour financer jusqu'à 100% de ton permis.</p>
-                </div>
-
-                <div class="payment-card">
-                    <div class="payment-icon">
-                        <i class="fas fa-hand-holding-usd"></i>
-                    </div>
-                    <h3>Aide au permis</h3>
-                    <p>Renseigne-toi sur les aides disponibles : permis à 1€/jour, aide Pôle Emploi, etc.</p>
+                    <ul class="pack-features">
+                        <li><i class="fas fa-check"></i> Récupération du dossier administratif</li>
+                        <li><i class="fas fa-check"></i> 1 séance bilan personnalisée (2h)</li>
+                        <li><i class="fas fa-check"></i> 1 séance correction des défauts (2h)</li>
+                        <li><i class="fas fa-check"></i> 1 séance permis blanc (2h)</li>
+                        <li><i class="fas fa-check"></i> Nouvelle date d'examen garantie</li>
+                        <li><i class="fas fa-check"></i> Accompagnement compris</li>
+                    </ul>
+                    <button type="button" class="btn-primary btn-block" onclick="selectPack('second-chance', 'Forfait Second Chance', 569)">Choisir ce pack</button>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- FAQ Section -->
-    <section class="faq-section">
+    <section class="faq-section" id="faq">
         <div class="container">
             <h2 class="section-title">Questions fréquentes</h2>
             
@@ -328,23 +321,22 @@
                         <p>Les frais de re-présentation à l'examen pratique sont de 80€. Nous te proposerons également des heures de conduite supplémentaires si nécessaire.</p>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- CTA Section -->
-    <section class="cta-section">
-        <div class="container">
-            <div class="cta-content">
-                <h2>Prêt à commencer ?</h2>
-                <p>Inscris-toi maintenant et bénéficie de nos tarifs avantageux</p>
-                <div class="cta-buttons">
-                    <a href="inscription.html" class="btn-primary btn-large">
-                        <i class="fas fa-user-plus"></i> S'inscrire maintenant
-                    </a>
-                    <a href="contact.html" class="btn-secondary btn-large">
-                        <i class="fas fa-phone"></i> Contacter un conseiller
-                    </a>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Où trouver mon numéro NEPH ?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Le numéro NEPH (Numéro d'Enregistrement Préfectoral Harmonisé) est ton identifiant unique pour passer le permis de conduire. Tu peux le trouver :</p>
+                        <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
+                            <li><strong>Sur ton certificat d'inscription</strong> délivré par l'ANTS lors de ta première inscription</li>
+                            <li><strong>Dans ton espace ANTS</strong> sur <a href="https://permisdeconduire.ants.gouv.fr" target="_blank" style="color: var(--primary-color);">permisdeconduire.ants.gouv.fr</a></li>
+                            <li><strong>Sur ta convocation aux examens</strong> du code ou de la conduite</li>
+                            <li><strong>Sur ton relevé d'information restreint</strong> si tu en as déjà demandé un</li>
+                        </ul>
+                        <p style="margin-top: 0.5rem;">Si tu n'as pas encore de numéro NEPH, nous t'aiderons à en faire la demande lors de ton inscription chez nous.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -353,6 +345,40 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Auto-Ecole Breteuil</h4>
+                    <p>Votre auto-école à Marseille 13006. Formation de qualité au permis de conduire.</p>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Formations</h4>
+                    <ul>
+                        <li><a href="permis-b.html">Permis B</a></li>
+                        <li><a href="qui-sommes-nous.html">Qui sommes-nous</a></li>
+                        <li><a href="conduite-accompagnee.html">Conduite accompagnée</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Informations</h4>
+                    <ul>
+                        <li><a href="tarifs.html">Tarifs</a></li>
+                        <li><a href="tarifs.html#faq">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Notre localisation</h4>
+                    <p style="margin-bottom: 1rem;">1 Rue Édouard Delanglade<br>13006 Marseille</p>
+                    <h4 style="margin-top: 1.5rem;">Contact</h4>
+                    <ul>
+                        <li><i class="fas fa-phone"></i> 04 91 53 36 98</li>
+                        <li><i class="fas fa-envelope"></i> a.e.breteuil@gmail.com</li>
+                    </ul>
+                </div>
+            </div>
+
             <div class="footer-bottom">
                 <p>&copy; 2024 Auto-Ecole Breteuil. Tous droits réservés.</p>
                 <div class="footer-links">
@@ -364,7 +390,995 @@
         </div>
     </footer>
 
+    <!-- Modal Code de la route -->
+    <div id="codeModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content" style="max-width: 600px;">
+            <button class="modal-close" onclick="closeCodeModal()">&times;</button>
+            
+            <!-- Step 0: Connexion requise -->
+            <div id="codeStep0" style="display: none; text-align: center;">
+                <div class="modal-icon">
+                    <i class="fas fa-user-lock"></i>
+                </div>
+                <h2>Connexion requise</h2>
+                <p>Pour souscrire au <strong>Code de la route</strong>, tu dois être connecté.</p>
+                <div style="background: var(--bg-light); padding: 1rem; border-radius: 12px; margin: 1.5rem 0;">
+                    <p style="margin: 0; font-size: 1.25rem; font-weight: 700; color: var(--primary-color);">À partir de 15€</p>
+                </div>
+                <div class="modal-actions" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    <a href="connexion.html" class="btn-primary" style="width: 100%; justify-content: center;">
+                        <i class="fas fa-sign-in-alt"></i> Se connecter
+                    </a>
+                    <a href="inscription.html" class="btn-secondary" style="width: 100%; justify-content: center;">
+                        <i class="fas fa-user-plus"></i> S'inscrire
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Step 1: Formulaire -->
+            <div id="codeStep1" style="display: none;">
+                <div class="code-form-header" style="text-align: center; margin-bottom: 1.5rem;">
+                    <h2 style="font-size: 1.75rem; margin-bottom: 0.5rem;">Inscription Code de la route</h2>
+                    <p style="color: var(--text-light);">Étape 1/2 : Tes informations</p>
+                </div>
+                <form id="codeInfoForm">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <label style="display: grid; gap: 0.5rem; font-weight: 600;">
+                            Prénom *
+                            <input type="text" name="prenom" id="codePrenom" required style="padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px;">
+                        </label>
+                        <label style="display: grid; gap: 0.5rem; font-weight: 600;">
+                            Nom *
+                            <input type="text" name="nom" id="codeNom" required style="padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px;">
+                        </label>
+                        <label style="display: grid; gap: 0.5rem; font-weight: 600;">
+                            Email *
+                            <input type="email" name="email" id="codeEmail" required style="padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px;">
+                        </label>
+                        <label style="display: grid; gap: 0.5rem; font-weight: 600;">
+                            Téléphone *
+                            <input type="tel" name="tel" id="codeTel" required style="padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px;">
+                        </label>
+                        <label style="display: grid; gap: 0.5rem; font-weight: 600; grid-column: span 2;">
+                            Pack souhaité *
+                            <select name="pack" id="codePackSelect" required style="padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px;">
+                                <option value="">Choisis un pack</option>
+                                <option value="etudiant" data-price="15">Pack Étudiant (15€)</option>
+                                <option value="classique" data-price="20">Pack Classique (20€)</option>
+                            </select>
+                        </label>
+                        <label id="codeStudentCardField" style="display: none; grid-column: span 2; gap: 0.5rem; font-weight: 600;">
+                            Carte étudiante (photo) *
+                            <input type="file" name="carte_etudiante" id="codeCarteEtudiante" accept="image/*,.pdf" style="padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px;">
+                            <span style="font-size: 0.85rem; color: var(--text-light);">Ajoute une photo lisible. PDF accepté.</span>
+                        </label>
+                    </div>
+                    <div style="margin-top: 1.5rem; text-align: center;">
+                        <button type="submit" class="btn-primary" style="width: 100%;">
+                            <i class="fas fa-arrow-right"></i> Continuer vers le paiement
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Step 2: Paiement -->
+            <div id="codeStep2" style="display: none;">
+                <h2 class="checkout-title">Payer par carte bancaire</h2>
+                <p class="checkout-pack">Pack : <strong id="codeRecapPack"></strong> - <span id="codeRecapName"></span></p>
+                
+                <div class="checkout-form">
+                    <!-- Card Info -->
+                    <div class="checkout-field">
+                        <label>Informations de la carte</label>
+                        <div class="card-info-box">
+                            <div class="stripe-split-card">
+                                <div id="card-number-code" class="stripe-card-element"></div>
+                                <div class="stripe-split-row">
+                                    <div id="card-expiry-code" class="stripe-card-element"></div>
+                                    <div id="card-cvc-code" class="stripe-card-element"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p id="card-errors-code" class="stripe-card-errors"></p>
+                    </div>
+                    
+                    <!-- Cardholder Name -->
+                    <div class="checkout-field">
+                        <label for="codeCardholderName">Nom du titulaire de la carte</label>
+                        <input type="text" id="codeCardholderName" placeholder="Nom sur la carte" required>
+                    </div>
+                    
+                    <button type="button" class="checkout-pay-btn" id="codePayButton" onclick="processCodePayment()">
+                        Payer <span id="codePayAmount">0</span>€
+                    </button>
+                    
+                    <p class="payment-secure"><i class="fas fa-shield-alt"></i> Paiement sécurisé par Stripe</p>
+                    
+                    <button type="button" style="margin-top: 1rem; background: none; border: none; color: var(--text-light); cursor: pointer; width: 100%;" onclick="goBackToStep1()">
+                        <i class="fas fa-arrow-left"></i> Retour
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Step 3: Confirmation -->
+            <div id="codeStep3" style="display: none; text-align: center; padding: 2rem 0;">
+                <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                    <i class="fas fa-check" style="font-size: 2.5rem; color: white;"></i>
+                </div>
+                <h2 style="font-size: 1.75rem; margin-bottom: 0.75rem; color: var(--text-dark);">Paiement confirmé !</h2>
+                <p style="color: var(--text-light); margin-bottom: 1.5rem; line-height: 1.6;">
+                    Merci pour ton inscription au Code de la route.<br>
+                    <strong style="color: var(--text-dark);">Tu recevras tes identifiants de connexion par email sous 24h.</strong>
+                </p>
+                <div style="background: var(--bg-light); padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                    <p style="margin: 0; font-size: 0.9rem; color: var(--text-light);">
+                        <i class="fas fa-envelope" style="color: var(--primary-color);"></i> 
+                        Un email de confirmation a été envoyé à <strong id="codeConfirmEmail"></strong>
+                    </p>
+                </div>
+                <button type="button" class="btn-primary" onclick="closeCodeModal()" style="width: 100%;">
+                    <i class="fas fa-home"></i> Retour à l'accueil
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Pack Selection -->
+    <div id="packModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            
+            <!-- Content for non-logged users -->
+            <div id="modalNotLogged" style="display: none;">
+                <div class="modal-icon">
+                    <i class="fas fa-user-lock"></i>
+                </div>
+                <h2>Connexion requise</h2>
+                <p>Pour souscrire au pack <strong id="modalPackName"></strong>, tu dois être connecté.</p>
+                <div class="modal-pack-price" id="modalPackPrice"></div>
+                <div class="modal-actions">
+                    <a href="connexion.html" class="btn-primary">
+                        <i class="fas fa-sign-in-alt"></i> Se connecter
+                    </a>
+                    <a href="inscription.html" class="btn-secondary">
+                        <i class="fas fa-user-plus"></i> S'inscrire
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Content for logged users (payment) -->
+            <div id="modalLogged" style="display: none;">
+                <h2 class="checkout-title">Payer par carte bancaire</h2>
+                <p class="checkout-pack">Pack : <strong id="modalPackNameLogged"></strong></p>
+                
+                <div class="checkout-form">
+                    <!-- Card Info -->
+                    <div class="checkout-field">
+                        <label>Informations de la carte</label>
+                        <div class="card-info-box">
+                            <div class="stripe-split-card">
+                                <div id="card-number-tarifs" class="stripe-card-element"></div>
+                                <div class="stripe-split-row">
+                                    <div id="card-expiry-tarifs" class="stripe-card-element"></div>
+                                    <div id="card-cvc-tarifs" class="stripe-card-element"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p id="card-errors-tarifs" class="stripe-card-errors"></p>
+                    </div>
+                    
+                    <!-- Cardholder Name -->
+                    <div class="checkout-field">
+                        <label for="cardholderNameTarifs">Nom du titulaire de la carte</label>
+                        <input type="text" id="cardholderNameTarifs" placeholder="Nom sur la carte" required>
+                    </div>
+                    
+                    <!-- Country -->
+                    <div class="checkout-field" style="display: none;">
+                        <label for="checkoutCountry">Pays ou région</label>
+                        <select id="checkoutCountry">
+                            <option value="FR" selected>France</option>
+                            <option value="BE">Belgique</option>
+                            <option value="CH">Suisse</option>
+                            <option value="LU">Luxembourg</option>
+                            <option value="MC">Monaco</option>
+                        </select>
+                    </div>
+                    
+                    <button type="button" class="checkout-pay-btn" id="payButton" onclick="processPayment()">
+                        Payer <span id="modalPackPriceLogged">0</span>
+                    </button>
+                    
+                    <p class="payment-secure"><i class="fas fa-shield-alt"></i> Paiement sécurisé par Stripe</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="assets/js/supabaseClient.js"></script>
+    <script src="assets/js/navbar.js"></script>
+    <script src="assets/js/mobile-menu.js"></script>
+    <script src="assets/js/april-notice.js"></script>
     <script src="assets/js/main.js"></script>
-    <script src="assets/js/tarifs.js"></script>
+    <script src="assets/js/tarifs.js?v=109"></script>
+    <script src="assets/js/support-ticket.js?v=6"></script>
+    <script>
+        // Code Modal State
+        let codeUserData = {};
+        let codePrice = 0;
+        let codeCardNumber = null;
+        let codeCardExpiry = null;
+        let codeCardCvc = null;
+        let codeStripeInitialized = false;
+
+        // Code Modal Functions
+        function openCodeModal() {
+            document.getElementById('codeModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            
+            // Check if user is logged in
+            const user = getStoredUser();
+            
+            // Hide all steps first
+            document.getElementById('codeStep0').style.display = 'none';
+            document.getElementById('codeStep1').style.display = 'none';
+            document.getElementById('codeStep2').style.display = 'none';
+            document.getElementById('codeStep3').style.display = 'none';
+            
+            if (user && user.email) {
+                // User is logged in - show form (step 1)
+                document.getElementById('codeStep1').style.display = 'block';
+                // Pre-fill form with user data
+                if (user.prenom) document.getElementById('codePrenom').value = user.prenom;
+                if (user.nom) document.getElementById('codeNom').value = user.nom;
+                if (user.email) document.getElementById('codeEmail').value = user.email;
+                if (user.telephone) document.getElementById('codeTel').value = user.telephone;
+            } else {
+                // User not logged in - show login prompt (step 0)
+                document.getElementById('codeStep0').style.display = 'block';
+            }
+        }
+
+        function closeCodeModal() {
+            document.getElementById('codeModal').style.display = 'none';
+            document.body.style.overflow = '';
+            // Reset form
+            document.getElementById('codeInfoForm').reset();
+            document.getElementById('codeStep0').style.display = 'none';
+            document.getElementById('codeStep1').style.display = 'none';
+            document.getElementById('codeStep2').style.display = 'none';
+            document.getElementById('codeStep3').style.display = 'none';
+        }
+
+        function goBackToStep1() {
+            document.getElementById('codeStep1').style.display = 'block';
+            document.getElementById('codeStep2').style.display = 'none';
+        }
+
+        function goToStep2() {
+            document.getElementById('codeStep1').style.display = 'none';
+            document.getElementById('codeStep2').style.display = 'block';
+            
+            // Update recap
+            document.getElementById('codeRecapName').textContent = codeUserData.prenom + ' ' + codeUserData.nom;
+            document.getElementById('codeRecapPack').textContent = codeUserData.packLabel;
+            document.getElementById('codePayAmount').textContent = codePrice;
+            
+            // Initialize card fields
+            if (!codeStripeInitialized) {
+                const isLocalTest = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
+                
+                if (isLocalTest) {
+                    // En local, créer des champs de saisie simulés
+                    const numberEl = document.getElementById('card-number-code');
+                    const expiryEl = document.getElementById('card-expiry-code');
+                    const cvcEl = document.getElementById('card-cvc-code');
+                    
+                    if (numberEl && !numberEl.querySelector('input')) {
+                        numberEl.innerHTML = '<input type="text" class="mock-card-input" placeholder="1234 1234 1234 1234" maxlength="19">';
+                    }
+                    if (expiryEl && !expiryEl.querySelector('input')) {
+                        expiryEl.innerHTML = '<input type="text" class="mock-card-input" placeholder="MM / AA" maxlength="7">';
+                    }
+                    if (cvcEl && !cvcEl.querySelector('input')) {
+                        cvcEl.innerHTML = '<input type="text" class="mock-card-input" placeholder="CVC" maxlength="4">';
+                    }
+                    codeStripeInitialized = true;
+                } else if (typeof Stripe !== 'undefined') {
+                    // En production, utiliser les vrais éléments Stripe
+                    initCodeStripeElements();
+                }
+            }
+        }
+        
+        async function initCodeStripeElements() {
+            try {
+                const response = await fetch('/.netlify/functions/stripe-config');
+                const data = await response.json();
+                const publishableKey = data.publishableKey;
+                if (!publishableKey) throw new Error('Clé Stripe introuvable');
+                
+                const stripeInstance = Stripe(publishableKey);
+                const elements = stripeInstance.elements();
+                
+                const style = {
+                    base: {
+                        fontSize: '16px',
+                        color: '#1f2937',
+                        '::placeholder': { color: '#9ca3af' }
+                    }
+                };
+
+                codeCardNumber = elements.create('cardNumber', { style: style });
+                codeCardExpiry = elements.create('cardExpiry', { style: style });
+                codeCardCvc = elements.create('cardCvc', { style: style });
+
+                codeCardNumber.mount('#card-number-code');
+                codeCardExpiry.mount('#card-expiry-code');
+                codeCardCvc.mount('#card-cvc-code');
+
+                codeCardNumber.on('change', function(event) {
+                    const displayError = document.getElementById('card-errors-code');
+                    displayError.textContent = event.error ? event.error.message : '';
+                });
+
+                codeStripeInitialized = true;
+            } catch (error) {
+                console.error('Erreur initialisation Stripe:', error);
+                document.getElementById('card-errors-code').textContent = 'Erreur chargement Stripe';
+            }
+        }
+
+        function goToStep3() {
+            document.getElementById('codeStep2').style.display = 'none';
+            document.getElementById('codeStep3').style.display = 'block';
+            document.getElementById('codeConfirmEmail').textContent = codeUserData.email;
+        }
+
+        async function processCodePayment() {
+            const payButton = document.getElementById('codePayButton');
+            const cardholderName = document.getElementById('codeCardholderName').value.trim();
+            
+            if (!cardholderName) {
+                alert('Veuillez entrer le nom du titulaire de la carte.');
+                return;
+            }
+
+            payButton.disabled = true;
+            payButton.innerHTML = 'Traitement...';
+
+            // In local/test mode, simulate payment
+            const isLocalTest = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
+            
+            if (isLocalTest) {
+                // Simulate payment delay and save notification
+                setTimeout(async function() {
+                    // Enregistrer la notification de paiement
+                    try {
+                        const { error } = await window.supabaseClient
+                            .from('code_rousseau_paiements')
+                            .insert([{
+                                prenom: codeUserData.prenom,
+                                nom: codeUserData.nom,
+                                email: codeUserData.email,
+                                telephone: codeUserData.tel,
+                                pack: codeUserData.pack,
+                                pack_label: codeUserData.packLabel,
+                                montant: codePrice,
+                                created_at: new Date().toISOString()
+                            }]);
+                        
+                        if (error) {
+                            console.error('Erreur enregistrement paiement:', error);
+                        }
+                    } catch (err) {
+                        console.error('Erreur:', err);
+                    }
+                    
+                    payButton.disabled = false;
+                    payButton.innerHTML = 'Payer ' + codePrice + '€';
+                    goToStep3();
+                }, 1500);
+                return;
+            }
+
+            // Real Stripe payment
+            try {
+                const { paymentMethod, error } = await stripe.createPaymentMethod({
+                    type: 'card',
+                    card: codeCardNumber,
+                    billing_details: {
+                        name: cardholderName,
+                        email: codeUserData.email
+                    }
+                });
+
+                if (error) {
+                    document.getElementById('card-errors-code').textContent = error.message;
+                    payButton.disabled = false;
+                    payButton.innerHTML = 'Payer ' + codePrice + '€';
+                    return;
+                }
+
+                // Here you would send to your backend to process payment
+                // For now, we'll simulate success
+                goToStep3();
+                
+            } catch (err) {
+                document.getElementById('card-errors-code').textContent = 'Erreur lors du paiement. Veuillez réessayer.';
+                payButton.disabled = false;
+                payButton.innerHTML = 'Payer ' + codePrice + '€';
+            }
+        }
+
+        // Close modal on overlay click
+        document.getElementById('codeModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeCodeModal();
+            }
+        });
+
+        // Handle student card field visibility and form submission
+        (function() {
+            const packSelect = document.getElementById('codePackSelect');
+            const studentCardField = document.getElementById('codeStudentCardField');
+            const studentCardInput = document.getElementById('codeCarteEtudiante');
+            const form = document.getElementById('codeInfoForm');
+
+            function syncStudentField() {
+                const isStudent = packSelect && packSelect.value === 'etudiant';
+                if (studentCardField) {
+                    studentCardField.style.display = isStudent ? 'grid' : 'none';
+                }
+                if (studentCardInput) {
+                    studentCardInput.required = !!isStudent;
+                }
+            }
+
+            if (packSelect) {
+                packSelect.addEventListener('change', syncStudentField);
+            }
+            syncStudentField();
+
+            // Handle form submission - go to step 2
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+
+                    if (!form.checkValidity()) {
+                        form.reportValidity();
+                        return;
+                    }
+
+                    // Store user data
+                    const selectedOption = packSelect.options[packSelect.selectedIndex];
+                    codeUserData = {
+                        prenom: document.getElementById('codePrenom').value,
+                        nom: document.getElementById('codeNom').value,
+                        email: document.getElementById('codeEmail').value,
+                        tel: document.getElementById('codeTel').value,
+                        pack: packSelect.value,
+                        packLabel: selectedOption.text
+                    };
+                    codePrice = parseInt(selectedOption.getAttribute('data-price')) || 20;
+
+                    goToStep2();
+                });
+            }
+        })();
+
+        // Driving Hour Modal Functions
+        let drivingHourUserData = {};
+        let drivingHourType = null;
+        let drivingHourPricePerHour = 0;
+
+        function openDrivingHourModal() {
+            document.getElementById('drivingHourModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            
+            // Check if user is logged in (check both 'user' and 'ae_user' keys)
+            const user = JSON.parse(localStorage.getItem('ae_user') || localStorage.getItem('user') || 'null');
+            
+            if (user && user.email) {
+                // User is logged in - show hours selection directly
+                showDrivingHourStepLoggedIn();
+            } else {
+                // User not logged in - show contact message
+                showDrivingHourStepNotLoggedIn();
+            }
+        }
+        
+        function showDrivingHourStepNotLoggedIn() {
+            document.getElementById('drivingHourStep1').style.display = 'none';
+            document.getElementById('drivingHourStep2').style.display = 'none';
+            document.getElementById('drivingHourStep3').style.display = 'none';
+            document.getElementById('drivingHourStepLoggedIn').style.display = 'none';
+            document.getElementById('drivingHourStepNotLoggedIn').style.display = 'block';
+        }
+
+        function closeDrivingHourModal() {
+            document.getElementById('drivingHourModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            // Reset
+            drivingHourType = null;
+            drivingHourPricePerHour = 0;
+        }
+
+        function showDrivingHourStep1() {
+            document.getElementById('drivingHourStep1').style.display = 'block';
+            document.getElementById('drivingHourStep2').style.display = 'none';
+            document.getElementById('drivingHourStepLoggedIn').style.display = 'none';
+        }
+
+        function showDrivingHourStep2() {
+            document.getElementById('drivingHourStep1').style.display = 'none';
+            document.getElementById('drivingHourStep2').style.display = 'block';
+            document.getElementById('drivingHourStepLoggedIn').style.display = 'none';
+        }
+
+        function showDrivingHourStepLoggedIn() {
+            document.getElementById('drivingHourStep1').style.display = 'none';
+            document.getElementById('drivingHourStep2').style.display = 'none';
+            document.getElementById('drivingHourStepLoggedIn').style.display = 'block';
+        }
+
+        function submitDrivingHourInfo(e) {
+            e.preventDefault();
+            
+            // Store user data
+            drivingHourUserData = {
+                neph: document.getElementById('drivingHourNeph').value,
+                prenom: document.getElementById('drivingHourPrenom').value,
+                nom: document.getElementById('drivingHourNom').value,
+                email: document.getElementById('drivingHourEmail').value,
+                tel: document.getElementById('drivingHourTel').value
+            };
+            
+            // Go to step 2 (choose transmission type)
+            showDrivingHourStep2();
+        }
+
+        function selectDrivingHourType(type, price) {
+            // Store the selected transmission type and price
+            drivingHourType = type;
+            drivingHourPricePerHour = price;
+            
+            // Go to step 3 (choose number of hours)
+            showDrivingHourStep3();
+        }
+        
+        function showDrivingHourStep3() {
+            document.getElementById('drivingHourStep1').style.display = 'none';
+            document.getElementById('drivingHourStep2').style.display = 'none';
+            document.getElementById('drivingHourStep3').style.display = 'block';
+            document.getElementById('drivingHourStepLoggedIn').style.display = 'none';
+        }
+        
+        function validateHoursInputNonLoggedIn(input) {
+            let value = parseInt(input.value) || 0;
+            
+            // Ensure it's a positive even number
+            if (value < 0) value = 0;
+            if (value % 2 !== 0) {
+                value = Math.floor(value / 2) * 2; // Round down to nearest even number
+            }
+            
+            input.value = value;
+            updateTotalPriceNonLoggedIn(value);
+        }
+        
+        function updateTotalPriceNonLoggedIn(hours) {
+            const totalPriceEl = document.getElementById('drivingHourTotalPriceNonLoggedIn');
+            if (hours > 0 && drivingHourPricePerHour > 0) {
+                const total = hours * drivingHourPricePerHour;
+                totalPriceEl.textContent = total + '€';
+            } else {
+                totalPriceEl.textContent = '0€';
+            }
+        }
+        
+        function submitDrivingHoursNonLoggedIn(e) {
+            e.preventDefault();
+            
+            const hours = parseInt(document.getElementById('drivingHoursInputNonLoggedIn').value) || 0;
+            
+            if (hours <= 0) {
+                alert('Veuillez saisir un nombre d\'heures valide');
+                return;
+            }
+            
+            if (hours % 2 !== 0) {
+                alert('Le nombre d\'heures doit être pair (2, 4, 6, 8, etc.)');
+                return;
+            }
+            
+            const totalPrice = hours * drivingHourPricePerHour;
+            const packName = `${hours}h de conduite - Boîte ${drivingHourType === 'manual' ? 'manuelle' : 'automatique'}`;
+            
+            // Combine user data with pack selection
+            const fullData = {
+                ...drivingHourUserData,
+                pack: 'heure-conduite-' + drivingHourType,
+                packName: packName,
+                price: totalPrice,
+                hours: hours
+            };
+            
+            // Call selectPack with the calculated data
+            selectPack('heure-conduite-' + drivingHourType, packName, totalPrice, hours);
+            closeDrivingHourModal();
+        }
+        
+        function goBackToDrivingHourStep2() {
+            showDrivingHourStep2();
+        }
+
+        function selectDrivingHourTypeLoggedIn(type, pricePerHour) {
+            drivingHourType = type;
+            drivingHourPricePerHour = pricePerHour;
+            
+            // Update UI to show selected type
+            document.querySelectorAll('.transmission-option').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.target.closest('.transmission-option').classList.add('selected');
+            
+            // Update price display
+            const hoursInput = document.getElementById('drivingHoursInput');
+            const hours = parseInt(hoursInput.value) || 0;
+            updateTotalPrice(hours);
+        }
+
+        function updateTotalPrice(hours) {
+            const totalPriceEl = document.getElementById('drivingHourTotalPrice');
+            if (hours > 0 && drivingHourPricePerHour > 0) {
+                const total = hours * drivingHourPricePerHour;
+                totalPriceEl.textContent = total + '€';
+            } else {
+                totalPriceEl.textContent = '0€';
+            }
+        }
+
+        function validateHoursInput(input) {
+            let value = parseInt(input.value) || 0;
+            
+            // Ensure it's a positive even number
+            if (value < 0) value = 0;
+            if (value % 2 !== 0) {
+                value = Math.floor(value / 2) * 2; // Round down to nearest even number
+            }
+            
+            input.value = value;
+            updateTotalPrice(value);
+        }
+
+        function submitDrivingHoursLoggedIn(e) {
+            e.preventDefault();
+            
+            const hours = parseInt(document.getElementById('drivingHoursInput').value) || 0;
+            
+            if (hours <= 0) {
+                alert('Veuillez saisir un nombre d\'heures valide');
+                return;
+            }
+            
+            if (hours % 2 !== 0) {
+                alert('Le nombre d\'heures doit être pair (2, 4, 6, 8, etc.)');
+                return;
+            }
+            
+            if (!drivingHourType) {
+                alert('Veuillez sélectionner un type de boîte');
+                return;
+            }
+            
+            const totalPrice = hours * drivingHourPricePerHour;
+            const packName = `${hours}h de conduite - Boîte ${drivingHourType === 'manual' ? 'manuelle' : 'automatique'}`;
+            
+            // Call selectPack with the calculated data
+            selectPack('heure-conduite-' + drivingHourType, packName, totalPrice, hours);
+            closeDrivingHourModal();
+        }
+
+        function goBackToDrivingHourStep1() {
+            showDrivingHourStep1();
+        }
+        
+        // Auto-ouvrir le modal si hash #heures-conduite
+        if (window.location.hash === '#heures-conduite') {
+            openDrivingHourModal();
+        }
+        
+        // Gérer le paiement direct depuis espace-eleve
+        if (window.location.hash === '#payer-heures') {
+            const extraHoursData = localStorage.getItem('extraHoursPurchase');
+            if (extraHoursData) {
+                try {
+                    const data = JSON.parse(extraHoursData);
+                    selectPack('heure-conduite-' + data.transmission, data.packName, data.price, data.hours);
+                    localStorage.removeItem('extraHoursPurchase');
+                } catch (e) {
+                    console.error('Erreur parsing extraHoursPurchase:', e);
+                }
+            }
+        }
+    </script>
+
+    <!-- Modal Heure de conduite -->
+    <div id="drivingHourModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content" style="max-width: 550px;">
+            <button class="modal-close" onclick="closeDrivingHourModal()">&times;</button>
+            
+            <!-- Step 1: Formulaire d'inscription -->
+            <div id="drivingHourStep1" style="display: block;">
+                <div style="text-align: center; margin-bottom: 1.5rem;">
+                    <div class="modal-icon" style="width: 80px; height: 80px; margin: 0 auto 1rem; background: var(--primary-gradient); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-user-plus" style="font-size: 2rem; color: white;"></i>
+                    </div>
+                    <h2 style="font-size: 1.75rem; margin-bottom: 0.5rem;">Inscription Heure de conduite</h2>
+                    <p style="color: var(--text-light);">Étape 1/2 : Tes informations</p>
+                </div>
+                
+                <form id="drivingHourInfoForm" onsubmit="submitDrivingHourInfo(event)">
+                    <div style="display: grid; gap: 1rem;">
+                        <label style="display: grid; gap: 0.5rem; font-weight: 600;">
+                            Numéro NEPH *
+                            <input type="text" id="drivingHourNeph" required placeholder="Ex: 123456789012" style="padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem;">
+                            <span style="font-size: 0.85rem; color: var(--text-light);">Numéro d'enregistrement préfectoral harmonisé (12 chiffres)</span>
+                        </label>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <label style="display: grid; gap: 0.5rem; font-weight: 600;">
+                                Prénom *
+                                <input type="text" id="drivingHourPrenom" required placeholder="Prénom" style="padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem;">
+                            </label>
+                            <label style="display: grid; gap: 0.5rem; font-weight: 600;">
+                                Nom *
+                                <input type="text" id="drivingHourNom" required placeholder="Nom" style="padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem;">
+                            </label>
+                        </div>
+                        
+                        <label style="display: grid; gap: 0.5rem; font-weight: 600;">
+                            Email *
+                            <input type="email" id="drivingHourEmail" required placeholder="ton.email@exemple.com" style="padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem;">
+                        </label>
+                        
+                        <label style="display: grid; gap: 0.5rem; font-weight: 600;">
+                            Téléphone *
+                            <input type="tel" id="drivingHourTel" required placeholder="06 12 34 56 78" style="padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem;">
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1.5rem; justify-content: center;">
+                        <i class="fas fa-arrow-right"></i> Continuer
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Step 2: Choix du type de boîte -->
+            <div id="drivingHourStep2" style="display: none;">
+                <div style="text-align: center; padding: 1rem;">
+                    <div class="modal-icon" style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: var(--primary-gradient); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-car" style="font-size: 2rem; color: white;"></i>
+                    </div>
+                    <h2 style="font-size: 1.75rem; margin-bottom: 0.5rem;">Choisis ton type de boîte</h2>
+                    <p style="color: var(--text-light); margin-bottom: 2rem;">Étape 2/3 : Sélectionne le type de transmission</p>
+                    
+                    <div style="display: grid; gap: 1rem;">
+                        <button onclick="selectDrivingHourType('manual', 45)" class="driving-hour-option" style="background: white; border: 2px solid var(--border-color); border-radius: 16px; padding: 1.5rem; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: space-between;">
+                            <div style="text-align: left;">
+                                <div style="font-size: 1.25rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.25rem;">
+                                    <i class="fas fa-cog" style="margin-right: 0.5rem; color: var(--primary-color);"></i>
+                                    Boîte manuelle
+                                </div>
+                                <div style="color: var(--text-light); font-size: 0.9rem;">Formation traditionnelle</div>
+                            </div>
+                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary-color);">45€/h</div>
+                        </button>
+                        
+                        <button onclick="selectDrivingHourType('auto', 50)" class="driving-hour-option" style="background: white; border: 2px solid var(--border-color); border-radius: 16px; padding: 1.5rem; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: space-between;">
+                            <div style="text-align: left;">
+                                <div style="font-size: 1.25rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.25rem;">
+                                    <i class="fas fa-magic" style="margin-right: 0.5rem; color: var(--primary-color);"></i>
+                                    Boîte automatique
+                                </div>
+                                <div style="color: var(--text-light); font-size: 0.9rem;">Conduite simplifiée</div>
+                            </div>
+                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary-color);">50€/h</div>
+                        </button>
+                    </div>
+                    
+                    <button type="button" onclick="goBackToDrivingHourStep1()" style="margin-top: 1.5rem; background: none; border: none; color: var(--text-light); cursor: pointer; width: 100%; padding: 0.75rem;">
+                        <i class="fas fa-arrow-left"></i> Retour
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Step 3: Choix du nombre d'heures (non connecté) -->
+            <div id="drivingHourStep3" style="display: none; max-height: 85vh; overflow-y: auto;">
+                <div style="padding: 1rem;">
+                    <div style="text-align: center; margin-bottom: 1rem;">
+                        <div class="modal-icon" style="width: 60px; height: 60px; margin: 0 auto 0.75rem; background: var(--primary-gradient); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-clock" style="font-size: 1.5rem; color: white;"></i>
+                        </div>
+                        <h2 style="font-size: 1.5rem; margin-bottom: 0.25rem;">Nombre d'heures</h2>
+                        <p style="color: var(--text-light); font-size: 0.9rem;">Étape 3/3 : Choisis le nombre d'heures</p>
+                    </div>
+                    
+                    <form onsubmit="submitDrivingHoursNonLoggedIn(event)">
+                        <div style="display: grid; gap: 1rem;">
+                            <!-- Hours Selection -->
+                            <div>
+                                <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.95rem;">
+                                    Nombre d'heures *
+                                </label>
+                                <input 
+                                    type="number" 
+                                    id="drivingHoursInputNonLoggedIn" 
+                                    min="2" 
+                                    step="2" 
+                                    placeholder="Ex: 2, 4, 6, 8..." 
+                                    required
+                                    oninput="validateHoursInputNonLoggedIn(this)"
+                                    style="width: 100%; padding: 0.65rem; border: 2px solid var(--border-color); border-radius: 8px; font-size: 1rem; text-align: center;"
+                                >
+                                <p style="font-size: 0.8rem; color: var(--text-light); margin-top: 0.35rem;">
+                                    <i class="fas fa-info-circle"></i> Le nombre d'heures doit être pair (2, 4, 6, 8, etc.)
+                                </p>
+                            </div>
+                            
+                            <!-- Total Price Display -->
+                            <div style="background: var(--bg-light); padding: 1rem; border-radius: 10px; text-align: center;">
+                                <div style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 0.35rem;">Prix total</div>
+                                <div id="drivingHourTotalPriceNonLoggedIn" style="font-size: 1.75rem; font-weight: 700; color: var(--primary-color);">0€</div>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem; justify-content: center; padding: 0.75rem;">
+                            <i class="fas fa-check"></i> Confirmer et payer
+                        </button>
+                        
+                        <button type="button" onclick="goBackToDrivingHourStep2()" style="margin-top: 0.75rem; background: none; border: none; color: var(--text-light); cursor: pointer; width: 100%; padding: 0.5rem;">
+                            <i class="fas fa-arrow-left"></i> Retour
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Step for Non-Logged Users: Contact message -->
+            <div id="drivingHourStepNotLoggedIn" style="display: none;">
+                <div style="padding: 2rem; text-align: center;">
+                    <div class="modal-icon" style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: var(--primary-gradient); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-phone" style="font-size: 2rem; color: white;"></i>
+                    </div>
+                    <h2 style="font-size: 1.75rem; margin-bottom: 1rem;">Réservation d'heures de conduite</h2>
+                    <p style="color: var(--text-light); font-size: 1.1rem; margin-bottom: 2rem; line-height: 1.6;">
+                        Pour réserver des heures de conduite à l'unité, veuillez nous contacter directement.
+                    </p>
+                    
+                    <div style="background: var(--bg-light); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+                        <div style="margin-bottom: 1rem;">
+                            <i class="fas fa-phone" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                            <a href="tel:0491533698" style="font-size: 1.25rem; font-weight: 700; color: var(--primary-color); text-decoration: none;">
+                                04 91 53 36 98
+                            </a>
+                        </div>
+                        <div>
+                            <i class="fas fa-envelope" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                            <a href="mailto:a.e.breteuil@gmail.com" style="font-size: 1rem; color: var(--text-dark); text-decoration: none;">
+                                a.e.breteuil@gmail.com
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                        <a href="connexion.html" class="btn-primary" style="text-decoration: none;">
+                            <i class="fas fa-sign-in-alt"></i> Se connecter
+                        </a>
+                        <a href="inscription.html" class="btn-secondary" style="text-decoration: none;">
+                            <i class="fas fa-user-plus"></i> S'inscrire
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step for Logged-in Users: Choose hours and transmission -->
+            <div id="drivingHourStepLoggedIn" style="display: none; max-height: 85vh; overflow-y: auto;">
+                <div style="padding: 1rem;">
+                    <div style="text-align: center; margin-bottom: 1rem;">
+                        <div class="modal-icon" style="width: 60px; height: 60px; margin: 0 auto 0.75rem; background: var(--primary-gradient); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-clock" style="font-size: 1.5rem; color: white;"></i>
+                        </div>
+                        <h2 style="font-size: 1.5rem; margin-bottom: 0.25rem;">Réserver des heures de conduite</h2>
+                        <p style="color: var(--text-light); font-size: 0.9rem;">Choisis le nombre d'heures et le type de boîte</p>
+                    </div>
+                    
+                    <form onsubmit="submitDrivingHoursLoggedIn(event)">
+                        <div style="display: grid; gap: 1rem;">
+                            <!-- Hours Selection -->
+                            <div>
+                                <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.95rem;">
+                                    Nombre d'heures *
+                                </label>
+                                <input 
+                                    type="number" 
+                                    id="drivingHoursInput" 
+                                    min="2" 
+                                    step="2" 
+                                    placeholder="Ex: 2, 4, 6, 8..." 
+                                    required
+                                    oninput="validateHoursInput(this)"
+                                    style="width: 100%; padding: 0.65rem; border: 2px solid var(--border-color); border-radius: 8px; font-size: 1rem; text-align: center;"
+                                >
+                                <p style="font-size: 0.8rem; color: var(--text-light); margin-top: 0.35rem;">
+                                    <i class="fas fa-info-circle"></i> Le nombre d'heures doit être pair (2, 4, 6, 8, etc.)
+                                </p>
+                            </div>
+                            
+                            <!-- Transmission Type Selection -->
+                            <div>
+                                <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.95rem;">
+                                    Type de boîte *
+                                </label>
+                                <div style="display: grid; gap: 0.75rem;">
+                                    <button type="button" onclick="selectDrivingHourTypeLoggedIn('manual', 45)" class="transmission-option" style="background: white; border: 2px solid var(--border-color); border-radius: 10px; padding: 0.75rem; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: space-between;">
+                                        <div style="text-align: left;">
+                                            <div style="font-size: 1rem; font-weight: 700; color: var(--text-dark);">
+                                                <i class="fas fa-cog" style="margin-right: 0.5rem; color: var(--primary-color);"></i>
+                                                Boîte manuelle
+                                            </div>
+                                        </div>
+                                        <div style="font-size: 1.1rem; font-weight: 700; color: var(--primary-color);">45€/h</div>
+                                    </button>
+                                    
+                                    <button type="button" onclick="selectDrivingHourTypeLoggedIn('auto', 50)" class="transmission-option" style="background: white; border: 2px solid var(--border-color); border-radius: 10px; padding: 0.75rem; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: space-between;">
+                                        <div style="text-align: left;">
+                                            <div style="font-size: 1rem; font-weight: 700; color: var(--text-dark);">
+                                                <i class="fas fa-magic" style="margin-right: 0.5rem; color: var(--primary-color);"></i>
+                                                Boîte automatique
+                                            </div>
+                                        </div>
+                                        <div style="font-size: 1.1rem; font-weight: 700; color: var(--primary-color);">50€/h</div>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Total Price Display -->
+                            <div style="background: var(--bg-light); padding: 1rem; border-radius: 10px; text-align: center;">
+                                <div style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 0.35rem;">Prix total</div>
+                                <div id="drivingHourTotalPrice" style="font-size: 1.75rem; font-weight: 700; color: var(--primary-color);">0€</div>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem; justify-content: center; padding: 0.75rem;">
+                            <i class="fas fa-check"></i> Confirmer la réservation
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .driving-hour-option:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 105, 180, 0.2);
+        }
+        
+        .transmission-option:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 105, 180, 0.2);
+        }
+        
+        .transmission-option.selected {
+            border-color: var(--primary-color);
+            background: linear-gradient(135deg, rgba(255, 105, 180, 0.1), rgba(233, 30, 99, 0.05));
+            box-shadow: 0 4px 12px rgba(255, 105, 180, 0.3);
+        }
+    </style>
 </body>
 </html>
