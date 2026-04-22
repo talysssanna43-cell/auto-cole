@@ -146,7 +146,7 @@ window.closePermisModal = function() {
 };
 
 // Autocomplétion pour rechercher les élèves
-let autocompleteTimeout = null;
+let candidateAutocompleteTimeout = null;
 window.searchCandidate = async function(input) {
     const searchTerm = input.value.trim();
     const suggestionsContainer = document.getElementById('candidateSuggestions');
@@ -158,8 +158,8 @@ window.searchCandidate = async function(input) {
         return;
     }
     
-    clearTimeout(autocompleteTimeout);
-    autocompleteTimeout = setTimeout(async () => {
+    clearTimeout(candidateAutocompleteTimeout);
+    candidateAutocompleteTimeout = setTimeout(async () => {
         try {
             const { data: users, error } = await window.supabaseClient
                 .from('users')
