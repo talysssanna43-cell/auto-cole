@@ -229,19 +229,38 @@ window.confirmChangeForfait = async function(email, prenom, nom, heuresEffectuee
     
     try {
         // Mettre à jour le forfait dans la base de données
+        const updateData = {
+            forfait: newPack,
+            transmission_type: transmission
+        };
+        
         const { error: updateError } = await window.supabaseClient
             .from('users')
-            .update({
-                forfait: newPack,
-                hours_goal: heuresDisponibles,
-                hours_remaining: heuresDisponibles,
-                transmission_type: transmission,
-                updated_at: new Date().toISOString()
-            })
+            .update(updateData)
             .eq('email', email);
         
         if (updateError) {
+            console.error('Erreur update users:', updateError);
             throw updateError;
+        }
+        
+        // Créer une nouvelle entrée dans inscription_notifications pour enregistrer le changement
+        const { error: notifError } = await window.supabaseClient
+            .from('inscription_notifications')
+            .insert({
+                user_email: email,
+                user_name: `${prenom} ${nom}`,
+                pack: newPack,
+                hours_purchased: heuresDisponibles,
+                amount_paid: packPrices[newPack] || 0,
+                transmission_type: transmission,
+                status: 'approved',
+                created_at: new Date().toISOString()
+            });
+        
+        if (notifError) {
+            console.error('Erreur création notification:', notifError);
+            // Ne pas bloquer si l'insertion échoue
         }
         
         console.log(`✅ Forfait changé pour ${prenom} ${nom}: ${newPack} (${transmission}) - ${heuresDisponibles}h disponibles`);
