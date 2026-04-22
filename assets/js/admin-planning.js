@@ -2322,7 +2322,6 @@ window.bookStudentOnSlot = async function(student, slotInfo) {
         
         if (bookingError) {
             console.error('❌ Error booking slot:', bookingError);
-            alert('Erreur lors de la réservation du créneau: ' + bookingError.message);
             return;
         }
         
@@ -2334,13 +2333,6 @@ window.bookStudentOnSlot = async function(student, slotInfo) {
         
         console.log('✅ Réservation créée avec succès! Slot ID:', bookingResult.slot_id, 'Reservation ID:', bookingResult.reservation_id);
         
-        // Afficher un message de succès
-        const finalHoursRemaining = Math.max(0, hoursRemaining - 2);
-        alert(`✅ Créneau réservé avec succès !\n\n` +
-            `${student.prenom} ${student.nom} a été placé(e) sur le planning de ${slotInfo.instructor}.\n\n` +
-            `⏰ Heures restantes : ${finalHoursRemaining}h / ${hoursGoal}h` +
-            (finalHoursRemaining === 0 ? '\n\n⚠️ Forfait épuisé - L\'élève devra acheter des heures supplémentaires.' : ''));
-        
         // Mettre à jour l'état pour afficher la semaine et le moniteur du créneau ajouté
         state.instructor = normalizedInstructor;
         state.weekStart = startOfWeek(new Date(slotInfo.dateStr));
@@ -2351,7 +2343,6 @@ window.bookStudentOnSlot = async function(student, slotInfo) {
         
     } catch (err) {
         console.error('Error booking student on slot:', err);
-        alert('Erreur lors de la réservation.');
     }
 };
 
@@ -2730,22 +2721,16 @@ window.bookSlotForStudent = async function(slotId, studentEmail, studentFirstNam
         
         if (bookingError) {
             console.error('Error booking slot:', bookingError);
-            alert('Erreur lors de la réservation du créneau.');
             return;
         }
         
         if (!bookingResult || !bookingResult.ok) {
-            alert('Impossible de réserver ce créneau : ' + (bookingResult?.error || 'Erreur inconnue'));
+            console.error('Impossible de réserver ce créneau:', bookingResult?.error || 'Erreur inconnue');
             return;
         }
         
         // Fermer la modal de sélection
         closeSlotSelection();
-        
-        // Afficher un message de succès
-        alert(`✅ Créneau réservé avec succès !\n\n` +
-            `${studentFirstName} ${studentLastName} a été placé(e) sur le planning de ${instructor}.\n\n` +
-            `Heures restantes : ${hoursRemaining - 2}h / ${hoursGoal}h`);
         
         // Mettre à jour l'état pour afficher la semaine et le moniteur du créneau ajouté
         state.instructor = normalizeInstructor(instructor);
@@ -2757,7 +2742,6 @@ window.bookSlotForStudent = async function(slotId, studentEmail, studentFirstNam
         
     } catch (err) {
         console.error('Error booking slot for student:', err);
-        alert('Erreur lors de la réservation.');
     }
 };
 
