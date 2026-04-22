@@ -1289,6 +1289,7 @@ async function initializeStripe() {
         const isLocalTest = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
 
         if (isLocalTest) {
+            // Champs pour paiement comptant
             const number = document.getElementById('card-number');
             const exp = document.getElementById('card-expiry');
             const cvc = document.getElementById('card-cvc');
@@ -1303,7 +1304,22 @@ async function initializeStripe() {
                 cvc.innerHTML = '<input type="text" class="mock-card-input" placeholder="CVC" inputmode="numeric" autocomplete="cc-csc">';
             }
 
-            console.log('Mode local détecté - Stripe désactivé');
+            // Champs pour paiement en plusieurs fois
+            const installmentsNumber = document.getElementById('installments-card-number');
+            const installmentsExp = document.getElementById('installments-card-expiry');
+            const installmentsCvc = document.getElementById('installments-card-cvc');
+
+            if (installmentsNumber) {
+                installmentsNumber.innerHTML = '<input type="text" class="mock-card-input" placeholder="1234 1234 1234 1234" inputmode="numeric" autocomplete="cc-number">';
+            }
+            if (installmentsExp) {
+                installmentsExp.innerHTML = '<input type="text" class="mock-card-input" placeholder="MM / AA" inputmode="numeric" autocomplete="cc-exp">';
+            }
+            if (installmentsCvc) {
+                installmentsCvc.innerHTML = '<input type="text" class="mock-card-input" placeholder="CVC" inputmode="numeric" autocomplete="cc-csc">';
+            }
+
+            console.log('Mode local détecté - Stripe désactivé, champs simulés créés');
             return;
         }
 
