@@ -1307,43 +1307,56 @@ async function fetchUserPackAndSetGoal(forfait) {
     try {
         console.log('🔍 Pack récupéré depuis users.forfait:', forfait);
         
-        // Try to get hours_goal and hours_remaining from database first
+        // Récupérer les heures depuis inscription_notifications
         const user = dashboardState.user;
         if (user && user.email) {
-            const { data, error } = await window.supabaseClient
-                .from('users')
-                .select('hours_goal, hours_completed_initial')
-                .eq('email', user.email)
-                .maybeSingle();
+            // Récupérer toutes les inscriptions de l'utilisateur (triées par date décroissante)
+            const { data: inscriptions, error: inscError } = await window.supabaseClient
+                .from('inscription_notifications')
+                .select('hours_purchased, pack, created_at')
+                .eq('user_email', user.email)
+                .order('created_at', { ascending: false });
             
-            if (!error && data) {
-                console.log('📊 Données utilisateur récupérées:', data);
+            if (!inscError && inscriptions && inscriptions.length > 0) {
+                // Calculer le total des heures achetées
+                const totalHoursPurchased = inscriptions.reduce((sum, ins) => {
+                    return sum + (ins.hours_purchased || 0);
+                }, 0);
+                
+                dashboardState.hoursGoal = totalHoursPurchased;
+                console.log('✅ Total heures achetées depuis inscription_notifications:', dashboardState.hoursGoal);
                 
                 // Packs sans heures de conduite : toujours 0h
                 const packsWithoutDriving = ['code'];
-                if (packsWithoutDriving.includes(forfait)) {
+                const latestPack = inscriptions[0].pack;
+                if (packsWithoutDriving.includes(latestPack)) {
                     dashboardState.hoursGoal = 0;
-                    console.log('✅ Forfait', forfait, '→ 0 heures de conduite');
-                } else {
-                    if (data.hours_goal !== null && data.hours_goal !== undefined) {
-                        dashboardState.hoursGoal = data.hours_goal;
-                        console.log('✅ hours_goal récupéré depuis la DB:', dashboardState.hoursGoal);
-                    }
+                    console.log('✅ Forfait', latestPack, '→ 0 heures de conduite');
                 }
+            } else {
+                console.warn('⚠️ Aucune inscription trouvée dans inscription_notifications');
+            }
+            
+            // Récupérer hours_completed_initial depuis users
+            const { data: userData, error: userError } = await window.supabaseClient
+                .from('users')
+                .select('hours_completed_initial')
+                .eq('email', user.email)
+                .maybeSingle();
+            
+            if (!userError && userData) {
+                console.log('🔍 hours_completed_initial dans la DB:', userData.hours_completed_initial);
                 
-                // Récupérer hours_completed_initial directement
-                console.log('🔍 hours_completed_initial dans la DB:', data.hours_completed_initial);
-                
-                if (data.hours_completed_initial !== null && data.hours_completed_initial !== undefined) {
-                    dashboardState.initialCompletedHours = data.hours_completed_initial;
+                if (userData.hours_completed_initial !== null && userData.hours_completed_initial !== undefined) {
+                    dashboardState.initialCompletedHours = userData.hours_completed_initial;
                     console.log('✅ Heures déjà effectuées avant inscription:', dashboardState.initialCompletedHours);
                 } else {
                     dashboardState.initialCompletedHours = 0;
                     console.log('⚠️ Aucune heure initiale trouvée, défaut à 0');
                 }
-                
-                if (dashboardState.hoursGoal !== undefined) return;
             }
+            
+            if (dashboardState.hoursGoal !== undefined && dashboardState.hoursGoal > 0) return;
         }
         
         // Fallback to pack-based mapping if hours_goal not in DB
