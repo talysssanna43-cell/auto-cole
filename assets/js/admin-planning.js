@@ -226,8 +226,8 @@ async function fetchBookedSlots(instructor, weekStart, weekEnd) {
         const pack = packMap.get(email) || '';
         const transmissionType = transmissionMap.get(email) || null;
         
-        // Log détaillé pour déboguer les réservations sans nom (sauf pour les créneaux permis)
-        if (!isPermis && (!res?.first_name || !res?.last_name)) {
+        // Log détaillé pour déboguer les réservations sans nom (sauf pour les créneaux permis et indisponibles)
+        if (!isPermis && !isIndisponible && (!res?.first_name || !res?.last_name)) {
             console.warn('⚠️ Réservation sans nom pour le slot:', {
                 slotId: row.id,
                 startAt: row.start_at,
@@ -252,11 +252,14 @@ async function fetchBookedSlots(instructor, weekStart, weekEnd) {
         });
     });
     
-    // Debug: afficher tous les créneaux permis dans la map
+    // Debug: afficher tous les créneaux permis et indisponibles dans la map
     console.log('📋 Créneaux dans bookedMap:', bookedMap.size);
     bookedMap.forEach((value, key) => {
         if (value.status === 'permis') {
             console.log(`  🟡 ${key} → PERMIS (${value.notes})`);
+        }
+        if (value.status === 'indisponible') {
+            console.log(`  🔴 ${key} → INDISPONIBLE (${value.notes})`);
         }
     });
 
