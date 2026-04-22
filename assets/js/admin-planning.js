@@ -183,12 +183,16 @@ async function fetchBookedSlots(instructor, weekStart, weekEnd) {
     if (emails.length > 0) {
         const { data: inscriptions } = await window.supabaseClient
             .from('inscription_notifications')
-            .select('user_email, pack, transmission_type')
-            .in('user_email', [...new Set(emails)]);
+            .select('user_email, pack, transmission_type, created_at')
+            .in('user_email', [...new Set(emails)])
+            .order('created_at', { ascending: false });
         
+        // Prendre la plus récente inscription pour chaque email
         (inscriptions || []).forEach(ins => {
-            packMap.set(ins.user_email, ins.pack);
-            transmissionMap.set(ins.user_email, ins.transmission_type);
+            if (!packMap.has(ins.user_email)) {
+                packMap.set(ins.user_email, ins.pack);
+                transmissionMap.set(ins.user_email, ins.transmission_type);
+            }
         });
     }
 
