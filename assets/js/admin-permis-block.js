@@ -112,6 +112,9 @@ window.deletePermisSlot = async function(slotId) {
     }
 };
 
+// Liste des candidats sélectionnés
+let selectedCandidates = [];
+
 window.openPermisModal = function() {
     const modal = document.getElementById('permisModal');
     if (modal) {
@@ -119,6 +122,10 @@ window.openPermisModal = function() {
         // Pré-remplir avec la date du jour
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('permisDate').value = today;
+        
+        // Réinitialiser la liste des candidats
+        selectedCandidates = [];
+        updateCandidatesList();
     }
 };
 
@@ -127,8 +134,105 @@ window.closePermisModal = function() {
     if (modal) {
         modal.style.display = 'none';
         document.getElementById('permisForm').reset();
+        selectedCandidates = [];
     }
 };
+
+// Autocomplétion pour rechercher les élèves
+let autocompleteTimeout = null;
+window.searchCandidate = async function(input) {
+    const searchTerm = input.value.trim();
+    const suggestionsContainer = document.getElementById('candidateSuggestions');
+    
+    if (!suggestionsContainer) return;
+    
+    if (searchTerm.length < 2) {
+        suggestionsContainer.style.display = 'none';
+        return;
+    }
+    
+    clearTimeout(autocompleteTimeout);
+    autocompleteTimeout = setTimeout(async () => {
+        try {
+            const { data: users, error } = await window.supabaseClient
+                .from('users')
+                .select('email, prenom, nom, telephone')
+                .or(`prenom.ilike.%${searchTerm}%,nom.ilike.%${searchTerm}%,email.ilike.%${searchTerm}%`)
+                .limit(10);
+            
+            if (error) {
+                console.error('Erreur recherche:', error);
+                return;
+            }
+            
+            if (!users || users.length === 0) {
+                suggestionsContainer.innerHTML = '<div style="padding: 0.75rem; color: #999;">Aucun élève trouvé</div>';
+                suggestionsContainer.style.display = 'block';
+                return;
+            }
+            
+            suggestionsContainer.innerHTML = users.map(user => `
+                <div class="candidate-suggestion" onclick="selectCandidate('${user.email}', '${user.prenom}', '${user.nom}')" 
+                    style="padding: 0.75rem; cursor: pointer; border-bottom: 1px solid #eee; transition: background 0.2s;"
+                    onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">
+                    <div style="font-weight: 600;">${user.prenom} ${user.nom}</div>
+                    <div style="font-size: 0.85rem; color: #666;">${user.email}</div>
+                </div>
+            `).join('');
+            
+            suggestionsContainer.style.display = 'block';
+            
+        } catch (err) {
+            console.error('Erreur autocomplétion:', err);
+        }
+    }, 300);
+};
+
+window.selectCandidate = function(email, prenom, nom) {
+    // Vérifier si déjà ajouté
+    if (selectedCandidates.find(c => c.email === email)) {
+        alert('Ce candidat est déjà dans la liste');
+        return;
+    }
+    
+    selectedCandidates.push({ email, prenom, nom });
+    updateCandidatesList();
+    
+    // Réinitialiser le champ de recherche
+    const input = document.getElementById('candidateSearch');
+    if (input) input.value = '';
+    
+    const suggestionsContainer = document.getElementById('candidateSuggestions');
+    if (suggestionsContainer) suggestionsContainer.style.display = 'none';
+};
+
+window.removeCandidate = function(email) {
+    selectedCandidates = selectedCandidates.filter(c => c.email !== email);
+    updateCandidatesList();
+};
+
+function updateCandidatesList() {
+    const container = document.getElementById('selectedCandidatesList');
+    if (!container) return;
+    
+    if (selectedCandidates.length === 0) {
+        container.innerHTML = '<p style="color: #999; font-style: italic; text-align: center; padding: 1rem;">Aucun candidat ajouté</p>';
+        return;
+    }
+    
+    container.innerHTML = selectedCandidates.map(candidate => `
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: #f8f9fa; border-radius: 8px; margin-bottom: 0.5rem;">
+            <div>
+                <div style="font-weight: 600;">${candidate.prenom} ${candidate.nom}</div>
+                <div style="font-size: 0.85rem; color: #666;">${candidate.email}</div>
+            </div>
+            <button type="button" onclick="removeCandidate('${candidate.email}')" 
+                style="padding: 0.5rem 0.75rem; border: none; border-radius: 6px; background: #dc3545; color: white; cursor: pointer; font-size: 0.85rem;">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `).join('');
+}
 
 window.submitPermisBlock = async function(event) {
     event.preventDefault();
@@ -146,6 +250,16 @@ window.submitPermisBlock = async function(event) {
         alert('❌ L\'heure de fin doit être après l\'heure de début.');
         return;
     }
+    
+    // Vérifier qu'au moins un candidat est sélectionné
+    if (selectedCandidates.length === 0) {
+        alert('❌ Veuillez ajouter au moins un candidat au permis.');
+        return;
+    }
+    
+    // Créer la liste des candidats pour les notes
+    const candidatesNames = selectedCandidates.map(c => `${c.prenom} ${c.nom}`).join(', ');
+    const notesText = `PERMIS - ${location} | Candidats: ${candidatesNames}`;
     
     try {
         // Créer les créneaux à bloquer (toutes les 2 heures entre start et end)
@@ -206,14 +320,14 @@ window.submitPermisBlock = async function(event) {
                     .update({
                         status: 'permis',
                         end_at: endAt,
-                        notes: `PERMIS - ${slot.location}`
+                        notes: notesText
                     })
                     .eq('id', existingSlot.id);
                 
                 if (updateError) {
                     console.error('Erreur lors de la mise à jour:', updateError);
                 } else {
-                    console.log(`✅ Créneau ${slot.start_time} mis à jour en "permis" (${slot.location})`);
+                    console.log(`✅ Créneau ${slot.start_time} mis à jour en "permis"`);
                 }
             } else {
                 // Créer un nouveau créneau
@@ -224,18 +338,18 @@ window.submitPermisBlock = async function(event) {
                         end_at: endAt,
                         instructor: slot.instructor,
                         status: 'permis',
-                        notes: `PERMIS - ${slot.location}`
+                        notes: notesText
                     });
                 
                 if (insertError) {
                     console.error('Erreur lors de l\'insertion:', insertError);
                 } else {
-                    console.log(`✅ Créneau ${slot.start_time} créé avec statut "permis" (${slot.location})`);
+                    console.log(`✅ Créneau ${slot.start_time} créé avec statut "permis"`);
                 }
             }
         }
         
-        alert(`✅ ${slots.length} créneau(x) bloqué(s) pour le permis !\n\nDate: ${date}\nHoraire: ${startTime} - ${endTime}\nMoniteur: ${instructor}\nLieu: ${location}`);
+        alert(`✅ ${slots.length} créneau(x) bloqué(s) pour le permis !\n\nDate: ${date}\nHoraire: ${startTime} - ${endTime}\nMoniteur: ${instructor}\nLieu: ${location}\n\nCandidats (${selectedCandidates.length}): ${candidatesNames}`);
         
         closePermisModal();
         

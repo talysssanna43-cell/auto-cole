@@ -317,7 +317,16 @@ function renderPlanning(grid, instructor, weekStart, bookedSet) {
             
             // Vérifier si c'est un créneau permis
             const isPermis = booking && booking.status === 'permis';
-            const permisLocation = isPermis && booking.notes ? booking.notes.replace('PERMIS - ', '') : '';
+            let permisLocation = '';
+            let permisCandidates = '';
+            if (isPermis && booking.notes) {
+                // Format: "PERMIS - Lieu | Candidats: Nom1, Nom2, Nom3"
+                const parts = booking.notes.split('|');
+                permisLocation = parts[0] ? parts[0].replace('PERMIS - ', '').trim() : '';
+                if (parts[1]) {
+                    permisCandidates = parts[1].replace('Candidats:', '').trim();
+                }
+            }
             
             // Un créneau est passé seulement si la DATE est antérieure à aujourd'hui
             // Cela permet de placer des élèves sur tous les créneaux de la semaine affichée
@@ -333,7 +342,9 @@ function renderPlanning(grid, instructor, weekStart, bookedSet) {
             else if (isBooked && !isPermis) bookedCount++;
 
             const statusClass = isPermis ? 'permis' : isDone ? 'done' : isBooked ? 'booked' : 'available';
-            const statusLabel = isPermis ? `PERMIS - ${permisLocation}` : isDone ? 'Réalisé' : isBooked ? 'Réservé' : 'Libre';
+            const statusLabel = isPermis 
+                ? `PERMIS - ${permisLocation}${permisCandidates ? `<br><small style="font-size: 0.75rem; opacity: 0.9;">${permisCandidates}</small>` : ''}` 
+                : isDone ? 'Réalisé' : isBooked ? 'Réservé' : 'Libre';
             const todayCol = isToday(d) ? ' today-col' : '';
 
             const studentName = isBooked && !isPermis

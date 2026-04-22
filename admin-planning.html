@@ -993,6 +993,25 @@
                             </select>
                         </div>
                         
+                        <!-- Section Candidats -->
+                        <div style="border-top: 2px solid var(--border); padding-top: 16px;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.9rem;">
+                                <i class="fas fa-users"></i> Candidats au permis
+                            </label>
+                            <div style="position: relative;">
+                                <input type="text" id="candidateSearch" 
+                                    oninput="searchCandidate(this)" 
+                                    placeholder="Rechercher un élève (nom, prénom, email)..."
+                                    style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem;">
+                                <div id="candidateSuggestions" 
+                                    style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid var(--border); border-radius: 8px; margin-top: 4px; max-height: 200px; overflow-y: auto; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                                </div>
+                            </div>
+                            <div id="selectedCandidatesList" style="margin-top: 12px; max-height: 200px; overflow-y: auto;">
+                                <p style="color: #999; font-style: italic; text-align: center; padding: 1rem;">Aucun candidat ajouté</p>
+                            </div>
+                        </div>
+                        
                         <div style="display: flex; gap: 10px; margin-top: 8px;">
                             <button type="button" onclick="closePermisModal()"
                                 style="flex: 1; padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); font-weight: 600; cursor: pointer;">
@@ -1033,7 +1052,7 @@
     <script src="assets/js/admin-instructor-success.js"></script>
     <script src="assets/js/admin-planning.js?v=46"></script>
     <script src="assets/js/admin-cancel-slot.js"></script>
-    <script src="assets/js/admin-permis-block.js?v=5"></script>
+    <script src="assets/js/admin-permis-block.js?v=6"></script>
     <script src="assets/js/admin-change-forfait.js?v=5"></script>
     <script src="assets/js/admin-notif-badge.js"></script>
     <script src="assets/js/admin-mobile-menu.js"></script>
