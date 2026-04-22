@@ -229,15 +229,31 @@ window.confirmChangeForfait = async function(email, prenom, nom, heuresEffectuee
     
     try {
         // Mettre à jour le forfait dans la base de données
-        const updateData = {
+        // D'abord essayer avec transmission_type
+        let updateData = {
             forfait: newPack,
             transmission_type: transmission
         };
         
-        const { error: updateError } = await window.supabaseClient
+        let { error: updateError } = await window.supabaseClient
             .from('users')
             .update(updateData)
             .eq('email', email);
+        
+        // Si erreur car la colonne transmission_type n'existe pas, réessayer sans
+        if (updateError && updateError.code === 'PGRST204') {
+            console.warn('⚠️ Colonne transmission_type non trouvée, mise à jour sans cette colonne');
+            updateData = {
+                forfait: newPack
+            };
+            
+            const retry = await window.supabaseClient
+                .from('users')
+                .update(updateData)
+                .eq('email', email);
+            
+            updateError = retry.error;
+        }
         
         if (updateError) {
             console.error('Erreur update users:', updateError);
