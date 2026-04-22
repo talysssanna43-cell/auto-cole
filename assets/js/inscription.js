@@ -608,11 +608,26 @@ async function handleSubmit(e) {
     
     console.log('Form submission started...');
     
+    // Désactiver le bouton pour éviter les doubles soumissions
+    const submitButton = document.querySelector('button[type="submit"]');
+    if (submitButton) {
+        if (submitButton.disabled) {
+            console.log('⚠️ Soumission déjà en cours, ignorée');
+            return;
+        }
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Traitement en cours...';
+    }
+    
     // En mode admin, on saute la validation de l'étape 3 (paiement) car on ne l'affiche pas
     if (!window.adminInscriptionMode) {
         // Validate final step
         if (!validateStep(currentStep)) {
             console.log('Validation failed');
+            if (submitButton) {
+                submitButton.disabled = false;
+                submitButton.innerHTML = '<i class="fas fa-check"></i> Finaliser l\'inscription';
+            }
             return;
         }
         
@@ -622,6 +637,10 @@ async function handleSubmit(e) {
         const cgvCheckbox = document.getElementById('cgv');
         if (!cgvCheckbox || !cgvCheckbox.checked) {
             alert('Vous devez accepter les conditions générales de vente');
+            if (submitButton) {
+                submitButton.disabled = false;
+                submitButton.innerHTML = '<i class="fas fa-check"></i> Finaliser l\'inscription';
+            }
             return;
         }
         
