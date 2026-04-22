@@ -89,6 +89,9 @@ async function fetchMySlots(instructor, weekStart, weekEnd) {
     const end = new Date(weekEnd);
     end.setHours(23, 59, 59, 999);
 
+    console.log('🔍 Récupération créneaux pour:', instructor);
+    console.log('📅 Période:', start.toISOString(), '→', end.toISOString());
+
     const { data, error } = await window.supabaseClient
         .from('slots')
         .select('id, start_at, end_at, status, notes, reservations(id, email, first_name, last_name, phone)')
@@ -97,6 +100,12 @@ async function fetchMySlots(instructor, weekStart, weekEnd) {
         .lte('start_at', end.toISOString());
 
     if (error) throw error;
+    
+    console.log('📊 Créneaux trouvés:', data?.length || 0);
+    const indisponibleCount = (data || []).filter(s => s.status === 'indisponible').length;
+    const permisCount = (data || []).filter(s => s.status === 'permis').length;
+    console.log(`  - Indisponibles: ${indisponibleCount}`);
+    console.log(`  - Permis: ${permisCount}`);
     
     // Récupérer les packs et transmission_type des élèves
     const emails = (data || []).map(slot => {
