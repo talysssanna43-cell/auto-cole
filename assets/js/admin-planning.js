@@ -923,17 +923,24 @@ window.displayStudentDetails = async function(student) {
             </div>
         `;
         
-        // Bouton pour placer l'élève sur le planning
+        // Boutons d'action
         modalBody.innerHTML += `
             <div class="info-section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-                <h3 style="color: white;"><i class="fas fa-calendar-plus"></i> Placer sur le planning</h3>
-                <p style="margin-bottom: 1rem; opacity: 0.9;">Sélectionnez un créneau disponible pour placer cet élève</p>
-                <button onclick="showSlotSelectionForStudent('${student.email}', '${student.prenom}', '${student.nom}')" 
-                    style="background: white; color: #667eea; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s;"
-                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';"
-                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
-                    <i class="fas fa-calendar-check"></i> Sélectionner un créneau
-                </button>
+                <h3 style="color: white;"><i class="fas fa-calendar-plus"></i> Actions</h3>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <button onclick="showSlotSelectionForStudent('${student.email}', '${student.prenom}', '${student.nom}')" 
+                        style="background: white; color: #667eea; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s;"
+                        onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                        <i class="fas fa-calendar-check"></i> Placer sur le planning
+                    </button>
+                    <button onclick="openChangeForfaitModal('${student.email}', '${student.prenom}', '${student.nom}', '${student.forfait || ''}', ${totalHours})" 
+                        style="background: #ffc107; color: #000; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s;"
+                        onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                        <i class="fas fa-exchange-alt"></i> Changer de forfait
+                    </button>
+                </div>
             </div>
         `;
         
