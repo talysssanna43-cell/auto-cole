@@ -198,9 +198,10 @@ async function fetchBookedSlots(instructor, weekStart, weekEnd) {
 
     const bookedMap = new Map();
     (data || []).forEach((row) => {
-        // Inclure les slots réservés, permis OU ceux qui ont des réservations (même si status != 'booked')
+        // Inclure les slots réservés, permis, indisponible OU ceux qui ont des réservations
         const hasReservation = Array.isArray(row.reservations) ? row.reservations.length > 0 : !!row.reservations;
         const isPermis = row.status === 'permis';
+        const isIndisponible = row.status === 'indisponible';
         
         // Debug: log pour voir les créneaux permis
         if (row.status === 'permis' || (row.notes && row.notes.includes('PERMIS'))) {
@@ -213,7 +214,7 @@ async function fetchBookedSlots(instructor, weekStart, weekEnd) {
             });
         }
         
-        if (row.status !== 'booked' && !hasReservation && !isPermis) return;
+        if (row.status !== 'booked' && !hasReservation && !isPermis && !isIndisponible) return;
         
         const d = new Date(row.start_at);
         const dateStr = toInputDate(d);
@@ -240,7 +241,7 @@ async function fetchBookedSlots(instructor, weekStart, weekEnd) {
             status: row.status,
             notes: row.notes || '',
             slot_uuid: row.id, // Stocker le vrai UUID du slot
-            student: {
+            student: (isPermis || isIndisponible) ? null : {
                 first_name: res?.first_name || 'Réservé',
                 last_name: res?.last_name || '(sans détails)',
                 phone: res?.phone || '',
@@ -328,6 +329,13 @@ function renderPlanning(grid, instructor, weekStart, bookedSet) {
                 }
             }
             
+            // Vérifier si c'est un créneau indisponible
+            const isIndisponible = booking && booking.status === 'indisponible';
+            let indisponibleReason = '';
+            if (isIndisponible && booking.notes) {
+                indisponibleReason = booking.notes.replace('INDISPONIBLE - ', '').trim();
+            }
+            
             // Un créneau est passé seulement si la DATE est antérieure à aujourd'hui
             // Cela permet de placer des élèves sur tous les créneaux de la semaine affichée
             const slotDate = new Date(dateStr);
@@ -335,24 +343,26 @@ function renderPlanning(grid, instructor, weekStart, bookedSet) {
             const isPast = slotDate.getTime() < todayTimestamp;
             
             // Un créneau est "done" si réservé ET l'heure est passée
-            const isDone = isBooked && !isPermis && (slotStart < now);
+            const isDone = isBooked && !isPermis && !isIndisponible && (slotStart < now);
 
             totalSlots++;
             if (isDone) doneCount++;
-            else if (isBooked && !isPermis) bookedCount++;
+            else if (isBooked && !isPermis && !isIndisponible) bookedCount++;
 
-            const statusClass = isPermis ? 'permis' : isDone ? 'done' : isBooked ? 'booked' : 'available';
-            const statusLabel = isPermis 
+            const statusClass = isIndisponible ? 'indisponible' : isPermis ? 'permis' : isDone ? 'done' : isBooked ? 'booked' : 'available';
+            const statusLabel = isIndisponible
+                ? `INDISPONIBLE${indisponibleReason ? `<br><small style="font-size: 0.75rem; opacity: 0.9;">${indisponibleReason}</small>` : ''}`
+                : isPermis 
                 ? `PERMIS - ${permisLocation}${permisCandidates ? `<br><small style="font-size: 0.75rem; opacity: 0.9;">${permisCandidates}</small>` : ''}` 
                 : isDone ? 'Réalisé' : isBooked ? 'Réservé' : 'Libre';
             const todayCol = isToday(d) ? ' today-col' : '';
 
-            const studentName = isBooked && !isPermis
+            const studentName = isBooked && !isPermis && !isIndisponible
                 ? `${(booking.student?.first_name || '').trim()} ${(booking.student?.last_name || '').trim()}`.trim()
                 : '';
-            const studentPhone = isBooked && !isPermis ? (booking.student?.phone || '') : '';
+            const studentPhone = isBooked && !isPermis && !isIndisponible ? (booking.student?.phone || '') : '';
 
-            const icon = isPermis ? 'fa-id-card' : isDone ? 'fa-check' : isBooked ? 'fa-user' : 'fa-minus';
+            const icon = isIndisponible ? 'fa-ban' : isPermis ? 'fa-id-card' : isDone ? 'fa-check' : isBooked ? 'fa-user' : 'fa-minus';
             
             // Déterminer le type de véhicule depuis transmission_type
             const transmissionType = isBooked ? (booking?.student?.transmission_type || null) : null;
@@ -390,13 +400,13 @@ function renderPlanning(grid, instructor, weekStart, bookedSet) {
             
             return `
                 <div class="cal-cell${todayCol}">
-                    <div class="ev ${statusClass} ${transmissionClass}" ${isPermis ? '' : isBooked ? `onclick="showStudent(${studentData})" style="cursor:pointer;"` : !isPast ? `onclick="openStudentSearchModal(${slotData})" style="cursor:pointer;"` : ''}>
-                        ${!isBooked && !isPast && !isPermis ? `<button class="add-student-btn" onclick="event.stopPropagation(); openStudentSearchModal(${slotData});" title="Placer un élève"><i class="fas fa-plus"></i></button>` : ''}
+                    <div class="ev ${statusClass} ${transmissionClass}" ${isPermis || isIndisponible ? '' : isBooked ? `onclick="showStudent(${studentData})" style="cursor:pointer;"` : !isPast ? `onclick="openStudentSearchModal(${slotData})" style="cursor:pointer;"` : ''}>
+                        ${!isBooked && !isPast && !isPermis && !isIndisponible ? `<button class="add-student-btn" onclick="event.stopPropagation(); openStudentSearchModal(${slotData});" title="Placer un élève"><i class="fas fa-plus"></i></button>` : ''}
                         <span class="ev-icon"><i class="fas ${icon}"></i></span>
                         <div class="ev-status">${statusLabel}</div>
                         <div class="ev-time">${start} – ${end}</div>
-                        ${isBooked && !isPermis ? `<div class="ev-name">${studentName || 'Élève'}${vehicleType ? ` <span class="vehicle-badge">[${vehicleType}]</span>` : ''}</div>` : ''}
-                        ${isBooked && !isPermis && studentPhone ? `<div class="ev-phone"><i class="fas fa-phone" style="font-size:0.55rem;margin-right:3px;"></i>${studentPhone}</div>` : ''}
+                        ${isBooked && !isPermis && !isIndisponible ? `<div class="ev-name">${studentName || 'Élève'}${vehicleType ? ` <span class="vehicle-badge">[${vehicleType}]</span>` : ''}</div>` : ''}
+                        ${isBooked && !isPermis && !isIndisponible && studentPhone ? `<div class="ev-phone"><i class="fas fa-phone" style="font-size:0.55rem;margin-right:3px;"></i>${studentPhone}</div>` : ''}
                     </div>
                 </div>
             `;
