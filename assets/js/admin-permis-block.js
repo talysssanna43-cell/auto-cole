@@ -116,16 +116,23 @@ window.deletePermisSlot = async function(slotId) {
 let selectedCandidates = [];
 
 window.openPermisModal = function() {
+    console.log('🔵 openPermisModal appelée');
     const modal = document.getElementById('permisModal');
     if (modal) {
+        console.log('✅ Modal trouvée');
         modal.style.display = 'flex';
         // Pré-remplir avec la date du jour
         const today = new Date().toISOString().split('T')[0];
-        document.getElementById('permisDate').value = today;
+        const dateInput = document.getElementById('permisDate');
+        if (dateInput) {
+            dateInput.value = today;
+        }
         
         // Réinitialiser la liste des candidats
         selectedCandidates = [];
-        updateCandidatesList();
+        window.updateCandidatesList();
+    } else {
+        console.error('❌ Modal permisModal non trouvée');
     }
 };
 
@@ -196,7 +203,7 @@ window.selectCandidate = function(email, prenom, nom) {
     }
     
     selectedCandidates.push({ email, prenom, nom });
-    updateCandidatesList();
+    window.updateCandidatesList();
     
     // Réinitialiser le champ de recherche
     const input = document.getElementById('candidateSearch');
@@ -208,10 +215,10 @@ window.selectCandidate = function(email, prenom, nom) {
 
 window.removeCandidate = function(email) {
     selectedCandidates = selectedCandidates.filter(c => c.email !== email);
-    updateCandidatesList();
+    window.updateCandidatesList();
 };
 
-function updateCandidatesList() {
+window.updateCandidatesList = function() {
     const container = document.getElementById('selectedCandidatesList');
     if (!container) return;
     
