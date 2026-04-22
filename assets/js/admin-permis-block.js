@@ -19,8 +19,20 @@ window.openDeletePermisModal = async function() {
             return;
         }
         
+        // Filtrer pour ne garder que les créneaux à venir (pas encore passés)
+        const now = new Date();
+        const futurePermisSlots = permisSlots.filter(slot => {
+            const slotDate = new Date(slot.start_at);
+            return slotDate >= now;
+        });
+        
+        if (futurePermisSlots.length === 0) {
+            alert('ℹ️ Aucun créneau permis à venir. Les créneaux passés sont automatiquement masqués.');
+            return;
+        }
+        
         // Construire la liste HTML
-        const listHtml = permisSlots.map(slot => {
+        const listHtml = futurePermisSlots.map(slot => {
             const startDate = new Date(slot.start_at);
             const endDate = new Date(slot.end_at);
             const dateStr = startDate.toLocaleDateString('fr-FR', { 
@@ -31,9 +43,9 @@ window.openDeletePermisModal = async function() {
             const location = slot.notes ? slot.notes.replace('PERMIS - ', '') : 'Non renseigné';
             
             return `
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; background: rgba(255, 193, 7, 0.08);">
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; background: rgba(156, 39, 176, 0.08);">
                     <div style="flex: 1;">
-                        <div style="font-weight: 600; color: #f57c00; font-size: 0.9rem;">
+                        <div style="font-weight: 600; color: #7b1fa2; font-size: 0.9rem;">
                             <i class="fas fa-id-card"></i> ${dateStr}
                         </div>
                         <div style="font-size: 0.85rem; color: var(--text2); margin-top: 4px;">
