@@ -203,7 +203,15 @@ function renderPlanning(grid, instructor, weekStart, slots) {
             const isBooked = slot && slot.status === 'booked';
             const isCancelled = slot && slot.status === 'cancelled';
             const isPermis = slot && slot.status === 'permis';
-            const permisLocation = isPermis && slot.notes ? slot.notes.replace('PERMIS - ', '') : '';
+            const isIndisponible = slot && slot.status === 'indisponible';
+            
+            const permisLocation = isPermis && slot.notes ? slot.notes.replace('PERMIS - ', '').split('|')[0].trim() : '';
+            const permisCandidates = isPermis && slot.notes && slot.notes.includes('|') 
+                ? slot.notes.split('|')[1].replace('Candidats:', '').trim() 
+                : '';
+            
+            const indisponibleReason = isIndisponible && slot.notes ? slot.notes.replace('INDISPONIBLE - ', '').trim() : '';
+            
             const slotStart = new Date(`${dateStr}T${start}:00`).getTime();
             const isPast = slotStart < now;
             const isDone = isBooked && isPast;
@@ -214,9 +222,12 @@ function renderPlanning(grid, instructor, weekStart, slots) {
 
             let statusClass = 'available';
             let statusLabel = 'Libre';
-            if (isPermis) {
+            if (isIndisponible) {
+                statusClass = 'indisponible';
+                statusLabel = `INDISPONIBLE${indisponibleReason ? `<br><small style="font-size: 0.75rem; opacity: 0.9;">${indisponibleReason}</small>` : ''}`;
+            } else if (isPermis) {
                 statusClass = 'permis';
-                statusLabel = `PERMIS - ${permisLocation}`;
+                statusLabel = `PERMIS - ${permisLocation}${permisCandidates ? `<br><small style="font-size: 0.75rem; opacity: 0.9;">${permisCandidates}</small>` : ''}`;
             } else if (isCancelled) {
                 statusClass = 'cancelled';
                 statusLabel = 'Annulé';
@@ -255,10 +266,10 @@ function renderPlanning(grid, instructor, weekStart, slots) {
 
             return `
                 <div class="cal-cell${todayCol}">
-                    <div class="ev ${statusClass} ${transmissionClass}" ${res ? `onclick="showStudent(${studentData})"` : ''}>
+                    <div class="ev ${statusClass} ${transmissionClass}" ${res && !isPermis && !isIndisponible ? `onclick="showStudent(${studentData})"` : ''}>
                         <div class="ev-status">${statusLabel}</div>
                         <div class="ev-time">${start} – ${end}</div>
-                        ${studentName ? `<div class="ev-name">${studentName}${vehicleType ? ` <span class="vehicle-badge">[${vehicleType}]</span>` : ''}</div>` : ''}
+                        ${studentName && !isPermis && !isIndisponible ? `<div class="ev-name">${studentName}${vehicleType ? ` <span class="vehicle-badge">[${vehicleType}]</span>` : ''}</div>` : ''}
                     </div>
                 </div>
             `;

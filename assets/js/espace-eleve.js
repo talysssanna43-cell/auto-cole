@@ -1053,18 +1053,18 @@ async function fetchBookedSlotsFromSupabase() {
             .gte('slots.start_at', weekStart.toISOString())
             .lt('slots.start_at', weekEnd.toISOString());
         
-        // Récupérer aussi les créneaux bloqués pour permis
-        const { data: permisSlots, error: permisError } = await window.supabaseClient
+        // Récupérer aussi les créneaux bloqués pour permis et indisponibles
+        const { data: blockedSlots, error: blockedError } = await window.supabaseClient
             .from('slots')
             .select('start_at, end_at, instructor, status')
-            .eq('status', 'permis')
+            .in('status', ['permis', 'indisponible'])
             .gte('start_at', weekStart.toISOString())
             .lt('start_at', weekEnd.toISOString());
         
-        if (permisError) {
-            console.warn('Erreur récupération créneaux permis:', permisError);
-        } else if (permisSlots && permisSlots.length > 0) {
-            console.log('🚫 Créneaux bloqués pour permis:', permisSlots.length);
+        if (blockedError) {
+            console.warn('Erreur récupération créneaux bloqués:', blockedError);
+        } else if (blockedSlots && blockedSlots.length > 0) {
+            console.log('🚫 Créneaux bloqués (permis + indisponible):', blockedSlots.length);
         }
 
         if (error) {
@@ -1107,8 +1107,8 @@ async function fetchBookedSlotsFromSupabase() {
             });
         });
         
-        // Ajouter les créneaux bloqués pour permis
-        (permisSlots || []).forEach((slot) => {
+        // Ajouter les créneaux bloqués pour permis et indisponibles à la liste des créneaux réservés
+        (blockedSlots || []).forEach(slot => {
             if (!slot || !slot.start_at) return;
             
             const d = new Date(slot.start_at);

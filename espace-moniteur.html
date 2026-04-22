@@ -208,6 +208,10 @@
         .ev.permis::before { background: #9c27b0; }
         .ev.permis .ev-status { color: #7b1fa2; font-weight: 700; }
         
+        .ev.indisponible { background: rgba(220, 53, 69, 0.15); cursor: not-allowed; }
+        .ev.indisponible::before { background: #dc3545; }
+        .ev.indisponible .ev-status { color: #c82333; font-weight: 700; }
+        
         /* Couleurs différentes pour BA et BM */
         .ev.booked.transmission-auto { background: rgba(0, 113, 227, 0.08); }
         .ev.booked.transmission-auto::before { background: #0071e3; }
@@ -527,6 +531,6 @@
     <script src="https://unpkg.com/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
     <script src="assets/js/supabaseClient.js"></script>
     <script src="assets/js/espace-moniteur-bonus.js"></script>
-    <script src="assets/js/espace-moniteur.js?v=6"></script>
+    <script src="assets/js/espace-moniteur.js?v=7"></script>
 </body>
 </html>
