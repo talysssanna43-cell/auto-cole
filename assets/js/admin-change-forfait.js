@@ -65,11 +65,29 @@ window.openChangeForfaitModal = function(email, prenom, nom, currentForfait, heu
                 <div class="info-section">
                     <h3><i class="fas fa-box"></i> Nouveau forfait</h3>
                     <p style="color: #666; margin-bottom: 1rem;">
-                        Les ${heuresEffectuees}h déjà effectuées seront déduites du nouveau forfait.
+                        <strong>${heuresEffectuees}h</strong> ont déjà été effectuées par cet élève.
                     </p>
                     
                     <div id="packSelection" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
                         ${generatePackCards(heuresEffectuees)}
+                    </div>
+                </div>
+                
+                <div id="heuresSection" style="display: none; margin-top: 1.5rem;">
+                    <div class="info-section">
+                        <h3><i class="fas fa-clock"></i> Heures de conduite disponibles</h3>
+                        <p style="color: #666; margin-bottom: 1rem;">
+                            Combien d'heures de conduite seront disponibles sur ce nouveau forfait ?
+                        </p>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <input type="number" id="heuresDisponibles" min="0" max="100" 
+                                style="flex: 1; padding: 0.75rem; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem; font-weight: 600;"
+                                placeholder="Ex: 20">
+                            <span style="font-size: 1.2rem; font-weight: 600; color: #667eea;">heures</span>
+                        </div>
+                        <p id="heuresInfo" style="margin-top: 0.75rem; padding: 0.75rem; background: #f0f4ff; border-left: 4px solid #667eea; border-radius: 4px; font-size: 0.9rem;">
+                            <i class="fas fa-info-circle"></i> Ces heures seront disponibles sur le compte de l'élève.
+                        </p>
                     </div>
                 </div>
                 
@@ -112,8 +130,10 @@ window.openChangeForfaitModal = function(email, prenom, nom, currentForfait, heu
             this.classList.add('selected');
             
             const packId = this.dataset.pack;
-            const confirmBtn = document.getElementById('confirmChangeForfait');
-            confirmBtn.disabled = false;
+            
+            // Afficher la section heures
+            const heuresSection = document.getElementById('heuresSection');
+            heuresSection.style.display = 'block';
             
             // Afficher la section transmission si nécessaire
             const transmissionSection = document.getElementById('transmissionSection');
@@ -122,8 +142,27 @@ window.openChangeForfaitModal = function(email, prenom, nom, currentForfait, heu
             } else {
                 transmissionSection.style.display = 'none';
             }
+            
+            // Désactiver le bouton jusqu'à ce que les heures soient saisies
+            const confirmBtn = document.getElementById('confirmChangeForfait');
+            confirmBtn.disabled = true;
         });
     });
+    
+    // Ajouter event listener pour le champ heures
+    const heuresInput = document.getElementById('heuresDisponibles');
+    if (heuresInput) {
+        heuresInput.addEventListener('input', function() {
+            const confirmBtn = document.getElementById('confirmChangeForfait');
+            const heuresValue = parseInt(this.value);
+            
+            if (heuresValue > 0) {
+                confirmBtn.disabled = false;
+            } else {
+                confirmBtn.disabled = true;
+            }
+        });
+    }
 };
 
 function generatePackCards(heuresEffectuees) {
@@ -140,19 +179,13 @@ function generatePackCards(heuresEffectuees) {
     ];
     
     return packs.map(pack => {
-        const heuresIncluses = packHours[pack.id];
-        const heuresRestantes = Math.max(0, heuresIncluses - heuresEffectuees);
         const prix = packPrices[pack.id];
         
         return `
             <div class="pack-card" data-pack="${pack.id}" style="border: 2px solid #ddd; border-radius: 12px; padding: 1rem; cursor: pointer; transition: all 0.2s; text-align: center;">
                 <i class="fas fa-${pack.icon}" style="font-size: 2rem; color: #667eea; margin-bottom: 0.5rem;"></i>
                 <h4 style="margin: 0.5rem 0; font-size: 1rem;">${pack.name}</h4>
-                <p style="color: #666; font-size: 0.85rem; margin: 0.5rem 0;">
-                    ${heuresIncluses}h incluses<br>
-                    <strong style="color: #28a745;">${heuresRestantes}h restantes</strong>
-                </p>
-                <p style="font-weight: 700; color: #667eea; margin: 0.5rem 0;">${prix}€</p>
+                <p style="font-weight: 700; color: #667eea; margin: 0.5rem 0; font-size: 1.1rem;">${prix}€</p>
             </div>
         `;
     }).join('');
@@ -173,8 +206,15 @@ window.confirmChangeForfait = async function(email, prenom, nom, heuresEffectuee
     }
     
     const newPack = selectedCard.dataset.pack;
-    const heuresIncluses = packHours[newPack];
-    const heuresRestantes = Math.max(0, heuresIncluses - heuresEffectuees);
+    
+    // Récupérer les heures saisies par l'admin
+    const heuresInput = document.getElementById('heuresDisponibles');
+    const heuresDisponibles = parseInt(heuresInput.value);
+    
+    if (!heuresDisponibles || heuresDisponibles <= 0) {
+        alert('Veuillez saisir le nombre d\'heures disponibles');
+        return;
+    }
     
     // Déterminer le type de transmission
     let transmission = packTransmission[newPack];
@@ -193,8 +233,8 @@ window.confirmChangeForfait = async function(email, prenom, nom, heuresEffectuee
             .from('users')
             .update({
                 forfait: newPack,
-                hours_goal: heuresIncluses,
-                hours_remaining: heuresRestantes,
+                hours_goal: heuresDisponibles,
+                hours_remaining: heuresDisponibles,
                 transmission_type: transmission,
                 updated_at: new Date().toISOString()
             })
@@ -204,7 +244,7 @@ window.confirmChangeForfait = async function(email, prenom, nom, heuresEffectuee
             throw updateError;
         }
         
-        console.log(`✅ Forfait changé pour ${prenom} ${nom}: ${newPack} (${transmission})`);
+        console.log(`✅ Forfait changé pour ${prenom} ${nom}: ${newPack} (${transmission}) - ${heuresDisponibles}h disponibles`);
         
         // Fermer la modal
         closeChangeForfaitModal();
