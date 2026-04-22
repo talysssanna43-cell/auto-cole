@@ -295,8 +295,12 @@ window.confirmChangeForfait = async function(email, prenom, nom, heuresEffectuee
             await displayStudentDetails(updatedStudent);
         }
         
-        // Rafraîchir le planning
-        await refresh();
+        // Rafraîchir le planning si la fonction existe
+        if (typeof window.refresh === 'function') {
+            await window.refresh();
+        } else if (typeof refresh === 'function') {
+            await refresh();
+        }
         
     } catch (error) {
         console.error('Erreur changement forfait:', error);
