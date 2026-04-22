@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avis clients - Breteuil Auto-École</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .avis-hero {
+            background: linear-gradient(135deg, #f9a8d4 0%, #ec4899 100%);
+            padding: 6rem 0 4rem;
+            text-align: center;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .avis-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: #fff;
+            border-radius: 50% 50% 0 0;
+        }
+
+        .avis-hero h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 900;
+            margin: 0 0 0.75rem 0;
+            color: #fff;
+        }
+
+        .avis-hero-subtitle {
+            font-size: 1.25rem;
+            opacity: 0.95;
+            margin: 0 0 2.5rem 0;
+        }
+
+        .avis-hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .avis-stat-circle {
+            width: 140px;
+            height: 140px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .avis-stat-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #ec4899;
+            line-height: 1;
+        }
+
+        .avis-stat-number span {
+            font-size: 1.25rem;
+        }
+
+        .avis-stat-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            text-align: center;
+            margin-top: 0.25rem;
+            line-height: 1.2;
+        }
+
+        .avis-mascot {
+            position: absolute;
+            right: 5%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 150px;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 900px) {
+            .avis-mascot {
+                display: none;
+            }
+        }
+
+        .avis-page {
+            padding: 3rem 0 4rem;
+            background: #fff;
+        }
+
+        .avis-section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .avis-section-title {
+            font-size: 1.75rem;
+            font-weight: 900;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .avis-count {
+            font-size: 1rem;
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        .avis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .avis-card {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: box-shadow 0.2s ease, transform 0.2s ease;
+        }
+
+        .avis-card:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transform: translateY(-4px);
+        }
+
+        .avis-card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .avis-card-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .avis-card-meta {
+            flex: 1;
+        }
+
+        .avis-card-name {
+            font-weight: 700;
+            color: var(--text-dark);
+            font-size: 1rem;
+        }
+
+        .avis-card-date {
+            font-size: 0.85rem;
+            color: #10b981;
+        }
+
+        .avis-card-stars {
+            color: #f59e0b;
+            font-size: 1rem;
+        }
+
+        .avis-card-text {
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .avis-pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 3rem;
+        }
+
+        .avis-pagination button {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #e5e7eb;
+            background: #fff;
+            border-radius: 10px;
+            font-weight: 700;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .avis-pagination button:hover,
+        .avis-pagination button.active {
+            border-color: #10b981;
+            background: #10b981;
+            color: #fff;
+        }
+
+        .avis-cta {
+            text-align: center;
+            margin-top: 4rem;
+            padding: 3rem;
+            background: linear-gradient(135deg, #f9a8d4 0%, #ec4899 100%);
+            border-radius: 24px;
+        }
+
+        .avis-cta h2 {
+            color: #fff;
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin: 0 0 1rem 0;
+        }
+
+        .avis-cta p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            margin: 0 0 1.5rem 0;
+        }
+
+        .avis-cta .btn-white {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #fff;
+            color: var(--primary-dark);
+            font-weight: 700;
+            font-size: 1rem;
+            border-radius: 999px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .avis-cta .btn-white:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 600px) {
+            .avis-stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .avis-stats-divider {
+                width: 60px;
+                height: 2px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <a href="index.html" class="logo">
+                    <img src="assets/logo.png" alt="Auto-Ecole Breteuil">
+                    <span>Auto-Ecole <strong>Breteuil</strong></span>
+                </a>
+                
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="recrutement.html">Recrutement</a></li>
+                    <li><a href="qui-sommes-nous.html">Qui sommes-nous</a></li>
+                    <li><a href="tarifs.html">Tarifs</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+
+                <div class="nav-actions">
+                    <a href="connexion.html" class="btn-secondary">Se connecter</a>
+                    <a href="inscription.html" class="btn-primary">S'inscrire</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="avis-hero">
+        <div class="container">
+            <h1>Chez nous, nous sommes transparents</h1>
+            <p class="avis-hero-subtitle">Voici ce que pensent nos élèves</p>
+            
+            <div class="avis-hero-stats">
+                <div class="avis-stat-circle">
+                    <div class="avis-stat-number">94<span>%</span></div>
+                    <div class="avis-stat-label">d'élèves<br>satisfaits</div>
+                </div>
+                <div class="avis-stat-circle">
+                    <div class="avis-stat-number">88<span>%</span></div>
+                    <div class="avis-stat-label">de réussite<br>au code</div>
+                </div>
+                <div class="avis-stat-circle">
+                    <div class="avis-stat-number">86<span>%</span></div>
+                    <div class="avis-stat-label">de réussite<br>au permis</div>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+
+    <main class="avis-page">
+        <div class="container">
+            <div class="avis-section-header">
+                <h2 class="avis-section-title">Ce qu'en disent nos élèves</h2>
+                <span class="avis-count">127 avis</span>
+            </div>
+
+            <div class="avis-grid">
+                <div class="avis-card">
+                    <div class="avis-card-header">
+                        <div class="avis-card-avatar">M</div>
+                        <div class="avis-card-meta">
+                            <div class="avis-card-name">Marie D.</div>
+                            <div class="avis-card-date">15 janvier 2026</div>
+                        </div>
+                        <div class="avis-card-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="avis-card-text">Super auto-école ! J'ai eu mon permis du premier coup grâce à l'accompagnement personnalisé. L'application est vraiment pratique pour gérer ses cours.</p>
+                </div>
+
+                <div class="avis-card">
+                    <div class="avis-card-header">
+                        <div class="avis-card-avatar">T</div>
+                        <div class="avis-card-meta">
+                            <div class="avis-card-name">Thomas M.</div>
+                            <div class="avis-card-date">8 décembre 2025</div>
+                        </div>
+                        <div class="avis-card-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="avis-card-text">Tarifs très compétitifs et moniteurs au top ! La flexibilité des horaires m'a permis de passer mon permis tout en travaillant.</p>
+                </div>
+
+                <div class="avis-card">
+                    <div class="avis-card-header">
+                        <div class="avis-card-avatar">S</div>
+                        <div class="avis-card-meta">
+                            <div class="avis-card-name">Sarah B.</div>
+                            <div class="avis-card-date">22 novembre 2025</div>
+                        </div>
+                        <div class="avis-card-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="avis-card-text">Le pack accéléré m'a permis d'avoir mon permis en 1 mois ! Parfait pour ceux qui ont besoin du permis rapidement.</p>
+                </div>
+
+                <div class="avis-card">
+                    <div class="avis-card-header">
+                        <div class="avis-card-avatar">L</div>
+                        <div class="avis-card-meta">
+                            <div class="avis-card-name">Lison H.</div>
+                            <div class="avis-card-date">3 octobre 2025</div>
+                        </div>
+                        <div class="avis-card-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                    <p class="avis-card-text">Très satisfaite, mon enseignant faisait au mieux pour s'arranger avec mes horaires. Je recommande !</p>
+                </div>
+
+                <div class="avis-card">
+                    <div class="avis-card-header">
+                        <div class="avis-card-avatar">A</div>
+                        <div class="avis-card-meta">
+                            <div class="avis-card-name">Antoine R.</div>
+                            <div class="avis-card-date">18 septembre 2025</div>
+                        </div>
+                        <div class="avis-card-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="avis-card-text">Excellente auto-école ! Les moniteurs sont patients et pédagogues. J'ai obtenu mon permis avec confiance.</p>
+                </div>
+
+                <div class="avis-card">
+                    <div class="avis-card-header">
+                        <div class="avis-card-avatar">C</div>
+                        <div class="avis-card-meta">
+                            <div class="avis-card-name">Camille P.</div>
+                            <div class="avis-card-date">5 septembre 2025</div>
+                        </div>
+                        <div class="avis-card-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="avis-card-text">Formation au top ! Le code en ligne est super pratique et les créneaux de conduite sont faciles à réserver.</p>
+                </div>
+
+                <div class="avis-card">
+                    <div class="avis-card-header">
+                        <div class="avis-card-avatar">J</div>
+                        <div class="avis-card-meta">
+                            <div class="avis-card-name">Julien F.</div>
+                            <div class="avis-card-date">28 août 2025</div>
+                        </div>
+                        <div class="avis-card-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="avis-card-text">Je recommande à 100% ! Équipe sympa, prix corrects et résultats au rendez-vous. Permis obtenu du premier coup !</p>
+                </div>
+
+                <div class="avis-card">
+                    <div class="avis-card-header">
+                        <div class="avis-card-avatar">E</div>
+                        <div class="avis-card-meta">
+                            <div class="avis-card-name">Emma L.</div>
+                            <div class="avis-card-date">12 août 2025</div>
+                        </div>
+                        <div class="avis-card-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                    <p class="avis-card-text">Bonne expérience globale. Les moniteurs sont pros et le suivi est bien fait. Petit bémol sur les délais d'examen mais ce n'est pas de leur faute.</p>
+                </div>
+
+                <div class="avis-card">
+                    <div class="avis-card-header">
+                        <div class="avis-card-avatar">N</div>
+                        <div class="avis-card-meta">
+                            <div class="avis-card-name">Nicolas G.</div>
+                            <div class="avis-card-date">30 juillet 2025</div>
+                        </div>
+                        <div class="avis-card-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="avis-card-text">Auto-école moderne et efficace. L'application pour réserver les heures est vraiment bien faite. Merci à toute l'équipe !</p>
+                </div>
+
+                <div class="avis-card">
+                    <div class="avis-card-header">
+                        <div class="avis-card-avatar">P</div>
+                        <div class="avis-card-meta">
+                            <div class="avis-card-name">Pierre V.</div>
+                            <div class="avis-card-date">15 juillet 2025</div>
+                        </div>
+                        <div class="avis-card-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="avis-card-text">Très bonne auto-école, je recommande vivement ! Les moniteurs sont à l'écoute et très pédagogues.</p>
+                </div>
+
+                <div class="avis-card">
+                    <div class="avis-card-header">
+                        <div class="avis-card-avatar">L</div>
+                        <div class="avis-card-meta">
+                            <div class="avis-card-name">Laura K.</div>
+                            <div class="avis-card-date">2 juillet 2025</div>
+                        </div>
+                        <div class="avis-card-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                    <p class="avis-card-text">Bon rapport qualité/prix. J'ai apprécié la flexibilité des horaires et la qualité de l'enseignement.</p>
+                </div>
+
+                <div class="avis-card">
+                    <div class="avis-card-header">
+                        <div class="avis-card-avatar">M</div>
+                        <div class="avis-card-meta">
+                            <div class="avis-card-name">Maxime B.</div>
+                            <div class="avis-card-date">20 juin 2025</div>
+                        </div>
+                        <div class="avis-card-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="avis-card-text">Permis obtenu rapidement grâce au pack accéléré. Les moniteurs sont vraiment compétents !</p>
+                </div>
+
+                <div class="avis-card">
+                    <div class="avis-card-header">
+                        <div class="avis-card-avatar">C</div>
+                        <div class="avis-card-meta">
+                            <div class="avis-card-name">Clara S.</div>
+                            <div class="avis-card-date">8 juin 2025</div>
+                        </div>
+                        <div class="avis-card-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="avis-card-text">Super expérience ! L'équipe est très professionnelle et sympathique. Je recommande à 100%.</p>
+                </div>
+
+                <div class="avis-card">
+                    <div class="avis-card-header">
+                        <div class="avis-card-avatar">R</div>
+                        <div class="avis-card-meta">
+                            <div class="avis-card-name">Romain T.</div>
+                            <div class="avis-card-date">25 mai 2025</div>
+                        </div>
+                        <div class="avis-card-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="avis-card-text">Excellente formation ! J'ai eu mon permis du premier coup grâce à leur méthode d'enseignement.</p>
+                </div>
+
+                <div class="avis-card">
+                    <div class="avis-card-header">
+                        <div class="avis-card-avatar">I</div>
+                        <div class="avis-card-meta">
+                            <div class="avis-card-name">Inès M.</div>
+                            <div class="avis-card-date">10 mai 2025</div>
+                        </div>
+                        <div class="avis-card-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                    <p class="avis-card-text">Très satisfaite de ma formation. Les cours de code en ligne sont très bien faits.</p>
+                </div>
+
+                <div class="avis-card">
+                    <div class="avis-card-header">
+                        <div class="avis-card-avatar">D</div>
+                        <div class="avis-card-meta">
+                            <div class="avis-card-name">David L.</div>
+                            <div class="avis-card-date">28 avril 2025</div>
+                        </div>
+                        <div class="avis-card-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="avis-card-text">Auto-école au top ! Les moniteurs sont patients et expliquent très bien. Merci pour tout !</p>
+                </div>
+
+                <div class="avis-card">
+                    <div class="avis-card-header">
+                        <div class="avis-card-avatar">S</div>
+                        <div class="avis-card-meta">
+                            <div class="avis-card-name">Sophie H.</div>
+                            <div class="avis-card-date">12 avril 2025</div>
+                        </div>
+                        <div class="avis-card-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="avis-card-text">Je recommande cette auto-école ! Ambiance conviviale et enseignement de qualité.</p>
+                </div>
+
+                <div class="avis-card">
+                    <div class="avis-card-header">
+                        <div class="avis-card-avatar">A</div>
+                        <div class="avis-card-meta">
+                            <div class="avis-card-name">Alexandre P.</div>
+                            <div class="avis-card-date">5 avril 2025</div>
+                        </div>
+                        <div class="avis-card-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="avis-card-text">Formation complète et efficace. Les tarifs sont très compétitifs pour la qualité proposée.</p>
+                </div>
+
+                <div class="avis-card">
+                    <div class="avis-card-header">
+                        <div class="avis-card-avatar">V</div>
+                        <div class="avis-card-meta">
+                            <div class="avis-card-name">Valérie D.</div>
+                            <div class="avis-card-date">22 mars 2025</div>
+                        </div>
+                        <div class="avis-card-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                    <p class="avis-card-text">Bonne auto-école avec des moniteurs compétents. Petit bémol sur les délais de réservation en haute saison.</p>
+                </div>
+
+                <div class="avis-card">
+                    <div class="avis-card-header">
+                        <div class="avis-card-avatar">F</div>
+                        <div class="avis-card-meta">
+                            <div class="avis-card-name">Florian G.</div>
+                            <div class="avis-card-date">8 mars 2025</div>
+                        </div>
+                        <div class="avis-card-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="avis-card-text">Permis obtenu en 2 mois avec le pack accéléré ! Équipe au top, je recommande vivement.</p>
+                </div>
+
+                <div class="avis-card">
+                    <div class="avis-card-header">
+                        <div class="avis-card-avatar">O</div>
+                        <div class="avis-card-meta">
+                            <div class="avis-card-name">Océane R.</div>
+                            <div class="avis-card-date">25 février 2025</div>
+                        </div>
+                        <div class="avis-card-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="avis-card-text">Super auto-école ! Les moniteurs sont très pédagogues et mettent en confiance. Merci !</p>
+                </div>
+
+                <div class="avis-card">
+                    <div class="avis-card-header">
+                        <div class="avis-card-avatar">K</div>
+                        <div class="avis-card-meta">
+                            <div class="avis-card-name">Karim B.</div>
+                            <div class="avis-card-date">10 février 2025</div>
+                        </div>
+                        <div class="avis-card-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="avis-card-text">Excellente expérience ! Formation de qualité et résultats au rendez-vous. Je recommande à 100%.</p>
+                </div>
+
+                <div class="avis-card">
+                    <div class="avis-card-header">
+                        <div class="avis-card-avatar">Z</div>
+                        <div class="avis-card-meta">
+                            <div class="avis-card-name">Zoé F.</div>
+                            <div class="avis-card-date">28 janvier 2025</div>
+                        </div>
+                        <div class="avis-card-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                    <p class="avis-card-text">Très bonne auto-école. Les cours sont bien organisés et l'application mobile est pratique.</p>
+                </div>
+
+                <div class="avis-card">
+                    <div class="avis-card-header">
+                        <div class="avis-card-avatar">H</div>
+                        <div class="avis-card-meta">
+                            <div class="avis-card-name">Hugo M.</div>
+                            <div class="avis-card-date">15 janvier 2025</div>
+                        </div>
+                        <div class="avis-card-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="avis-card-text">Formation complète et moniteurs très professionnels. J'ai eu mon permis du premier coup !</p>
+                </div>
+
+                <div class="avis-card">
+                    <div class="avis-card-header">
+                        <div class="avis-card-avatar">Y</div>
+                        <div class="avis-card-meta">
+                            <div class="avis-card-name">Yasmine L.</div>
+                            <div class="avis-card-date">3 janvier 2025</div>
+                        </div>
+                        <div class="avis-card-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="avis-card-text">Auto-école moderne avec une équipe dynamique. Les tarifs sont transparents et compétitifs.</p>
+                </div>
+
+                <div class="avis-card">
+                    <div class="avis-card-header">
+                        <div class="avis-card-avatar">B</div>
+                        <div class="avis-card-meta">
+                            <div class="avis-card-name">Baptiste C.</div>
+                            <div class="avis-card-date">20 décembre 2024</div>
+                        </div>
+                        <div class="avis-card-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="avis-card-text">Je recommande cette auto-école ! Moniteurs patients et pédagogues, ambiance conviviale.</p>
+                </div>
+
+                <div class="avis-card">
+                    <div class="avis-card-header">
+                        <div class="avis-card-avatar">G</div>
+                        <div class="avis-card-meta">
+                            <div class="avis-card-name">Gabrielle N.</div>
+                            <div class="avis-card-date">5 décembre 2024</div>
+                        </div>
+                        <div class="avis-card-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                    <p class="avis-card-text">Bonne formation avec des moniteurs compétents. L'application de réservation est très pratique.</p>
+                </div>
+
+                <div class="avis-card">
+                    <div class="avis-card-header">
+                        <div class="avis-card-avatar">Q</div>
+                        <div class="avis-card-meta">
+                            <div class="avis-card-name">Quentin A.</div>
+                            <div class="avis-card-date">22 novembre 2024</div>
+                        </div>
+                        <div class="avis-card-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="avis-card-text">Excellent accompagnement du début à la fin. Permis obtenu rapidement grâce à leur expertise !</p>
+                </div>
+
+                <div class="avis-card">
+                    <div class="avis-card-header">
+                        <div class="avis-card-avatar">W</div>
+                        <div class="avis-card-meta">
+                            <div class="avis-card-name">Wendy J.</div>
+                            <div class="avis-card-date">8 novembre 2024</div>
+                        </div>
+                        <div class="avis-card-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="avis-card-text">Super auto-école ! Les moniteurs sont à l'écoute et très professionnels. Je recommande vivement.</p>
+                </div>
+            </div>
+
+            <div class="avis-pagination">
+                <div id="avisPagination" aria-label="Pagination des avis"></div>
+            </div>
+
+            <div class="avis-cta">
+                <h2>Prêt à nous rejoindre ?</h2>
+                <p>Rejoins nos élèves satisfaits et passe ton permis avec nous</p>
+                <a href="inscription.html" class="btn-white">S'inscrire maintenant</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Auto-Ecole Breteuil</h4>
+                    <p>Votre auto-école à Marseille 13006. Formation de qualité au permis de conduire.</p>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Formations</h4>
+                    <ul>
+                        <li><a href="permis-b.html">Permis B</a></li>
+                        <li><a href="qui-sommes-nous.html">Qui sommes-nous</a></li>
+                        <li><a href="conduite-accompagnee.html">Conduite accompagnée</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Informations</h4>
+                    <ul>
+                        <li><a href="tarifs.html">Tarifs</a></li>
+                        <li><a href="tarifs.html#faq">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Notre localisation</h4>
+                    <p style="margin-bottom: 1rem;">1 Rue Édouard Delanglade<br>13006 Marseille</p>
+                    <h4 style="margin-top: 1.5rem;">Contact</h4>
+                    <ul>
+                        <li><i class="fas fa-phone"></i> 04 91 53 36 98</li>
+                        <li><i class="fas fa-envelope"></i> a.e.breteuil@gmail.com</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 Auto-Ecole Breteuil. Tous droits réservés.</p>
+                <div class="footer-links">
+                    <a href="mentions-legales.html">Mentions légales</a>
+                    <a href="cgv.html">CGV</a>
+                    <a href="confidentialite.html">Confidentialité</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/april-notice.js"></script>
+    <script>
+        // Pagination des avis
+        const avisCards = document.querySelectorAll('.avis-card');
+        const paginationRoot = document.getElementById('avisPagination');
+        const itemsPerPage = 9;
+        let currentPage = 1;
+
+        function getTotalPages() {
+            return Math.max(1, Math.ceil(avisCards.length / itemsPerPage));
+        }
+
+        function clampPage(page) {
+            const totalPages = getTotalPages();
+            if (!Number.isFinite(page)) return 1;
+            return Math.min(Math.max(1, page), totalPages);
+        }
+
+        function renderPagination() {
+            if (!paginationRoot) return;
+
+            const totalPages = getTotalPages();
+            if (totalPages <= 1) {
+                paginationRoot.innerHTML = '';
+                return;
+            }
+
+            const buttons = [];
+            for (let i = 1; i <= totalPages; i += 1) {
+                buttons.push(`<button type="button" data-page="${i}" class="${i === currentPage ? 'active' : ''}">${i}</button>`);
+            }
+
+            paginationRoot.innerHTML = buttons.join('');
+
+            paginationRoot.querySelectorAll('button[data-page]').forEach((button) => {
+                button.addEventListener('click', () => {
+                    const page = clampPage(parseInt(button.dataset.page, 10));
+                    currentPage = page;
+                    showPage(page);
+                });
+            });
+        }
+
+        function showPage(page) {
+            const safePage = clampPage(page);
+            const start = (safePage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+
+            avisCards.forEach((card, index) => {
+                if (index >= start && index < end) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            currentPage = safePage;
+            renderPagination();
+
+            // Scroll to top of reviews
+            document.querySelector('.avis-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Show first page on load
+        showPage(1);
+    </script>
+</body>
+</html>

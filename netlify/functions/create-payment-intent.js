@@ -51,6 +51,7 @@ exports.handler = async function handler(event) {
     const packLabel = payload.packLabel || 'Pack Auto-Ecole';
     const customerEmail = payload.customerEmail || null;
     const description = payload.description || `Inscription ${packLabel}`;
+    const installments = payload.installments || null;
 
     if (!Number.isInteger(amount) || amount <= 0) {
         return {
@@ -61,18 +62,25 @@ exports.handler = async function handler(event) {
     }
 
     try {
+        const metadata = {
+            pack_id: packId,
+            pack_label: packLabel,
+            hours: payload.hours || '20',
+            customer_email: customerEmail || 'non_renseigne'
+        };
+        
+        // Ajouter le nombre de mensualités si présent
+        if (installments) {
+            metadata.installments_count = String(installments);
+        }
+        
         const paymentIntent = await stripe.paymentIntents.create({
             amount,
             currency,
             description,
             receipt_email: customerEmail || undefined,
-            automatic_payment_methods: { enabled: true },
-            metadata: {
-                pack_id: packId,
-                pack_label: packLabel,
-                hours: payload.hours || '20',
-                customer_email: customerEmail || 'non_renseigne'
-            }
+            payment_method_types: ['card'],
+            metadata
         });
 
         return {

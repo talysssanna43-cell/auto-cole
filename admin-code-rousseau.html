@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paiements Code Rousseau - Admin</title>
+    <meta name="robots" content="noindex,nofollow">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/admin-inscriptions.css">
+    <link rel="stylesheet" href="assets/css/admin-mobile.css">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #f5f5f7;
+            --card: #ffffff;
+            --border: rgba(0,0,0,0.06);
+            --text: #1d1d1f;
+            --text2: #86868b;
+            --blue: #0071e3;
+            --green: #34c759;
+            --orange: #ff9500;
+            --red: #ff3b30;
+            --radius: 14px;
+            --shadow: 0 4px 24px rgba(0,0,0,0.06);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .topbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            height: 52px;
+            background: rgba(255,255,255,0.72);
+            backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+        .topbar-inner {
+            max-width: 1400px; margin: 0 auto; height: 100%; padding: 0 24px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .topbar-brand { font-size: 1.05rem; font-weight: 600; color: var(--text); text-decoration: none; }
+        .topbar-tabs {
+            display: flex; gap: 4px; background: rgba(0,0,0,0.04); border-radius: 8px; padding: 3px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+        }
+        .topbar-tabs a {
+            padding: 6px 12px; border-radius: 6px; font-size: 0.78rem; font-weight: 500;
+            color: var(--text2); text-decoration: none; transition: all 0.15s;
+            white-space: nowrap;
+        }
+        .topbar-tabs a:hover { color: var(--text); }
+        .topbar-tabs a.active {
+            background: var(--card); color: var(--text); font-weight: 600;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        .topbar-right { display: flex; align-items: center; gap: 14px; }
+        .topbar-right a { font-size: 0.82rem; color: var(--text2); text-decoration: none; }
+        .topbar-right a:hover { color: var(--text); }
+        .btn-logout {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 5px 12px; border-radius: 980px; border: none; background: none;
+            font-size: 0.82rem; font-weight: 500; color: var(--text2); cursor: pointer;
+        }
+        .btn-logout:hover { color: var(--red); background: rgba(255,59,48,0.06); }
+
+        .main-content {
+            max-width: 1400px; margin: 0 auto; padding: 76px 24px 24px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text2);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .payment-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .payment-card.unread {
+            border-left: 4px solid var(--blue);
+        }
+
+        .payment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .payment-user {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .payment-date {
+            font-size: 0.85rem;
+            color: var(--text2);
+        }
+
+        .payment-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .payment-info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .payment-info-label {
+            font-size: 0.75rem;
+            color: var(--text2);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .payment-info-value {
+            font-size: 0.95rem;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .payment-amount {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--green);
+        }
+
+        .btn-mark-read {
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            background: white;
+            color: var(--text);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-mark-read:hover {
+            background: var(--bg);
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            background: white;
+            color: var(--text);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .filter-btn.active {
+            background: var(--blue);
+            color: white;
+            border-color: var(--blue);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text2);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+    </style>
+</head>
+<body>
+    <nav class="topbar">
+        <div class="topbar-inner">
+            <a href="index.html" class="topbar-brand">Auto-Ecole Breteuil</a>
+            <button class="admin-menu-toggle" id="adminMenuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="topbar-tabs" id="adminTabs">
+                <a href="admin-planning.html">Planning</a>
+                <a href="admin-candidatures.html">Candidatures <span class="notif-badge" id="candidaturesBadge" style="display: none;">0</span></a>
+                <a href="admin-analytics.html">Analytics</a>
+                <a href="admin-support.html">Support <span class="notif-badge" id="supportBadge" style="display: none;">0</span></a>
+                <a href="admin-contact.html">Contact <span class="notif-badge" id="contactBadge" style="display: none;">0</span></a>
+                <a href="admin-code-rousseau.html" class="active">Code Rousseau</a>
+            </div>
+            <div class="topbar-right">
+                <a href="index.html"><i class="fas fa-arrow-left"></i> Retour au site</a>
+                <button class="btn-logout" id="logoutBtn"><i class="fas fa-right-from-bracket"></i> Quitter</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div style="margin-bottom: 2rem;">
+            <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;">
+                <i class="fas fa-book"></i> Paiements Code Rousseau
+            </h1>
+            <p style="color: var(--text2); font-size: 0.95rem;">Notifications des inscriptions au Code de la route</p>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total paiements</div>
+                <div class="stat-value" id="statTotal">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Non lus</div>
+                <div class="stat-value" id="statUnread" style="color: var(--blue);">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Revenus total</div>
+                <div class="stat-value" id="statRevenue" style="color: var(--green);">0€</div>
+            </div>
+        </div>
+
+        <!-- Filtres -->
+        <div class="filter-tabs">
+            <button class="filter-btn active" data-filter="all">Tous</button>
+            <button class="filter-btn" data-filter="unread">Non lus</button>
+            <button class="filter-btn" data-filter="read">Lus</button>
+        </div>
+
+        <!-- Liste des paiements -->
+        <div id="paymentsList">
+            <div class="empty-state">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Chargement des paiements...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
+    <script src="assets/js/supabaseClient.js"></script>
+    <script>
+        (function() {
+            'use strict';
+
+            let payments = [];
+            let currentFilter = 'all';
+
+            // Vérifier l'authentification admin
+            function checkAuth() {
+                const user = JSON.parse(localStorage.getItem('ae_user') || '{}');
+                if (!user.email || !user.is_admin) {
+                    window.location.href = 'connexion.html';
+                    return false;
+                }
+                return true;
+            }
+
+            // Charger les paiements
+            async function loadPayments() {
+                try {
+                    const { data, error } = await window.supabaseClient
+                        .from('inscription_notifications')
+                        .select('*')
+                        .eq('pack', 'code')
+                        .order('created_at', { ascending: false });
+
+                    if (error) throw error;
+
+                    payments = data || [];
+                    updateStats();
+                    renderPayments();
+                } catch (err) {
+                    console.error('Erreur chargement paiements:', err);
+                    document.getElementById('paymentsList').innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>Erreur de chargement</p>
+                        </div>
+                    `;
+                }
+            }
+
+            // Mettre à jour les statistiques
+            function updateStats() {
+                const total = payments.length;
+                const unread = payments.filter(p => !p.vu).length;
+                const revenue = payments.reduce((sum, p) => sum + parseFloat(p.amount_paid || 0), 0);
+
+                document.getElementById('statTotal').textContent = total;
+                document.getElementById('statUnread').textContent = unread;
+                document.getElementById('statRevenue').textContent = revenue.toFixed(0) + '€';
+            }
+
+            // Afficher les paiements
+            function renderPayments() {
+                const container = document.getElementById('paymentsList');
+                
+                let filtered = payments;
+                if (currentFilter === 'all') {
+                    // "Tous" affiche uniquement les non lus
+                    filtered = payments.filter(p => !p.vu);
+                } else if (currentFilter === 'unread') {
+                    filtered = payments.filter(p => !p.vu);
+                } else if (currentFilter === 'read') {
+                    filtered = payments.filter(p => p.vu);
+                }
+
+                if (filtered.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            <p>Aucun paiement ${currentFilter === 'unread' ? 'non lu' : currentFilter === 'read' ? 'lu' : ''}</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = filtered.map(payment => {
+                    const date = new Date(payment.created_at);
+                    const dateStr = date.toLocaleDateString('fr-FR', { 
+                        day: 'numeric', 
+                        month: 'long', 
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+
+                    return `
+                        <div class="payment-card ${!payment.vu ? 'unread' : ''}" data-id="${payment.id}">
+                            <div class="payment-header">
+                                <div>
+                                    <div class="payment-user">
+                                        <i class="fas fa-user"></i> ${payment.user_prenom} ${payment.user_nom}
+                                    </div>
+                                    <div class="payment-date">
+                                        <i class="fas fa-clock"></i> ${dateStr}
+                                    </div>
+                                </div>
+                                ${!payment.vu ? `
+                                    <button class="btn-mark-read" onclick="markAsRead('${payment.id}')">
+                                        <i class="fas fa-check"></i> Marquer comme lu
+                                    </button>
+                                ` : ''}
+                            </div>
+                            <div class="payment-info">
+                                <div class="payment-info-item">
+                                    <div class="payment-info-label">Email</div>
+                                    <div class="payment-info-value">
+                                        <i class="fas fa-envelope"></i> ${payment.user_email}
+                                    </div>
+                                </div>
+                                ${payment.user_telephone ? `
+                                    <div class="payment-info-item">
+                                        <div class="payment-info-label">Téléphone</div>
+                                        <div class="payment-info-value">
+                                            <i class="fas fa-phone"></i> ${payment.user_telephone}
+                                        </div>
+                                    </div>
+                                ` : ''}
+                                <div class="payment-info-item">
+                                    <div class="payment-info-label">Pack</div>
+                                    <div class="payment-info-value">
+                                        <i class="fas fa-book"></i> Code de la route
+                                    </div>
+                                </div>
+                                <div class="payment-info-item">
+                                    <div class="payment-info-label">Montant</div>
+                                    <div class="payment-amount">
+                                        ${payment.amount_paid}€
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // Marquer comme lu
+            window.markAsRead = async function(id) {
+                try {
+                    const { error } = await window.supabaseClient
+                        .from('inscription_notifications')
+                        .update({ vu: true })
+                        .eq('id', id);
+
+                    if (error) throw error;
+
+                    // Mettre à jour localement
+                    const payment = payments.find(p => p.id === id);
+                    if (payment) payment.vu = true;
+
+                    updateStats();
+                    renderPayments();
+                } catch (err) {
+                    console.error('Erreur:', err);
+                    alert('Erreur lors de la mise à jour');
+                }
+            };
+
+            // Filtres
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentFilter = this.dataset.filter;
+                    renderPayments();
+                });
+            });
+
+            // Déconnexion
+            document.getElementById('logoutBtn').addEventListener('click', function() {
+                localStorage.removeItem('ae_user');
+                window.location.href = 'connexion.html';
+            });
+
+            // Auto-refresh toutes les 30 secondes
+            setInterval(loadPayments, 30000);
+
+            // Initialisation
+            if (checkAuth()) {
+                loadPayments();
+            }
+        })();
+    </script>
+    <script src="assets/js/admin-notif-badge.js"></script>
+    <script src="assets/js/admin-mobile-menu.js"></script>
+</body>
+</html>

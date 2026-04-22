@@ -1,0 +1,252 @@
+/* ===== INSCRIPTION CARDS STYLES ===== */
+
+.inscription-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.inscription-card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+}
+
+/* Header */
+.inscription-card-header {
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.inscription-user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+}
+
+.user-avatar-large {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: white;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+.inscription-user-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: white;
+    margin: 0 0 0.25rem 0;
+}
+
+.inscription-user-email {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.inscription-user-email i {
+    opacity: 0.8;
+}
+
+.inscription-timestamp {
+    text-align: right;
+    color: white;
+}
+
+.timestamp-date {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.timestamp-time {
+    font-size: 0.85rem;
+    opacity: 0.9;
+}
+
+/* Body */
+.inscription-card-body {
+    padding: 1.5rem;
+    background: #f8f9fa;
+}
+
+.inscription-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.info-badge {
+    background: white;
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.info-badge:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.info-badge i {
+    font-size: 1.5rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pack-badge i {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.docs-badge i {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+}
+
+.info-badge > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.info-label {
+    font-size: 0.75rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1d1d1f;
+}
+
+/* Footer */
+.inscription-card-footer {
+    padding: 1.25rem 1.5rem;
+    background: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.inscription-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+/* Buttons */
+.btn-inscription-view,
+.btn-inscription-accept,
+.btn-inscription-reject {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: 10px;
+    border: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.btn-inscription-view {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-inscription-view:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-inscription-accept {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    color: white;
+}
+
+.btn-inscription-accept:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(56, 239, 125, 0.4);
+}
+
+.btn-inscription-reject {
+    background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);
+    color: white;
+}
+
+.btn-inscription-reject:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(238, 9, 121, 0.4);
+}
+
+.btn-inscription-view i,
+.btn-inscription-accept i,
+.btn-inscription-reject i {
+    font-size: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .inscription-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .inscription-timestamp {
+        text-align: left;
+    }
+    
+    .inscription-card-footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .btn-inscription-view,
+    .inscription-actions {
+        width: 100%;
+    }
+    
+    .inscription-actions {
+        flex-direction: column;
+    }
+    
+    .btn-inscription-accept,
+    .btn-inscription-reject {
+        width: 100%;
+        justify-content: center;
+    }
+}

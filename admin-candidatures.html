@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Candidatures - Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/admin-mobile.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', sans-serif;
+            background: #f5f5f7;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            padding: 12px 24px;
+        }
+
+        .topbar-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .topbar-brand {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1d1d1f;
+            letter-spacing: -0.022em;
+            text-decoration: none;
+        }
+
+        .topbar-tabs {
+            display: flex;
+            gap: 4px;
+            background: rgba(0,0,0,0.04);
+            border-radius: 8px;
+            padding: 3px;
+        }
+
+        .topbar-tabs a {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: #86868b;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .topbar-tabs a.active {
+            background: var(--card); color: var(--text); font-weight: 600;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        .notif-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 5px;
+            background: #ff3b30;
+            color: white;
+            border-radius: 9px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .btn-inscription {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 14px; border-radius: 8px; border: none;
+            background: #34c759; color: white; font-size: 0.82rem; font-weight: 500;
+            cursor: pointer; text-decoration: none; transition: all 0.2s;
+        }
+        .btn-inscription:hover { background: #2fb04f; transform: translateY(-1px); }
+
+        .topbar-link {
+            font-size: 14px;
+            color: #86868b;
+            text-decoration: none;
+            font-weight: 400;
+        }
+
+        .btn-logout {
+            background: none;
+            border: none;
+            color: #86868b;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 400;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 48px 24px;
+        }
+
+        .header {
+            margin-bottom: 32px;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            font-weight: 700;
+            color: #1d1d1f;
+            letter-spacing: -0.025em;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 21px;
+            color: #86868b;
+            font-weight: 400;
+            letter-spacing: -0.016em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .stat-card h3 {
+            color: #86868b;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 40px;
+            font-weight: 600;
+            color: #1d1d1f;
+            letter-spacing: -0.025em;
+        }
+
+        .candidatures-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .candidature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .candidature-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            position: relative;
+        }
+
+        .btn-delete {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #ff3b30;
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            box-shadow: 0 2px 8px rgba(255, 59, 48, 0.3);
+        }
+
+        .candidature-info h3 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1d1d1f;
+            letter-spacing: -0.022em;
+            margin-bottom: 4px;
+        }
+
+        .candidature-info p {
+            font-size: 14px;
+            color: #86868b;
+            font-weight: 400;
+        }
+
+        .candidature-badge {
+            background: #1d1d1f;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 980px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .candidature-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .detail-item i {
+            color: #06c;
+            width: 18px;
+            font-size: 16px;
+        }
+
+        .detail-item span {
+            color: #1d1d1f;
+            font-size: 15px;
+            font-weight: 400;
+        }
+
+        .candidature-message {
+            background: #f5f5f7;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .candidature-message strong {
+            color: #1d1d1f;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .candidature-message p {
+            color: #1d1d1f;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .candidature-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 980px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .btn-download {
+            background: #06c;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #f5f5f7;
+            color: #1d1d1f;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 24px;
+            color: #86868b;
+        }
+
+        .empty-state i {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.3;
+        }
+
+        .empty-state p {
+            font-size: 17px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 80px 24px;
+            color: #86868b;
+        }
+
+        .loading p {
+            font-size: 17px;
+            margin-top: 16px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="topbar">
+        <div class="topbar-inner">
+            <a href="index.html" class="topbar-brand">Auto-Ecole Breteuil</a>
+            <button class="admin-menu-toggle" id="adminMenuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="topbar-tabs" id="adminTabs">
+                <a href="admin-planning.html">Planning</a>
+                <a href="admin-candidatures.html" class="active">Candidatures <span class="notif-badge" id="candidaturesBadge" style="display: none;">0</span></a>
+                <a href="admin-analytics.html">Analytics</a>
+                <a href="admin-support.html">Support <span class="notif-badge" id="supportBadge" style="display: none;">0</span></a>
+                <a href="admin-contact.html">Contact <span class="notif-badge" id="contactBadge" style="display: none;">0</span></a>
+                <a href="admin-code-rousseau.html">Code Rousseau <span class="notif-badge" id="codeRousseuBadge" style="display: none;">0</span></a>
+            </div>
+            <div class="topbar-right">
+                <a href="inscription.html?admin=true" class="btn-inscription">
+                    <i class="fas fa-user-plus"></i> Nouvelle inscription
+                </a>
+                <a href="index.html" style="color: #86868b; text-decoration: none; font-size: 14px;"><i class="fas fa-arrow-left"></i> Retour au site</a>
+                <button class="btn-logout" id="logoutBtn" style="background: none; border: none; color: #86868b; cursor: pointer; font-size: 14px;"><i class="fas fa-right-from-bracket"></i> Quitter</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <h1>Candidatures</h1>
+            <p>Consultez et gérez les candidatures reçues</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total</h3>
+                <div class="stat-value" id="totalCandidatures">0</div>
+            </div>
+        </div>
+
+        <div class="candidatures-list" id="candidaturesList">
+            <div class="loading">
+                <p>Chargement des candidatures...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
+    <script src="assets/js/supabaseClient.js"></script>
+    <script>
+        async function loadCandidatures() {
+            try {
+                console.log('Chargement des candidatures...');
+                console.log('URL Supabase:', window.supabaseClient?.supabaseUrl);
+                
+                // Vérifier d'abord si l'utilisateur est authentifié
+                const { data: { user } } = await window.supabaseClient.auth.getUser();
+                console.log('Utilisateur authentifié:', user);
+                
+                if (!user) {
+                    console.warn('Utilisateur non authentifié, tentative de lecture publique...');
+                }
+                
+                // Sélectionner toutes les colonnes y compris l'id pour pouvoir supprimer
+                const { data: candidatures, error } = await window.supabaseClient
+                    .from('candidatures')
+                    .select('created_at, prenom, nom, email, telephone, poste, disponibilites, message, cv_url, lettre_url, status');
+                
+                console.log('Réponse Supabase:', { candidatures, error });
+                
+                if (error) {
+                    console.error('Erreur Supabase:', error);
+                    throw new Error(`Erreur Supabase: ${error.message} (Code: ${error.code})`);
+                }
+                
+                console.log('Nombre de candidatures:', candidatures ? candidatures.length : 0);
+                console.log('Première candidature:', candidatures?.[0]);
+
+                // Update stats
+                document.getElementById('totalCandidatures').textContent = candidatures.length;
+
+                // Display candidatures
+                const container = document.getElementById('candidaturesList');
+                
+                if (candidatures.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            <p>Aucune candidature pour le moment</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = candidatures.map(candidature => {
+                    const date = new Date(candidature.created_at);
+                    const dateStr = date.toLocaleDateString('fr-FR', {
+                        day: '2-digit',
+                        month: 'long',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+
+                    return `
+                        <div class="candidature-card">
+                            <div class="candidature-header">
+                                <button class="btn-delete" onclick="deleteCandidature('${candidature.email}', '${candidature.created_at}', '${candidature.prenom}', '${candidature.nom}')" title="Supprimer cette candidature">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                <div class="candidature-info">
+                                    <h3>${candidature.prenom} ${candidature.nom}</h3>
+                                    <p><i class="far fa-clock"></i> ${dateStr}</p>
+                                </div>
+                            </div>
+
+                            <div class="candidature-details">
+                                <div class="detail-item">
+                                    <i class="fas fa-envelope"></i>
+                                    <span>${candidature.email}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-phone"></i>
+                                    <span>${candidature.telephone}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-calendar"></i>
+                                    <span>${candidature.disponibilites || 'Non renseignées'}</span>
+                                </div>
+                            </div>
+
+                            ${candidature.message ? `
+                                <div class="candidature-message">
+                                    <strong>MESSAGE</strong>
+                                    <p>${candidature.message}</p>
+                                </div>
+                            ` : ''}
+
+                            <div class="candidature-actions">
+                                ${candidature.cv_url && candidature.cv_url.includes('base64') ? `
+                                    <button class="btn btn-download" onclick="downloadFile(\`${candidature.cv_url}\`, 'CV_${candidature.nom}_${candidature.prenom}.pdf')">
+                                        <i class="fas fa-download"></i>
+                                        Télécharger CV
+                                    </button>
+                                ` : '<span style="color: #6c757d;">Pas de CV</span>'}
+                                
+                                ${candidature.lettre_url && candidature.lettre_url.includes('base64') ? `
+                                    <button class="btn btn-download" onclick="downloadFile(\`${candidature.lettre_url}\`, 'Lettre_${candidature.nom}_${candidature.prenom}.pdf')">
+                                        <i class="fas fa-download"></i>
+                                        Télécharger Lettre
+                                    </button>
+                                ` : '<span style="color: #6c757d;">Pas de lettre</span>'}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (err) {
+                console.error('Erreur complète:', err);
+                console.error('Message:', err.message);
+                console.error('Stack:', err.stack);
+                document.getElementById('candidaturesList').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Erreur lors du chargement</p>
+                        <p style="font-size: 0.9rem; margin-top: 1rem; color: #dc3545;">${err.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function downloadFile(base64Data, filename) {
+            try {
+                // Create a link and trigger download
+                const link = document.createElement('a');
+                link.href = base64Data;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } catch (err) {
+                console.error('Erreur téléchargement:', err);
+                alert('Erreur lors du téléchargement du fichier');
+            }
+        }
+
+        async function deleteCandidature(email, createdAt, prenom, nom) {
+            if (!confirm(`Êtes-vous sûr de vouloir supprimer la candidature de ${prenom} ${nom} ?`)) {
+                return;
+            }
+
+            console.log('Tentative de suppression:', { email, createdAt, prenom, nom });
+
+            try {
+                const { data, error } = await window.supabaseClient
+                    .from('candidatures')
+                    .delete()
+                    .eq('email', email)
+                    .eq('created_at', createdAt);
+
+                console.log('Résultat suppression:', { data, error });
+
+                if (error) {
+                    console.error('Erreur suppression complète:', error);
+                    alert(`Erreur lors de la suppression: ${error.message}\n\nVérifie les permissions RLS dans Supabase (politique DELETE pour authenticated)`);
+                    return;
+                }
+
+                console.log('Suppression réussie, rechargement...');
+                // Recharger les candidatures
+                await loadCandidatures();
+            } catch (err) {
+                console.error('Erreur exception:', err);
+                alert('Erreur lors de la suppression: ' + err.message);
+            }
+        }
+
+        // Load candidatures on page load
+        document.addEventListener('DOMContentLoaded', loadCandidatures);
+    </script>
+    <script src="assets/js/admin-candidatures.js"></script>
+    <script src="assets/js/admin-notif-badge.js"></script>
+    <script src="assets/js/admin-mobile-menu.js"></script>
+</body>
+</html>

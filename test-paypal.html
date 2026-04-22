@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test PayPal - Paiement en plusieurs fois</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .price {
+            font-size: 48px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .description {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        #paypal-button-container {
+            margin: 30px 0;
+        }
+        .info {
+            background: #f0f7ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #555;
+        }
+        .success {
+            background: #d4edda;
+            border-left-color: #28a745;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            border-left-color: #dc3545;
+            color: #721c24;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚗 Test PayPal</h1>
+        <p class="subtitle">Paiement en plusieurs fois</p>
+        
+        <div class="price">995€</div>
+        <div class="description">
+            <strong>Forfait Zen</strong><br>
+            20h de conduite + code de la route<br>
+            Paiement en 4 fois sans frais avec PayPal
+        </div>
+
+        <div id="loading" class="loading">
+            Chargement de PayPal...
+        </div>
+
+        <div id="paypal-button-container"></div>
+
+        <div id="result"></div>
+
+        <div class="info">
+            <strong>ℹ️ Mode test</strong><br>
+            Utilise un compte PayPal Sandbox pour tester.<br>
+            Le paiement en 4x apparaît automatiquement pour les montants entre 30€ et 2000€.
+        </div>
+    </div>
+
+    <script src="assets/js/paypal-payment.js"></script>
+    <script>
+        const paypal = new PayPalPayment();
+        const resultDiv = document.getElementById('result');
+        const loadingDiv = document.getElementById('loading');
+
+        async function initPayPal() {
+            try {
+                // Récupérer le Client ID
+                const clientId = await paypal.getClientId();
+                console.log('Client ID récupéré');
+
+                // Charger le SDK PayPal
+                await paypal.loadPayPalSDK(clientId);
+                loadingDiv.style.display = 'none';
+
+                // Rendre les boutons
+                await paypal.renderButtons(
+                    'paypal-button-container',
+                    995, // Montant
+                    'Forfait Zen - Auto-École Breteuil',
+                    'test@example.com',
+                    'Test User',
+                    // Succès
+                    (data) => {
+                        console.log('✅ Paiement réussi:', data);
+                        resultDiv.innerHTML = `
+                            <div class="info success">
+                                <strong>✅ Paiement réussi !</strong><br>
+                                ID Commande: ${data.orderId}<br>
+                                ID Capture: ${data.captureId}<br>
+                                Email: ${data.payerEmail}<br>
+                                Montant: ${data.amount.value} ${data.amount.currency_code}
+                            </div>
+                        `;
+                    },
+                    // Erreur
+                    (error) => {
+                        console.error('❌ Erreur:', error);
+                        resultDiv.innerHTML = `
+                            <div class="info error">
+                                <strong>❌ Erreur</strong><br>
+                                ${error.message}
+                            </div>
+                        `;
+                    }
+                );
+            } catch (error) {
+                console.error('Erreur initialisation:', error);
+                loadingDiv.innerHTML = `
+                    <div class="info error">
+                        <strong>❌ Erreur d'initialisation</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Initialiser au chargement
+        initPayPal();
+    </script>
+</body>
+</html>

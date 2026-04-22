@@ -142,6 +142,9 @@
 </head>
 <body>
     <div class="login-card">
+        <a href="index.html" style="display:inline-flex;align-items:center;gap:6px;color:#666;text-decoration:none;font-size:0.9rem;margin-bottom:1rem;">
+            <i class="fas fa-arrow-left"></i> Retour à l'accueil
+        </a>
         <div class="login-header">
             <h1>Connexion</h1>
             <p>Accède à ton espace pour réserver tes heures et suivre ta progression.</p>
@@ -159,7 +162,7 @@
                 <label style="display: flex; gap: 0.35rem; align-items: center; font-size: 0.95rem;">
                     <input type="checkbox" style="accent-color: #FF69B4;"> Rester connecté(e)
                 </label>
-                <a href="#">Mot de passe oublié ?</a>
+                <a href="reset-password.html">Mot de passe oublié ?</a>
             </div>
             <button type="submit" class="btn-primary btn-block" style="font-size: 1.05rem;">Se connecter</button>
             <div class="divider">ou</div>
@@ -175,15 +178,66 @@
     <script src="https://unpkg.com/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
     <script src="assets/js/supabaseClient.js"></script>
     <script>
+        // Comptes moniteurs et admin (codés en dur)
+        const COMPTES_SPECIAUX = {
+            'mylene@breteuil-autoecole.fr': {
+                password: 'mylene123',
+                prenom: 'Mylène',
+                is_admin: false,
+                is_moniteur: true,
+                instructor_name: 'Mylène'
+            },
+            'sammy@breteuil-autoecole.fr': {
+                password: 'sammy123',
+                prenom: 'Sammy',
+                is_admin: false,
+                is_moniteur: true,
+                instructor_name: 'Sammy'
+            },
+            'breteuilautoecole@gmail.com': {
+                password: 'admin123',
+                prenom: 'Admin',
+                is_admin: true,
+                is_moniteur: false,
+                instructor_name: null
+            }
+        };
+
         const loginForm = document.getElementById('loginForm');
         loginForm.addEventListener('submit', async (event) => {
             event.preventDefault();
 
-            const email = document.getElementById('email').value.trim();
+            const email = document.getElementById('email').value.trim().toLowerCase();
             const password = document.getElementById('password').value;
 
-            if (!window.supabaseClient) {
-                alert('Supabase n’est pas initialisé. Merci de réessayer dans un instant.');
+            // Vérifier si c'est un compte spécial (moniteur ou admin)
+            const compteSpecial = COMPTES_SPECIAUX[email];
+            if (compteSpecial) {
+                if (password === compteSpecial.password) {
+                    localStorage.setItem('ae_user', JSON.stringify({
+                        id: 999,
+                        prenom: compteSpecial.prenom,
+                        email: email,
+                        is_admin: compteSpecial.is_admin,
+                        is_moniteur: compteSpecial.is_moniteur,
+                        instructor_name: compteSpecial.instructor_name
+                    }));
+
+                    if (compteSpecial.is_admin) {
+                        window.location.href = 'admin-planning.html';
+                    } else {
+                        window.location.href = 'espace-moniteur.html';
+                    }
+                    return;
+                } else {
+                    alert('Mot de passe incorrect.');
+                    return;
+                }
+            }
+
+            // Sinon, connexion élève via Supabase
+            if (!window.supabaseClient || !window.hashPassword) {
+                alert("Chargement en cours, réessaie dans un instant.");
                 return;
             }
 
@@ -192,7 +246,7 @@
 
                 const { data, error } = await window.supabaseClient
                     .from('users')
-                    .select('id, prenom, email, password_hash')
+                    .select('id, prenom, nom, email, telephone, password_hash, is_admin')
                     .ilike('email', email)
                     .limit(1)
                     .maybeSingle();
@@ -207,18 +261,44 @@
                     return;
                 }
 
-                localStorage.setItem('ae_user', JSON.stringify({
-                    id: data.id,
-                    prenom: data.prenom,
-                    email
-                }));
+                // Tenter de sauvegarder dans localStorage avec gestion d'erreur
+                try {
+                    localStorage.setItem('ae_user', JSON.stringify({
+                        id: data.id,
+                        prenom: data.prenom,
+                        nom: data.nom,
+                        email: data.email,
+                        telephone: data.telephone,
+                        is_admin: false,
+                        is_moniteur: false,
+                        instructor_name: null
+                    }));
+                } catch (storageError) {
+                    console.error('Erreur localStorage:', storageError);
+                    // Si localStorage est bloqué, utiliser sessionStorage comme fallback
+                    try {
+                        sessionStorage.setItem('ae_user', JSON.stringify({
+                            id: data.id,
+                            prenom: data.prenom,
+                            nom: data.nom,
+                            email: data.email,
+                            telephone: data.telephone,
+                            is_admin: false,
+                            is_moniteur: false,
+                            instructor_name: null
+                        }));
+                        alert('⚠️ Pour des raisons de sécurité du navigateur, tu devras te reconnecter à chaque session. Active les cookies pour éviter cela.');
+                    } catch (sessionError) {
+                        console.error('Erreur sessionStorage:', sessionError);
+                        alert('❌ Ton navigateur bloque le stockage des données. Vérifie les paramètres de confidentialité et réessaie.');
+                        return;
+                    }
+                }
 
-                alert(`Bienvenue ${data.prenom || ''} ! Connexion réussie.`);
-                setTimeout(() => {
-                    window.location.replace('index.html');
-                }, 50);
+                const redirectUrl = new URLSearchParams(window.location.search).get('redirect');
+                window.location.href = redirectUrl || 'espace-eleve.html';
             } catch (error) {
-                console.error('Erreur connexion Supabase:', error);
+                console.error('Erreur connexion:', error);
                 alert('Serveur indisponible. Réessaie dans un instant.');
             }
         });

@@ -189,6 +189,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: var(--spacing-lg);
+    margin-top: 1.5rem;
     margin-bottom: var(--spacing-xl);
 }
 
@@ -460,6 +461,51 @@
     border: 1px solid var(--primary-color);
 }
 
+.card-info-box {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: white;
+}
+
+.stripe-split-card {
+    display: grid;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+}
+
+.stripe-split-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 0.5rem;
+}
+
+.stripe-split-card .stripe-card-element {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    background: #fff;
+}
+
+.stripe-split-card .stripe-card-element:focus-within {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.15);
+}
+
+.mock-card-input {
+    width: 100%;
+    border: none;
+    font-size: 1rem;
+    padding: 0.35rem 0;
+    background: transparent;
+}
+
+.mock-card-input:focus {
+    outline: none;
+}
+
 /* ===== FORM ACTIONS ===== */
 .form-actions {
     display: flex;
@@ -525,4 +571,46 @@
     .form-actions button {
         width: 100%;
     }
+}
+
+/* ===== STEP SUBTITLE ===== */
+.step-subtitle {
+    text-align: center;
+    color: var(--primary-color);
+    font-size: 1.125rem;
+    font-weight: 500;
+    margin-top: -1rem;
+    margin-bottom: 3.5rem;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.08), rgba(236, 72, 153, 0.03));
+    border-radius: var(--radius-lg);
+    border-left: 4px solid var(--primary-color);
+    line-height: 1.6;
+}
+
+/* ===== SKIP OPTION ===== */
+.skip-option {
+    text-align: center;
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--border-color);
+}
+
+.skip-link {
+    color: var(--text-light);
+    font-size: 0.875rem;
+    text-decoration: none;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.skip-link:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+/* ===== LARGE BUTTON ===== */
+.btn-large {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
 }

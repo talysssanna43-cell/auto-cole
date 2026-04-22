@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription manuelle - Admin</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/forms.css?v=2">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .admin-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+        .admin-header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+        .admin-header p {
+            margin: 0.5rem 0 0 0;
+            opacity: 0.9;
+        }
+        .form-section {
+            padding: 2rem 0 4rem 0;
+        }
+        .pack-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .pack-option {
+            position: relative;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .pack-option:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(255, 20, 147, 0.1);
+        }
+        .pack-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+        }
+        .pack-option input[type="radio"]:checked + label {
+            border-color: var(--primary-color);
+            background: rgba(255, 20, 147, 0.05);
+        }
+        .pack-option label {
+            cursor: pointer;
+            display: block;
+        }
+        .pack-option-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        .pack-option-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            color: #333;
+        }
+        .pack-option-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        .pack-option p {
+            color: #666;
+            margin: 0.5rem 0 1rem 0;
+        }
+        .pack-option ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .pack-option ul li {
+            padding: 0.25rem 0;
+            color: #555;
+            font-size: 0.9rem;
+        }
+        .pack-option ul li i {
+            color: #4caf50;
+            margin-right: 0.5rem;
+        }
+        .pack-option.featured {
+            border-color: var(--primary-color);
+            background: rgba(255, 20, 147, 0.03);
+        }
+        .pack-option-badge {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: var(--primary-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .form-feedback {
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        .form-feedback.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .form-feedback.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            text-decoration: none;
+            margin-top: 1rem;
+            opacity: 0.9;
+            transition: opacity 0.3s;
+        }
+        .back-link:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-header">
+        <div class="container">
+            <h1><i class="fas fa-user-plus"></i> Inscription manuelle (Paiement en espèces)</h1>
+            <p>Inscrire un élève qui a payé en espèces ou par chèque</p>
+            <a href="admin.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Retour au tableau de bord
+            </a>
+        </div>
+    </div>
+
+    <section class="form-section">
+        <div class="container">
+            <div class="form-wrapper">
+                <form id="adminInscriptionForm" class="form-container">
+                    <h2>Informations personnelles</h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="prenom">Prénom *</label>
+                            <input type="text" id="prenom" name="prenom" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="nom">Nom *</label>
+                            <input type="text" id="nom" name="nom" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="motdepasse">Mot de passe *</label>
+                        <input type="password" id="motdepasse" name="password" minlength="6" placeholder="Créer un mot de passe pour l'élève" required>
+                        <small style="color: var(--text-light); display: block; margin-top: 0.25rem;">6 caractères minimum</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telephone">Téléphone *</label>
+                        <input type="tel" id="telephone" name="telephone" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dateNaissance">Date de naissance *</label>
+                        <input type="date" id="dateNaissance" name="dateNaissance" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="adresse">Adresse *</label>
+                        <input type="text" id="adresse" name="adresse" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="codePostal">Code postal *</label>
+                            <input type="text" id="codePostal" name="codePostal" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ville">Ville *</label>
+                            <input type="text" id="ville" name="ville" required>
+                        </div>
+                    </div>
+
+                    <h2 style="margin-top: 2rem;">Pack choisi</h2>
+                    <p style="color: #666; margin-bottom: 1.5rem;">Sélectionne le pack que l'élève a choisi</p>
+
+                    <div style="margin-bottom: 2rem; padding: 1.5rem; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 8px;">
+                        <label style="display: block; margin-bottom: 1rem; font-weight: 600; color: #856404;">
+                            <i class="fas fa-exclamation-triangle"></i> L'élève a-t-il déjà eu un permis invalidé ou annulé ?
+                        </label>
+                        <div style="display: flex; gap: 2rem;">
+                            <label style="display: flex; align-items: center; cursor: pointer;">
+                                <input type="radio" name="permisInvalide" value="oui" style="margin-right: 0.5rem;">
+                                <span>Oui</span>
+                            </label>
+                            <label style="display: flex; align-items: center; cursor: pointer;">
+                                <input type="radio" name="permisInvalide" value="non" checked style="margin-right: 0.5rem;">
+                                <span>Non</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="pack-selection">
+                        <div class="pack-option" data-pack="am">
+                            <input type="radio" name="pack" id="pack-am" value="am">
+                            <label for="pack-am">
+                                <div class="pack-option-header">
+                                    <h3>Voiture sans permis (AM)</h3>
+                                    <div class="pack-option-price">350€</div>
+                                </div>
+                                <p>Formation complète</p>
+                                <ul>
+                                    <li><i class="fas fa-check"></i> 8h de pratique</li>
+                                    <li><i class="fas fa-check"></i> Module code & manœuvres</li>
+                                </ul>
+                            </label>
+                        </div>
+
+                        <div class="pack-option" data-pack="boite-auto">
+                            <input type="radio" name="pack" id="pack-boite-auto" value="boite-auto">
+                            <label for="pack-boite-auto">
+                                <div class="pack-option-header">
+                                    <h3>Boîte Automatique</h3>
+                                    <div class="pack-option-price">859€</div>
+                                </div>
+                                <p>Code + 13h de conduite</p>
+                                <ul>
+                                    <li><i class="fas fa-check"></i> Code en salle 6 mois</li>
+                                    <li><i class="fas fa-check"></i> 13h de conduite</li>
+                                </ul>
+                            </label>
+                        </div>
+
+                        <div class="pack-option featured" data-pack="zen">
+                            <div class="pack-option-badge">Populaire</div>
+                            <input type="radio" name="pack" id="pack-zen" value="zen" checked>
+                            <label for="pack-zen">
+                                <div class="pack-option-header">
+                                    <h3>Boîte Manuelle</h3>
+                                    <div class="pack-option-price">995€</div>
+                                </div>
+                                <p>Code + 20h de conduite</p>
+                                <ul>
+                                    <li><i class="fas fa-check"></i> Code en salle 6 mois</li>
+                                    <li><i class="fas fa-check"></i> 20h de conduite</li>
+                                </ul>
+                            </label>
+                        </div>
+
+                        <div class="pack-option" data-pack="aac">
+                            <input type="radio" name="pack" id="pack-aac" value="aac">
+                            <label for="pack-aac">
+                                <div class="pack-option-header">
+                                    <h3>Conduite accompagnée (AAC)</h3>
+                                    <div class="pack-option-price">1190€</div>
+                                </div>
+                                <p>Dès 15 ans</p>
+                                <ul>
+                                    <li><i class="fas fa-check"></i> Code + 20h de conduite</li>
+                                    <li><i class="fas fa-check"></i> RDV préalable inclus</li>
+                                </ul>
+                            </label>
+                        </div>
+
+                        <div class="pack-option" data-pack="supervisee">
+                            <input type="radio" name="pack" id="pack-supervisee" value="supervisee">
+                            <label for="pack-supervisee">
+                                <div class="pack-option-header">
+                                    <h3>Conduite supervisée</h3>
+                                    <div class="pack-option-price">1190€</div>
+                                </div>
+                                <p>Pour les +18 ans</p>
+                                <ul>
+                                    <li><i class="fas fa-check"></i> Code + 20h de conduite</li>
+                                    <li><i class="fas fa-check"></i> Autonomie garantie</li>
+                                </ul>
+                            </label>
+                        </div>
+
+                        <div class="pack-option" data-pack="second-chance">
+                            <input type="radio" name="pack" id="pack-second-chance" value="second-chance">
+                            <label for="pack-second-chance">
+                                <div class="pack-option-header">
+                                    <h3>Forfait Second Chance</h3>
+                                    <div class="pack-option-price">569€</div>
+                                </div>
+                                <p>Votre nouvelle opportunité</p>
+                                <ul>
+                                    <li><i class="fas fa-check"></i> Récupération du dossier</li>
+                                    <li><i class="fas fa-check"></i> 3 séances (bilan, correction, permis blanc)</li>
+                                    <li><i class="fas fa-check"></i> Nouvelle date d'examen</li>
+                                </ul>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div id="formFeedback" class="form-feedback" style="display: none;"></div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary" id="submitBtn">
+                            <i class="fas fa-check"></i> Terminer l'inscription
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
+    <script src="assets/js/supabaseClient.js?v=3"></script>
+    <script src="assets/js/admin-inscription.js?v=1"></script>
+</body>
+</html>

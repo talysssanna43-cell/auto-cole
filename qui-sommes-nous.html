@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qui sommes-nous - Auto-Ecole Breteuil</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --apple-bg: #fbfbfd;
+            --apple-text: #1d1d1f;
+            --apple-text2: #86868b;
+            --apple-blue: #0071e3;
+            --apple-pink: #ec4899;
+            --apple-card: #ffffff;
+            --apple-border: rgba(0,0,0,0.04);
+        }
+
+        .apple-hero {
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: linear-gradient(180deg, #fff 0%, #f5f5f7 100%);
+            padding: 120px 24px 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .apple-hero::before {
+            content: '';
+            position: absolute;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(236,72,153,0.08) 0%, transparent 70%);
+            top: -200px;
+            right: -200px;
+        }
+
+        .apple-hero::after {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0,113,227,0.06) 0%, transparent 70%);
+            bottom: -150px;
+            left: -150px;
+        }
+
+        .hero-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #fdf2f8, #fce7f3);
+            color: #be185d;
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            line-height: 1.05;
+            color: var(--apple-text);
+            margin-bottom: 24px;
+        }
+
+        .hero-title span {
+            background: linear-gradient(135deg, #ec4899, #be185d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: var(--apple-text2);
+            max-width: 600px;
+            margin: 0 auto 40px;
+            line-height: 1.5;
+            font-weight: 400;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            flex-wrap: wrap;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-value {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--apple-text);
+            line-height: 1;
+        }
+
+        .hero-stat-label {
+            font-size: 0.9rem;
+            color: var(--apple-text2);
+            margin-top: 6px;
+            font-weight: 500;
+        }
+
+        /* Story Section */
+        .story-section {
+            padding: 120px 24px;
+            background: #fff;
+        }
+
+        .story-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .story-content h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--apple-text);
+            line-height: 1.1;
+            margin-bottom: 24px;
+        }
+
+        .story-content h2 span {
+            color: var(--apple-pink);
+        }
+
+        .story-content p {
+            font-size: 1.15rem;
+            color: var(--apple-text2);
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
+
+        .story-badges {
+            display: flex;
+            gap: 12px;
+            margin-top: 32px;
+            flex-wrap: wrap;
+        }
+
+        .story-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .story-badge.green {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .story-badge.yellow {
+            background: #fffbeb;
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+
+        .story-image {
+            position: relative;
+            background: #f8f9fa;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.12);
+        }
+
+        .story-image img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        .story-image-badge {
+            position: absolute;
+            bottom: 16px;
+            left: 32px;
+            background: #fff;
+            border-radius: 14px;
+            padding: 10px 14px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .story-image-badge .icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #ec4899, #be185d);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .story-image-badge .icon i {
+            color: #fff;
+            font-size: 0.85rem;
+        }
+
+        .story-image-badge .text .value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--apple-text);
+            line-height: 1;
+        }
+
+        .story-image-badge .text .label {
+            font-size: 0.65rem;
+            color: var(--apple-text2);
+            line-height: 1;
+            margin-top: 2px;
+        }
+
+        /* Method Section */
+        .method-section {
+            padding: 120px 24px;
+            background: linear-gradient(180deg, #f5f5f7 0%, #fff 100%);
+        }
+
+        .method-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 80px;
+        }
+
+        .method-header h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--apple-text);
+            margin-bottom: 16px;
+        }
+
+        .method-header p {
+            font-size: 1.2rem;
+            color: var(--apple-text2);
+        }
+
+        .method-grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+
+        .method-card {
+            background: #fff;
+            border-radius: 24px;
+            padding: 40px 32px;
+            text-align: center;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+            border: 1px solid var(--apple-border);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .method-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+        }
+
+        .method-number {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #ec4899, #be185d);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .method-card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--apple-text);
+            margin-bottom: 12px;
+        }
+
+        .method-card p {
+            font-size: 1rem;
+            color: var(--apple-text2);
+            line-height: 1.6;
+        }
+
+        /* Values Section */
+        .values-section {
+            padding: 120px 24px;
+            background: #fff;
+        }
+
+        .values-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 80px;
+        }
+
+        .values-header h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--apple-text);
+            margin-bottom: 16px;
+        }
+
+        .values-header p {
+            font-size: 1.2rem;
+            color: var(--apple-text2);
+        }
+
+        .values-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+        }
+
+        .value-card {
+            background: linear-gradient(180deg, #f8fafc 0%, #fff 100%);
+            border-radius: 24px;
+            padding: 32px 24px;
+            text-align: center;
+            border: 1px solid var(--apple-border);
+            transition: transform 0.3s ease;
+        }
+
+        .value-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .value-card .emoji {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+
+        .value-card h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--apple-text);
+            margin-bottom: 10px;
+        }
+
+        .value-card p {
+            font-size: 0.9rem;
+            color: var(--apple-text2);
+            line-height: 1.5;
+        }
+
+        /* Location Section */
+        .location-section {
+            padding: 120px 24px;
+            background: linear-gradient(180deg, #f5f5f7 0%, #fff 100%);
+        }
+
+        .location-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .location-content h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--apple-text);
+            margin-bottom: 24px;
+        }
+
+        .location-content p {
+            font-size: 1.1rem;
+            color: var(--apple-text2);
+            line-height: 1.7;
+            margin-bottom: 32px;
+        }
+
+        .location-info {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .location-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .location-item .icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #fdf2f8, #fce7f3);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #be185d;
+        }
+
+        .location-item .text {
+            font-size: 1rem;
+            color: var(--apple-text);
+        }
+
+        .location-item .text strong {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--apple-text2);
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .location-map {
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            height: 400px;
+        }
+
+        .location-map iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 120px 24px;
+            background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+            text-align: center;
+        }
+
+        .cta-inner {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .cta-section h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 40px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-btn {
+            padding: 16px 32px;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: transform 0.2s ease;
+        }
+
+        .cta-btn:hover {
+            transform: scale(1.02);
+        }
+
+        .cta-btn.primary {
+            background: #fff;
+            color: #be185d;
+        }
+
+        .cta-btn.secondary {
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .story-grid,
+            .location-grid {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+
+            .method-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .values-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .hero-stats {
+                gap: 32px;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .story-content h2,
+            .method-header h2,
+            .values-header h2,
+            .cta-section h2 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <a href="index.html" class="logo">
+                    <img src="assets/logo.png" alt="Auto-Ecole Breteuil">
+                    <span>Auto-Ecole <strong>Breteuil</strong></span>
+                </a>
+                
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="recrutement.html">Recrutement</a></li>
+                    <li><a href="qui-sommes-nous.html" class="active">Qui sommes-nous</a></li>
+                    <li><a href="tarifs.html">Tarifs</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+
+                <div class="nav-actions">
+                    <a href="connexion.html" class="btn-secondary">Se connecter</a>
+                    <a href="inscription.html" class="btn-primary">S'inscrire</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Story Section -->
+    <section class="story-section">
+        <div class="story-grid">
+            <div class="story-content">
+                <h2>Plus de <span>30 ans</span> d'expérience au cœur de Marseille</h2>
+                <p>
+                    <strong>Depuis 1994</strong>, l'Auto-École Breteuil forme des conducteurs responsables avec une pédagogie adaptée, bienveillante et efficace.
+                </p>
+                <p>
+                    Nous croyons que la conduite est une liberté qui se mérite et se respecte. C'est pourquoi nous accompagnons chaque élève vers l'autonomie sur la route.
+                </p>
+                <div class="story-badges">
+                    <div class="story-badge green">
+                        <i class="fas fa-check-circle"></i> Agréée Préfecture
+                    </div>
+                    <div class="story-badge yellow">
+                        <i class="fas fa-award"></i> Reconnue par l'État
+                    </div>
+                </div>
+            </div>
+            <div class="story-image">
+                <img src="assets/qui sommes nous.png" alt="Voiture Auto-École Breteuil">
+                <div class="story-image-badge">
+                    <div class="icon"><i class="fas fa-star"></i></div>
+                    <div class="text">
+                        <div class="value">4.8/5</div>
+                        <div class="label">Note moyenne</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Method Section -->
+    <section class="method-section">
+        <div class="method-header">
+            <h2>Notre méthode en 3 étapes</h2>
+            <p>Un parcours clair et efficace pour t'accompagner vers la réussite.</p>
+        </div>
+        <div class="method-grid">
+            <div class="method-card">
+                <div class="method-number">1</div>
+                <h3>Code de la route</h3>
+                <p>En ligne ou en présentiel, à ton rythme avec un suivi personnalisé et des tests illimités.</p>
+            </div>
+            <div class="method-card">
+                <div class="method-number">2</div>
+                <h3>Conduite + fiche récap</h3>
+                <p>Après chaque séance, une fiche détaillant tes points forts et axes d'amélioration.</p>
+            </div>
+            <div class="method-card">
+                <div class="method-number">3</div>
+                <h3>Jusqu'à l'examen</h3>
+                <p>Le jour J, ton moniteur est avec toi dans le véhicule pour te mettre en confiance.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Values Section -->
+    <section class="values-section">
+        <div class="values-header">
+            <h2>Nos valeurs</h2>
+            <p>Plus qu'une simple formation à la conduite</p>
+        </div>
+        <div class="values-grid">
+            <div class="value-card">
+                <div class="emoji">🔍</div>
+                <h3>Transparence</h3>
+                <p>Nos démarches sont claires, nos actions limpides.</p>
+            </div>
+            <div class="value-card">
+                <div class="emoji">✅</div>
+                <h3>Facilité</h3>
+                <p>Où que tu sois, on se rapproche de toi.</p>
+            </div>
+            <div class="value-card">
+                <div class="emoji">⭐</div>
+                <h3>Bienveillance</h3>
+                <p>Progresse à ton rythme, sans stress ni jugement.</p>
+            </div>
+            <div class="value-card">
+                <div class="emoji">📊</div>
+                <h3>Régularité</h3>
+                <p>Un suivi constant pour progresser efficacement.</p>
+            </div>
+            <div class="value-card">
+                <div class="emoji">🚗</div>
+                <h3>Liberté</h3>
+                <p>Pour aller où tu veux, quand tu veux.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Location Section -->
+    <section class="location-section">
+        <div class="location-grid">
+            <div class="location-content">
+                <h2>Où nous trouver ?</h2>
+                <p>Située au cœur de Marseille 6ème, notre auto-école est facilement accessible en transports en commun. Nous t'accueillons dans un cadre moderne et chaleureux.</p>
+                <div class="location-info">
+                    <div class="location-item">
+                        <div class="icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="text">
+                            <strong>Adresse</strong>
+                            1A Rue Édouard Delanglade, 13006 Marseille
+                        </div>
+                    </div>
+                    <div class="location-item">
+                        <div class="icon"><i class="fas fa-phone"></i></div>
+                        <div class="text">
+                            <strong>Téléphone</strong>
+                            04 91 53 36 98
+                        </div>
+                    </div>
+                    <div class="location-item">
+                        <div class="icon"><i class="fas fa-car"></i></div>
+                        <div class="text">
+                            <strong>Conduite</strong>
+                            Lun-Ven 7h-17h
+                        </div>
+                    </div>
+                    <div class="location-item">
+                        <div class="icon"><i class="fas fa-clock"></i></div>
+                        <div class="text">
+                            <strong>Bureau</strong>
+                            Lun-Ven 17h-19h
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="location-map">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2903.5!2d5.3756!3d43.2878!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12c9c0c5f5a5a5a5%3A0x0!2s1A%20Rue%20%C3%89douard%20Delanglade%2C%2013006%20Marseille!5e0!3m2!1sfr!2sfr!4v1707400000000" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="cta-inner">
+            <h2>Prêt à démarrer ?</h2>
+            <p>Rejoins les milliers d'élèves qui ont obtenu leur permis avec nous.</p>
+            <div class="cta-buttons">
+                <a href="inscription.html" class="cta-btn primary">S'inscrire maintenant</a>
+                <a href="contact.html" class="cta-btn secondary">Nous contacter</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Auto-Ecole Breteuil</h4>
+                    <p>Votre auto-école à Marseille 13006. Formation de qualité au permis de conduire.</p>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Formations</h4>
+                    <ul>
+                        <li><a href="permis-b.html">Permis B</a></li>
+                        <li><a href="qui-sommes-nous.html">Qui sommes-nous</a></li>
+                        <li><a href="conduite-accompagnee.html">Conduite accompagnée</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Informations</h4>
+                    <ul>
+                        <li><a href="tarifs.html">Tarifs</a></li>
+                        <li><a href="tarifs.html#faq">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Notre localisation</h4>
+                    <p style="margin-bottom: 1rem;">1 Rue Édouard Delanglade<br>13006 Marseille</p>
+                    <h4 style="margin-top: 1.5rem;">Contact</h4>
+                    <ul>
+                        <li style="white-space: normal; overflow: visible;"><i class="fas fa-phone"></i> <span style="white-space: nowrap;">04 91 53 36 98</span></li>
+                        <li><i class="fas fa-envelope"></i> a.e.breteuil@gmail.com</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 Auto-Ecole Breteuil. Tous droits réservés.</p>
+                <div class="footer-links">
+                    <a href="mentions-legales.html">Mentions légales</a>
+                    <a href="cgv.html">CGV</a>
+                    <a href="confidentialite.html">Confidentialité</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
+    <script src="assets/js/supabaseClient.js"></script>
+    <script src="assets/js/navbar.js"></script>
+    <script src="assets/js/mobile-menu.js"></script>
+    <script src="assets/js/april-notice.js"></script>
+    <script src="assets/js/support-ticket.js?v=6"></script>
+</body>
+</html>

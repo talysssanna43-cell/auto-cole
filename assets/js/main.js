@@ -22,16 +22,37 @@ function bindLoginLinks(scope = document) {
 
 function getStoredUser() {
     try {
+        // Essayer localStorage d'abord
         const stored = localStorage.getItem(AUTH_STORAGE_KEY);
-        return stored ? JSON.parse(stored) : null;
+        if (stored) return JSON.parse(stored);
+        
+        // Fallback vers sessionStorage si localStorage est bloqué
+        const sessionStored = sessionStorage.getItem(AUTH_STORAGE_KEY);
+        return sessionStored ? JSON.parse(sessionStored) : null;
     } catch (error) {
         console.warn('Erreur lecture utilisateur stocké', error);
-        return null;
+        // Dernier recours: essayer sessionStorage
+        try {
+            const sessionStored = sessionStorage.getItem(AUTH_STORAGE_KEY);
+            return sessionStored ? JSON.parse(sessionStored) : null;
+        } catch (sessionError) {
+            console.error('Erreur sessionStorage:', sessionError);
+            return null;
+        }
     }
 }
 
 function logoutUser() {
-    localStorage.removeItem(AUTH_STORAGE_KEY);
+    try {
+        localStorage.removeItem(AUTH_STORAGE_KEY);
+    } catch (e) {
+        console.warn('Erreur suppression localStorage:', e);
+    }
+    try {
+        sessionStorage.removeItem(AUTH_STORAGE_KEY);
+    } catch (e) {
+        console.warn('Erreur suppression sessionStorage:', e);
+    }
     updateAuthUI();
     window.location.href = 'index.html';
 }
@@ -74,12 +95,13 @@ function updateAuthUI() {
 
     if (navActionsContainer) {
         if (user) {
+            // Utilisateur connecté : afficher Mon espace et Se déconnecter
             navActionsContainer.innerHTML = `
-                <span class="nav-welcome">Bonjour ${user.prenom || 'élève'}</span>
                 <a href="espace-eleve.html" class="btn-secondary">Mon espace</a>
                 <button type="button" class="btn-primary" data-logout>Se déconnecter</button>
             `;
         } else {
+            // Utilisateur non connecté : afficher Se connecter et S'inscrire
             navActionsContainer.innerHTML = navActionsDefaultHTML;
         }
         bindLogoutButton(navActionsContainer);
@@ -237,39 +259,39 @@ window.addEventListener('load', () => {
     document.body.classList.add('loaded');
 });
 
-// ===== HERO STATS COUNTER ANIMATION =====
-function animateCounter(element, target, duration = 2000) {
-    let start = 0;
-    const increment = target / (duration / 16);
-    
-    const timer = setInterval(() => {
-        start += increment;
-        if (start >= target) {
-            element.textContent = target + (element.dataset.suffix || '');
-            clearInterval(timer);
-        } else {
-            element.textContent = Math.floor(start) + (element.dataset.suffix || '');
-        }
-    }, 16);
-}
+// ===== HERO STATS COUNTER ANIMATION (DISABLED) =====
+// Animation disabled - stats remain static
+// function animateCounter(element, target, duration = 2000) {
+//     let start = 0;
+//     const increment = target / (duration / 16);
+//     
+//     const timer = setInterval(() => {
+//         start += increment;
+//         if (start >= target) {
+//             element.textContent = target + (element.dataset.suffix || '');
+//             clearInterval(timer);
+//         } else {
+//             element.textContent = Math.floor(start) + (element.dataset.suffix || '');
+//         }
+//     }, 16);
+// }
 
-// Animate stats when they come into view
-const statsObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
-            const statNumber = entry.target.querySelector('.stat-number');
-            const targetValue = parseInt(statNumber.textContent);
-            const suffix = statNumber.textContent.replace(/[0-9]/g, '');
-            statNumber.dataset.suffix = suffix;
-            animateCounter(statNumber, targetValue);
-            entry.target.classList.add('animated');
-        }
-    });
-}, { threshold: 0.5 });
+// const statsObserver = new IntersectionObserver((entries) => {
+//     entries.forEach(entry => {
+//         if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
+//             const statNumber = entry.target.querySelector('.stat-number');
+//             const targetValue = parseInt(statNumber.textContent);
+//             const suffix = statNumber.textContent.replace(/[0-9]/g, '');
+//             statNumber.dataset.suffix = suffix;
+//             animateCounter(statNumber, targetValue);
+//             entry.target.classList.add('animated');
+//         }
+//     });
+// }, { threshold: 0.5 });
 
-document.querySelectorAll('.stat').forEach(stat => {
-    statsObserver.observe(stat);
-});
+// document.querySelectorAll('.stat').forEach(stat => {
+//     statsObserver.observe(stat);
+// });
 
 // ===== TESTIMONIALS SLIDER (optional enhancement) =====
 let currentTestimonial = 0;

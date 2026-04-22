@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parrainage - Auto-Ecole Breteuil</title>
+    <meta name="description" content="Parraine tes amis et gagne 1h de conduite gratuite pour chaque filleul inscrit.">
+    
+    <!-- Favicon et Open Graph -->
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="shortcut icon" href="assets/logo.png">
+    <link rel="apple-touch-icon" href="assets/logo.png">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        .referral-hero {
+            background: linear-gradient(135deg, var(--primary-gradient));
+            padding: 4rem 0 3rem;
+            color: white;
+            text-align: center;
+        }
+        
+        .referral-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .referral-hero p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+        
+        .referral-container {
+            max-width: 900px;
+            margin: -2rem auto 4rem;
+            padding: 0 1rem;
+        }
+        
+        .referral-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .referral-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-box {
+            background: linear-gradient(135deg, #fff5f7 0%, #fff 100%);
+            border: 2px solid rgba(233,30,99,0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .qr-section {
+            text-align: center;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+        
+        .qr-code-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            display: inline-block;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 1.5rem 0;
+        }
+        
+        .referral-code-display {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin: 1rem 0;
+            display: inline-block;
+        }
+        
+        .share-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+        
+        .share-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: transform 0.2s;
+        }
+        
+        .share-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .share-btn.whatsapp {
+            background: #25D366;
+            color: white;
+        }
+        
+        .share-btn.copy {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .share-btn.download {
+            background: var(--primary-gradient);
+            color: white;
+        }
+        
+        .referral-list {
+            margin-top: 2rem;
+        }
+        
+        .referral-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .referral-info h4 {
+            margin: 0 0 0.5rem 0;
+            color: #333;
+        }
+        
+        .referral-info p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .referral-status {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .how-it-works {
+            background: linear-gradient(135deg, #fff9fb 0%, #fff 100%);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+        
+        .how-it-works h3 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .step {
+            text-align: center;
+        }
+        
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: var(--primary-gradient);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 1rem;
+        }
+        
+        .step h4 {
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+        
+        .step p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .referral-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .referral-card {
+                padding: 1.5rem;
+            }
+            
+            .share-buttons {
+                flex-direction: column;
+            }
+            
+            .share-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <a href="index.html" class="logo">
+                    <img src="assets/logo.png" alt="Auto-Ecole Breteuil">
+                    <span>Auto-Ecole <strong>Breteuil</strong></span>
+                </a>
+                
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="recrutement.html">Recrutement</a></li>
+                    <li><a href="qui-sommes-nous.html">Qui sommes-nous</a></li>
+                    <li><a href="tarifs.html">Tarifs</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+
+                <div class="nav-actions">
+                    <a href="espace-eleve.html" class="btn-secondary">Mon espace</a>
+                    <a href="javascript:void(0)" onclick="logout()" class="btn-primary">Se déconnecter</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="referral-hero">
+        <div class="container">
+            <h1><i class="fas fa-gift"></i> Parraine tes amis !</h1>
+            <p>Gagne 1h de conduite gratuite pour chaque ami inscrit et payé</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="referral-container">
+        <!-- Stats -->
+        <div class="referral-card">
+            <h2 style="margin-bottom: 1.5rem;"><i class="fas fa-chart-line"></i> Mes statistiques</h2>
+            <div class="referral-stats">
+                <div class="stat-box">
+                    <div class="stat-number" id="totalReferrals">0</div>
+                    <div class="stat-label">Parrainages en cours</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" id="completedReferrals">0</div>
+                    <div class="stat-label">Parrainages validés</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" id="hoursEarned">0h</div>
+                    <div class="stat-label">Heures gagnées</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- QR Code Section -->
+        <div class="referral-card">
+            <h2 style="margin-bottom: 1rem; text-align: center;"><i class="fas fa-qrcode"></i> Mon code de parrainage</h2>
+            
+            <div class="qr-section" id="qrSection">
+                <div class="loading-spinner" id="loadingSpinner"></div>
+                <p id="loadingText">Génération de ton code de parrainage...</p>
+                
+                <div id="qrContent" style="display: none;">
+                    <p style="color: #666; margin-bottom: 1rem;">Partage ce QR code avec tes amis !</p>
+                    
+                    <div class="referral-code-display" id="referralCodeDisplay">
+                        XXXXXXXX
+                    </div>
+                    
+                    <div class="qr-code-container">
+                        <div id="qrCanvas"></div>
+                    </div>
+                    
+                    <div class="share-buttons">
+                        <button class="share-btn whatsapp" onclick="shareWhatsApp()">
+                            <i class="fab fa-whatsapp"></i> Partager sur WhatsApp
+                        </button>
+                        <button class="share-btn copy" onclick="copyReferralLink()">
+                            <i class="fas fa-copy"></i> Copier le lien
+                        </button>
+                        <button class="share-btn download" onclick="downloadQRCode()">
+                            <i class="fas fa-download"></i> Télécharger le QR code
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- How it works -->
+        <div class="referral-card how-it-works">
+            <h3><i class="fas fa-info-circle"></i> Comment ça marche ?</h3>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h4>Partage ton code</h4>
+                    <p>Envoie ton QR code ou ton lien à tes amis</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h4>Ton ami s'inscrit</h4>
+                    <p>Il utilise ton code lors de son inscription</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h4>Validation de l'inscription</h4>
+                    <p>Notre équipe valide son inscription sous 24-48h</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h4>Tu gagnes 1h !</h4>
+                    <p>1h de conduite créditée automatiquement dans tes heures restantes</p>
+                </div>
+            </div>
+            
+            <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 20px; margin-top: 30px; border-radius: 8px;">
+                <h4 style="margin-top: 0; color: #856404;"><i class="fas fa-exclamation-triangle"></i> Important</h4>
+                <ul style="margin: 0; padding-left: 20px; color: #856404;">
+                    <li><strong>L'heure de conduite est offerte uniquement après validation de l'inscription par notre équipe administrative</strong></li>
+                    <li><strong>Le parrainage ne fonctionne pas pour le forfait code uniquement</strong></li>
+                    <li>Ton filleul doit s'inscrire à un forfait incluant des heures de conduite (AAC, Supervisée, Zen, etc.)</li>
+                    <li>L'heure créditée apparaîtra dans tes "Heures restantes" sur ton espace élève</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Referral List -->
+        <div class="referral-card">
+            <h2 style="margin-bottom: 1.5rem;"><i class="fas fa-users"></i> Mes parrainages</h2>
+            <div class="referral-list" id="referralList">
+                <p style="text-align: center; color: #666;">Aucun parrainage pour le moment</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Auto-Ecole Breteuil</h4>
+                    <p>Votre auto-école à Marseille 13006. Formation de qualité au permis de conduire.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Liens rapides</h4>
+                    <ul>
+                        <li><a href="index.html">Accueil</a></li>
+                        <li><a href="tarifs.html">Tarifs</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Auto-Ecole Breteuil. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
+    <script src="assets/js/supabaseClient.js"></script>
+    <script src="assets/js/navbar.js"></script>
+    <script src="assets/js/mobile-menu.js"></script>
+    <script src="https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="assets/js/parrainage.js"></script>
+</body>
+</html>

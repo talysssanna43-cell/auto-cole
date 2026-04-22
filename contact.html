@@ -3,11 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact - Auto-Ecole Breteuil</title>
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/forms.css">
-    <link rel="stylesheet" href="assets/css/contact.css">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="description" content="Contactez Auto-Ecole Breteuil à Marseille 13006. 1 Rue Édouard Delanglade. Téléphone : 04 91 53 36 98.">
+    
+    <!-- Favicon et Open Graph -->
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="shortcut icon" href="assets/logo.png">
+    <link rel="apple-touch-icon" href="assets/logo.png">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://auto-ecole-breteuil.fr/contact.html">
+    <meta property="og:title" content="Contact - Auto-Ecole Breteuil - Marseille 13006">
+    <meta property="og:description" content="Contactez Auto-Ecole Breteuil à Marseille 13006. 1 Rue Édouard Delanglade. Téléphone : 04 91 53 36 98.">
+    <meta property="og:image" content="https://auto-ecole-breteuil.fr/assets/logo.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    
+    <!-- Twitter Card -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://auto-ecole-breteuil.fr/contact.html">
+    <meta property="twitter:title" content="Contact - Auto-Ecole Breteuil - Marseille 13006">
+    <meta property="twitter:description" content="Contactez Auto-Ecole Breteuil à Marseille 13006. 1 Rue Édouard Delanglade. Téléphone : 04 91 53 36 98.">
+    <meta property="twitter:image" content="https://auto-ecole-breteuil.fr/assets/logo.png">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css?v=2">
+    <link rel="stylesheet" href="assets/css/forms.css?v=2">
+    <link rel="stylesheet" href="assets/css/contact.css?v=2">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Contact - Auto-Ecole Breteuil</title>
 </head>
 <body>
     <!-- Navigation -->
@@ -15,7 +45,7 @@
         <div class="container">
             <div class="nav-wrapper">
                 <a href="index.html" class="logo">
-                    <i class="fas fa-car"></i>
+                    <img src="assets/logo.png" alt="Auto-Ecole Breteuil">
                     <span>Auto-Ecole <strong>Breteuil</strong></span>
                 </a>
                 
@@ -27,8 +57,8 @@
 
                 <ul class="nav-menu" id="navMenu">
                     <li><a href="index.html">Accueil</a></li>
-                    <li><a href="#permis">Permis</a></li>
-                    <li><a href="code.html">Code de la route</a></li>
+                    <li><a href="recrutement.html">Recrutement</a></li>
+                    <li><a href="qui-sommes-nous.html">Qui sommes-nous</a></li>
                     <li><a href="tarifs.html">Tarifs</a></li>
                     <li><a href="contact.html">Contact</a></li>
                 </ul>
@@ -89,8 +119,9 @@
 
                 <!-- Contact Form -->
                 <div class="contact-form-wrapper">
-                    <form id="contactForm" class="contact-form" action="https://formspree.io/f/xykygkyz" method="POST">
+                    <form id="contactForm" class="contact-form">
                         <h2>Envoie-nous un message</h2>
+                        <p id="contactFeedback" style="display: none; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; text-align: center; font-weight: 600;"></p>
                         
                         <div class="form-row">
                             <div class="form-group">
@@ -138,7 +169,7 @@
                             </label>
                         </div>
 
-                        <button type="submit" class="btn-primary btn-block">
+                        <button type="submit" class="btn-primary btn-block" id="contactSubmitBtn">
                             <i class="fas fa-paper-plane"></i> Envoyer le message
                         </button>
                     </form>
@@ -167,46 +198,43 @@
         </div>
     </section>
 
-    <!-- FAQ Quick -->
-    <section class="faq-quick">
-        <div class="container">
-            <h2 class="section-title">Questions fréquentes</h2>
-            
-            <div class="faq-quick-grid">
-                <div class="faq-quick-card">
-                    <i class="fas fa-clock"></i>
-                    <h3>Quels sont vos horaires ?</h3>
-                    <p>Bureau : Lundi au vendredi de 17h à 19h. Cours de conduite : Lundi au vendredi de 7h à 19h.</p>
-                </div>
-
-                <div class="faq-quick-card">
-                    <i class="fas fa-euro-sign"></i>
-                    <h3>Quels modes de paiement acceptez-vous ?</h3>
-                    <p>Carte bancaire, virement, paiement en 4 fois sans frais, et financement CPF.</p>
-                </div>
-
-                <div class="faq-quick-card">
-                    <i class="fas fa-calendar"></i>
-                    <h3>Combien de temps pour obtenir le permis ?</h3>
-                    <p>En moyenne 3 à 6 mois selon ton rythme. Avec notre pack accéléré, c'est possible en 30 jours.</p>
-                </div>
-
-                <div class="faq-quick-card">
-                    <i class="fas fa-mobile-alt"></i>
-                    <h3>Comment réserver mes heures ?</h3>
-                    <p>Via notre application mobile ou notre site web, 24h/24. Tu choisis ton moniteur et ton créneau.</p>
-                </div>
-            </div>
-
-            <div style="text-align: center; margin-top: var(--spacing-xl);">
-                <a href="faq.html" class="btn-secondary">Voir toutes les questions</a>
-            </div>
-        </div>
-    </section>
-
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Auto-Ecole Breteuil</h4>
+                    <p>Votre auto-école à Marseille 13006. Formation de qualité au permis de conduire.</p>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Formations</h4>
+                    <ul>
+                        <li><a href="permis-b.html">Permis B</a></li>
+                        <li><a href="qui-sommes-nous.html">Qui sommes-nous</a></li>
+                        <li><a href="conduite-accompagnee.html">Conduite accompagnée</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Informations</h4>
+                    <ul>
+                        <li><a href="tarifs.html">Tarifs</a></li>
+                        <li><a href="tarifs.html#faq">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Notre localisation</h4>
+                    <p style="margin-bottom: 1rem;">1 Rue Édouard Delanglade<br>13006 Marseille</p>
+                    <h4 style="margin-top: 1.5rem;">Contact</h4>
+                    <ul>
+                        <li><i class="fas fa-phone"></i> 04 91 53 36 98</li>
+                        <li><i class="fas fa-envelope"></i> a.e.breteuil@gmail.com</li>
+                    </ul>
+                </div>
+            </div>
+
             <div class="footer-bottom">
                 <p>&copy; 2024 Auto-Ecole Breteuil. Tous droits réservés.</p>
                 <div class="footer-links">
@@ -218,6 +246,87 @@
         </div>
     </footer>
 
+    <script src="https://unpkg.com/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
+    <script src="assets/js/supabaseClient.js"></script>
+    <script src="assets/js/april-notice.js"></script>
     <script src="assets/js/main.js"></script>
+    <script src="assets/js/support-ticket.js?v=6"></script>
+    <script>
+    // Formulaire de contact - Enregistrement dans Supabase
+    (function() {
+        var form = document.getElementById('contactForm');
+        if (!form) return;
+        
+        // Supprimer tout attribut action ou method résiduel
+        form.removeAttribute('action');
+        form.removeAttribute('method');
+        
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            
+            var btn = document.getElementById('contactSubmitBtn');
+            var feedback = document.getElementById('contactFeedback');
+            
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi en cours...';
+            }
+            
+            try {
+                var formData = {
+                    prenom: document.getElementById('prenom').value.trim(),
+                    nom: document.getElementById('nom').value.trim(),
+                    email: document.getElementById('email').value.trim().toLowerCase(),
+                    telephone: document.getElementById('telephone').value.trim() || null,
+                    sujet: document.getElementById('sujet').value,
+                    message: document.getElementById('message').value.trim(),
+                    newsletter: document.getElementById('newsletter').checked,
+                    status: 'nouveau'
+                };
+                
+                if (!window.supabaseClient) {
+                    throw new Error('Connexion au serveur impossible. Recharge la page.');
+                }
+                
+                var result = await window.supabaseClient
+                    .from('contact_requests')
+                    .insert([formData])
+                    .select();
+                
+                if (result.error) {
+                    throw new Error('Erreur serveur. Reessaie plus tard.');
+                }
+                
+                if (feedback) {
+                    feedback.style.display = 'block';
+                    feedback.style.background = '#d4edda';
+                    feedback.style.color = '#155724';
+                    feedback.style.border = '1px solid #c3e6cb';
+                    feedback.textContent = 'Message envoye avec succes ! Nous te repondrons dans les plus brefs delais.';
+                }
+                
+                form.reset();
+                
+            } catch (err) {
+                if (feedback) {
+                    feedback.style.display = 'block';
+                    feedback.style.background = '#f8d7da';
+                    feedback.style.color = '#721c24';
+                    feedback.style.border = '1px solid #f5c6cb';
+                    feedback.textContent = err.message || 'Erreur. Reessaie plus tard.';
+                }
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Envoyer le message';
+                }
+            }
+            
+            return false;
+        });
+    })();
+    </script>
 </body>
 </html>

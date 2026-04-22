@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Accès Moniteur</title>
+    <style>
+        body { font-family: -apple-system, sans-serif; background: #f5f5f7; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .box { background: #fff; padding: 40px; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.1); text-align: center; }
+        h1 { margin-bottom: 20px; }
+        .btn { display: block; margin: 10px 0; padding: 14px 30px; border-radius: 10px; border: none; font-size: 1rem; font-weight: 600; cursor: pointer; text-decoration: none; }
+        .btn-mylene { background: linear-gradient(135deg, #0071e3, #af52de); color: #fff; }
+        .btn-sammy { background: linear-gradient(135deg, #ff9500, #ff3b30); color: #fff; }
+        .btn:hover { opacity: 0.9; transform: scale(1.02); }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>🚗 Test Espace Moniteur</h1>
+        <p>Clique sur un moniteur pour voir son interface :</p>
+        <br>
+        <a href="#" class="btn btn-mylene" onclick="loginAs('Mylène')">Connexion Mylène</a>
+        <a href="#" class="btn btn-sammy" onclick="loginAs('Sammy')">Connexion Sammy</a>
+    </div>
+
+    <script>
+        function loginAs(instructor) {
+            // Simuler la connexion en stockant les infos dans localStorage
+            localStorage.setItem('ae_user', JSON.stringify({
+                id: 999,
+                prenom: instructor,
+                email: instructor.toLowerCase() + '@breteuil-autoecole.fr',
+                is_admin: false,
+                is_moniteur: true,
+                instructor_name: instructor
+            }));
+            // Rediriger vers l'espace moniteur
+            window.location.href = 'espace-moniteur.html';
+        }
+    </script>
+</body>
+</html>

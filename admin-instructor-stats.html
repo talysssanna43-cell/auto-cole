@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistiques Moniteurs - Auto-École Breteuil</title>
+    <link rel="stylesheet" href="assets/css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .stats-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .instructor-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .instructor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .instructor-name {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .period-badge {
+            padding: 0.5rem 1rem;
+            background: #e3f2fd;
+            color: #1976d2;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .period-badge.completed {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .stat-value.success {
+            color: #4CAF50;
+        }
+
+        .stat-value.warning {
+            color: #FF9800;
+        }
+
+        .stat-value.danger {
+            color: #F44336;
+        }
+
+        .bonus-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .bonus-amount {
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 1rem 0;
+        }
+
+        .bonus-details {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50 0%, #45a049 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            transition: width 0.3s ease;
+        }
+
+        .recent-exams {
+            margin-top: 2rem;
+        }
+
+        .exam-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+        }
+
+        .exam-student {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .exam-date {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .exam-result {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .exam-result.passed {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+
+        .exam-result.failed {
+            background: #ffcdd2;
+            color: #c62828;
+        }
+
+        .rating-stars {
+            color: #FFD700;
+            font-size: 1.2rem;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 3rem;
+            color: #999;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: #666;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="stats-container">
+        <div class="page-header">
+            <h1 class="page-title">
+                <i class="fas fa-chart-line"></i> Statistiques & Primes Moniteurs
+            </h1>
+            <p class="page-subtitle">Suivi des performances et calcul automatique des primes</p>
+        </div>
+
+        <div id="instructorsContainer">
+            <div class="no-data">
+                <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: #1976d2;"></i>
+                <p style="margin-top: 1rem; font-size: 1.1rem;">Chargement des statistiques...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
+    <script src="assets/js/supabaseClient.js"></script>
+    <script>
+        async function loadInstructorStats() {
+            try {
+                // Récupérer les statistiques des moniteurs
+                const { data: bonuses, error: bonusError } = await window.supabaseClient
+                    .from('instructor_bonuses')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (bonusError) throw bonusError;
+
+                // Récupérer les derniers résultats d'examen
+                const { data: recentExams, error: examError } = await window.supabaseClient
+                    .from('exam_results')
+                    .select('*')
+                    .order('submitted_at', { ascending: false })
+                    .limit(50);
+
+                if (examError) throw examError;
+
+                const container = document.getElementById('instructorsContainer');
+
+                if (!bonuses || bonuses.length === 0) {
+                    container.innerHTML = `
+                        <div class="no-data">
+                            <i class="fas fa-inbox" style="font-size: 3rem; color: #ccc;"></i>
+                            <p style="margin-top: 1rem; font-size: 1.1rem;">Aucune donnée disponible</p>
+                            <p style="color: #999;">Les statistiques apparaîtront dès que les élèves auront soumis leurs résultats d'examen.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Grouper par moniteur (période active uniquement)
+                const instructorMap = {};
+                bonuses.forEach(bonus => {
+                    if (bonus.status === 'active') {
+                        instructorMap[bonus.instructor] = bonus;
+                    }
+                });
+
+                let html = '';
+
+                for (const [instructor, bonus] of Object.entries(instructorMap)) {
+                    // Récupérer les examens récents pour ce moniteur
+                    const instructorExams = recentExams
+                        .filter(exam => exam.instructor === instructor)
+                        .slice(0, 5);
+
+                    const progressPercent = Math.min((bonus.total_students / 20) * 100, 100);
+                    const remainingStudents = Math.max(20 - bonus.total_students, 0);
+
+                    html += `
+                        <div class="instructor-card">
+                            <div class="instructor-header">
+                                <div class="instructor-name">
+                                    <i class="fas fa-user-tie"></i> ${instructor}
+                                </div>
+                                <div class="period-badge ${bonus.status === 'completed' ? 'completed' : ''}">
+                                    ${bonus.status === 'active' ? 'Période en cours' : 'Période terminée'}
+                                </div>
+                            </div>
+
+                            <div class="stats-grid">
+                                <div class="stat-box">
+                                    <div class="stat-label">Élèves évalués</div>
+                                    <div class="stat-value">${bonus.total_students}/20</div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-label">Taux de réussite</div>
+                                    <div class="stat-value ${bonus.success_rate >= 90 ? 'success' : bonus.success_rate >= 80 ? 'warning' : 'danger'}">
+                                        ${bonus.success_rate}%
+                                    </div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-label">Note moyenne</div>
+                                    <div class="stat-value">
+                                        ${bonus.average_rating}/5
+                                        <div class="rating-stars" style="font-size: 1rem; margin-top: 0.25rem;">
+                                            ${generateStars(bonus.average_rating)}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-label">Score final</div>
+                                    <div class="stat-value">${bonus.final_score}%</div>
+                                </div>
+                            </div>
+
+                            <div style="margin: 2rem 0;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span style="font-weight: 600; color: #666;">Progression vers la prime</span>
+                                    <span style="font-weight: 600; color: #666;">${remainingStudents} élève(s) restant(s)</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${progressPercent}%">
+                                        ${bonus.total_students}/20
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bonus-section">
+                                <div style="font-size: 1.1rem; font-weight: 600; opacity: 0.9;">Prime actuelle</div>
+                                <div class="bonus-amount">${bonus.bonus_amount}€</div>
+                                <div class="bonus-details">
+                                    <div>
+                                        <i class="fas fa-check-circle"></i> ${bonus.passed_students} réussis
+                                    </div>
+                                    <div>
+                                        <i class="fas fa-times-circle"></i> ${bonus.failed_students} échoués
+                                    </div>
+                                </div>
+                                <div style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.8;">
+                                    ${getBonusMessage(bonus.success_rate)}
+                                </div>
+                            </div>
+
+                            ${instructorExams.length > 0 ? `
+                                <div class="recent-exams">
+                                    <h3 style="margin-bottom: 1rem; color: #333;">
+                                        <i class="fas fa-history"></i> Derniers examens
+                                    </h3>
+                                    ${instructorExams.map(exam => `
+                                        <div class="exam-item">
+                                            <div>
+                                                <div class="exam-student">${exam.student_name}</div>
+                                                <div class="exam-date">
+                                                    ${new Date(exam.exam_date).toLocaleDateString('fr-FR')}
+                                                </div>
+                                            </div>
+                                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                                <div class="rating-stars">
+                                                    ${generateStars(exam.rating)}
+                                                </div>
+                                                <span class="exam-result ${exam.result}">
+                                                    ${exam.result === 'passed' ? 'Réussi' : 'Échoué'}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }
+
+                container.innerHTML = html;
+
+            } catch (err) {
+                console.error('Erreur chargement stats:', err);
+                document.getElementById('instructorsContainer').innerHTML = `
+                    <div class="no-data">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #F44336;"></i>
+                        <p style="margin-top: 1rem; font-size: 1.1rem; color: #F44336;">Erreur de chargement</p>
+                        <p style="color: #999;">${err.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function generateStars(rating) {
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 >= 0.5;
+            let html = '';
+            
+            for (let i = 0; i < fullStars; i++) {
+                html += '<i class="fas fa-star"></i>';
+            }
+            if (hasHalfStar) {
+                html += '<i class="fas fa-star-half-alt"></i>';
+            }
+            const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+            for (let i = 0; i < emptyStars; i++) {
+                html += '<i class="far fa-star"></i>';
+            }
+            
+            return html;
+        }
+
+        function getBonusMessage(successRate) {
+            if (successRate >= 100) {
+                return '🎉 Taux de réussite parfait ! Prime de 300€';
+            } else if (successRate >= 90) {
+                return '🌟 Excellent taux de réussite ! Prime de 200€';
+            } else if (successRate >= 80) {
+                return '✅ Bon taux de réussite ! Prime de 120€';
+            } else {
+                return '💪 Continue comme ça ! Prime à partir de 80% de réussite';
+            }
+        }
+
+        // Charger les stats au démarrage
+        document.addEventListener('DOMContentLoaded', loadInstructorStats);
+
+        // Rafraîchir toutes les 30 secondes
+        setInterval(loadInstructorStats, 30000);
+    </script>
+</body>
+</html>

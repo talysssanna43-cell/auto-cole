@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demander un devis - Auto-Ecole Breteuil</title>
+    <meta name="description" content="Demande de devis permis de conduire. Réponse sous 48h.">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .quote-page {
+            padding: 4rem 0;
+            background: linear-gradient(180deg, rgba(255,105,180,0.08), rgba(233,30,99,0.02));
+            min-height: 100vh;
+        }
+        .quote-shell {
+            max-width: 880px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.08);
+        }
+        .quote-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .quote-header h1 {
+            font-size: 2.25rem;
+            margin-bottom: 0.75rem;
+        }
+        .quote-header p {
+            color: var(--text-light);
+            font-size: 1.05rem;
+        }
+        .stepper {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 1.5rem 0 2.5rem;
+        }
+        .step-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.9rem;
+            border-radius: 999px;
+            border: 1px solid rgba(0,0,0,0.1);
+            color: var(--text-light);
+            font-weight: 600;
+            background: #fff;
+        }
+        .step-pill.is-active {
+            border-color: rgba(233,30,99,0.35);
+            color: var(--primary-dark);
+            background: rgba(233,30,99,0.06);
+        }
+        .step-pill .step-number {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.06);
+            color: var(--text-dark);
+            font-size: 0.9rem;
+        }
+        .step-pill.is-active .step-number {
+            background: rgba(233,30,99,0.15);
+            color: var(--primary-dark);
+        }
+        .quote-form {
+            display: grid;
+            gap: 1.75rem;
+        }
+        .form-step {
+            display: none;
+        }
+        .form-step.is-active {
+            display: block;
+            animation: fadeInUp 0.35s ease-out;
+        }
+        .quote-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.25rem;
+        }
+        .quote-field {
+            display: flex;
+            flex-direction: column;
+        }
+        .quote-field label {
+            font-weight: 600;
+            margin-bottom: 0.6rem;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .quote-field input,
+        .quote-field select,
+        .quote-field textarea {
+            border: 2px solid rgba(0,0,0,0.08);
+            border-radius: 16px;
+            padding: 1rem 1.1rem;
+            font-size: 1rem;
+            font-family: inherit;
+            background: white;
+            transition: all 0.3s ease;
+        }
+        .quote-field input:focus,
+        .quote-field select:focus,
+        .quote-field textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(233,30,99,0.1);
+        }
+        .quote-field textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+        .quote-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+        .quote-actions .btn-secondary,
+        .quote-actions .btn-primary {
+            min-width: 220px;
+            text-align: center;
+        }
+        .quote-note {
+            background: rgba(16,185,129,0.08);
+            border: 1px solid rgba(16,185,129,0.2);
+            padding: 1rem 1.25rem;
+            border-radius: 18px;
+            color: #065f46;
+            font-weight: 600;
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+        }
+        .quote-note i {
+            margin-top: 0.1rem;
+        }
+        .hidden-field {
+            position: absolute;
+            left: -10000px;
+            top: auto;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <a href="index.html" class="logo">
+                    <img src="assets/logo.png" alt="Auto-Ecole Breteuil">
+                    <span>Auto-Ecole <strong>Breteuil</strong></span>
+                </a>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="tarifs.html">Tarifs</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+                <div class="nav-actions">
+                    <a href="connexion.html" class="btn-secondary">Se connecter</a>
+                    <a href="inscription.html" class="btn-primary">S'inscrire</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="quote-page">
+        <div class="container">
+            <div class="quote-shell">
+                <div class="quote-header">
+                    <h1>Demander un devis</h1>
+                    <p>Remplis ce formulaire. Nous te renvoyons un devis par email <strong>sous 48h</strong> pour que tu puisses le transmettre à ton organisme.</p>
+                </div>
+
+                <div class="stepper" id="quoteStepper">
+                    <div class="step-pill is-active" data-step-pill="1"><span class="step-number">1</span> Profil</div>
+                    <div class="step-pill" data-step-pill="2"><span class="step-number">2</span> Financement</div>
+                    <div class="step-pill" data-step-pill="3"><span class="step-number">3</span> Forfait</div>
+                    <div class="step-pill" data-step-pill="4"><span class="step-number">4</span> Envoi</div>
+                </div>
+
+                <form
+                    class="quote-form"
+                    name="demande-devis"
+                    data-netlify="true"
+                    data-netlify-honeypot="bot-field"
+                    action="devis-envoye.html"
+                >
+                    <input type="hidden" name="form-name" value="demande-devis">
+                    <div class="hidden-field">
+                        <label>Ne pas remplir: <input name="bot-field"></label>
+                    </div>
+
+                    <input type="hidden" name="page" value="devis.html">
+                    <input type="hidden" name="financement_source" id="financementSource" value="">
+
+                    <section class="form-step is-active" data-step="1">
+                        <div class="quote-grid">
+                            <div class="quote-field">
+                                <label for="prenom"><i class="fas fa-user"></i> Prénom *</label>
+                                <input id="prenom" name="prenom" type="text" required>
+                            </div>
+                            <div class="quote-field">
+                                <label for="nom"><i class="fas fa-id-card"></i> Nom *</label>
+                                <input id="nom" name="nom" type="text" required>
+                            </div>
+                            <div class="quote-field">
+                                <label for="age"><i class="fas fa-cake-candles"></i> Âge *</label>
+                                <input id="age" name="age" type="number" min="14" max="99" required>
+                            </div>
+                            <div class="quote-field">
+                                <label for="nationalite"><i class="fas fa-flag"></i> Nationalité *</label>
+                                <input id="nationalite" name="nationalite" type="text" required>
+                            </div>
+                            <div class="quote-field" style="grid-column: 1 / -1;">
+                                <label for="email"><i class="fas fa-envelope"></i> Email *</label>
+                                <input id="email" name="email" type="email" required>
+                            </div>
+                            <div class="quote-field" style="grid-column: 1 / -1;">
+                                <label for="telephone"><i class="fas fa-phone"></i> Téléphone *</label>
+                                <input id="telephone" name="telephone" type="tel" required>
+                            </div>
+                        </div>
+
+                        <div class="quote-actions">
+                            <a class="btn-secondary" href="index.html">Retour</a>
+                            <button type="button" class="btn-primary" data-next-step>Continuer</button>
+                        </div>
+                    </section>
+
+                    <section class="form-step" data-step="2">
+                        <div class="quote-grid">
+                            <div class="quote-field" style="grid-column: 1 / -1;">
+                                <label for="financement"><i class="fas fa-hand-holding-heart"></i> Financement souhaité *</label>
+                                <select id="financement" name="financement" required>
+                                    <option value="">Sélectionner</option>
+                                    <option value="CPF">CPF</option>
+                                    <option value="Mission Locale">Mission Locale</option>
+                                    <option value="Département 13">Département 13 (Bouches-du-Rhône)</option>
+                                    <option value="France Travail">France Travail / Pôle emploi</option>
+                                    <option value="Autre">Autre</option>
+                                </select>
+                            </div>
+                            <div class="quote-field" style="grid-column: 1 / -1;">
+                                <label for="organisme"><i class="fas fa-building"></i> Organisme à qui transmettre le devis *</label>
+                                <input id="organisme" name="organisme" type="text" placeholder="Ex: Mission Locale Marseille, Département 13, France Travail..." required>
+                            </div>
+                            <div class="quote-field" style="grid-column: 1 / -1;">
+                                <label for="organisme_email"><i class="fas fa-at"></i> Email de l'organisme (si tu l'as)</label>
+                                <input id="organisme_email" name="organisme_email" type="email" placeholder="facultatif">
+                            </div>
+                        </div>
+
+                        <div class="quote-actions">
+                            <button type="button" class="btn-secondary" data-prev-step>Précédent</button>
+                            <button type="button" class="btn-primary" data-next-step>Continuer</button>
+                        </div>
+                    </section>
+
+                    <section class="form-step" data-step="3">
+                        <div class="quote-grid">
+                            <div class="quote-field" style="grid-column: 1 / -1;">
+                                <label for="forfait"><i class="fas fa-car"></i> Forfait souhaité *</label>
+                                <select id="forfait" name="forfait" required>
+                                    <option value="">Sélectionner</option>
+                                    <option value="Conduite seule - 20h">Conduite seule - 20h</option>
+                                    <option value="Boîte Manuelle">Boîte Manuelle</option>
+                                    <option value="Permis accéléré">Permis accéléré</option>
+                                </select>
+                            </div>
+                            <div class="quote-field">
+                                <label for="disponibilite"><i class="fas fa-calendar"></i> Disponibilités</label>
+                                <select id="disponibilite" name="disponibilite">
+                                    <option value="">Sélectionner</option>
+                                    <option value="Semaine">Semaine</option>
+                                    <option value="Week-end">Week-end</option>
+                                    <option value="Flexible">Flexible</option>
+                                </select>
+                            </div>
+                            <div class="quote-field">
+                                <label for="objectif"><i class="fas fa-bullseye"></i> Objectif</label>
+                                <select id="objectif" name="objectif">
+                                    <option value="">Sélectionner</option>
+                                    <option value="Permis rapidement">Permis rapidement</option>
+                                    <option value="Budget">Budget</option>
+                                    <option value="Confort planning">Confort planning</option>
+                                </select>
+                            </div>
+                            <div class="quote-field" style="grid-column: 1 / -1;">
+                                <label for="message"><i class="fas fa-comment-dots"></i> Informations complémentaires</label>
+                                <textarea id="message" name="message" placeholder="Adresse, contraintes, urgence, besoin d'adaptation... (facultatif)"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="quote-actions">
+                            <button type="button" class="btn-secondary" data-prev-step>Précédent</button>
+                            <button type="button" class="btn-primary" data-next-step>Continuer</button>
+                        </div>
+                    </section>
+
+                    <section class="form-step" data-step="4">
+                        <div class="quote-note">
+                            <i class="fas fa-circle-check"></i>
+                            <div>
+                                <div style="font-weight:800; margin-bottom: 0.25rem;">Dernière étape</div>
+                                <div>En cliquant sur <strong>Envoyer</strong>, ta demande est transmise à l'auto-école. Tu recevras ton devis par email sous 48h.</div>
+                            </div>
+                        </div>
+
+                        <div class="quote-actions">
+                            <button type="button" class="btn-secondary" data-prev-step>Précédent</button>
+                            <button type="submit" class="btn-primary">Envoyer ma demande</button>
+                        </div>
+                    </section>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
+    <script src="assets/js/supabaseClient.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script>
+        (function() {
+            const steps = Array.from(document.querySelectorAll('.form-step'));
+            const pills = Array.from(document.querySelectorAll('.step-pill'));
+            const nextButtons = Array.from(document.querySelectorAll('[data-next-step]'));
+            const prevButtons = Array.from(document.querySelectorAll('[data-prev-step]'));
+            const financementSelect = document.getElementById('financement');
+            const financementSource = document.getElementById('financementSource');
+            const form = document.querySelector('.quote-form');
+
+            let currentStep = 1;
+
+            function setActiveStep(step) {
+                currentStep = step;
+                steps.forEach((el) => el.classList.toggle('is-active', Number(el.dataset.step) === step));
+                pills.forEach((el) => el.classList.toggle('is-active', Number(el.dataset.stepPill) === step));
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            function validateCurrentStep() {
+                const stepEl = steps.find((s) => Number(s.dataset.step) === currentStep);
+                if (!stepEl) return true;
+
+                const inputs = Array.from(stepEl.querySelectorAll('input, select, textarea'))
+                    .filter((el) => el.hasAttribute('required'));
+
+                for (const input of inputs) {
+                    if (!input.checkValidity()) {
+                        input.reportValidity();
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            nextButtons.forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    if (!validateCurrentStep()) return;
+                    setActiveStep(Math.min(4, currentStep + 1));
+                });
+            });
+
+            prevButtons.forEach((btn) => {
+                btn.addEventListener('click', () => setActiveStep(Math.max(1, currentStep - 1)));
+            });
+
+            // Gestion de la soumission du formulaire
+            if (form) {
+                form.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+
+                    if (!validateCurrentStep()) return;
+
+                    const submitButton = form.querySelector('button[type="submit"]');
+                    const originalText = submitButton.textContent;
+                    submitButton.disabled = true;
+                    submitButton.textContent = 'Envoi en cours...';
+
+                    const formData = new FormData(form);
+                    const data = {
+                        nom: formData.get('nom'),
+                        prenom: formData.get('prenom'),
+                        email: formData.get('email'),
+                        telephone: formData.get('telephone'),
+                        date_naissance: formData.get('date_naissance'),
+                        financement: formData.get('financement'),
+                        organisme: formData.get('organisme'),
+                        forfait: formData.get('forfait'),
+                        message: formData.get('message')
+                    };
+
+                    try {
+                        // 1. Enregistrer dans Supabase
+                        const { error: supabaseError } = await window.supabaseClient
+                            .from('demandes_devis')
+                            .insert([data]);
+
+                        if (supabaseError) {
+                            console.error('Erreur Supabase:', supabaseError);
+                        }
+
+                        // 2. Envoyer via FormSubmit pour notification email (uniquement en production)
+                        const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+                        
+                        if (isProduction) {
+                            const formSubmitData = new FormData();
+                            formSubmitData.append('_subject', `Nouvelle demande de devis - ${data.prenom} ${data.nom}`);
+                            formSubmitData.append('_template', 'table');
+                            formSubmitData.append('Nom', data.nom);
+                            formSubmitData.append('Prénom', data.prenom);
+                            formSubmitData.append('Email', data.email);
+                            formSubmitData.append('Téléphone', data.telephone);
+                            formSubmitData.append('Date de naissance', data.date_naissance || 'Non renseignée');
+                            formSubmitData.append('Financement', data.financement || 'Non renseigné');
+                            formSubmitData.append('Organisme', data.organisme || 'Non renseigné');
+                            formSubmitData.append('Forfait', data.forfait || 'Non renseigné');
+                            formSubmitData.append('Message', data.message || 'Aucun message');
+
+                            const formSubmitResponse = await fetch('https://formsubmit.co/breteuilautoecole@gmail.com', {
+                                method: 'POST',
+                                body: formSubmitData
+                            });
+
+                            if (!formSubmitResponse.ok) {
+                                console.error('Erreur FormSubmit:', await formSubmitResponse.text());
+                            }
+                        } else {
+                            console.log('Mode local : email non envoyé (FormSubmit désactivé)');
+                        }
+
+                        // Rediriger vers la page de confirmation
+                        window.location.href = 'devis-envoye.html';
+                    } catch (err) {
+                        console.error('Erreur:', err);
+                        submitButton.disabled = false;
+                        submitButton.textContent = originalText;
+                        alert('Une erreur est survenue. Réessaie ou contacte-nous directement.');
+                    }
+                });
+            }
+
+            // Pré-remplir le financement depuis l'URL
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const financing = params.get('financement');
+                if (financingSource) financementSource.value = financing || '';
+
+                if (financing && financementSelect) {
+                    const map = {
+                        'cpf': 'CPF',
+                        'mission-locale': 'Mission Locale',
+                        'departement13': 'Département 13',
+                        'france-travail': 'France Travail'
+                    };
+                    const value = map[financing] || '';
+                    if (value) financementSelect.value = value;
+                }
+            } catch (e) {
+            }
+
+            setActiveStep(1);
+        })();
+    </script>
+</body>
+</html>

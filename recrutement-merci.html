@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidature envoyée - Auto-Ecole Breteuil</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            min-height: 100vh;
+            background: linear-gradient(90deg, rgba(255, 230, 242, 1) 0%, rgba(255, 105, 180, 0.78) 55%, rgba(233, 30, 99, 0.92) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .thanks-card {
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 28px;
+            padding: 3rem;
+            max-width: 720px;
+            width: 100%;
+            box-shadow: 0 30px 90px rgba(0,0,0,0.18);
+            border: 1px solid rgba(255, 255, 255, 0.55);
+            text-align: center;
+            backdrop-filter: blur(6px);
+        }
+
+        .thanks-icon {
+            width: 88px;
+            height: 88px;
+            border-radius: 26px;
+            margin: 0 auto 1.5rem;
+            display: grid;
+            place-items: center;
+            background: rgba(19, 206, 102, 0.12);
+            color: #0a8e47;
+            font-size: 2.6rem;
+            box-shadow: 0 12px 30px rgba(19, 206, 102, 0.18);
+        }
+
+        h1 {
+            font-size: 2.4rem;
+            margin-bottom: 0.75rem;
+        }
+
+        p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            line-height: 1.65;
+            margin-bottom: 2rem;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .actions a {
+            min-width: 240px;
+            justify-content: center;
+        }
+
+        @media (max-width: 520px) {
+            .thanks-card {
+                padding: 2.25rem;
+            }
+            .actions a {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="thanks-card">
+        <div class="thanks-icon"><i class="fas fa-check"></i></div>
+        <h1>Candidature envoyée</h1>
+        <p>Merci ! Nous avons bien reçu votre candidature. Si votre profil correspond à nos besoins, nous vous recontactons rapidement.</p>
+        <div class="actions">
+            <a href="recrutement.html" class="btn-secondary btn-large"><i class="fas fa-arrow-left"></i> Retour au recrutement</a>
+            <a href="index.html" class="btn-primary btn-large"><i class="fas fa-home"></i> Retour à l'accueil</a>
+        </div>
+    </div>
+</body>
+</html>

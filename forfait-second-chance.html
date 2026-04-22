@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forfait Second Chance - Auto-École Breteuil</title>
+    <meta name="description" content="Votre permis vous a échappé ? Donnez-vous une seconde chance avec notre forfait spécialement conçu pour réussir votre examen.">
+    
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="shortcut icon" href="assets/logo.png">
+    <link rel="apple-touch-icon" href="assets/logo.png">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        .hero-second-chance {
+            background: linear-gradient(135deg, rgba(233, 30, 99, 0.95) 0%, rgba(240, 98, 146, 0.95) 100%),
+                        url('assets/hero-bg.jpg') center/cover;
+            padding: 8rem 0 6rem;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-second-chance::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(255,255,255,0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .hero-second-chance h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        
+        .hero-second-chance .hero-subtitle {
+            font-size: 1.4rem;
+            margin-bottom: 3rem;
+            opacity: 0.95;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+        
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            background: white;
+            color: var(--primary-color);
+            padding: 1.25rem 3rem;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .hero-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+        }
+        
+        .section-second-chance {
+            padding: 5rem 0;
+        }
+        
+        .section-dark {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+        }
+        
+        .section-light {
+            background: #f8f9fa;
+        }
+        
+        .section-header {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 4rem;
+        }
+        
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .section-dark .section-header h2 {
+            color: white;
+        }
+        
+        .section-header p {
+            font-size: 1.2rem;
+            color: #666;
+            line-height: 1.8;
+        }
+        
+        .section-dark .section-header p {
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .feature-card-sc {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+        }
+        
+        .feature-card-sc:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-color);
+            box-shadow: 0 20px 60px rgba(233,30,99,0.2);
+        }
+        
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-gradient));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 10px 30px rgba(233,30,99,0.3);
+        }
+        
+        .feature-card-sc h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #1a1a2e;
+        }
+        
+        .feature-card-sc p {
+            color: #666;
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+        
+        .timeline {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            padding: 2rem 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, var(--primary-gradient));
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        .timeline-item:nth-child(odd) {
+            flex-direction: row;
+        }
+        
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+        
+        .timeline-content {
+            flex: 1;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 2px solid rgba(255,255,255,0.2);
+            margin: 0 2rem;
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-content {
+            text-align: right;
+        }
+        
+        .timeline-number {
+            width: 60px;
+            height: 60px;
+            background: white;
+            color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .timeline-content h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .timeline-content p {
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        .price-card {
+            background: white;
+            border-radius: 30px;
+            padding: 3rem;
+            max-width: 600px;
+            margin: 3rem auto 0;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            text-align: center;
+            border: 4px solid var(--primary-color);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .price-card::before {
+            content: '🎯';
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            font-size: 8rem;
+            opacity: 0.05;
+        }
+        
+        .price-badge {
+            background: linear-gradient(135deg, var(--primary-gradient));
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+        }
+        
+        .price-amount {
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .price-description {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .price-features {
+            text-align: left;
+            margin: 2rem 0;
+        }
+        
+        .price-feature {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 0.75rem;
+        }
+        
+        .price-feature i {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+        
+        .cta-section {
+            text-align: center;
+            padding: 5rem 2rem;
+            background: linear-gradient(135deg, var(--primary-gradient));
+            color: white;
+        }
+        
+        .cta-section h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+        
+        .cta-section p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn-cta-primary {
+            background: white;
+            color: var(--primary-color);
+            padding: 1.25rem 3rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-cta-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+        
+        .btn-cta-secondary {
+            background: transparent;
+            color: white;
+            padding: 1.25rem 3rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            border: 3px solid white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-cta-secondary:hover {
+            background: white;
+            color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+        
+        @media (max-width: 768px) {
+            .hero-second-chance {
+                padding: 5rem 0 3rem;
+            }
+            
+            .hero-second-chance h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-second-chance .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .timeline::before {
+                left: 30px;
+            }
+            
+            .timeline-item,
+            .timeline-item:nth-child(even) {
+                flex-direction: row !important;
+            }
+            
+            .timeline-content,
+            .timeline-item:nth-child(odd) .timeline-content {
+                text-align: left;
+                margin-left: 4rem;
+                margin-right: 0;
+            }
+            
+            .timeline-number {
+                position: absolute;
+                left: 0;
+            }
+            
+            .price-amount {
+                font-size: 3rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <a href="index.html" class="logo">
+                    <img src="assets/logo.png" alt="Auto-Ecole Breteuil">
+                    <span>Auto-Ecole <strong>Breteuil</strong></span>
+                </a>
+                
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="recrutement.html">Recrutement</a></li>
+                    <li><a href="qui-sommes-nous.html">Qui sommes-nous</a></li>
+                    <li><a href="tarifs.html">Tarifs</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+
+                <div class="nav-actions">
+                    <a href="connexion.html" class="btn-secondary">Connexion</a>
+                    <a href="inscription.html" class="btn-primary">Inscription</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-second-chance">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-star"></i> Forfait Spécial
+            </div>
+            <h1>Votre Second Chance</h1>
+            <p class="hero-subtitle">
+                Un échec n'est pas une fin, c'est une opportunité de recommencer plus fort. 
+                Avec notre forfait Second Chance, transformez votre expérience en réussite.
+            </p>
+            <a href="#tarif" class="hero-cta">
+                <span>Découvrir le forfait</span>
+                <i class="fas fa-arrow-down"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Why Section -->
+    <section class="section-second-chance section-light">
+        <div class="container">
+            <div class="section-header">
+                <h2>Pourquoi choisir Second Chance ?</h2>
+                <p>
+                    Nous savons que l'échec au permis peut être décourageant. C'est pourquoi nous avons créé 
+                    un forfait spécialement conçu pour vous accompagner vers la réussite, avec un suivi personnalisé 
+                    et des outils concrets pour corriger vos erreurs.
+                </p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card-sc">
+                    <div class="feature-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h3>Analyse Précise</h3>
+                    <p>Nous analysons en détail les remarques de l'inspecteur pour identifier exactement ce qui n'a pas fonctionné.</p>
+                </div>
+                
+                <div class="feature-card-sc">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <h3>Accompagnement Personnalisé</h3>
+                    <p>Un suivi individuel avec des séances ciblées sur vos points faibles pour une progression rapide.</p>
+                </div>
+                
+                <div class="feature-card-sc">
+                    <div class="feature-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <h3>Nouvelle Date Garantie</h3>
+                    <p>Nous nous occupons de tout : récupération de votre dossier et nouvelle date d'examen assurée.</p>
+                </div>
+                
+                <div class="feature-card-sc">
+                    <div class="feature-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h3>Confiance Retrouvée</h3>
+                    <p>Reprenez confiance en vous avec notre méthode éprouvée et nos moniteurs bienveillants.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section class="section-second-chance section-dark">
+        <div class="container">
+            <div class="section-header">
+                <h2>Votre Parcours vers la Réussite</h2>
+                <p>
+                    Un programme structuré en 4 étapes pour maximiser vos chances de succès
+                </p>
+            </div>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-number">1</div>
+                    <div class="timeline-content">
+                        <h3>📋 Récupération du Dossier</h3>
+                        <p>Nous récupérons votre dossier administratif et analysons les remarques de l'inspecteur pour comprendre les raisons de l'échec.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-number">2</div>
+                    <div class="timeline-content">
+                        <h3>🔍 Séance Bilan</h3>
+                        <p>Une séance complète pour faire le point sur vos compétences, identifier vos points forts et les axes d'amélioration prioritaires.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-number">3</div>
+                    <div class="timeline-content">
+                        <h3>🎯 Correction des Défauts</h3>
+                        <p>Une séance intensive dédiée à la correction des erreurs commises lors de votre précédent examen, avec des exercices ciblés.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-number">4</div>
+                    <div class="timeline-content">
+                        <h3>✅ Permis Blanc</h3>
+                        <p>Un examen blanc dans les conditions réelles pour valider vos acquis et vous préparer mentalement au jour J.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-number">5</div>
+                    <div class="timeline-content">
+                        <h3>🎓 Passage de l'Examen</h3>
+                        <p>Vous passez votre examen avec confiance, accompagné par nos moniteurs jusqu'au dernier moment.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Price Section -->
+    <section class="section-second-chance section-light" id="tarif">
+        <div class="container">
+            <div class="section-header">
+                <h2>Un Investissement pour Votre Avenir</h2>
+                <p>
+                    Donnez-vous toutes les chances de réussir avec un forfait complet et transparent
+                </p>
+            </div>
+            
+            <div class="price-card">
+                <div class="price-badge">Forfait Second Chance</div>
+                <div class="price-amount">490€</div>
+                <div class="price-description">Tout compris, sans surprise</div>
+                
+                <div class="price-features">
+                    <div class="price-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Récupération du dossier administratif</span>
+                    </div>
+                    <div class="price-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>1 séance bilan personnalisée (2h)</span>
+                    </div>
+                    <div class="price-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>1 séance de correction des défauts (2h)</span>
+                    </div>
+                    <div class="price-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>1 séance permis blanc (2h)</span>
+                    </div>
+                    <div class="price-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Nouvelle date d'examen garantie</span>
+                    </div>
+                    <div class="price-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Accompagnement jusqu'à la réussite</span>
+                    </div>
+                </div>
+                
+                <a href="inscription.html" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem;">
+                    <i class="fas fa-rocket"></i>
+                    <span>Je m'inscris maintenant</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Prêt à Transformer Votre Échec en Réussite ?</h2>
+            <p>Ne laissez pas un échec définir votre avenir. Avec Second Chance, c'est votre moment de briller.</p>
+            
+            <div class="cta-buttons">
+                <a href="inscription.html" class="btn-cta-primary">
+                    <i class="fas fa-user-plus"></i>
+                    <span>M'inscrire au forfait</span>
+                </a>
+                <a href="contact.html" class="btn-cta-secondary">
+                    <i class="fas fa-phone"></i>
+                    <span>Nous contacter</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Auto-Ecole Breteuil</h4>
+                    <p>Votre auto-école à Marseille 13006. Formation de qualité au permis de conduire.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Liens rapides</h4>
+                    <ul>
+                        <li><a href="index.html">Accueil</a></li>
+                        <li><a href="tarifs.html">Tarifs</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="forfait-second-chance.html">Second Chance</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><i class="fas fa-phone"></i> 04 91 53 36 98</li>
+                        <li><i class="fas fa-envelope"></i> a.e.breteuil@gmail.com</li>
+                        <li><i class="fas fa-map-marker-alt"></i> 1 Rue Édouard Delanglade, 13006 Marseille</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Auto-Ecole Breteuil. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/mobile-menu.js"></script>
+</body>
+</html>
