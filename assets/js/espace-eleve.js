@@ -290,8 +290,8 @@ function updateWeekDisplay() {
     
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const weekStart = new Date(today);
-    weekStart.setDate(today.getDate() + (dashboardState.weekOffset * 7));
+    const weekStart = startOfWeek(today);
+    weekStart.setDate(weekStart.getDate() + (dashboardState.weekOffset * 7));
     const weekEnd = new Date(weekStart);
     weekEnd.setDate(weekStart.getDate() + 6);
     
