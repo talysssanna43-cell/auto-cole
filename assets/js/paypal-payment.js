@@ -37,6 +37,10 @@ class PayPalPayment {
     // Vider le container
     container.innerHTML = '';
 
+    // Appliquer les frais de 3% pour le paiement en plusieurs fois
+    const feeRate = 1.03;  // +3%
+    const totalWithFees = Math.round(amount * feeRate);
+
     // Créer les boutons PayPal
     window.paypal.Buttons({
       style: {
@@ -54,7 +58,7 @@ class PayPalPayment {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              amount: parseFloat(amount),
+              amount: parseFloat(totalWithFees),
               description: description,
               userEmail: userEmail,
               userName: userName,

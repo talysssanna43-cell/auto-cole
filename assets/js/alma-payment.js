@@ -24,14 +24,8 @@ async function processAlmaPayment(formData) {
         
         const installments = parseInt(document.getElementById('almaInstallments')?.value || '3');
         
-        // Taux de majoration selon le nombre de mensualités
-        const feeRates = {
-            2: 1.0432,  // +4.32%
-            3: 1.0456,  // +4.56%
-            4: 1.0576   // +5.76%
-        };
-        
-        const feeRate = feeRates[installments] || 1.0456;
+        // Frais de 3% pour le paiement en plusieurs fois
+        const feeRate = 1.03;  // +3%
         const totalWithFees = Math.round(packPrice * feeRate);
         
         // Mode test local : si on est en local, simuler le paiement

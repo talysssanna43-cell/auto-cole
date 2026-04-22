@@ -501,14 +501,8 @@ function updateInstallmentsPreview() {
     
     const installments = parseInt(document.getElementById('installmentsCount')?.value || '3');
     
-    // Taux de majoration selon le nombre de mensualités
-    const feeRates = {
-        2: 1.0432,  // +4.32%
-        3: 1.0456,  // +4.56%
-        4: 1.0576   // +5.76%
-    };
-    
-    const feeRate = feeRates[installments] || 1.0456;
+    // Frais de 3% pour le paiement en plusieurs fois
+    const feeRate = 1.03;  // +3%
     const totalWithFees = Math.round(basePrice * feeRate);
     
     // Calculer la mensualité de base
@@ -585,14 +579,8 @@ function updateSummary() {
         // Vérifier si paiement en plusieurs fois
         const paymentMethod = document.querySelector('input[name="payment"]:checked')?.value;
         if (paymentMethod === 'installments') {
-            // Taux de majoration selon le nombre de mensualités
-            const installments = parseInt(document.getElementById('installmentsCount')?.value || '3');
-            const feeRates = {
-                2: 1.0432,  // +4.32%
-                3: 1.0456,  // +4.56%
-                4: 1.0576   // +5.76%
-            };
-            const feeRate = feeRates[installments] || 1.0456;
+            // Frais de 3% pour le paiement en plusieurs fois
+            const feeRate = 1.03;  // +3%
             totalPrice = Math.round(totalPrice * feeRate);
             document.getElementById('totalPrice').textContent = `${totalPrice}€`;
         } else {

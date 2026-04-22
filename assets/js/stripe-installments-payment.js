@@ -14,14 +14,9 @@ async function processStripeInstallmentsPayment(formData) {
         const packName = selectedPack.value;
         const basePrice = packPrices[packName];
         
-        // Récupérer le nombre de mensualités et calculer le montant avec frais
+        // Récupérer le nombre de mensualités et calculer le montant avec frais de 3%
         const installments = parseInt(document.getElementById('installmentsCount')?.value || '3');
-        const feeRates = {
-            2: 1.0432,  // +4.32%
-            3: 1.0456,  // +4.56%
-            4: 1.0576   // +5.76%
-        };
-        const feeRate = feeRates[installments] || 1.0456;
+        const feeRate = 1.03;  // +3%
         const totalWithFees = Math.round(basePrice * feeRate);
         const amountInCents = totalWithFees * 100;
         
