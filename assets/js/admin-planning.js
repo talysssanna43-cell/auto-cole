@@ -1548,9 +1548,6 @@ window.handleInscriptionDecision = async function(notificationId, decision) {
         // Reload notifications to remove the card immediately
         await loadInscriptionNotifications();
         
-        // Show success message
-        alert(decision === 'approved' ? 'Inscription validée ! Un email a été envoyé à l\'utilisateur.' : 'Inscription refusée. Un email a été envoyé à l\'utilisateur.');
-        
     } catch (err) {
         console.error('Error handling inscription decision:', err);
         alert('Erreur lors du traitement.');
