@@ -56,35 +56,39 @@ window.downloadStudentPDF = async function(studentEmail) {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
         
-        // Couleurs
-        const primaryColor = [31, 48, 94]; // Bleu foncé
-        const accentColor = [102, 126, 234]; // Bleu clair
-        const greenColor = [40, 167, 69];
-        const lightBg = [240, 249, 255];
+        // Couleurs de l'auto-école
+        const blackColor = [0, 0, 0]; // Noir
+        const fuchsiaColor = [236, 72, 153]; // Rose fuchsia
+        const darkGray = [55, 65, 81]; // Gris foncé
+        const lightGray = [243, 244, 246]; // Gris clair
+        const whiteColor = [255, 255, 255]; // Blanc
+        const greenColor = [34, 197, 94]; // Vert pour "Effectue"
+        const redColor = [239, 68, 68]; // Rouge pour annulations
         
         let yPos = 15;
         
-        // En-tête
-        doc.setFillColor(...primaryColor);
-        doc.rect(0, 0, 210, 25, 'F');
+        // En-tête avec fond noir
+        doc.setFillColor(...blackColor);
+        doc.rect(0, 0, 210, 28, 'F');
         
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(18);
+        doc.setTextColor(...fuchsiaColor);
+        doc.setFontSize(20);
         doc.setFont('helvetica', 'bold');
-        doc.text('AUTO ECOLE BRETEUIL', 15, 12);
+        doc.text('AUTO ECOLE BRETEUIL', 15, 13);
         
         doc.setFontSize(9);
         doc.setFont('helvetica', 'normal');
-        doc.text('1A rue Edouard Delanglade   13006 Marseille', 15, 18);
-        doc.text('04 91 53 36 98   breteuilautoecole@gmail.com', 15, 22);
+        doc.setTextColor(...whiteColor);
+        doc.text('1A rue Edouard Delanglade   13006 Marseille', 15, 20);
+        doc.text('04 91 53 36 98   breteuilautoecole@gmail.com', 15, 25);
         
-        yPos = 35;
+        yPos = 38;
         
-        // Titre
-        doc.setFillColor(...lightBg);
+        // Titre avec fond gris clair
+        doc.setFillColor(...lightGray);
         doc.rect(10, yPos, 190, 10, 'F');
-        doc.setTextColor(0, 0, 0);
-        doc.setFontSize(12);
+        doc.setTextColor(...blackColor);
+        doc.setFontSize(13);
         doc.setFont('helvetica', 'bold');
         doc.text('FICHE RECAPITULATIVE ELEVE', 105, yPos + 7, { align: 'center' });
         
@@ -93,7 +97,8 @@ window.downloadStudentPDF = async function(studentEmail) {
         // Informations personnelles
         doc.setFontSize(11);
         doc.setFont('helvetica', 'bold');
-        doc.text('■ Informations personnelles', 15, yPos);
+        doc.setTextColor(...fuchsiaColor);
+        doc.text('Informations personnelles', 15, yPos);
         yPos += 8;
         
         doc.setFontSize(9);
@@ -108,10 +113,10 @@ window.downloadStudentPDF = async function(studentEmail) {
         
         infoData.forEach(([label, value]) => {
             doc.setFont('helvetica', 'bold');
-            doc.setTextColor(100, 100, 100);
+            doc.setTextColor(...darkGray);
             doc.text(label, 15, yPos);
             doc.setFont('helvetica', 'normal');
-            doc.setTextColor(0, 0, 0);
+            doc.setTextColor(...blackColor);
             doc.text(value, 80, yPos);
             yPos += 6;
         });
@@ -121,21 +126,21 @@ window.downloadStudentPDF = async function(studentEmail) {
         // Forfait et Statistiques
         doc.setFontSize(11);
         doc.setFont('helvetica', 'bold');
-        doc.setTextColor(0, 0, 0);
+        doc.setTextColor(...fuchsiaColor);
         doc.text('Forfait & Statistiques', 15, yPos);
         yPos += 8;
         
         // Grille de statistiques
         const stats = [
-            { label: 'FORFAIT', value: student.forfait || 'Non defini', color: accentColor },
+            { label: 'FORFAIT', value: student.forfait || 'Non defini', color: fuchsiaColor },
             { label: 'HEURES EFFECTUEES', value: `${totalHours}h`, color: greenColor },
-            { label: 'SEANCES REALISEES', value: completedSessions.length.toString(), color: [0, 0, 0] }
+            { label: 'SEANCES REALISEES', value: completedSessions.length.toString(), color: blackColor }
         ];
         
         const stats2 = [
-            { label: 'SEANCES A VENIR', value: upcomingSessions.length.toString(), color: [0, 0, 0] },
-            { label: 'ANNULATIONS', value: totalCancellations.toString(), color: [220, 53, 69] },
-            { label: 'DATE D\'INSCRIPTION', value: student.created_at ? new Date(student.created_at).toLocaleDateString('fr-FR') : '-', color: [0, 0, 0] }
+            { label: 'SEANCES A VENIR', value: upcomingSessions.length.toString(), color: blackColor },
+            { label: 'ANNULATIONS', value: totalCancellations.toString(), color: redColor },
+            { label: 'DATE D\'INSCRIPTION', value: student.created_at ? new Date(student.created_at).toLocaleDateString('fr-FR') : '-', color: blackColor }
         ];
         
         doc.setFontSize(9);
@@ -143,7 +148,7 @@ window.downloadStudentPDF = async function(studentEmail) {
         
         stats.forEach(stat => {
             doc.setFont('helvetica', 'bold');
-            doc.setTextColor(100, 100, 100);
+            doc.setTextColor(...darkGray);
             doc.text(stat.label, xPos, yPos);
             doc.setFont('helvetica', 'bold');
             doc.setTextColor(...stat.color);
@@ -158,7 +163,7 @@ window.downloadStudentPDF = async function(studentEmail) {
         
         stats2.forEach(stat => {
             doc.setFont('helvetica', 'bold');
-            doc.setTextColor(100, 100, 100);
+            doc.setTextColor(...darkGray);
             doc.text(stat.label, xPos, yPos);
             doc.setFont('helvetica', 'bold');
             doc.setTextColor(...stat.color);
@@ -173,21 +178,21 @@ window.downloadStudentPDF = async function(studentEmail) {
         // Historique des séances
         doc.setFontSize(11);
         doc.setFont('helvetica', 'bold');
-        doc.setTextColor(0, 0, 0);
+        doc.setTextColor(...fuchsiaColor);
         doc.text('Historique des seances', 15, yPos);
         yPos += 8;
         
         if (completedSessions.length === 0) {
             doc.setFontSize(9);
             doc.setFont('helvetica', 'italic');
-            doc.setTextColor(150, 150, 150);
+            doc.setTextColor(...darkGray);
             doc.text('Aucune seance enregistree.', 15, yPos);
         } else {
-            // En-tête du tableau
-            doc.setFillColor(...primaryColor);
+            // En-tête du tableau avec fond noir
+            doc.setFillColor(...blackColor);
             doc.rect(15, yPos - 5, 180, 8, 'F');
             
-            doc.setTextColor(255, 255, 255);
+            doc.setTextColor(...fuchsiaColor);
             doc.setFontSize(9);
             doc.setFont('helvetica', 'bold');
             doc.text('DATE', 20, yPos);
@@ -198,7 +203,7 @@ window.downloadStudentPDF = async function(studentEmail) {
             yPos += 8;
             
             // Lignes du tableau
-            doc.setTextColor(0, 0, 0);
+            doc.setTextColor(...blackColor);
             doc.setFont('helvetica', 'normal');
             
             const sessionsToShow = completedSessions.slice(0, 15); // Limiter à 15 séances
@@ -209,9 +214,9 @@ window.downloadStudentPDF = async function(studentEmail) {
                     yPos = 20;
                 }
                 
-                // Fond alterné
+                // Fond alterné gris clair
                 if (index % 2 === 0) {
-                    doc.setFillColor(245, 245, 245);
+                    doc.setFillColor(...lightGray);
                     doc.rect(15, yPos - 5, 180, 7, 'F');
                 }
                 
@@ -257,7 +262,7 @@ window.downloadStudentPDF = async function(studentEmail) {
         for (let i = 1; i <= pageCount; i++) {
             doc.setPage(i);
             doc.setFontSize(8);
-            doc.setTextColor(150, 150, 150);
+            doc.setTextColor(...darkGray);
             doc.setFont('helvetica', 'italic');
             doc.text(
                 `Document genere le ${new Date().toLocaleDateString('fr-FR')}   Auto Ecole Breteuil   1A rue Edouard Delanglade, 13006 Marseille`,
