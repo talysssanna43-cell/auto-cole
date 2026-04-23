@@ -913,7 +913,11 @@ window.displayStudentDetails = async function(student) {
                             </tr>
                         </thead>
                         <tbody>
-                            ${reservations.map(res => {
+                            ${reservations.sort((a, b) => {
+                                const dateA = a.slots?.start_at ? new Date(a.slots.start_at) : new Date(0);
+                                const dateB = b.slots?.start_at ? new Date(b.slots.start_at) : new Date(0);
+                                return dateB - dateA; // Tri décroissant (plus récent en premier)
+                            }).map(res => {
                                 const slotDate = res.slots?.start_at ? new Date(res.slots.start_at) : null;
                                 const dateStr = slotDate ? slotDate.toLocaleDateString('fr-FR', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' }) : '-';
                                 const timeStr = slotDate ? `${String(slotDate.getHours()).padStart(2, '0')}:${String(slotDate.getMinutes()).padStart(2, '0')}` : '-';
