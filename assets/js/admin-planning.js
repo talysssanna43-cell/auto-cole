@@ -822,10 +822,28 @@ window.displayStudentDetails = async function(student) {
         }
         
         // Calculer les statistiques
-        const totalHours = (reservations || []).filter(r => r.status === 'completed').length * 2;
-        const totalCancellations = (cancellations || []).length;
-        const completedSessions = (reservations || []).filter(r => r.status === 'completed');
-        const upcomingSessions = (reservations || []).filter(r => r.status === 'upcoming');
+        const now = new Date();
+        
+        // Compter les heures effectuées : status 'completed' ou 'done' OU séances passées avec status 'upcoming'
+        const completedSessions = (reservations || []).filter(r => {
+            const slotDate = r.slots?.start_at ? new Date(r.slots.start_at) : null;
+            const isPast = slotDate && slotDate < now;
+            return r.status === 'completed' || r.status === 'done' || (isPast && r.status === 'upcoming');
+        });
+        const totalHours = completedSessions.length * 2;
+        
+        // Compter les annulations acceptées (status 'accepted' ou 'approved')
+        const totalCancellations = (cancellations || []).filter(c => 
+            c.status === 'accepted' || c.status === 'approved'
+        ).length;
+        
+        // Séances à venir : status 'upcoming' ET date future
+        const upcomingSessions = (reservations || []).filter(r => {
+            const slotDate = r.slots?.start_at ? new Date(r.slots.start_at) : null;
+            const isFuture = slotDate && slotDate >= now;
+            return r.status === 'upcoming' && isFuture;
+        });
+        
         const cancelledSessions = (reservations || []).filter(r => r.status?.includes('cancelled'));
         
         // Construire le HTML
