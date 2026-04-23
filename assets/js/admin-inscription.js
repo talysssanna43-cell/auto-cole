@@ -4,7 +4,7 @@ function requireAdmin() {
     if (!user || !user.email) {
         return { ok: false };
     }
-    const adminEmails = ['admin@breteuil.com', 'talysssanna43@gmail.com'];
+    const adminEmails = ['breteuilautoecole@gmail.com', 'talysssanna43@gmail.com'];
     if (!adminEmails.includes(user.email.toLowerCase())) {
         return { ok: false };
     }
