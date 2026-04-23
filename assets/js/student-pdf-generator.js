@@ -284,10 +284,17 @@ window.downloadStudentPDF = async function(studentEmail) {
     }
 };
 
-// Fonction pour envoyer le PDF par email à l'élève (via mailto)
+// Fonction pour envoyer le PDF par email à l'élève automatiquement
 window.sendStudentPDFByEmail = async function(studentEmail) {
     try {
-        console.log('📧 Préparation de l\'email pour:', studentEmail);
+        console.log('📧 Envoi du PDF par email à:', studentEmail);
+        
+        // Afficher un message de chargement
+        const loadingMsg = document.createElement('div');
+        loadingMsg.id = 'emailLoadingMsg';
+        loadingMsg.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.9); color: white; padding: 2rem 3rem; border-radius: 12px; z-index: 10000; text-align: center;';
+        loadingMsg.innerHTML = '<i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 1rem;"></i><br><strong>Envoi du PDF en cours...</strong>';
+        document.body.appendChild(loadingMsg);
         
         // Récupérer les données de l'élève
         const { data: student, error: studentError } = await window.supabaseClient
@@ -297,52 +304,80 @@ window.sendStudentPDFByEmail = async function(studentEmail) {
             .single();
         
         if (studentError || !student) {
-            alert('Erreur lors de la récupération des données de l\'élève');
-            return;
+            throw new Error('Erreur lors de la récupération des données de l\'élève');
         }
         
-        // Message personnalisé
-        const subject = 'Votre fiche recapitulative - Auto Ecole Breteuil';
-        const body = `Bonjour ${student.prenom} ${student.nom},
-
-Veuillez trouver ci-joint votre fiche recapitulative contenant toutes vos informations et l'historique de vos seances de conduite.
-
-Si vous avez des questions, n'hesitez pas a nous contacter.
-
-Cordialement,
-Auto Ecole Breteuil
-1A rue Edouard Delanglade, 13006 Marseille
-Tel: 04 91 53 36 98
-Email: breteuilautoecole@gmail.com`;
-
-        // Afficher un message d'information
-        const message = `
-📧 Email prepare pour ${student.prenom} ${student.nom}
-
-Pour envoyer la fiche PDF par email :
-
-1. Cliquez sur "Telecharger la fiche" pour obtenir le PDF
-2. Ouvrez votre client email (Gmail, Outlook, etc.)
-3. Composez un email a : ${student.email}
-4. Sujet : ${subject}
-5. Attachez le PDF telecharge
-6. Envoyez !
-
-Voulez-vous ouvrir votre client email maintenant ?
-        `;
+        // Récupérer les réservations
+        const { data: reservations } = await window.supabaseClient
+            .from('reservations')
+            .select('*, slots(*)')
+            .eq('email', student.email)
+            .order('created_at', { ascending: false });
         
-        if (confirm(message)) {
-            // Ouvrir le client email avec les informations pré-remplies
-            const mailtoLink = `mailto:${student.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-            window.open(mailtoLink, '_blank');
-            
-            // Télécharger automatiquement le PDF
-            await downloadStudentPDF(studentEmail);
+        // Calculer les statistiques
+        const now = new Date();
+        const completedSessions = (reservations || []).filter(r => {
+            const slotDate = r.slots?.start_at ? new Date(r.slots.start_at) : null;
+            const isPast = slotDate && slotDate < now;
+            return r.status === 'completed' || r.status === 'done' || (isPast && r.status === 'upcoming');
+        });
+        
+        const upcomingSessions = (reservations || []).filter(r => {
+            const slotDate = r.slots?.start_at ? new Date(r.slots.start_at) : null;
+            const isFuture = slotDate && slotDate >= now;
+            return r.status === 'upcoming' && isFuture;
+        });
+        
+        const { data: cancellations } = await window.supabaseClient
+            .from('cancellation_requests')
+            .select('*')
+            .eq('user_email', student.email);
+        
+        const totalCancellations = (cancellations || []).filter(c => 
+            c.status === 'accepted' || c.status === 'approved'
+        ).length;
+        
+        const totalHours = completedSessions.length * 2;
+        
+        // Générer le PDF
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        // Générer le contenu du PDF
+        await generatePDFContent(doc, student, completedSessions, upcomingSessions, totalHours, totalCancellations, now);
+        
+        // Convertir le PDF en base64
+        const pdfBase64 = doc.output('datauristring').split(',')[1];
+        
+        // Envoyer l'email via Netlify Function
+        const response = await fetch('/.netlify/functions/send-student-pdf', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                studentEmail: student.email,
+                studentName: `${student.prenom} ${student.nom}`,
+                pdfBase64: pdfBase64
+            })
+        });
+        
+        const result = await response.json();
+        
+        // Supprimer le message de chargement
+        document.body.removeChild(loadingMsg);
+        
+        if (response.ok && result.ok) {
+            alert(`✅ Email envoyé avec succès à ${student.email}`);
+        } else {
+            throw new Error(result.error || 'Erreur lors de l\'envoi de l\'email');
         }
         
     } catch (error) {
-        console.error('❌ Erreur:', error);
-        alert('Erreur lors de la préparation de l\'email');
+        console.error('❌ Erreur envoi email:', error);
+        const loadingMsg = document.getElementById('emailLoadingMsg');
+        if (loadingMsg) document.body.removeChild(loadingMsg);
+        alert('Erreur lors de l\'envoi de l\'email: ' + error.message);
     }
 };
 
