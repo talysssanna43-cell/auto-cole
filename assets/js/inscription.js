@@ -949,6 +949,7 @@ async function processInscription(data) {
                 code_postal: data.codePostal,
                 ville: data.ville,
                 forfait: selectedPack ? selectedPack.value : null,
+                numero_neph: data.numeroNeph || null,
                 hours_goal: hoursGoal,
                 hours_completed_initial: hoursCompletedInitial,
                 documents: Object.keys(documents).length > 0 ? documents : null

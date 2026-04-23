@@ -883,6 +883,12 @@ window.displayStudentDetails = async function(student) {
                         <label>Ville</label>
                         <span>${student.ville || '-'}</span>
                     </div>
+                    <div class="info-item">
+                        <label><i class="fas fa-id-card"></i> Numéro NEPH</label>
+                        <span style="font-family: monospace; font-weight: 600; color: ${student.numero_neph ? '#0071e3' : 'inherit'};">
+                            ${student.numero_neph || 'Non renseigné'}
+                        </span>
+                    </div>
                 </div>
             </div>
             

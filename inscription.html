@@ -104,6 +104,45 @@
                             <input type="date" id="dateNaissance" name="dateNaissance" required>
                         </div>
 
+                        <!-- Question NEPH -->
+                        <div class="form-group" style="margin-top: 1.5rem; padding: 1.5rem; background: #f0f9ff; border-left: 4px solid #0071e3; border-radius: 8px;">
+                            <label style="display: block; margin-bottom: 1rem; font-weight: 600; color: #0369a1;">
+                                <i class="fas fa-id-card"></i> Avez-vous déjà un numéro NEPH ?
+                            </label>
+                            <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1rem;">
+                                Le NEPH (Numéro d'Enregistrement Préfectoral Harmonisé) est un numéro unique de 12 chiffres attribué lors de votre inscription au permis de conduire.
+                            </p>
+                            <div style="display: flex; gap: 2rem; margin-bottom: 1rem;">
+                                <label style="display: flex; align-items: center; cursor: pointer;">
+                                    <input type="radio" name="hasNeph" value="oui" style="margin-right: 0.5rem;" onchange="toggleNephInput(true)">
+                                    <span>Oui, j'ai un numéro NEPH</span>
+                                </label>
+                                <label style="display: flex; align-items: center; cursor: pointer;">
+                                    <input type="radio" name="hasNeph" value="non" checked style="margin-right: 0.5rem;" onchange="toggleNephInput(false)">
+                                    <span>Non, pas encore</span>
+                                </label>
+                            </div>
+                            
+                            <!-- Champ NEPH (caché par défaut) -->
+                            <div id="nephInputSection" style="display: none; margin-top: 1rem;">
+                                <label for="numeroNeph" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #0369a1;">
+                                    Numéro NEPH (12 chiffres)
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="numeroNeph" 
+                                    name="numeroNeph" 
+                                    placeholder="Ex: 123456789012"
+                                    maxlength="12"
+                                    pattern="[0-9]{12}"
+                                    style="width: 100%; padding: 0.75rem; border: 2px solid #bae6fd; border-radius: 8px; font-size: 1rem;"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                <small style="color: #64748b; display: block; margin-top: 0.5rem;">
+                                    <i class="fas fa-info-circle"></i> Entrez uniquement les 12 chiffres de votre NEPH
+                                </small>
+                            </div>
+                        </div>
+
                         <!-- Champs pour représentant légal (si mineur) -->
                         <div id="representantLegalSection" style="display: none; margin-top: 1rem; padding: 1.5rem; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 8px;">
                             <h4 style="margin-top: 0; color: #856404; font-size: 1.1rem;">
@@ -836,5 +875,22 @@
     <script src="assets/js/stripe-installments-payment.js"></script>
     <script src="assets/js/inscription.js"></script>
     <script src="assets/js/support-ticket.js?v=6"></script>
+    
+    <script>
+        // Fonction pour afficher/masquer le champ NEPH
+        function toggleNephInput(show) {
+            const nephSection = document.getElementById('nephInputSection');
+            const nephInput = document.getElementById('numeroNeph');
+            
+            if (show) {
+                nephSection.style.display = 'block';
+                nephInput.required = true;
+            } else {
+                nephSection.style.display = 'none';
+                nephInput.required = false;
+                nephInput.value = '';
+            }
+        }
+    </script>
     </body>
 </html>
