@@ -1006,6 +1006,12 @@ window.displayStudentDetails = async function(student) {
                         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
                         <i class="fas fa-file-pdf"></i> Télécharger la fiche
                     </button>
+                    <button onclick="sendStudentPDFByEmail('${student.email}')" 
+                        style="background: #0071e3; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s;"
+                        onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                        <i class="fas fa-envelope"></i> Envoyer par email
+                    </button>
                 </div>
             </div>
         `;
