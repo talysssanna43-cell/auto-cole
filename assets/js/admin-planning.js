@@ -919,12 +919,16 @@ window.displayStudentDetails = async function(student) {
                                 const timeStr = slotDate ? `${String(slotDate.getHours()).padStart(2, '0')}:${String(slotDate.getMinutes()).padStart(2, '0')}` : '-';
                                 const instructor = res.slots?.instructor || res.instructor || '-';
                                 
+                                // Vérifier si la séance est passée
+                                const now = new Date();
+                                const isPast = slotDate && slotDate < now;
+                                
                                 let statusClass = 'upcoming';
                                 let statusLabel = 'À venir';
                                 
-                                if (res.status === 'completed') {
+                                if (res.status === 'completed' || res.status === 'done' || (isPast && res.status === 'upcoming')) {
                                     statusClass = 'completed';
-                                    statusLabel = 'Réalisée';
+                                    statusLabel = 'Effectué';
                                 } else if (res.status === 'cancelled_refused') {
                                     statusClass = 'cancelled';
                                     statusLabel = 'Refusée';
