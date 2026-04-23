@@ -1251,6 +1251,12 @@ window.loadInscriptionNotifications = async function() {
                                         <strong style="color: #6c757d;">Ville:</strong><br>
                                         <span>${notif.user_ville || 'Non renseignée'}</span>
                                     </div>
+                                    <div>
+                                        <strong style="color: #6c757d;"><i class="fas fa-id-card"></i> Numéro NEPH:</strong><br>
+                                        <span style="font-family: monospace; font-weight: 600; color: ${notif.numero_neph ? '#0071e3' : 'inherit'};">
+                                            ${notif.numero_neph || 'Non renseigné'}
+                                        </span>
+                                    </div>
                                     ${notif.parent_prenom || notif.parent_nom ? `
                                     <div style="grid-column: 1 / -1; padding-top: 0.5rem; border-top: 1px solid #dee2e6; margin-top: 0.5rem;">
                                         <strong style="color: #6c757d;"><i class="fas fa-user-shield"></i> Représentant légal (mineur):</strong><br>
