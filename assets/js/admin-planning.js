@@ -1557,6 +1557,7 @@ window.handleInscriptionDecision = async function(notificationId, decision) {
                         adresse: notification.user_adresse,
                         code_postal: notification.user_code_postal,
                         ville: notification.user_ville,
+                        numero_neph: notification.numero_neph || null,
                         forfait: notification.pack || null,
                         hours_goal: hoursGoal,
                         hours_completed_initial: 0
