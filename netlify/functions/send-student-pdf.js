@@ -1,3 +1,5 @@
+const fetch = require('node-fetch');
+
 exports.handler = async (event) => {
     if (event.httpMethod !== 'POST') {
         return {
@@ -12,6 +14,7 @@ exports.handler = async (event) => {
         const from = process.env.RESEND_FROM_EMAIL;
 
         if (!apiKey || !from) {
+            console.error('Missing RESEND_API_KEY or RESEND_FROM_EMAIL');
             return {
                 statusCode: 500,
                 headers: { 'Content-Type': 'application/json' },
@@ -28,6 +31,8 @@ exports.handler = async (event) => {
                 body: JSON.stringify({ ok: false, error: 'MISSING_EMAIL_OR_PDF' })
             };
         }
+
+        console.log('📧 Sending PDF to:', studentEmail);
 
         // HTML de l'email
         const html = `
@@ -92,6 +97,8 @@ exports.handler = async (event) => {
             };
         }
 
+        console.log('✅ Email sent successfully:', data.id);
+
         return {
             statusCode: 200,
             headers: { 'Content-Type': 'application/json' },
@@ -99,7 +106,7 @@ exports.handler = async (event) => {
         };
 
     } catch (error) {
-        console.error('Erreur envoi email:', error);
+        console.error('❌ Erreur envoi email:', error);
         return {
             statusCode: 500,
             headers: { 'Content-Type': 'application/json' },
