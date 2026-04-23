@@ -75,7 +75,7 @@ window.downloadStudentPDF = async function(studentEmail) {
         
         doc.setFontSize(9);
         doc.setFont('helvetica', 'normal');
-        doc.text('1A rue Édouard Delanglade   13006 Marseille', 15, 18);
+        doc.text('1A rue Edouard Delanglade   13006 Marseille', 15, 18);
         doc.text('04 91 53 36 98   breteuilautoecole@gmail.com', 15, 22);
         
         yPos = 35;
@@ -86,7 +86,7 @@ window.downloadStudentPDF = async function(studentEmail) {
         doc.setTextColor(0, 0, 0);
         doc.setFontSize(12);
         doc.setFont('helvetica', 'bold');
-        doc.text('📋 FICHE RÉCAPITULATIVE ÉLÈVE', 105, yPos + 7, { align: 'center' });
+        doc.text('FICHE RECAPITULATIVE ELEVE', 105, yPos + 7, { align: 'center' });
         
         yPos += 18;
         
@@ -122,18 +122,18 @@ window.downloadStudentPDF = async function(studentEmail) {
         doc.setFontSize(11);
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(0, 0, 0);
-        doc.text('■ Forfait & Statistiques', 15, yPos);
+        doc.text('Forfait & Statistiques', 15, yPos);
         yPos += 8;
         
         // Grille de statistiques
         const stats = [
-            { label: 'FORFAIT', value: student.forfait || 'Non défini', color: accentColor },
-            { label: 'HEURES EFFECTUÉES', value: `${totalHours}h`, color: greenColor },
-            { label: 'SÉANCES RÉALISÉES', value: completedSessions.length.toString(), color: [0, 0, 0] }
+            { label: 'FORFAIT', value: student.forfait || 'Non defini', color: accentColor },
+            { label: 'HEURES EFFECTUEES', value: `${totalHours}h`, color: greenColor },
+            { label: 'SEANCES REALISEES', value: completedSessions.length.toString(), color: [0, 0, 0] }
         ];
         
         const stats2 = [
-            { label: 'SÉANCES À VENIR', value: upcomingSessions.length.toString(), color: [0, 0, 0] },
+            { label: 'SEANCES A VENIR', value: upcomingSessions.length.toString(), color: [0, 0, 0] },
             { label: 'ANNULATIONS', value: totalCancellations.toString(), color: [220, 53, 69] },
             { label: 'DATE D\'INSCRIPTION', value: student.created_at ? new Date(student.created_at).toLocaleDateString('fr-FR') : '-', color: [0, 0, 0] }
         ];
@@ -174,14 +174,14 @@ window.downloadStudentPDF = async function(studentEmail) {
         doc.setFontSize(11);
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(0, 0, 0);
-        doc.text('■ Historique des séances', 15, yPos);
+        doc.text('Historique des seances', 15, yPos);
         yPos += 8;
         
         if (completedSessions.length === 0) {
             doc.setFontSize(9);
             doc.setFont('helvetica', 'italic');
             doc.setTextColor(150, 150, 150);
-            doc.text('Aucune séance enregistrée.', 15, yPos);
+            doc.text('Aucune seance enregistree.', 15, yPos);
         } else {
             // En-tête du tableau
             doc.setFillColor(...primaryColor);
@@ -229,12 +229,12 @@ window.downloadStudentPDF = async function(studentEmail) {
                 
                 const instructor = res.slots?.instructor || '-';
                 
-                let statusStr = 'À venir';
+                let statusStr = 'A venir';
                 let statusColor = [0, 0, 0];
                 const isPast = slotDate && slotDate < now;
                 
                 if (res.status === 'completed' || res.status === 'done' || (isPast && res.status === 'upcoming')) {
-                    statusStr = 'Effectué';
+                    statusStr = 'Effectue';
                     statusColor = greenColor;
                 }
                 
@@ -260,7 +260,7 @@ window.downloadStudentPDF = async function(studentEmail) {
             doc.setTextColor(150, 150, 150);
             doc.setFont('helvetica', 'italic');
             doc.text(
-                `Document généré le ${new Date().toLocaleDateString('fr-FR')}   Auto École Breteuil   1A rue Édouard Delanglade, 13006 Marseille`,
+                `Document genere le ${new Date().toLocaleDateString('fr-FR')}   Auto Ecole Breteuil   1A rue Edouard Delanglade, 13006 Marseille`,
                 105,
                 290,
                 { align: 'center' }
