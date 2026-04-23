@@ -771,11 +771,11 @@ window.searchStudent = async function() {
     }
     
     try {
-        // Rechercher dans la table users
+        // Rechercher dans la table users (nom, prénom, email, téléphone)
         const { data: users, error: userError } = await window.supabaseClient
             .from('users')
             .select('*')
-            .or(`nom.ilike.%${searchTerm}%,prenom.ilike.%${searchTerm}%`);
+            .or(`nom.ilike.%${searchTerm}%,prenom.ilike.%${searchTerm}%,email.ilike.%${searchTerm}%,telephone.ilike.%${searchTerm}%`);
         
         if (userError) {
             console.error('Error searching users:', userError);
@@ -1030,7 +1030,7 @@ window.showSuggestions = async function(searchTerm) {
     const suggestionsContainer = document.getElementById('autocompleteSuggestions');
     if (!suggestionsContainer) return;
     
-    if (!searchTerm || searchTerm.length < 2) {
+    if (!searchTerm) {
         suggestionsContainer.classList.remove('active');
         return;
     }
@@ -1039,7 +1039,7 @@ window.showSuggestions = async function(searchTerm) {
         const { data: users, error } = await window.supabaseClient
             .from('users')
             .select('*')
-            .or(`nom.ilike.%${searchTerm}%,prenom.ilike.%${searchTerm}%`)
+            .or(`nom.ilike.%${searchTerm}%,prenom.ilike.%${searchTerm}%,email.ilike.%${searchTerm}%,telephone.ilike.%${searchTerm}%`)
             .limit(5);
         
         if (error) {
