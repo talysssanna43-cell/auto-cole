@@ -78,18 +78,38 @@ async function handleSubmit(event) {
         
         console.log('Auth user created:', authData);
         
-        // 2. Insérer dans la table users
+        // Calculer hours_goal selon le pack
+        let hoursGoal = 0;
+        const packHours = {
+            'am': 8,
+            'boite-auto': 13,
+            'zen': 20,
+            'aac': 20,
+            'supervisee': 20,
+            'second-chance': 6
+        };
+        hoursGoal = packHours[pack] || 20;
+        
+        // Hasher le mot de passe
+        const passwordHash = await window.hashPassword(password);
+        
+        // 2. Insérer directement dans la table users avec le statut approved (inscription validée)
         const { error: userError } = await window.supabaseClient
             .from('users')
             .insert({
                 email: email,
+                password_hash: passwordHash,
                 prenom: prenom,
                 nom: nom,
                 telephone: telephone,
-                date_naissance: dateNaissance,
+                date_nais: dateNaissance,
                 adresse: adresse,
                 code_postal: codePostal,
-                ville: ville
+                ville: ville,
+                forfait: pack,
+                hours_goal: hoursGoal,
+                hours_completed_initial: 0,
+                created_at: new Date().toISOString()
             });
         
         if (userError) {
@@ -100,9 +120,9 @@ async function handleSubmit(event) {
             return;
         }
         
-        console.log('User data inserted');
+        console.log('User data inserted with approved status');
         
-        // 3. Insérer dans inscription_notifications
+        // 3. Insérer dans inscription_notifications avec statut "approved" (pas besoin de validation)
         const { error: inscriptionError } = await window.supabaseClient
             .from('inscription_notifications')
             .insert({
@@ -118,9 +138,10 @@ async function handleSubmit(event) {
                 pack: pack,
                 permis_invalide: permisInvalide === 'oui',
                 payment_method: 'cash',
-                status: 'pending',
+                status: 'approved',
                 documents_count: 0,
-                created_at: new Date().toISOString()
+                created_at: new Date().toISOString(),
+                approved_at: new Date().toISOString()
             });
         
         if (inscriptionError) {
@@ -131,7 +152,7 @@ async function handleSubmit(event) {
             return;
         }
         
-        console.log('Inscription notification created');
+        console.log('Inscription notification created with approved status');
         
         // Succès !
         setFeedback(`✅ Inscription réussie ! L'élève ${prenom} ${nom} peut maintenant se connecter avec l'email ${email}`, 'success');
