@@ -4,7 +4,7 @@ function requireAdmin() {
     if (!user || !user.email) {
         return { ok: false };
     }
-    const adminEmails = ['breteuilautoecole@gmail.com', 'talysssanna43@gmail.com'];
+    const adminEmails = ['admin@breteuil.com', 'talysssanna43@gmail.com'];
     if (!adminEmails.includes(user.email.toLowerCase())) {
         return { ok: false };
     }
@@ -78,38 +78,18 @@ async function handleSubmit(event) {
         
         console.log('Auth user created:', authData);
         
-        // Calculer hours_goal selon le pack
-        let hoursGoal = 0;
-        const packHours = {
-            'am': 8,
-            'boite-auto': 13,
-            'zen': 20,
-            'aac': 20,
-            'supervisee': 20,
-            'second-chance': 6
-        };
-        hoursGoal = packHours[pack] || 20;
-        
-        // Hasher le mot de passe
-        const passwordHash = await window.hashPassword(password);
-        
-        // 2. Insérer directement dans la table users avec le statut approved (inscription validée)
+        // 2. Insérer dans la table users
         const { error: userError } = await window.supabaseClient
             .from('users')
             .insert({
                 email: email,
-                password_hash: passwordHash,
                 prenom: prenom,
                 nom: nom,
                 telephone: telephone,
-                date_nais: dateNaissance,
+                date_naissance: dateNaissance,
                 adresse: adresse,
                 code_postal: codePostal,
-                ville: ville,
-                forfait: pack,
-                hours_goal: hoursGoal,
-                hours_completed_initial: 0,
-                created_at: new Date().toISOString()
+                ville: ville
             });
         
         if (userError) {
@@ -120,9 +100,9 @@ async function handleSubmit(event) {
             return;
         }
         
-        console.log('User data inserted with approved status');
+        console.log('User data inserted');
         
-        // 3. Insérer dans inscription_notifications avec statut "approved" (pas besoin de validation)
+        // 3. Insérer dans inscription_notifications
         const { error: inscriptionError } = await window.supabaseClient
             .from('inscription_notifications')
             .insert({
@@ -138,10 +118,9 @@ async function handleSubmit(event) {
                 pack: pack,
                 permis_invalide: permisInvalide === 'oui',
                 payment_method: 'cash',
-                status: 'approved',
+                status: 'pending',
                 documents_count: 0,
-                created_at: new Date().toISOString(),
-                approved_at: new Date().toISOString()
+                created_at: new Date().toISOString()
             });
         
         if (inscriptionError) {
@@ -152,7 +131,7 @@ async function handleSubmit(event) {
             return;
         }
         
-        console.log('Inscription notification created with approved status');
+        console.log('Inscription notification created');
         
         // Succès !
         setFeedback(`✅ Inscription réussie ! L'élève ${prenom} ${nom} peut maintenant se connecter avec l'email ${email}`, 'success');

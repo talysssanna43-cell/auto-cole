@@ -856,6 +856,9 @@
                 <button class="tab-btn active" data-tab="sessions">
                     <i class="fas fa-calendar-check"></i> Mes séances
                 </button>
+                <button class="tab-btn" data-tab="invoices">
+                    <i class="fas fa-file-invoice"></i> Mes factures
+                </button>
                 <button class="tab-btn" data-tab="driving-log" id="drivingLogTabBtn" style="display: none;">
                     <i class="fas fa-book"></i> Carnet de bord
                 </button>
@@ -1206,6 +1209,23 @@
                     <button onclick="openExamResultModal()" style="padding: 1rem 2rem; background: linear-gradient(135deg, #FF6B6B 0%, #FF5252 100%); color: white; border: none; border-radius: 30px; font-size: 1.1rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3); transition: all 0.3s;">
                         <i class="fas fa-trophy"></i> J'ai passé mon permis !
                     </button>
+                </div>
+            </div>
+
+            <!-- Tab: Mes factures -->
+            <div class="tab-content" id="invoicesTab">
+                <div class="invoices-panel">
+                    <div class="panel-header">
+                        <h2><i class="fas fa-file-invoice"></i> Mes factures</h2>
+                        <p style="color: var(--text-light); margin-top: 0.5rem;">Télécharge tes factures pour tous tes paiements effectués</p>
+                    </div>
+                    
+                    <div class="invoices-list" id="invoicesList">
+                        <div style="text-align:center; padding: 3rem 1rem; color: var(--text-light);">
+                            <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary-color);"></i>
+                            <p style="margin-top: 1rem;">Chargement de tes factures...</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -2425,12 +2445,14 @@
 
     <script src="https://js.stripe.com/v3/"></script>
     <script src="https://unpkg.com/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="assets/js/supabaseClient.js?v=3"></script>
     <script src="assets/js/espace-eleve-exam-check.js"></script>
-    <script src="assets/js/espace-eleve.js?v=53"></script>
+    <script src="assets/js/espace-eleve.js?v=54"></script>
     <script src="assets/js/buy-hours.js?v=2"></script>
     <script src="assets/js/exam-result.js"></script>
     <script src="assets/js/support-ticket.js?v=7"></script>
+    <script src="assets/js/invoice-pdf-generator.js"></script>
     
     <script>
         function openReferralModal() {

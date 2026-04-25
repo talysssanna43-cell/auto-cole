@@ -2275,7 +2275,7 @@ window.showSlotSuggestions = async function(searchTerm) {
                 <div style="padding: 16px; text-align: center; color: #666;">
                     <i class="fas fa-user-slash" style="font-size: 2rem; margin-bottom: 8px; opacity: 0.5;"></i>
                     <p style="margin: 0;">Aucun élève trouvé</p>
-                    <p style="margin: 8px 0 0 0; font-size: 0.85rem;">Voulez-vous <a href="admin-inscription.html" style="color: #667eea; font-weight: 600;">inscrire un nouvel élève</a> ?</p>
+                    <p style="margin: 8px 0 0 0; font-size: 0.85rem;">Voulez-vous <a href="inscription.html?admin=true" style="color: #667eea; font-weight: 600;">inscrire un nouvel élève</a> ?</p>
                 </div>
             `;
             suggestionsContainer.classList.add('active');
@@ -2739,7 +2739,7 @@ window.bookSlotForStudent = async function(slotId, studentEmail, studentFirstNam
             
             if (shouldRedirect) {
                 // Rediriger vers la page d'inscription admin
-                window.location.href = `admin-inscription.html`;
+                window.location.href = `inscription.html?admin=true&email=${encodeURIComponent(studentEmail)}&prenom=${encodeURIComponent(studentFirstName)}&nom=${encodeURIComponent(studentLastName)}`;
             }
             return;
         }

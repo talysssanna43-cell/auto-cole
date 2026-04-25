@@ -2207,6 +2207,12 @@ function initTabs() {
             btn.classList.add('active');
             if (targetTab === 'sessions') {
                 document.getElementById('sessionsTab').classList.add('active');
+            } else if (targetTab === 'invoices') {
+                document.getElementById('invoicesTab').classList.add('active');
+                // Charger les factures si pas déjà chargées
+                if (!window.invoicesLoaded) {
+                    loadInvoices();
+                }
             } else if (targetTab === 'driving-log') {
                 document.getElementById('drivingLogTab').classList.add('active');
             }
@@ -2633,6 +2639,116 @@ function stopAutoRefresh() {
     }
 }
 
+// Fonction pour charger les factures de l'élève
+async function loadInvoices() {
+    try {
+        const userEmail = localStorage.getItem('userEmail');
+        if (!userEmail) {
+            console.error('Email utilisateur non trouvé');
+            return;
+        }
+        
+        console.log('📄 Chargement des factures pour:', userEmail);
+        
+        const { data: invoices, error } = await window.supabaseClient
+            .from('invoices')
+            .select('*')
+            .eq('user_email', userEmail)
+            .order('payment_date', { ascending: false });
+        
+        if (error) {
+            console.error('Erreur chargement factures:', error);
+            document.getElementById('invoicesList').innerHTML = `
+                <div style="text-align:center; padding: 3rem 1rem; color: var(--text-light);">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 2rem; color: #ff6b6b;"></i>
+                    <p style="margin-top: 1rem;">Erreur lors du chargement des factures</p>
+                </div>
+            `;
+            return;
+        }
+        
+        if (!invoices || invoices.length === 0) {
+            document.getElementById('invoicesList').innerHTML = `
+                <div style="text-align:center; padding: 3rem 1rem; color: var(--text-light);">
+                    <i class="fas fa-file-invoice" style="font-size: 3rem; color: var(--primary-color); opacity: 0.3;"></i>
+                    <p style="margin-top: 1rem; font-size: 1.1rem;">Aucune facture disponible</p>
+                    <p style="margin-top: 0.5rem; font-size: 0.9rem;">Tes factures apparaîtront ici après chaque paiement</p>
+                </div>
+            `;
+            window.invoicesLoaded = true;
+            return;
+        }
+        
+        // Afficher les factures
+        let invoicesHTML = '<div class="invoices-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; padding: 1rem 0;">';
+        
+        invoices.forEach(invoice => {
+            const date = new Date(invoice.payment_date);
+            const formattedDate = date.toLocaleDateString('fr-FR', { 
+                day: '2-digit', 
+                month: 'long', 
+                year: 'numeric' 
+            });
+            
+            let description = invoice.description;
+            if (invoice.forfait) {
+                description = `Forfait ${invoice.forfait}`;
+            } else if (invoice.hours_purchased) {
+                description = `${invoice.hours_purchased} heure(s) de conduite`;
+            }
+            
+            invoicesHTML += `
+                <div class="invoice-card" style="background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 4px 16px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.1)';">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                        <div>
+                            <div style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 0.25rem;">Facture N°</div>
+                            <div style="font-weight: 700; color: var(--primary-color); font-size: 1.1rem;">${invoice.invoice_number}</div>
+                        </div>
+                        <div style="background: linear-gradient(135deg, #EC4899 0%, #FF6B9D 100%); color: white; padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">
+                            PAYÉ
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #f0f0f0;">
+                        <div style="font-size: 0.9rem; color: var(--text-light); margin-bottom: 0.5rem;">
+                            <i class="fas fa-calendar"></i> ${formattedDate}
+                        </div>
+                        <div style="font-size: 1rem; color: var(--text-dark); font-weight: 500;">
+                            ${description}
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-size: 0.85rem; color: var(--text-light);">Montant</div>
+                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--text-dark);">${invoice.amount.toFixed(2)} €</div>
+                        </div>
+                        <button onclick="downloadInvoicePDF('${invoice.id}')" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: all 0.2s;" onmouseover="this.style.transform='scale(1.05)';" onmouseout="this.style.transform='scale(1)';">
+                            <i class="fas fa-download"></i> Télécharger
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+        
+        invoicesHTML += '</div>';
+        document.getElementById('invoicesList').innerHTML = invoicesHTML;
+        window.invoicesLoaded = true;
+        
+        console.log(`✅ ${invoices.length} facture(s) chargée(s)`);
+        
+    } catch (error) {
+        console.error('❌ Erreur:', error);
+        document.getElementById('invoicesList').innerHTML = `
+            <div style="text-align:center; padding: 3rem 1rem; color: var(--text-light);">
+                <i class="fas fa-exclamation-triangle" style="font-size: 2rem; color: #ff6b6b;"></i>
+                <p style="margin-top: 1rem;">Une erreur est survenue</p>
+            </div>
+        `;
+    }
+}
+
+// Initialisation au chargement de la page
 if (document.readyState === 'loading') {
     initStudentDashboard();
     initAvailabilityConfig();
