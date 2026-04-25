@@ -59,6 +59,33 @@ exports.handler = async (event) => {
                         
                         if (!updateError) {
                             console.log(`✅ Hours updated for ${email}: +${quantity}h (new total: ${newGoal}h)`);
+                            
+                            // Créer une facture
+                            const { data: userData } = await supabase
+                                .from('users')
+                                .select('prenom, nom')
+                                .eq('email', email)
+                                .single();
+                            
+                            const studentName = userData ? `${userData.prenom} ${userData.nom}` : 'Élève';
+                            const amount = session.amount_total / 100; // Convertir centimes en euros
+                            
+                            // Générer le numéro de facture
+                            const { data: invoiceNumber } = await supabase.rpc('generate_invoice_number');
+                            
+                            // Créer la facture
+                            await supabase.from('invoices').insert({
+                                invoice_number: invoiceNumber,
+                                user_email: email,
+                                student_name: studentName,
+                                amount: amount,
+                                payment_method: 'Carte bancaire (Stripe)',
+                                description: `${quantity} heure(s) de conduite supplémentaire(s)`,
+                                hours_purchased: quantity,
+                                payment_date: new Date().toISOString()
+                            });
+                            
+                            console.log(`📄 Facture créée: ${invoiceNumber} pour ${email}`);
                         } else {
                             console.error('Error updating hours_goal:', updateError);
                         }

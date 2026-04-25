@@ -105,6 +105,36 @@ exports.handler = async function handler(event) {
                 console.warn('⚠️ Erreur mise à jour inscription:', updateError);
             }
 
+            // Créer une facture
+            try {
+                const { data: userData } = await supabase
+                    .from('users')
+                    .select('prenom, nom')
+                    .eq('email', customerEmail)
+                    .single();
+                
+                const studentName = userData ? `${userData.prenom} ${userData.nom}` : 'Élève';
+                
+                // Générer le numéro de facture
+                const { data: invoiceNumber } = await supabase.rpc('generate_invoice_number');
+                
+                // Créer la facture
+                await supabase.from('invoices').insert({
+                    invoice_number: invoiceNumber,
+                    user_email: customerEmail,
+                    student_name: studentName,
+                    amount: amount / 100,
+                    payment_method: `Oney (${installments_count}x)`,
+                    description: packLabel || 'Forfait auto-école',
+                    forfait: packId,
+                    payment_date: new Date().toISOString()
+                });
+                
+                console.log(`📄 Facture créée: ${invoiceNumber} pour ${customerEmail}`);
+            } catch (invoiceError) {
+                console.error('❌ Erreur création facture:', invoiceError);
+            }
+
             return {
                 statusCode: 200,
                 body: JSON.stringify({ 
