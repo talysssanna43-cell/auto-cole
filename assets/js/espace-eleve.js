@@ -651,6 +651,15 @@ function renderStats() {
     }
 }
 
+function getInstructorPhone(instructorName) {
+    if (!instructorName) return '';
+    const name = instructorName.toLowerCase();
+    if (name.includes('sammy')) return '06.51.16.30.70';
+    if (name.includes('mylène') || name.includes('mylene')) return '06.77.55.55.64';
+    if (name.includes('nail')) return '04.91.53.36.98';
+    return '';
+}
+
 function renderSessionsTable() {
     const tbody = document.querySelector('#sessionsTable tbody');
     if (!tbody) return;
@@ -707,7 +716,12 @@ function renderSessionsTable() {
                 <td>${formatDate(session.date)}</td>
                 <td>${session.slot}</td>
                 <td>${session.durationHours}h</td>
-                <td>${session.instructor}</td>
+                <td>
+                    <div style="font-weight: 600;">${session.instructor}</div>
+                    <div style="font-size: 0.85rem; color: var(--text-light); margin-top: 2px;">
+                        <i class="fas fa-phone" style="font-size: 0.75rem;"></i> ${getInstructorPhone(session.instructor)}
+                    </div>
+                </td>
                 <td>Métro Saint-Barnabé</td>
                 <td><span class="${statusClass}">${statusLabel}</span></td>
                 <td>${cancelBtn}</td>

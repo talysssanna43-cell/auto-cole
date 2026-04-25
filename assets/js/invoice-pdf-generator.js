@@ -14,6 +14,15 @@ window.downloadInvoicePDF = async function(invoiceId) {
             throw new Error('Erreur lors de la récupération de la facture');
         }
         
+        // Récupérer le téléphone de l'élève
+        const { data: userData } = await window.supabaseClient
+            .from('users')
+            .select('telephone')
+            .eq('email', invoice.user_email)
+            .single();
+        
+        invoice.student_phone = userData?.telephone || '';
+        
         // Générer le PDF
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
@@ -65,25 +74,48 @@ window.downloadInvoicePDF = async function(invoiceId) {
         
         // Informations client
         doc.setFillColor(...lightGray);
-        doc.rect(15, yPos - 5, 180, 30, 'F');
+        doc.rect(15, yPos - 5, 180, 45, 'F');
         
         doc.setFontSize(11);
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(...fuchsiaColor);
-        doc.text('FACTURE A:', 20, yPos);
+        doc.text('INFORMATIONS ELEVE:', 20, yPos);
         
-        yPos += 7;
+        yPos += 8;
         doc.setFontSize(10);
+        
+        // Nom
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(...blackColor);
-        doc.text(invoice.student_name, 20, yPos);
+        const nameParts = (invoice.student_name || '').split(' ');
+        const prenom = nameParts[0] || '';
+        const nom = nameParts.slice(1).join(' ') || '';
+        doc.text('Nom:', 20, yPos);
+        doc.setFont('helvetica', 'normal');
+        doc.text(nom, 50, yPos);
         
         yPos += 6;
+        doc.setFont('helvetica', 'bold');
+        doc.text('Prenom:', 20, yPos);
+        doc.setFont('helvetica', 'normal');
+        doc.text(prenom, 50, yPos);
+        
+        yPos += 6;
+        doc.setFont('helvetica', 'bold');
+        doc.text('Tel:', 20, yPos);
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(...darkGray);
-        doc.text(invoice.user_email, 20, yPos);
+        doc.text(invoice.student_phone || 'Non renseigne', 50, yPos);
         
-        yPos += 20;
+        yPos += 6;
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(...blackColor);
+        doc.text('Email:', 20, yPos);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(...darkGray);
+        doc.text(invoice.user_email, 50, yPos);
+        
+        yPos += 15;
         
         // Tableau des prestations
         doc.setFontSize(12);
@@ -122,11 +154,29 @@ window.downloadInvoicePDF = async function(invoiceId) {
         
         doc.text(description, 20, yPos + 2);
         doc.text('1', 135, yPos + 2);
-        doc.text(`${invoice.amount.toFixed(2)} €`, 175, yPos + 2);
+        doc.text(`${invoice.amount.toFixed(2)} ${String.fromCharCode(8364)}`, 175, yPos + 2);
         
         yPos += 20;
         
-        // Total
+        // Calcul TVA 20%
+        const totalTTC = invoice.amount;
+        const totalHT = (totalTTC / 1.20).toFixed(2);
+        const montantTVA = (totalTTC - totalHT).toFixed(2);
+        
+        // Sous-total HT
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(...darkGray);
+        doc.text('Total HT', 135, yPos);
+        doc.text(`${totalHT} ${String.fromCharCode(8364)}`, 175, yPos);
+        
+        yPos += 7;
+        doc.text('TVA (20%)', 135, yPos);
+        doc.text(`${montantTVA} ${String.fromCharCode(8364)}`, 175, yPos);
+        
+        yPos += 10;
+        
+        // Total TTC
         doc.setFillColor(...fuchsiaColor);
         doc.rect(130, yPos - 5, 65, 12, 'F');
         
@@ -134,7 +184,7 @@ window.downloadInvoicePDF = async function(invoiceId) {
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(...whiteColor);
         doc.text('TOTAL TTC', 135, yPos + 3);
-        doc.text(`${invoice.amount.toFixed(2)} €`, 175, yPos + 3);
+        doc.text(`${totalTTC.toFixed(2)} ${String.fromCharCode(8364)}`, 175, yPos + 3);
         
         yPos += 25;
         
@@ -155,16 +205,16 @@ window.downloadInvoicePDF = async function(invoiceId) {
         doc.text('STATUT:', 15, yPos);
         
         doc.setFont('helvetica', 'bold');
-        doc.setTextColor([34, 197, 94]); // Vert
+        doc.setTextColor(34, 197, 94); // Vert
         doc.text('PAYE', 60, yPos);
         
-        yPos += 20;
+        yPos += 15;
         
-        // TVA non applicable
-        doc.setFontSize(9);
+        // Mentions légales SARL
+        doc.setFontSize(8);
         doc.setFont('helvetica', 'italic');
         doc.setTextColor(...darkGray);
-        doc.text('TVA non applicable - Article 293 B du CGI', 15, yPos);
+        doc.text('TVA incluse (20%)', 15, yPos);
         
         // Pied de page
         doc.setFontSize(8);
