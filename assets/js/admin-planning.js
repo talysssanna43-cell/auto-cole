@@ -1820,16 +1820,57 @@ async function sendInscriptionEmail(userEmail, userName, decision, rejectionMess
 }
 
 // Show student details modal
-window.showStudent = function(student) {
+window.showStudent = async function(student) {
     const modal = document.getElementById('studentModal');
     const details = document.getElementById('studentDetails');
     const closeBtn = document.getElementById('closeModal');
+
+    // Calculer les heures effectuées AVANT cette séance
+    let hoursBeforeThisSession = 0;
+    let sessionDuration = 0;
+    let totalHoursCompleted = student.hours_completed || 0;
+    
+    if (student.email && student.slotDate) {
+        try {
+            const slotDateTime = new Date(`${student.slotDate}T${student.slotStart}`);
+            
+            // Récupérer toutes les séances effectuées AVANT cette date
+            const { data: previousSessions } = await window.supabaseClient
+                .from('reservations')
+                .select('slots(start_at, end_at)')
+                .eq('email', student.email)
+                .eq('status', 'done')
+                .lt('slots.start_at', slotDateTime.toISOString());
+            
+            (previousSessions || []).forEach(res => {
+                if (res.slots) {
+                    const startAt = new Date(res.slots.start_at);
+                    const endAt = new Date(res.slots.end_at);
+                    const hours = (endAt - startAt) / (1000 * 60 * 60);
+                    hoursBeforeThisSession += hours;
+                }
+            });
+            
+            // Calculer la durée de cette séance
+            if (student.slotStart && student.slotEnd) {
+                const [startH, startM] = student.slotStart.split(':').map(Number);
+                const [endH, endM] = student.slotEnd.split(':').map(Number);
+                sessionDuration = (endH * 60 + endM - startH * 60 - startM) / 60;
+            }
+        } catch (err) {
+            console.error('Error calculating hours:', err);
+        }
+    }
 
     // Formater la date et l'heure du créneau
     let slotInfo = '';
     if (student.slotDate && student.slotStart && student.slotEnd) {
         const slotDate = new Date(student.slotDate);
         const dateStr = slotDate.toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
+        
+        const hourStart = Math.floor(hoursBeforeThisSession) + 1;
+        const hourEnd = Math.floor(hoursBeforeThisSession + sessionDuration);
+        
         slotInfo = `
             <div class="info-row" style="background: #f0f7ff; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
                 <span class="info-label" style="color: #0071e3; font-weight: 600;"><i class="fas fa-calendar-alt"></i> Créneau</span>
@@ -1865,8 +1906,13 @@ window.showStudent = function(student) {
             <span class="info-value" style="color: #856404; font-weight: 600;">${student.forfait || student.pack || '-'}</span>
         </div>
         <div class="info-row" style="background: #d1ecf1; padding: 12px; border-radius: 8px; margin-top: 8px;">
-            <span class="info-label" style="color: #0c5460; font-weight: 600;"><i class="fas fa-clock"></i> Heures</span>
-            <span class="info-value" style="color: #0c5460; font-weight: 600;">${student.hours_completed || 0}h effectuées / ${student.hours_goal || 0}h objectif</span>
+            <span class="info-label" style="color: #0c5460; font-weight: 600;"><i class="fas fa-clock"></i> Heures de conduite</span>
+            <span class="info-value" style="color: #0c5460; font-weight: 600;">
+                ${hoursBeforeThisSession > 0 || sessionDuration > 0 
+                    ? `Heure ${hourStart} à ${hourEnd} / ${student.hours_goal || 0}h objectif`
+                    : `${student.hours_completed || 0}h effectuées / ${student.hours_goal || 0}h objectif`
+                }
+            </span>
         </div>
         ${student.slotUuid ? `
             <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e0e0e0;">
