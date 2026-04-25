@@ -1836,37 +1836,37 @@ window.showStudent = async function(student) {
         try {
             const slotDateTime = new Date(`${student.slotDate}T${student.slotStart}`);
             
-            // Récupérer TOUTES les séances effectuées de cet élève
-            const { data: allSessions } = await window.supabaseClient
+            // Récupérer TOUTES les réservations de cet élève (done ET upcoming)
+            const { data: allReservations } = await window.supabaseClient
                 .from('reservations')
-                .select('slots(start_at, end_at), created_at')
-                .eq('email', student.email)
-                .eq('status', 'done');
+                .select('slots(start_at, end_at), status, created_at')
+                .eq('email', student.email);
             
-            // Filtrer côté JS pour ne garder que celles AVANT ce créneau
-            (allSessions || []).forEach(res => {
-                if (res.slots && res.slots.start_at) {
-                    const sessionStart = new Date(res.slots.start_at);
-                    if (sessionStart < slotDateTime) {
-                        const sessionEnd = new Date(res.slots.end_at);
-                        const hours = (sessionEnd - sessionStart) / (1000 * 60 * 60);
-                        hoursBeforeThisSession += hours;
+            // Trier par date et compter jusqu'à cette séance incluse
+            const sortedSessions = (allReservations || [])
+                .filter(res => res.slots && res.slots.start_at)
+                .sort((a, b) => new Date(a.slots.start_at) - new Date(b.slots.start_at));
+            
+            let cumulativeHours = 0;
+            for (const res of sortedSessions) {
+                const sessionStart = new Date(res.slots.start_at);
+                const sessionEnd = new Date(res.slots.end_at);
+                const hours = (sessionEnd - sessionStart) / (1000 * 60 * 60);
+                
+                // Compter jusqu'à et incluant cette séance
+                if (sessionStart <= slotDateTime) {
+                    cumulativeHours += hours;
+                    
+                    // Si c'est exactement cette séance, on s'arrête
+                    if (sessionStart.getTime() === slotDateTime.getTime()) {
+                        break;
                     }
                 }
-            });
-            
-            // Calculer la durée de cette séance
-            if (student.slotStart && student.slotEnd) {
-                const [startH, startM] = student.slotStart.split(':').map(Number);
-                const [endH, endM] = student.slotEnd.split(':').map(Number);
-                sessionDuration = (endH * 60 + endM - startH * 60 - startM) / 60;
             }
             
-            // Calculer les numéros d'heures
-            hourStart = Math.floor(hoursBeforeThisSession) + 1;
-            hourEnd = Math.floor(hoursBeforeThisSession + sessionDuration);
+            hourEnd = Math.ceil(cumulativeHours);
             
-            console.log(`📊 ${student.prenom} - Créneau ${student.slotDate} ${student.slotStart}: ${hoursBeforeThisSession}h avant → Heure ${hourEnd}`);
+            console.log(`📊 ${student.prenom} - Créneau ${student.slotDate} ${student.slotStart}: ${hourEnd}h cumulées`);
         } catch (err) {
             console.error('Error calculating hours:', err);
         }
@@ -1915,8 +1915,8 @@ window.showStudent = async function(student) {
         <div class="info-row" style="background: #d1ecf1; padding: 12px; border-radius: 8px; margin-top: 8px;">
             <span class="info-label" style="color: #0c5460; font-weight: 600;"><i class="fas fa-clock"></i> Heures de conduite</span>
             <span class="info-value" style="color: #0c5460; font-weight: 600;">
-                ${hoursBeforeThisSession > 0 || sessionDuration > 0 
-                    ? `Heure ${hourEnd} / ${student.hours_goal || 0}h objectif`
+                ${hourEnd > 0 
+                    ? `${hourEnd}h effectuées / ${student.hours_goal || 0}h objectif`
                     : `${student.hours_completed || 0}h effectuées / ${student.hours_goal || 0}h objectif`
                 }
             </span>
