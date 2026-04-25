@@ -1828,26 +1828,30 @@ window.showStudent = async function(student) {
     // Calculer les heures effectuées AVANT cette séance
     let hoursBeforeThisSession = 0;
     let sessionDuration = 0;
+    let hourStart = 0;
+    let hourEnd = 0;
     let totalHoursCompleted = student.hours_completed || 0;
     
     if (student.email && student.slotDate) {
         try {
             const slotDateTime = new Date(`${student.slotDate}T${student.slotStart}`);
             
-            // Récupérer toutes les séances effectuées AVANT cette date
-            const { data: previousSessions } = await window.supabaseClient
+            // Récupérer TOUTES les séances effectuées de cet élève
+            const { data: allSessions } = await window.supabaseClient
                 .from('reservations')
-                .select('slots(start_at, end_at)')
+                .select('slots(start_at, end_at), created_at')
                 .eq('email', student.email)
-                .eq('status', 'done')
-                .lt('slots.start_at', slotDateTime.toISOString());
+                .eq('status', 'done');
             
-            (previousSessions || []).forEach(res => {
-                if (res.slots) {
-                    const startAt = new Date(res.slots.start_at);
-                    const endAt = new Date(res.slots.end_at);
-                    const hours = (endAt - startAt) / (1000 * 60 * 60);
-                    hoursBeforeThisSession += hours;
+            // Filtrer côté JS pour ne garder que celles AVANT ce créneau
+            (allSessions || []).forEach(res => {
+                if (res.slots && res.slots.start_at) {
+                    const sessionStart = new Date(res.slots.start_at);
+                    if (sessionStart < slotDateTime) {
+                        const sessionEnd = new Date(res.slots.end_at);
+                        const hours = (sessionEnd - sessionStart) / (1000 * 60 * 60);
+                        hoursBeforeThisSession += hours;
+                    }
                 }
             });
             
@@ -1857,6 +1861,12 @@ window.showStudent = async function(student) {
                 const [endH, endM] = student.slotEnd.split(':').map(Number);
                 sessionDuration = (endH * 60 + endM - startH * 60 - startM) / 60;
             }
+            
+            // Calculer les numéros d'heures
+            hourStart = Math.floor(hoursBeforeThisSession) + 1;
+            hourEnd = Math.floor(hoursBeforeThisSession + sessionDuration);
+            
+            console.log(`📊 ${student.prenom} - Créneau ${student.slotDate} ${student.slotStart}: ${hoursBeforeThisSession}h avant → Heure ${hourEnd}`);
         } catch (err) {
             console.error('Error calculating hours:', err);
         }
@@ -1867,9 +1877,6 @@ window.showStudent = async function(student) {
     if (student.slotDate && student.slotStart && student.slotEnd) {
         const slotDate = new Date(student.slotDate);
         const dateStr = slotDate.toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
-        
-        const hourStart = Math.floor(hoursBeforeThisSession) + 1;
-        const hourEnd = Math.floor(hoursBeforeThisSession + sessionDuration);
         
         slotInfo = `
             <div class="info-row" style="background: #f0f7ff; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
@@ -1909,7 +1916,7 @@ window.showStudent = async function(student) {
             <span class="info-label" style="color: #0c5460; font-weight: 600;"><i class="fas fa-clock"></i> Heures de conduite</span>
             <span class="info-value" style="color: #0c5460; font-weight: 600;">
                 ${hoursBeforeThisSession > 0 || sessionDuration > 0 
-                    ? `Heure ${hourStart} à ${hourEnd} / ${student.hours_goal || 0}h objectif`
+                    ? `Heure ${hourEnd} / ${student.hours_goal || 0}h objectif`
                     : `${student.hours_completed || 0}h effectuées / ${student.hours_goal || 0}h objectif`
                 }
             </span>
