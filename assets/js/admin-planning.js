@@ -180,6 +180,10 @@ async function fetchBookedSlots(instructor, weekStart, weekEnd) {
 
     let packMap = new Map();
     let transmissionMap = new Map();
+    let forfaitMap = new Map();
+    let hoursCompletedMap = new Map();
+    let hoursGoalMap = new Map();
+    
     if (emails.length > 0) {
         const { data: inscriptions } = await window.supabaseClient
             .from('inscription_notifications')
@@ -193,6 +197,18 @@ async function fetchBookedSlots(instructor, weekStart, weekEnd) {
                 packMap.set(ins.user_email, ins.pack);
                 transmissionMap.set(ins.user_email, ins.transmission_type);
             }
+        });
+        
+        // Récupérer forfait et heures depuis users
+        const { data: users } = await window.supabaseClient
+            .from('users')
+            .select('email, forfait, hours_completed, hours_goal')
+            .in('email', [...new Set(emails)]);
+        
+        (users || []).forEach(user => {
+            forfaitMap.set(user.email, user.forfait);
+            hoursCompletedMap.set(user.email, user.hours_completed);
+            hoursGoalMap.set(user.email, user.hours_goal);
         });
     }
 
@@ -247,7 +263,10 @@ async function fetchBookedSlots(instructor, weekStart, weekEnd) {
                 phone: res?.phone || '',
                 email: email,
                 pack: pack,
-                transmission_type: transmissionType
+                transmission_type: transmissionType,
+                forfait: forfaitMap.get(email) || '',
+                hours_completed: hoursCompletedMap.get(email) || 0,
+                hours_goal: hoursGoalMap.get(email) || 0
             }
         });
     });
@@ -385,6 +404,10 @@ function renderPlanning(grid, instructor, weekStart, bookedSet) {
                 nom: booking.student?.last_name,
                 telephone: booking.student?.phone,
                 email: booking.student?.email,
+                pack: booking.student?.pack,
+                forfait: booking.student?.forfait,
+                hours_completed: booking.student?.hours_completed,
+                hours_goal: booking.student?.hours_goal,
                 slotDate: dateStr,
                 slotStart: start,
                 slotEnd: end,
@@ -1816,6 +1839,14 @@ window.showStudent = function(student) {
         <div class="info-row">
             <span class="info-label">Email</span>
             <span class="info-value"><a href="mailto:${student.email}">${student.email || '-'}</a></span>
+        </div>
+        <div class="info-row" style="background: #fff3cd; padding: 12px; border-radius: 8px; margin-top: 12px;">
+            <span class="info-label" style="color: #856404; font-weight: 600;"><i class="fas fa-graduation-cap"></i> Forfait</span>
+            <span class="info-value" style="color: #856404; font-weight: 600;">${student.forfait || student.pack || '-'}</span>
+        </div>
+        <div class="info-row" style="background: #d1ecf1; padding: 12px; border-radius: 8px; margin-top: 8px;">
+            <span class="info-label" style="color: #0c5460; font-weight: 600;"><i class="fas fa-clock"></i> Heures</span>
+            <span class="info-value" style="color: #0c5460; font-weight: 600;">${student.hours_completed || 0}h effectuées / ${student.hours_goal || 0}h objectif</span>
         </div>
         ${student.slotUuid ? `
             <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e0e0e0;">
