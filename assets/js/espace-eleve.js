@@ -2642,7 +2642,16 @@ function stopAutoRefresh() {
 // Fonction pour charger les factures de l'élève
 async function loadInvoices() {
     try {
-        const userEmail = localStorage.getItem('userEmail');
+        // Récupérer l'email depuis ae_user
+        const aeUser = localStorage.getItem('ae_user') || sessionStorage.getItem('ae_user');
+        if (!aeUser) {
+            console.error('Utilisateur non connecté');
+            return;
+        }
+        
+        const userData = JSON.parse(aeUser);
+        const userEmail = userData.email;
+        
         if (!userEmail) {
             console.error('Email utilisateur non trouvé');
             return;
