@@ -202,13 +202,33 @@ async function fetchBookedSlots(instructor, weekStart, weekEnd) {
         // Récupérer forfait et heures depuis users
         const { data: users } = await window.supabaseClient
             .from('users')
-            .select('email, forfait, hours_completed, hours_goal')
+            .select('email, forfait, hours_goal')
             .in('email', [...new Set(emails)]);
         
         (users || []).forEach(user => {
             forfaitMap.set(user.email, user.forfait);
-            hoursCompletedMap.set(user.email, user.hours_completed);
             hoursGoalMap.set(user.email, user.hours_goal);
+        });
+        
+        // Calculer les heures effectuées en comptant les réservations passées
+        const { data: completedReservations } = await window.supabaseClient
+            .from('reservations')
+            .select('email, slots(start_at, end_at)')
+            .in('email', [...new Set(emails)])
+            .eq('status', 'done');
+        
+        const hoursCountMap = new Map();
+        (completedReservations || []).forEach(res => {
+            if (res.slots) {
+                const startAt = new Date(res.slots.start_at);
+                const endAt = new Date(res.slots.end_at);
+                const hours = (endAt - startAt) / (1000 * 60 * 60);
+                hoursCountMap.set(res.email, (hoursCountMap.get(res.email) || 0) + hours);
+            }
+        });
+        
+        hoursCountMap.forEach((hours, email) => {
+            hoursCompletedMap.set(email, hours);
         });
     }
 
