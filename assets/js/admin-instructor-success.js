@@ -94,7 +94,11 @@ function displayInstructorSuccessRates(bonuses, instructorFilter = null) {
         }
         
         html += `
-            <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 8px; border-radius: 8px; transition: background 0.2s;" 
+                 onclick="showInstructorExamResults('${bonus.instructor}')"
+                 onmouseover="this.style.background='rgba(0,0,0,0.03)'"
+                 onmouseout="this.style.background='transparent'"
+                 title="Cliquer pour voir les détails">
                 <div style="min-width: 100px; font-weight: 600; font-size: 0.95rem;">${bonus.instructor}</div>
                 <div style="flex: 1; position: relative; height: 12px; background: rgba(0,0,0,0.06); border-radius: 6px; overflow: visible;">
                     <div style="position: absolute; left: 0; top: 0; bottom: 0; width: ${Math.min(studentCount / 20 * 100, 100)}%; background: linear-gradient(90deg, ${color1}, ${color2}); border-radius: 6px; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 2px 8px ${color1}40;"></div>
@@ -136,6 +140,137 @@ function startSuccessRateAutoRefresh() {
 
 // Variable globale pour stocker les données de bonus
 let cachedBonuses = [];
+
+// Afficher les détails des résultats d'examen d'un moniteur
+window.showInstructorExamResults = async function(instructorName) {
+    const modal = document.getElementById('instructorExamResultsModal');
+    const nameDisplay = document.getElementById('instructorNameDisplay');
+    const bodyContainer = document.getElementById('instructorExamResultsBody');
+    
+    if (!modal || !nameDisplay || !bodyContainer) return;
+    
+    nameDisplay.textContent = instructorName;
+    bodyContainer.innerHTML = '<div style="text-align: center; padding: 40px;"><i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #667eea;"></i></div>';
+    
+    modal.style.display = 'flex';
+    
+    try {
+        // Récupérer tous les résultats d'examen pour ce moniteur
+        const { data: results, error } = await window.supabaseClient
+            .from('exam_results')
+            .select('*')
+            .eq('instructor', instructorName)
+            .order('exam_date', { ascending: false });
+        
+        if (error) {
+            console.error('Erreur récupération résultats:', error);
+            bodyContainer.innerHTML = '<div style="text-align: center; padding: 40px; color: #ff3b30;">Erreur lors du chargement des résultats.</div>';
+            return;
+        }
+        
+        if (!results || results.length === 0) {
+            bodyContainer.innerHTML = '<div style="text-align: center; padding: 40px; color: #999;">Aucun résultat d\'examen pour ce moniteur.</div>';
+            return;
+        }
+        
+        // Calculer les statistiques
+        const totalExams = results.length;
+        const passedCount = results.filter(r => r.result === 'passed').length;
+        const failedCount = results.filter(r => r.result === 'failed').length;
+        const successRate = Math.round((passedCount / totalExams) * 100);
+        const avgRating = (results.reduce((sum, r) => sum + (r.rating || 0), 0) / totalExams).toFixed(1);
+        
+        let html = `
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;">
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 16px; border-radius: 12px;">
+                    <div style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 4px;">Total examens</div>
+                    <div style="font-size: 2rem; font-weight: 700;">${totalExams}</div>
+                </div>
+                <div style="background: linear-gradient(135deg, #34c759 0%, #30d158 100%); color: white; padding: 16px; border-radius: 12px;">
+                    <div style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 4px;">Réussis</div>
+                    <div style="font-size: 2rem; font-weight: 700;">${passedCount}</div>
+                </div>
+                <div style="background: linear-gradient(135deg, #ff3b30 0%, #ff6b6b 100%); color: white; padding: 16px; border-radius: 12px;">
+                    <div style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 4px;">Échoués</div>
+                    <div style="font-size: 2rem; font-weight: 700;">${failedCount}</div>
+                </div>
+                <div style="background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%); color: #000; padding: 16px; border-radius: 12px;">
+                    <div style="font-size: 0.85rem; opacity: 0.7; margin-bottom: 4px;">Note moyenne</div>
+                    <div style="font-size: 2rem; font-weight: 700;">${avgRating}/5 ⭐</div>
+                </div>
+            </div>
+            
+            <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 16px; color: #333;">
+                <i class="fas fa-list"></i> Liste des résultats
+            </h4>
+            
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+        `;
+        
+        results.forEach(result => {
+            const isPassed = result.result === 'passed';
+            const resultColor = isPassed ? '#2e7d32' : '#c62828';
+            const resultBg = isPassed ? '#c8e6c9' : '#ffcdd2';
+            const resultIcon = isPassed ? 'check-circle' : 'times-circle';
+            const resultText = isPassed ? 'Réussi' : 'Échoué';
+            
+            const stars = '⭐'.repeat(result.rating || 0);
+            const examDate = new Date(result.exam_date).toLocaleDateString('fr-FR', { 
+                day: '2-digit', 
+                month: 'long', 
+                year: 'numeric' 
+            });
+            
+            html += `
+                <div style="background: white; border: 1px solid #e0e0e0; border-radius: 12px; padding: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+                        <div>
+                            <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 4px;">${result.student_name}</div>
+                            <div style="font-size: 0.85rem; color: #666;">
+                                <i class="fas fa-calendar"></i> ${examDate}
+                            </div>
+                        </div>
+                        <div style="background: ${resultBg}; color: ${resultColor}; padding: 6px 12px; border-radius: 20px; font-weight: 600; font-size: 0.85rem;">
+                            <i class="fas fa-${resultIcon}"></i> ${resultText}
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 16px; margin-bottom: 8px; font-size: 0.9rem;">
+                        <div>
+                            <span style="color: #666;">Note:</span> 
+                            <span style="font-weight: 600; color: #ffd700;">${stars} ${result.rating}/5</span>
+                        </div>
+                    </div>
+                    
+                    ${result.appreciation ? `
+                        <div style="background: #f5f5f5; padding: 12px; border-radius: 8px; margin-top: 12px;">
+                            <div style="font-size: 0.85rem; color: #666; margin-bottom: 4px;">
+                                <i class="fas fa-comment"></i> Commentaire
+                            </div>
+                            <div style="font-size: 0.9rem; color: #333; font-style: italic;">"${result.appreciation}"</div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        });
+        
+        html += '</div>';
+        
+        bodyContainer.innerHTML = html;
+        
+    } catch (err) {
+        console.error('Erreur affichage résultats:', err);
+        bodyContainer.innerHTML = '<div style="text-align: center; padding: 40px; color: #ff3b30;">Erreur lors du chargement des résultats.</div>';
+    }
+};
+
+// Fermer la modal des détails
+window.closeInstructorExamResultsModal = function() {
+    const modal = document.getElementById('instructorExamResultsModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+};
 
 // Fonction pour rafraîchir l'affichage selon le moniteur sélectionné
 function refreshInstructorDisplay(instructorName) {
