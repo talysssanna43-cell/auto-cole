@@ -446,15 +446,16 @@ function renderSlotGrid() {
                         <span class="slot-label">${label}</span>
                         <span class="slot-status">FÉRIÉ 🎉</span>
                     `;
-                } else if (isBooked) {
+                } else if (isBooked || isDisabled) {
+                    // Créneau réservé ou passé : afficher RÉSERVÉ
                     slotContent = `
                         <span class="slot-label">${label}</span>
                         <span class="slot-status">RÉSERVÉ</span>
                     `;
                 } else {
+                    // Créneau disponible : ne rien afficher (juste l'heure)
                     slotContent = `
                         <span class="slot-label">${label}</span>
-                        <span class="slot-instructor">${slot.instructor}</span>
                     `;
                 }
                 
