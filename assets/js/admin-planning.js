@@ -1055,6 +1055,12 @@ window.displayStudentDetails = async function(student) {
                         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
                         <i class="fas fa-envelope"></i> Envoyer par email
                     </button>
+                    <button onclick="openAdminExamResultModal('${student.email}', '${student.prenom} ${student.nom}')" 
+                        style="background: linear-gradient(135deg, #FF6B6B 0%, #FF5252 100%); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s;"
+                        onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                        <i class="fas fa-trophy"></i> Saisir résultat examen
+                    </button>
                 </div>
             </div>
         `;

@@ -1139,6 +1139,87 @@
         </div>
     </div>
 
+    <!-- Modal: Admin Exam Result -->
+    <div class="modal-overlay" id="adminExamResultModal" style="display: none;">
+        <div class="modal" style="max-width: 550px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-trophy" style="margin-right:8px; color: #FF6B6B;"></i> Saisir résultat d'examen</h3>
+                <button class="modal-close" onclick="closeAdminExamResultModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="adminExamResultForm" onsubmit="submitAdminExamResult(event)">
+                    <input type="hidden" id="adminExamStudentEmail">
+                    <input type="hidden" id="adminExamStudentName">
+                    <input type="hidden" id="adminExamInstructor">
+                    
+                    <div style="background: #f0f7ff; padding: 12px; border-radius: 8px; margin-bottom: 16px;">
+                        <div style="font-weight: 600; margin-bottom: 4px;" id="adminExamStudentDisplay"></div>
+                        <div style="font-size: 0.85rem; color: #666;" id="adminExamInstructorDisplay"></div>
+                    </div>
+                    
+                    <div style="display: grid; gap: 16px;">
+                        <div>
+                            <label style="display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.9rem;">
+                                <i class="fas fa-calendar"></i> Date de l'examen
+                            </label>
+                            <input type="date" id="adminExamDate" required
+                                style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem;">
+                        </div>
+                        
+                        <div>
+                            <label style="display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.9rem;">
+                                <i class="fas fa-check-circle"></i> Résultat
+                            </label>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                <label style="cursor: pointer;">
+                                    <input type="radio" name="adminExamResult" value="passed" required style="margin-right: 6px;">
+                                    <span style="color: #2e7d32; font-weight: 600;">✅ Réussi</span>
+                                </label>
+                                <label style="cursor: pointer;">
+                                    <input type="radio" name="adminExamResult" value="failed" required style="margin-right: 6px;">
+                                    <span style="color: #c62828; font-weight: 600;">❌ Échoué</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label style="display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.9rem;">
+                                <i class="fas fa-star"></i> Note du moniteur (1-5)
+                            </label>
+                            <div style="display: flex; gap: 8px; font-size: 2rem;">
+                                <i class="far fa-star rating-star-admin" onclick="setAdminRating(1)" style="cursor: pointer; color: #ddd;"></i>
+                                <i class="far fa-star rating-star-admin" onclick="setAdminRating(2)" style="cursor: pointer; color: #ddd;"></i>
+                                <i class="far fa-star rating-star-admin" onclick="setAdminRating(3)" style="cursor: pointer; color: #ddd;"></i>
+                                <i class="far fa-star rating-star-admin" onclick="setAdminRating(4)" style="cursor: pointer; color: #ddd;"></i>
+                                <i class="far fa-star rating-star-admin" onclick="setAdminRating(5)" style="cursor: pointer; color: #ddd;"></i>
+                            </div>
+                            <input type="hidden" id="adminRatingValue" required>
+                        </div>
+                        
+                        <div>
+                            <label style="display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.9rem;">
+                                <i class="fas fa-comment"></i> Appréciation (optionnel)
+                            </label>
+                            <textarea id="adminAppreciation" rows="3" placeholder="Commentaire sur le moniteur..."
+                                style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; resize: vertical;"></textarea>
+                        </div>
+                        
+                        <div style="display: flex; gap: 10px; margin-top: 8px;">
+                            <button type="button" onclick="closeAdminExamResultModal()"
+                                style="flex: 1; padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); font-weight: 600; cursor: pointer;">
+                                Annuler
+                            </button>
+                            <button type="submit"
+                                style="flex: 1; padding: 12px; border: none; border-radius: 8px; background: linear-gradient(135deg, #FF6B6B 0%, #FF5252 100%); color: #fff; font-weight: 600; cursor: pointer;">
+                                <i class="fas fa-save"></i> Enregistrer
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script src="https://unpkg.com/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="assets/js/supabaseClient.js?v=3"></script>
@@ -1149,6 +1230,7 @@
     <script src="assets/js/admin-permis-block.js?v=10"></script>
     <script src="assets/js/admin-indisponible-block.js?v=2"></script>
     <script src="assets/js/admin-change-forfait.js?v=5"></script>
+    <script src="assets/js/admin-exam-result.js"></script>
     <script src="assets/js/admin-notif-badge.js"></script>
     <script src="assets/js/admin-mobile-menu.js"></script>
 </body>
