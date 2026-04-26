@@ -1179,6 +1179,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 searchStudent();
             }
         });
+        
+        // Autocomplete on input - afficher les suggestions pendant la frappe
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(autocompleteTimeout);
+            
+            const searchTerm = e.target.value.trim().toLowerCase();
+            
+            if (searchTerm.length >= 2) {
+                autocompleteTimeout = setTimeout(() => {
+                    showSuggestions(searchTerm);
+                }, 300);
+            } else {
+                hideSuggestions();
+            }
+        });
     }
 });
 
