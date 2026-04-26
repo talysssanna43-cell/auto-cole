@@ -65,8 +65,7 @@ async function calculateStudentMainInstructor(studentEmail) {
     const instructorInput = document.getElementById('adminExamInstructor');
     
     if (!window.supabaseClient || !studentEmail) {
-        instructorDisplay.textContent = 'Moniteur: Non déterminé';
-        instructorInput.value = '';
+        showManualInstructorSelection();
         return;
     }
     
@@ -85,14 +84,12 @@ async function calculateStudentMainInstructor(studentEmail) {
         
         if (error) {
             console.error('Erreur Supabase:', error);
-            instructorDisplay.textContent = 'Moniteur: Erreur de calcul';
-            instructorInput.value = '';
+            showManualInstructorSelection();
             return;
         }
         
         if (!reservations || reservations.length === 0) {
-            instructorDisplay.textContent = 'Moniteur: Aucune séance effectuée';
-            instructorInput.value = '';
+            showManualInstructorSelection();
             return;
         }
         
@@ -121,15 +118,39 @@ async function calculateStudentMainInstructor(studentEmail) {
             instructorDisplay.innerHTML = `Moniteur: <strong>${mainInstructor}</strong> (${maxHours}/${totalHours} séances - ${percentage}%)`;
             instructorInput.value = mainInstructor;
         } else {
-            instructorDisplay.innerHTML = `Moniteur: <strong>${mainInstructor}</strong> (${percentage}% - pas de moniteur principal)`;
-            instructorInput.value = mainInstructor; // On prend quand même le principal
+            // Afficher sélection manuelle si pas de moniteur principal
+            showManualInstructorSelection(instructorHours);
         }
         
     } catch (err) {
         console.error('Erreur calcul moniteur:', err);
-        instructorDisplay.textContent = 'Moniteur: Erreur de calcul';
-        instructorInput.value = '';
+        showManualInstructorSelection();
     }
+}
+
+// Afficher le sélecteur manuel de moniteur
+function showManualInstructorSelection(instructorHours = {}) {
+    const instructorDisplay = document.getElementById('adminExamInstructorDisplay');
+    const instructorInput = document.getElementById('adminExamInstructor');
+    
+    const instructors = Object.keys(instructorHours).length > 0 
+        ? Object.keys(instructorHours) 
+        : ['Mylène', 'Sammy', 'Nail'];
+    
+    let html = '<label style="display: block; font-weight: 600; margin-bottom: 6px;">Sélectionne le moniteur :</label>';
+    html += '<select id="manualInstructorSelect" onchange="document.getElementById(\'adminExamInstructor\').value = this.value" required style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 0.95rem;">';
+    html += '<option value="">-- Choisir un moniteur --</option>';
+    
+    instructors.forEach(instructor => {
+        const hours = instructorHours[instructor] || 0;
+        const label = hours > 0 ? `${instructor} (${hours} séances)` : instructor;
+        html += `<option value="${instructor}">${label}</option>`;
+    });
+    
+    html += '</select>';
+    
+    instructorDisplay.innerHTML = html;
+    instructorInput.value = '';
 }
 
 // Soumettre le résultat d'examen
