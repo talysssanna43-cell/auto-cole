@@ -1113,6 +1113,12 @@ window.showSuggestions = async function(searchTerm) {
             return;
         }
         
+        // Si un seul résultat, ouvrir directement la fiche
+        if (users.length === 1) {
+            await selectStudent(users[0]);
+            return;
+        }
+        
         suggestionsContainer.innerHTML = users.map((user, index) => {
             const initials = `${user.prenom?.[0] || ''}${user.nom?.[0] || ''}`.toUpperCase();
             return `
