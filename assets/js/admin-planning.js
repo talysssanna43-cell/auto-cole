@@ -1179,15 +1179,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 searchStudent();
             }
         });
-        
-        searchInput.addEventListener('input', (e) => {
-            clearTimeout(autocompleteTimeout);
-            const searchTerm = e.target.value.trim().toLowerCase();
-            
-            autocompleteTimeout = setTimeout(() => {
-                showSuggestions(searchTerm);
-            }, 300);
-        });
     }
 });
 
