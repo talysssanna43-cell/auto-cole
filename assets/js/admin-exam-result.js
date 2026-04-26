@@ -3,6 +3,12 @@ let adminSelectedRating = 0;
 
 // Ouvrir la modal pour un élève
 window.openAdminExamResultModal = async function(studentEmail, studentName) {
+    // Fermer la modal de profil de l'élève d'abord
+    const studentDetailsModal = document.getElementById('studentDetailsModal');
+    if (studentDetailsModal) {
+        studentDetailsModal.classList.remove('active');
+    }
+    
     const modal = document.getElementById('adminExamResultModal');
     if (!modal) return;
     
