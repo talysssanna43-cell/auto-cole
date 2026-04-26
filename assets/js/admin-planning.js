@@ -1132,10 +1132,11 @@ window.showSuggestions = async function(searchTerm) {
             `;
         }).join('');
         
-        // Add click event listeners to each suggestion
+        // Add mousedown event listeners to each suggestion (mousedown se déclenche avant blur)
         const suggestionItems = suggestionsContainer.querySelectorAll('.suggestion-item');
         suggestionItems.forEach((item, index) => {
-            item.addEventListener('click', () => {
+            item.addEventListener('mousedown', (e) => {
+                e.preventDefault(); // Empêcher le blur de l'input
                 selectStudent(users[index]);
             });
         });
