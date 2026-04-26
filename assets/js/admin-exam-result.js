@@ -209,16 +209,16 @@ window.submitAdminExamResult = async function(event) {
         
         if (error) throw error;
         
-        // Succès
+        // Succès - fermer la modal et rafraîchir
         closeAdminExamResultModal();
-        
-        const resultText = data.result === 'passed' ? 'Réussi ✅' : 'Échoué ❌';
-        alert(`✅ Résultat enregistré avec succès !\n\nÉlève: ${studentName}\nRésultat: ${resultText}\nMoniteur: ${instructor}\nNote: ${adminSelectedRating}/5`);
         
         // Rafraîchir les taux de réussite
         if (typeof loadInstructorSuccessRates === 'function') {
             await loadInstructorSuccessRates();
         }
+        
+        // Notification discrète (optionnel)
+        console.log(`✅ Résultat enregistré: ${studentName} - ${data.result} - ${instructor} - ${adminSelectedRating}/5`);
         
     } catch (err) {
         console.error('Erreur soumission résultat:', err);
