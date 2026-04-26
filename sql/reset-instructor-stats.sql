@@ -9,9 +9,8 @@ UPDATE instructor_bonuses
 SET 
     total_students = 0,
     passed_students = 0,
+    failed_students = 0,
     success_rate = 0,
-    total_rating = 0,
-    rating_count = 0,
     average_rating = 0,
     final_score = 0,
     bonus_amount = 0;
