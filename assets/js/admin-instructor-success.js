@@ -182,21 +182,21 @@ window.showInstructorExamResults = async function(instructorName) {
         
         let html = `
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;">
-                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 16px; border-radius: 12px;">
-                    <div style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 4px;">Total examens</div>
-                    <div style="font-size: 2rem; font-weight: 700;">${totalExams}</div>
+                <div style="background: #1a1a1a; padding: 16px; border-radius: 12px; border: 1px solid #333;">
+                    <div style="font-size: 0.85rem; color: #fff; opacity: 0.8; margin-bottom: 4px;">Total examens</div>
+                    <div style="font-size: 2rem; font-weight: 700; color: #fff;">${totalExams}</div>
                 </div>
-                <div style="background: linear-gradient(135deg, #34c759 0%, #30d158 100%); color: white; padding: 16px; border-radius: 12px;">
-                    <div style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 4px;">Réussis</div>
-                    <div style="font-size: 2rem; font-weight: 700;">${passedCount}</div>
+                <div style="background: #1a1a1a; padding: 16px; border-radius: 12px; border: 1px solid #333;">
+                    <div style="font-size: 0.85rem; color: #4ade80; opacity: 0.8; margin-bottom: 4px;">Réussis</div>
+                    <div style="font-size: 2rem; font-weight: 700; color: #4ade80;">${passedCount}</div>
                 </div>
-                <div style="background: linear-gradient(135deg, #ff3b30 0%, #ff6b6b 100%); color: white; padding: 16px; border-radius: 12px;">
-                    <div style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 4px;">Échoués</div>
-                    <div style="font-size: 2rem; font-weight: 700;">${failedCount}</div>
+                <div style="background: #1a1a1a; padding: 16px; border-radius: 12px; border: 1px solid #333;">
+                    <div style="font-size: 0.85rem; color: #f87171; opacity: 0.8; margin-bottom: 4px;">Échoués</div>
+                    <div style="font-size: 2rem; font-weight: 700; color: #f87171;">${failedCount}</div>
                 </div>
-                <div style="background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%); color: #000; padding: 16px; border-radius: 12px;">
-                    <div style="font-size: 0.85rem; opacity: 0.7; margin-bottom: 4px;">Note moyenne</div>
-                    <div style="font-size: 2rem; font-weight: 700;">${avgRating}/5 ⭐</div>
+                <div style="background: #1a1a1a; padding: 16px; border-radius: 12px; border: 1px solid #333;">
+                    <div style="font-size: 0.85rem; color: #fbbf24; opacity: 0.8; margin-bottom: 4px;">Note moyenne</div>
+                    <div style="font-size: 2rem; font-weight: 700; color: #fbbf24;">${avgRating}/5 ⭐</div>
                 </div>
             </div>
             
