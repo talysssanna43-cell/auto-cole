@@ -3435,9 +3435,14 @@ function generateDesistementsGrid(availabilities, container) {
                 return slots[dayName].includes(slot.value);
             });
             
-            html += `<td style="padding: 8px; border: 1px solid #e0e0e0; vertical-align: top; min-height: 60px;">`;
+            html += `<td style="padding: 8px; border: 1px solid #e0e0e0; vertical-align: top; min-height: 60px; background: ${availableStudents.length > 0 ? '#f0fdf4' : 'white'};">`;
             
             if (availableStudents.length > 0) {
+                // Afficher le compteur d'élèves
+                html += `<div style="font-size: 0.75rem; color: #059669; font-weight: 700; margin-bottom: 4px;">
+                    <i class="fas fa-users"></i> ${availableStudents.length} élève${availableStudents.length > 1 ? 's' : ''}
+                </div>`;
+                
                 availableStudents.forEach(student => {
                     html += `
                         <div style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white; padding: 6px 10px; border-radius: 6px; margin: 2px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s;" 
@@ -3450,7 +3455,7 @@ function generateDesistementsGrid(availabilities, container) {
                     `;
                 });
             } else {
-                html += `<span style="color: #ccc; font-style: italic; font-size: 0.85rem;">-</span>`;
+                html += `<span style="color: #ccc; font-style: italic; font-size: 0.85rem;">Aucun élève</span>`;
             }
             
             html += `</td>`;
