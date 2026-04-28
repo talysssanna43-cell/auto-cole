@@ -3396,31 +3396,21 @@ async function loadDesistementsPlanning() {
 }
 
 function generateDesistementsGrid(availabilities, container) {
-    // Jours en minuscule (= format stocké côté élève)
     const daysOfWeek = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
-    const daysLabels = { lundi: 'Lundi', mardi: 'Mardi', mercredi: 'Mercredi', jeudi: 'Jeudi', vendredi: 'Vendredi', samedi: 'Samedi' };
+    const daysLabels = { lundi: 'LUN', mardi: 'MAR', mercredi: 'MER', jeudi: 'JEU', vendredi: 'VEN', samedi: 'SAM' };
     
-    // Créneaux horaires réels de l'auto-école (= format stocké côté élève)
     const timeSlots = [
-        { label: '07h - 09h', value: '07:00-09:00' },
-        { label: '09h - 11h', value: '09:00-11:00' },
-        { label: '11h - 13h', value: '11:00-13:00' },
-        { label: '13h - 15h', value: '13:00-15:00' },
-        { label: '15h - 17h', value: '15:00-17:00' },
-        { label: '17h - 19h', value: '17:00-19:00' }
+        { label: '07h00', value: '07:00-09:00', end: '09h00' },
+        { label: '09h00', value: '09:00-11:00', end: '11h00' },
+        { label: '11h00', value: '11:00-13:00', end: '13h00' },
+        { label: '13h00', value: '13:00-15:00', end: '15h00' },
+        { label: '15h00', value: '15:00-17:00', end: '17h00' },
+        { label: '17h00', value: '17:00-19:00', end: '19h00' }
     ];
     
-    // Calculer quelle "semaine1", "semaine2" etc. correspond à la semaine admin affichée
-    // Le format stocké est "semaine1" = semaine en cours, "semaine2" = semaine +1, etc.
-    // "toutes" = toutes les semaines
-    // On récupère le weekOffset du planning admin
     const adminWeekOffset = window.planningState?.weekOffset || 0;
     const targetSemaineKey = `semaine${adminWeekOffset + 1}`;
     
-    console.log('📅 Planning désistements - Semaine admin offset:', adminWeekOffset, '→ clé:', targetSemaineKey);
-    console.log('📊 Disponibilités brutes:', availabilities);
-    
-    // Calculer les dates de la semaine affichée
     const today = new Date();
     const currentDay = today.getDay();
     const diff = currentDay === 0 ? -6 : 1 - currentDay;
@@ -3434,93 +3424,88 @@ function generateDesistementsGrid(availabilities, container) {
         weekDates.push(d);
     }
     
-    const weekStartStr = weekDates[0].toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
-    const weekEndStr = weekDates[5].toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
+    const weekStartStr = weekDates[0].toLocaleDateString('fr-FR', { day: '2-digit', month: 'long' });
+    const weekEndStr = weekDates[5].toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
+    
+    // Stocker les dispo pour le onclick
+    window._desistAvailabilities = availabilities;
     
     let html = `
-        <div style="margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between;">
-            <div style="font-weight: 600; color: #333;">
-                <i class="fas fa-calendar"></i> Semaine du ${weekStartStr} au ${weekEndStr}
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
+            <div style="font-size: 1.05rem; font-weight: 600; color: #1d1d1f; letter-spacing: -0.01em;">
+                ${weekStartStr} &rarr; ${weekEndStr}
             </div>
-            <div style="display: flex; gap: 8px;">
-                <button onclick="changeDesistementWeek(-1)" style="padding: 6px 12px; border: 1px solid #ddd; border-radius: 6px; background: white; cursor: pointer; font-size: 0.85rem;">
-                    <i class="fas fa-chevron-left"></i>
+            <div style="display: flex; gap: 6px;">
+                <button onclick="changeDesistementWeek(-1)" style="width: 36px; height: 36px; border: none; border-radius: 10px; background: #f5f5f7; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; color: #1d1d1f;" onmouseover="this.style.background='#e8e8ed'" onmouseout="this.style.background='#f5f5f7'">
+                    <i class="fas fa-chevron-left" style="font-size: 0.8rem;"></i>
                 </button>
-                <button onclick="changeDesistementWeek(1)" style="padding: 6px 12px; border: 1px solid #ddd; border-radius: 6px; background: white; cursor: pointer; font-size: 0.85rem;">
-                    <i class="fas fa-chevron-right"></i>
+                <button onclick="changeDesistementWeek(1)" style="width: 36px; height: 36px; border: none; border-radius: 10px; background: #f5f5f7; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; color: #1d1d1f;" onmouseover="this.style.background='#e8e8ed'" onmouseout="this.style.background='#f5f5f7'">
+                    <i class="fas fa-chevron-right" style="font-size: 0.8rem;"></i>
                 </button>
             </div>
         </div>
-        <div style="background: white; border-radius: 12px; overflow-x: auto; border: 1px solid #e0e0e0;">
-            <table style="width: 100%; border-collapse: collapse; min-width: 700px;">
-                <thead>
-                    <tr style="background: #f5f5f7;">
-                        <th style="padding: 12px; border: 1px solid #e0e0e0; font-weight: 700; text-align: center; width: 100px;">Horaire</th>
-                        ${daysOfWeek.map((day, i) => `
-                            <th style="padding: 10px 8px; border: 1px solid #e0e0e0; font-weight: 700; text-align: center;">
-                                ${daysLabels[day]}<br>
-                                <span style="font-weight: 400; font-size: 0.8rem; color: #666;">${weekDates[i].toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' })}</span>
-                            </th>
-                        `).join('')}
-                    </tr>
-                </thead>
-                <tbody>
+        <div style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);">
+            <div style="display: grid; grid-template-columns: 80px repeat(6, 1fr); border-bottom: 1px solid #f0f0f0;">
+                <div style="padding: 14px 8px; text-align: center; font-size: 0.75rem; font-weight: 600; color: #86868b; text-transform: uppercase; letter-spacing: 0.05em;"></div>
+                ${daysOfWeek.map((day, i) => {
+                    const isToday = weekDates[i].toDateString() === today.toDateString();
+                    return `
+                    <div style="padding: 14px 8px; text-align: center;">
+                        <div style="font-size: 0.7rem; font-weight: 600; color: ${isToday ? '#0071e3' : '#86868b'}; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">${daysLabels[day]}</div>
+                        <div style="font-size: 1.3rem; font-weight: 700; color: ${isToday ? 'white' : '#1d1d1f'}; width: 36px; height: 36px; line-height: 36px; margin: 0 auto; border-radius: 50%; ${isToday ? 'background: #0071e3;' : ''}">${weekDates[i].getDate()}</div>
+                    </div>`;
+                }).join('')}
+            </div>
     `;
     
-    timeSlots.forEach(slot => {
-        html += `<tr>`;
-        html += `<td style="padding: 10px; border: 1px solid #e0e0e0; font-weight: 700; text-align: center; background: #fafafa; color: #555; font-size: 0.9rem;">
-            ${slot.label}
-        </td>`;
+    timeSlots.forEach((slot, slotIdx) => {
+        html += `<div style="display: grid; grid-template-columns: 80px repeat(6, 1fr); ${slotIdx < timeSlots.length - 1 ? 'border-bottom: 1px solid #f5f5f5;' : ''}">`;
+        html += `<div style="padding: 12px 8px; text-align: center; font-size: 0.8rem; font-weight: 600; color: #86868b; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2px;">
+            <span>${slot.label}</span>
+            <span style="font-size: 0.65rem; font-weight: 400;">${slot.end}</span>
+        </div>`;
         
-        daysOfWeek.forEach(dayName => {
-            // Trouver les élèves disponibles pour ce jour et ce créneau
+        daysOfWeek.forEach((dayName, dayIdx) => {
             const availableStudents = availabilities.filter(avail => {
-                // Vérifier la semaine
                 const weeks = avail.availability_weeks || [];
                 const isWeekOk = weeks.includes(targetSemaineKey) || weeks.includes('toutes');
                 if (!isWeekOk) return false;
                 
-                // Vérifier le jour et le créneau
                 const slots = typeof avail.availability_slots === 'string' 
                     ? JSON.parse(avail.availability_slots) 
                     : avail.availability_slots;
                 
                 if (!slots || !slots[dayName]) return false;
-                
                 return slots[dayName].includes(slot.value);
             });
             
-            html += `<td style="padding: 6px; border: 1px solid #e0e0e0; vertical-align: top; background: ${availableStudents.length > 0 ? '#f0fdf4' : 'white'};">`;
+            const dateStr = weekDates[dayIdx].toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
+            const creneauStr = `${slot.label} - ${slot.end}`;
+            
+            html += `<div style="padding: 6px; min-height: 70px; border-left: 1px solid #f5f5f5; display: flex; flex-direction: column; gap: 3px; ${availableStudents.length > 0 ? 'background: #f0fdf4;' : ''}">`;
             
             if (availableStudents.length > 0) {
                 availableStudents.forEach(student => {
-                    const escapedName = (student.user_name || '').replace(/'/g, "\\'");
                     const escapedEmail = (student.user_email || '').replace(/'/g, "\\'");
-                    const escapedPhone = (student.user_phone || '').replace(/'/g, "\\'");
                     html += `
-                        <div style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white; padding: 5px 8px; border-radius: 6px; margin: 2px 0; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 4px;" 
-                             onclick="showStudentInfo('${escapedEmail}', '${escapedName}', '${escapedPhone}')"
-                             onmouseover="this.style.transform='scale(1.03)'; this.style.boxShadow='0 3px 8px rgba(76,175,80,0.3)';"
-                             onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';"
-                             title="${student.user_name} - ${student.user_phone || 'Pas de tél'}">
-                            <i class="fas fa-user" style="font-size: 0.7rem;"></i> ${student.user_name}
+                        <div onclick="showDesistementStudentModal('${escapedEmail}', '${dateStr}', '${creneauStr}')"
+                             style="background: #34c759; color: white; padding: 5px 8px; border-radius: 8px; font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.15s ease; display: flex; align-items: center; gap: 5px; letter-spacing: -0.01em;"
+                             onmouseover="this.style.transform='scale(1.04)'; this.style.boxShadow='0 4px 12px rgba(52,199,89,0.35)';"
+                             onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
+                            <span style="width: 22px; height: 22px; border-radius: 50%; background: rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; font-size: 0.65rem; flex-shrink: 0;">${(student.user_name || '').split(' ').map(n => n[0]).join('').toUpperCase()}</span>
+                            <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${student.user_name}</span>
                         </div>
                     `;
                 });
             }
             
-            html += `</td>`;
+            html += `</div>`;
         });
         
-        html += `</tr>`;
+        html += `</div>`;
     });
     
-    html += `
-                </tbody>
-            </table>
-        </div>
-    `;
+    html += `</div>`;
     
     container.innerHTML = html;
 }
@@ -3533,14 +3518,124 @@ window.changeDesistementWeek = async function(direction) {
     if (desistementWeekOffset < 0) desistementWeekOffset = 0;
     if (desistementWeekOffset > 3) desistementWeekOffset = 3;
     
-    // Sauvegarder l'offset pour le planning
     if (!window.planningState) window.planningState = {};
     window.planningState.weekOffset = desistementWeekOffset;
     
     await loadDesistementsPlanning();
 };
 
-window.showStudentInfo = function(email, name, phone) {
-    const phoneText = phone ? `\n📞 Téléphone: ${phone}` : '\n📞 Téléphone: Non renseigné';
-    alert(`Contacter ${name}\n\n📧 Email: ${email}${phoneText}\n\n💡 Contactez cet élève pour lui proposer le créneau libéré.`);
+// Modal détaillée de l'élève (style Apple)
+window.showDesistementStudentModal = async function(email, dateStr, creneauStr) {
+    // Chercher les infos complètes de l'élève dans la base
+    let studentData = null;
+    try {
+        const { data } = await window.supabaseClient
+            .from('users')
+            .select('prenom, nom, email, telephone, forfait, hours_completed, hours_goal')
+            .eq('email', email)
+            .maybeSingle();
+        studentData = data;
+    } catch (e) {
+        console.error('Erreur récupération élève:', e);
+    }
+    
+    // Chercher aussi dans student_availability
+    let availData = null;
+    try {
+        const { data } = await window.supabaseClient
+            .from('student_availability')
+            .select('user_name, user_phone')
+            .eq('user_email', email)
+            .maybeSingle();
+        availData = data;
+    } catch (e) {}
+    
+    const prenom = studentData?.prenom || availData?.user_name?.split(' ')[0] || '-';
+    const nom = studentData?.nom || availData?.user_name?.split(' ').slice(1).join(' ') || '-';
+    const telephone = studentData?.telephone || availData?.user_phone || '-';
+    const forfait = studentData?.forfait || '-';
+    const hoursCompleted = studentData?.hours_completed || 0;
+    const hoursGoal = studentData?.hours_goal || 0;
+    const initials = `${prenom[0] || ''}${nom[0] || ''}`.toUpperCase();
+    
+    // Supprimer modal existante
+    const existing = document.getElementById('desistementModal');
+    if (existing) existing.remove();
+    
+    const modalHTML = `
+        <div id="desistementModal" style="position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); animation: fadeIn 0.2s ease;" onclick="if(event.target===this) this.remove()">
+            <div style="background: white; border-radius: 20px; width: 420px; max-width: 92vw; box-shadow: 0 24px 80px rgba(0,0,0,0.2); overflow: hidden; animation: slideUp 0.3s ease;">
+                
+                <!-- Header -->
+                <div style="padding: 24px 24px 16px; display: flex; align-items: center; justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #34c759, #30b350); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1rem;">${initials}</div>
+                        <h3 style="font-size: 1.15rem; font-weight: 700; color: #1d1d1f; margin: 0;">Détails de l'élève</h3>
+                    </div>
+                    <button onclick="document.getElementById('desistementModal').remove()" style="width: 32px; height: 32px; border-radius: 50%; border: none; background: #f5f5f7; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #86868b; transition: all 0.15s;" onmouseover="this.style.background='#e8e8ed'" onmouseout="this.style.background='#f5f5f7'">
+                        <i class="fas fa-times" style="font-size: 0.85rem;"></i>
+                    </button>
+                </div>
+                
+                <!-- Créneau -->
+                <div style="margin: 0 24px; padding: 12px 16px; background: #fff8e1; border-radius: 12px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-calendar" style="color: #f5a623; font-size: 1rem;"></i>
+                    <div>
+                        <div style="font-weight: 700; color: #1d1d1f; font-size: 0.9rem;">CRÉNEAU</div>
+                        <div style="color: #0071e3; font-weight: 600; font-size: 0.85rem;">${dateStr} - ${creneauStr}</div>
+                    </div>
+                </div>
+                
+                <!-- Infos -->
+                <div style="padding: 20px 24px;">
+                    <div style="display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid #f0f0f0;">
+                        <span style="font-weight: 600; color: #86868b; font-size: 0.9rem;">PRÉNOM</span>
+                        <span style="font-weight: 700; color: #1d1d1f; font-size: 0.9rem;">${prenom.toUpperCase()}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid #f0f0f0;">
+                        <span style="font-weight: 600; color: #86868b; font-size: 0.9rem;">NOM</span>
+                        <span style="font-weight: 700; color: #1d1d1f; font-size: 0.9rem;">${nom.toUpperCase()}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid #f0f0f0;">
+                        <span style="font-weight: 600; color: #86868b; font-size: 0.9rem;">TÉLÉPHONE</span>
+                        <a href="tel:${telephone}" style="font-weight: 700; color: #0071e3; text-decoration: none; font-size: 0.9rem;">${telephone}</a>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid #f0f0f0;">
+                        <span style="font-weight: 600; color: #86868b; font-size: 0.9rem;">EMAIL</span>
+                        <a href="mailto:${email}" style="font-weight: 700; color: #0071e3; text-decoration: none; font-size: 0.9rem;">${email}</a>
+                    </div>
+                    
+                    <!-- Forfait -->
+                    <div style="margin-top: 16px; padding: 12px 16px; background: #fff8e1; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: 700; color: #1d1d1f; font-size: 0.9rem;"><i class="fas fa-box" style="color: #f5a623; margin-right: 6px;"></i> FORFAIT</span>
+                        <span style="font-weight: 600; color: #1d1d1f; font-size: 0.9rem;">${forfait}</span>
+                    </div>
+                    
+                    <!-- Heures -->
+                    <div style="margin-top: 8px; padding: 12px 16px; background: #e8f5e9; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: 700; color: #1d1d1f; font-size: 0.9rem;"><i class="fas fa-clock" style="color: #34c759; margin-right: 6px;"></i> HEURES DE CONDUITE</span>
+                        <span style="font-weight: 600; color: #1d1d1f; font-size: 0.9rem;">${hoursCompleted}h / ${hoursGoal}h</span>
+                    </div>
+                </div>
+                
+                <!-- Actions -->
+                <div style="padding: 0 24px 24px; display: flex; gap: 8px;">
+                    ${telephone && telephone !== '-' ? `
+                        <a href="tel:${telephone}" style="flex: 1; padding: 14px; border-radius: 14px; background: #34c759; color: white; text-decoration: none; text-align: center; font-weight: 700; font-size: 0.95rem; transition: all 0.15s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                            <i class="fas fa-phone"></i> Appeler
+                        </a>
+                    ` : ''}
+                    <a href="mailto:${email}" style="flex: 1; padding: 14px; border-radius: 14px; background: #0071e3; color: white; text-decoration: none; text-align: center; font-weight: 700; font-size: 0.95rem; transition: all 0.15s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                        <i class="fas fa-envelope"></i> Email
+                    </a>
+                </div>
+            </div>
+        </div>
+        <style>
+            @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+            @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        </style>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
 };
