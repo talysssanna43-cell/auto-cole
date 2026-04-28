@@ -2848,9 +2848,14 @@ window.openAvailabilityModal = async function() {
                         </h4>
                         <div id="availabilitySummary" style="font-size: 0.85rem; color: #2e7d32;"></div>
                     </div>
-                    <button onclick="showAvailabilityEditForm()" style="width: 100%; padding: 0.75rem; border: none; border-radius: 12px; background: #0071e3; color: white; font-weight: 700; cursor: pointer; margin-bottom: 0.5rem;">
-                        <i class="fas fa-edit"></i> Modifier mes disponibilités
-                    </button>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button onclick="showAvailabilityEditForm()" style="flex: 1; padding: 0.75rem; border: none; border-radius: 12px; background: #0071e3; color: white; font-weight: 700; cursor: pointer;">
+                            <i class="fas fa-edit"></i> Modifier
+                        </button>
+                        <button onclick="deleteMyAvailability()" style="flex: 1; padding: 0.75rem; border: none; border-radius: 12px; background: #ff3b30; color: white; font-weight: 700; cursor: pointer;">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </button>
+                    </div>
                 ` : ''}
             </div>
         </div>
@@ -2896,10 +2901,17 @@ function displayAvailabilitySummary(availability) {
     }
     html += '</div>';
     
-    html += '<div><strong>🕐 Créneaux :</strong></div>';
-    Object.keys(slots).forEach(day => {
-        const daySlots = slots[day].map(s => slotsMap[s] || s).join(', ');
-        html += `<div style="margin-left: 1rem; margin-top: 0.25rem;">• <strong>${daysMap[day] || day}</strong> : ${daySlots}</div>`;
+    html += '<div style="margin-bottom: 0.5rem;"><strong>🕐 Créneaux :</strong></div>';
+    
+    // Trier les jours dans l'ordre de la semaine
+    const daysOrder = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
+    const sortedDays = Object.keys(slots).sort((a, b) => daysOrder.indexOf(a) - daysOrder.indexOf(b));
+    
+    sortedDays.forEach(day => {
+        if (slots[day] && slots[day].length > 0) {
+            const daySlots = slots[day].map(s => slotsMap[s] || s).join(', ');
+            html += `<div style="margin-left: 1rem; margin-top: 0.25rem;">• <strong>${daysMap[day] || day}</strong> : ${daySlots}</div>`;
+        }
     });
     
     summaryDiv.innerHTML = html;
@@ -2908,6 +2920,39 @@ function displayAvailabilitySummary(availability) {
 // Afficher le formulaire d'édition
 window.showAvailabilityEditForm = function() {
     handleCancellationInterest(true);
+};
+
+// Supprimer les disponibilités
+window.deleteMyAvailability = async function() {
+    if (!confirm('Es-tu sûr(e) de vouloir supprimer toutes tes disponibilités ?\n\nTu ne recevras plus de notifications pour les créneaux de désistement.')) {
+        return;
+    }
+    
+    const userEmail = dashboardState.user?.email;
+    if (!userEmail) {
+        alert('Erreur: utilisateur non connecté');
+        return;
+    }
+    
+    try {
+        const { error } = await window.supabaseClient
+            .from('student_availability')
+            .delete()
+            .eq('user_email', userEmail);
+        
+        if (error) {
+            console.error('Erreur suppression:', error);
+            alert('❌ Erreur lors de la suppression');
+            return;
+        }
+        
+        alert('✅ Tes disponibilités ont été supprimées avec succès !');
+        closeBookingNotification();
+        
+    } catch (err) {
+        console.error('Erreur:', err);
+        alert('❌ Erreur lors de la suppression');
+    }
 };
 
 // Initialisation au chargement de la page
