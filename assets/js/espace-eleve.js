@@ -1068,10 +1068,12 @@ async function fetchBookedSlotsFromSupabase() {
         console.log('  - Fin:', weekEnd.toISOString(), '→', weekEnd.toLocaleDateString('fr-FR'));
         console.log('  - Offset semaine:', dashboardState.weekOffset);
 
-        // Récupérer les créneaux réservés via la table reservations pour être sûr de tout avoir
+        // Récupérer les créneaux réservés via la table reservations
+        // Filtrer seulement les réservations confirmées (status = upcoming, completed, done)
         const { data, error } = await window.supabaseClient
             .from('reservations')
-            .select('slot_id, slots(start_at, end_at, instructor, status)')
+            .select('slot_id, status, slots(start_at, end_at, instructor, status)')
+            .in('status', ['upcoming', 'completed', 'done'])
             .gte('slots.start_at', weekStart.toISOString())
             .lt('slots.start_at', weekEnd.toISOString());
         
