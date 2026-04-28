@@ -1982,6 +1982,25 @@ window.saveAvailabilityFromPopup = async function() {
         
         const feedback = document.getElementById('availabilityFeedbackPopup');
         
+        // Charger les disponibilités existantes pour fusionner
+        let existingSlots = {};
+        let existingWeeks = [];
+        try {
+            const { data } = await window.supabaseClient
+                .from('student_availability')
+                .select('availability_slots, availability_weeks')
+                .eq('user_email', userEmail)
+                .maybeSingle();
+            if (data) {
+                existingSlots = typeof data.availability_slots === 'string' 
+                    ? JSON.parse(data.availability_slots) 
+                    : (data.availability_slots || {});
+                existingWeeks = data.availability_weeks || [];
+            }
+        } catch (e) {
+            console.error('Erreur chargement dispo existantes:', e);
+        }
+        
         // Collect selected weeks
         const selectedWeeks = [];
         document.querySelectorAll('.week-checkbox-popup:checked').forEach(weekCheckbox => {
@@ -1998,7 +2017,7 @@ window.saveAvailabilityFromPopup = async function() {
         }
         
         // Collect selected slots
-        const availabilitySlots = {};
+        const newSlots = {};
         document.querySelectorAll('.day-checkbox-popup:checked').forEach(dayCheckbox => {
             const day = dayCheckbox.dataset.day;
             const timeSlots = document.querySelector(`.time-slots-popup[data-day="${day}"]`);
@@ -2008,13 +2027,13 @@ window.saveAvailabilityFromPopup = async function() {
                     selectedTimes.push(cb.value);
                 });
                 if (selectedTimes.length > 0) {
-                    availabilitySlots[day] = selectedTimes;
+                    newSlots[day] = selectedTimes;
                 }
             }
         });
         
         // Validate: must select at least one slot
-        if (Object.keys(availabilitySlots).length === 0) {
+        if (Object.keys(newSlots).length === 0) {
             if (feedback) {
                 feedback.textContent = '⚠️ Sélectionne au moins un jour et un créneau horaire';
                 feedback.style.color = '#d32f2f';
@@ -2022,13 +2041,25 @@ window.saveAvailabilityFromPopup = async function() {
             return;
         }
         
+        // Fusionner avec les disponibilités existantes
+        const mergedSlots = { ...existingSlots };
+        Object.keys(newSlots).forEach(day => {
+            const existing = mergedSlots[day] || [];
+            const merged = [...new Set([...existing, ...newSlots[day]])];
+            mergedSlots[day] = merged;
+        });
+        
+        const mergedWeeks = [...new Set([...existingWeeks, ...selectedWeeks])];
+        
+        console.log('💾 Sauvegarde fusionnée - Semaines:', mergedWeeks, 'Créneaux:', mergedSlots);
+        
         const payload = {
             user_email: userEmail,
             user_name: userName,
             user_phone: userPhone,
             wants_cancellation_notifications: true,
-            availability_weeks: selectedWeeks,
-            availability_slots: availabilitySlots,
+            availability_weeks: mergedWeeks,
+            availability_slots: mergedSlots,
             updated_at: new Date().toISOString()
         };
         
