@@ -3084,20 +3084,49 @@ async function loadWaitlist() {
                 </div>
             ` : '';
             
-            // Formater les disponibilités par jour
-            const availabilityHTML = daysWithSlots.map(day => {
-                const slots = availabilitySlots[day];
-                const slotsFormatted = slots.map(slot => {
-                    // Convertir "07:00-09:00" en "07h-09h"
-                    return slot.replace(/:/g, 'h').replace('-', ' - ');
-                }).join(', ');
-                
-                return `
-                    <div style="margin-bottom: 0.5rem;">
-                        <strong style="color: var(--blue);">${daysMap[day] || day}</strong>: ${slotsFormatted}
-                    </div>
-                `;
-            }).join('');
+            // Créer un mini-planning visuel
+            const timeSlotLabels = {
+                'morning': 'Matin',
+                'afternoon': 'Après-midi',
+                'evening': 'Soir'
+            };
+            
+            const daysOrder = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+            const timeSlotsOrder = ['morning', 'afternoon', 'evening'];
+            
+            const availabilityHTML = `
+                <div style="background: white; border-radius: 8px; overflow: hidden; border: 1px solid #e0e0e0;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 0.75rem;">
+                        <thead>
+                            <tr style="background: #f5f5f5;">
+                                <th style="padding: 6px; border: 1px solid #e0e0e0; font-weight: 600; text-align: left; width: 80px;">Horaire</th>
+                                ${daysOrder.map(day => `
+                                    <th style="padding: 6px; border: 1px solid #e0e0e0; font-weight: 600; text-align: center; font-size: 0.7rem;">
+                                        ${day.substring(0, 3)}
+                                    </th>
+                                `).join('')}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${timeSlotsOrder.map(timeSlot => `
+                                <tr>
+                                    <td style="padding: 6px; border: 1px solid #e0e0e0; font-weight: 600; color: #666; background: #fafafa;">
+                                        ${timeSlotLabels[timeSlot]}
+                                    </td>
+                                    ${daysOrder.map(day => {
+                                        const isAvailable = availabilitySlots[day] && availabilitySlots[day].includes(timeSlot);
+                                        return `
+                                            <td style="padding: 6px; border: 1px solid #e0e0e0; text-align: center; background: ${isAvailable ? '#d4edda' : 'white'};">
+                                                ${isAvailable ? '<i class="fas fa-check" style="color: #28a745; font-size: 0.9rem;"></i>' : '-'}
+                                            </td>
+                                        `;
+                                    }).join('')}
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
             
             return `
                 <div style="background: #f8f9fa; border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; border-left: 4px solid var(--orange); position: relative;">
