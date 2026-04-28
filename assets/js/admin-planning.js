@@ -1520,6 +1520,15 @@ window.viewInscriptionDocuments = async function(userEmail) {
                 </p>
             </div>
             
+            ${notification && notification.notes_admin ? `
+                <div style="background: #fff9e6; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; border-left: 4px solid #ffc107;">
+                    <h4 style="margin-bottom: 0.75rem; color: #856404;">
+                        <i class="fas fa-comment-dots"></i> Commentaire de l'élève
+                    </h4>
+                    <p style="margin: 0; color: #856404; white-space: pre-wrap;">${notification.notes_admin}</p>
+                </div>
+            ` : ''}
+            
             <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 12px;">
                 <h4 style="margin-bottom: 1rem;"><i class="fas fa-file-alt"></i> Documents fournis</h4>
                 ${Object.keys(documents).length === 0 ? 
@@ -1660,7 +1669,8 @@ window.handleInscriptionDecision = async function(notificationId, decision) {
                         numero_neph: notification.numero_neph || null,
                         forfait: notification.pack || null,
                         hours_goal: hoursGoal,
-                        hours_completed_initial: 0
+                        hours_completed_initial: 0,
+                        notes_admin: notification.notes_admin || null
                     }, { onConflict: 'email' });
                 
                 if (userError) {
