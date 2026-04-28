@@ -1070,10 +1070,12 @@ async function fetchBookedSlotsFromSupabase() {
 
         // Récupérer les créneaux réservés via la table reservations
         // Filtrer seulement les réservations confirmées (status = upcoming, completed, done)
+        // ET vérifier que le slot n'est pas 'available' (sinon c'est une réservation annulée)
         const { data, error } = await window.supabaseClient
             .from('reservations')
-            .select('slot_id, status, slots(start_at, end_at, instructor, status)')
+            .select('slot_id, status, slots!inner(start_at, end_at, instructor, status)')
             .in('status', ['upcoming', 'completed', 'done'])
+            .neq('slots.status', 'available')
             .gte('slots.start_at', weekStart.toISOString())
             .lt('slots.start_at', weekEnd.toISOString());
         
@@ -1107,6 +1109,14 @@ async function fetchBookedSlotsFromSupabase() {
             const slot = reservation.slots;
             if (!slot || !slot.start_at) return;
             
+            // CRITIQUE: Vérifier que le slot n'est pas 'available'
+            // Si le slot est 'available', cela signifie que la réservation a été annulée
+            // et le créneau est redevenu libre
+            if (slot.status === 'available') {
+                console.log(`⚠️ SKIP: Créneau avec status 'available' ignoré (réservation annulée)`);
+                return;
+            }
+            
             const d = new Date(slot.start_at);
             const endD = new Date(slot.end_at);
             if (Number.isNaN(d.getTime())) return;
@@ -1116,7 +1126,7 @@ async function fetchBookedSlotsFromSupabase() {
             const endStr = `${padNumber(endD.getHours())}:${padNumber(endD.getMinutes())}`;
             const slotId = buildSlotId(dateStr, startStr);
             
-            console.log(`🔑 Créneau réservé: ${dateStr} ${startStr} → ID: ${slotId} (Instructeur: ${slot.instructor})`);
+            console.log(`🔑 Créneau réservé: ${dateStr} ${startStr} → ID: ${slotId} (Instructeur: ${slot.instructor}, Status: ${slot.status})`);
             
             ids.add(slotId);
             slots.push({
