@@ -3430,6 +3430,30 @@ function generateDesistementsGrid(availabilities, container) {
     // Stocker les dispo pour le onclick
     window._desistAvailabilities = availabilities;
     
+    // Palette de couleurs variées pour chaque élève
+    const studentColors = [
+        { bg: '#0071e3', shadow: 'rgba(0,113,227,0.3)' },
+        { bg: '#ff6b6b', shadow: 'rgba(255,107,107,0.3)' },
+        { bg: '#34c759', shadow: 'rgba(52,199,89,0.3)' },
+        { bg: '#af52de', shadow: 'rgba(175,82,222,0.3)' },
+        { bg: '#ff9500', shadow: 'rgba(255,149,0,0.3)' },
+        { bg: '#00c7be', shadow: 'rgba(0,199,190,0.3)' },
+        { bg: '#ff2d55', shadow: 'rgba(255,45,85,0.3)' },
+        { bg: '#5856d6', shadow: 'rgba(88,86,214,0.3)' },
+        { bg: '#64d2ff', shadow: 'rgba(100,210,255,0.3)' },
+        { bg: '#30b0c7', shadow: 'rgba(48,176,199,0.3)' }
+    ];
+    
+    // Associer une couleur à chaque email unique
+    const emailColorMap = {};
+    let colorIdx = 0;
+    availabilities.forEach(a => {
+        if (!emailColorMap[a.user_email]) {
+            emailColorMap[a.user_email] = studentColors[colorIdx % studentColors.length];
+            colorIdx++;
+        }
+    });
+    
     let html = `
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
             <div style="font-size: 1.05rem; font-weight: 600; color: #1d1d1f; letter-spacing: -0.01em;">
@@ -3445,25 +3469,33 @@ function generateDesistementsGrid(availabilities, container) {
             </div>
         </div>
         <div style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);">
-            <div style="display: grid; grid-template-columns: 80px repeat(6, 1fr); border-bottom: 1px solid #f0f0f0;">
-                <div style="padding: 14px 8px; text-align: center; font-size: 0.75rem; font-weight: 600; color: #86868b; text-transform: uppercase; letter-spacing: 0.05em;"></div>
-                ${daysOfWeek.map((day, i) => {
-                    const isToday = weekDates[i].toDateString() === today.toDateString();
-                    return `
-                    <div style="padding: 14px 8px; text-align: center;">
-                        <div style="font-size: 0.7rem; font-weight: 600; color: ${isToday ? '#0071e3' : '#86868b'}; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">${daysLabels[day]}</div>
-                        <div style="font-size: 1.3rem; font-weight: 700; color: ${isToday ? 'white' : '#1d1d1f'}; width: 36px; height: 36px; line-height: 36px; margin: 0 auto; border-radius: 50%; ${isToday ? 'background: #0071e3;' : ''}">${weekDates[i].getDate()}</div>
-                    </div>`;
-                }).join('')}
-            </div>
+            <table style="width: 100%; border-collapse: collapse; table-layout: fixed;">
+                <colgroup>
+                    <col style="width: 80px;">
+                    <col span="6">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th style="padding: 14px 4px; text-align: center; background: white; border-bottom: 1px solid #f0f0f0;"></th>
+                        ${daysOfWeek.map((day, i) => {
+                            const isToday = weekDates[i].toDateString() === today.toDateString();
+                            return `
+                            <th style="padding: 12px 4px; text-align: center; background: white; border-bottom: 1px solid #f0f0f0;">
+                                <div style="font-size: 0.7rem; font-weight: 600; color: ${isToday ? '#0071e3' : '#86868b'}; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">${daysLabels[day]}</div>
+                                <div style="font-size: 1.25rem; font-weight: 700; color: ${isToday ? 'white' : '#1d1d1f'}; width: 34px; height: 34px; line-height: 34px; margin: 0 auto; border-radius: 50%; ${isToday ? 'background: #0071e3;' : ''}">${weekDates[i].getDate()}</div>
+                            </th>`;
+                        }).join('')}
+                    </tr>
+                </thead>
+                <tbody>
     `;
     
     timeSlots.forEach((slot, slotIdx) => {
-        html += `<div style="display: grid; grid-template-columns: 80px repeat(6, 1fr); ${slotIdx < timeSlots.length - 1 ? 'border-bottom: 1px solid #f5f5f5;' : ''}">`;
-        html += `<div style="padding: 12px 8px; text-align: center; font-size: 0.8rem; font-weight: 600; color: #86868b; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2px;">
-            <span>${slot.label}</span>
-            <span style="font-size: 0.65rem; font-weight: 400;">${slot.end}</span>
-        </div>`;
+        html += `<tr>`;
+        html += `<td style="padding: 8px 4px; text-align: center; font-size: 0.78rem; font-weight: 600; color: #86868b; vertical-align: middle; border-bottom: 1px solid #f5f5f5;">
+            <div>${slot.label}</div>
+            <div style="font-size: 0.62rem; font-weight: 400; color: #b0b0b5;">${slot.end}</div>
+        </td>`;
         
         daysOfWeek.forEach((dayName, dayIdx) => {
             const availableStudents = availabilities.filter(avail => {
@@ -3482,30 +3514,36 @@ function generateDesistementsGrid(availabilities, container) {
             const dateStr = weekDates[dayIdx].toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
             const creneauStr = `${slot.label} - ${slot.end}`;
             
-            html += `<div style="padding: 6px; min-height: 70px; border-left: 1px solid #f5f5f5; display: flex; flex-direction: column; gap: 3px; ${availableStudents.length > 0 ? 'background: #f0fdf4;' : ''}">`;
+            html += `<td style="padding: 4px; vertical-align: top; border-bottom: 1px solid #f5f5f5; border-left: 1px solid #f5f5f5;">`;
             
             if (availableStudents.length > 0) {
                 availableStudents.forEach(student => {
                     const escapedEmail = (student.user_email || '').replace(/'/g, "\\'");
+                    const color = emailColorMap[student.user_email] || studentColors[0];
+                    const initials = (student.user_name || '').split(' ').map(n => n[0]).join('').toUpperCase();
                     html += `
                         <div onclick="showDesistementStudentModal('${escapedEmail}', '${dateStr}', '${creneauStr}')"
-                             style="background: #34c759; color: white; padding: 5px 8px; border-radius: 8px; font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.15s ease; display: flex; align-items: center; gap: 5px; letter-spacing: -0.01em;"
-                             onmouseover="this.style.transform='scale(1.04)'; this.style.boxShadow='0 4px 12px rgba(52,199,89,0.35)';"
-                             onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
-                            <span style="width: 22px; height: 22px; border-radius: 50%; background: rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; font-size: 0.65rem; flex-shrink: 0;">${(student.user_name || '').split(' ').map(n => n[0]).join('').toUpperCase()}</span>
+                             style="background: ${color.bg}; color: white; padding: 4px 6px; border-radius: 8px; margin: 2px; font-size: 0.72rem; font-weight: 600; cursor: pointer; transition: all 0.15s ease; display: flex; align-items: center; gap: 4px; overflow: hidden;"
+                             onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 3px 10px ${color.shadow}';"
+                             onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                            <span style="width: 20px; height: 20px; min-width: 20px; border-radius: 50%; background: rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; font-size: 0.58rem;">${initials}</span>
                             <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${student.user_name}</span>
                         </div>
                     `;
                 });
             }
             
-            html += `</div>`;
+            html += `</td>`;
         });
         
-        html += `</div>`;
+        html += `</tr>`;
     });
     
-    html += `</div>`;
+    html += `
+                </tbody>
+            </table>
+        </div>
+    `;
     
     container.innerHTML = html;
 }
