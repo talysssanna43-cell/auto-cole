@@ -1379,6 +1379,15 @@ window.loadInscriptionNotifications = async function() {
                                     ` : ''}
                                 </div>
                             </div>
+                            
+                            ${notif.notes_admin ? `
+                            <div style="margin-top: 1rem; padding: 1rem; background: #fff9e6; border-left: 4px solid #ffc107; border-radius: 8px;">
+                                <h4 style="margin: 0 0 0.5rem 0; font-size: 0.95rem; color: #856404;">
+                                    <i class="fas fa-comment-dots"></i> Commentaire de l'élève
+                                </h4>
+                                <p style="margin: 0; color: #856404; white-space: pre-wrap; font-size: 0.9rem;">${notif.notes_admin}</p>
+                            </div>
+                            ` : ''}
                         </div>
                         
                         <div class="inscription-card-footer">
