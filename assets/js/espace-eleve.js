@@ -2927,8 +2927,70 @@ function displayAvailabilitySummary(availability) {
 }
 
 // Afficher le formulaire d'édition
-window.showAvailabilityEditForm = function() {
+window.showAvailabilityEditForm = async function() {
+    const userEmail = dashboardState.user?.email;
+    
+    // Charger les disponibilités existantes
+    let existingAvailability = null;
+    if (userEmail) {
+        try {
+            const { data } = await window.supabaseClient
+                .from('student_availability')
+                .select('*')
+                .eq('user_email', userEmail)
+                .maybeSingle();
+            existingAvailability = data;
+        } catch (e) {
+            console.error('Erreur chargement dispo:', e);
+        }
+    }
+    
+    // Afficher le formulaire
     handleCancellationInterest(true);
+    
+    // Attendre que le formulaire soit généré
+    setTimeout(() => {
+        if (existingAvailability) {
+            console.log('🔄 Pré-remplissage du formulaire avec:', existingAvailability);
+            
+            // Pré-cocher les semaines
+            const weeks = existingAvailability.availability_weeks || [];
+            weeks.forEach(week => {
+                const weekCheckbox = document.querySelector(`.week-checkbox-popup[value="${week}"]`);
+                if (weekCheckbox) {
+                    weekCheckbox.checked = true;
+                }
+            });
+            
+            // Pré-cocher les jours et créneaux
+            const slots = typeof existingAvailability.availability_slots === 'string' 
+                ? JSON.parse(existingAvailability.availability_slots) 
+                : existingAvailability.availability_slots;
+            
+            Object.keys(slots).forEach(day => {
+                // Cocher le jour
+                const dayCheckbox = document.querySelector(`.day-checkbox-popup[data-day="${day}"]`);
+                if (dayCheckbox) {
+                    dayCheckbox.checked = true;
+                    // Afficher les créneaux
+                    const timeSlots = document.querySelector(`.time-slots-popup[data-day="${day}"]`);
+                    if (timeSlots) {
+                        timeSlots.style.display = 'block';
+                    }
+                }
+                
+                // Cocher les créneaux horaires
+                slots[day].forEach(timeSlot => {
+                    const timeCheckbox = document.querySelector(`.time-slots-popup[data-day="${day}"] input[value="${timeSlot}"]`);
+                    if (timeCheckbox) {
+                        timeCheckbox.checked = true;
+                    }
+                });
+            });
+            
+            console.log('✅ Formulaire pré-rempli avec les disponibilités existantes');
+        }
+    }, 300);
 };
 
 // Supprimer les disponibilités
