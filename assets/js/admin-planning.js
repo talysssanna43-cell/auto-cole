@@ -3086,39 +3086,44 @@ async function loadWaitlist() {
             ` : '';
             
             // Créer un mini-planning visuel
-            const timeSlotLabels = {
-                'morning': 'Matin',
-                'afternoon': 'Après-midi',
-                'evening': 'Soir'
-            };
+            // Les créneaux stockés sont au format '07:00-09:00', '09:00-11:00', etc.
+            // Les jours sont en minuscule : 'lundi', 'mardi', etc.
+            const miniTimeSlots = [
+                { label: '07-09h', value: '07:00-09:00' },
+                { label: '09-11h', value: '09:00-11:00' },
+                { label: '11-13h', value: '11:00-13:00' },
+                { label: '13-15h', value: '13:00-15:00' },
+                { label: '15-17h', value: '15:00-17:00' },
+                { label: '17-19h', value: '17:00-19:00' }
+            ];
             
-            const daysOrder = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
-            const timeSlotsOrder = ['morning', 'afternoon', 'evening'];
+            const miniDaysOrder = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
+            const miniDaysLabels = { lundi: 'Lun', mardi: 'Mar', mercredi: 'Mer', jeudi: 'Jeu', vendredi: 'Ven', samedi: 'Sam' };
             
             const availabilityHTML = `
                 <div style="background: white; border-radius: 8px; overflow: hidden; border: 1px solid #e0e0e0;">
                     <table style="width: 100%; border-collapse: collapse; font-size: 0.75rem;">
                         <thead>
                             <tr style="background: #f5f5f5;">
-                                <th style="padding: 6px; border: 1px solid #e0e0e0; font-weight: 600; text-align: left; width: 80px;">Horaire</th>
-                                ${daysOrder.map(day => `
-                                    <th style="padding: 6px; border: 1px solid #e0e0e0; font-weight: 600; text-align: center; font-size: 0.7rem;">
-                                        ${day.substring(0, 3)}
+                                <th style="padding: 6px; border: 1px solid #e0e0e0; font-weight: 600; text-align: left; width: 60px;"></th>
+                                ${miniDaysOrder.map(day => `
+                                    <th style="padding: 4px; border: 1px solid #e0e0e0; font-weight: 600; text-align: center; font-size: 0.7rem;">
+                                        ${miniDaysLabels[day]}
                                     </th>
                                 `).join('')}
                             </tr>
                         </thead>
                         <tbody>
-                            ${timeSlotsOrder.map(timeSlot => `
+                            ${miniTimeSlots.map(slot => `
                                 <tr>
-                                    <td style="padding: 6px; border: 1px solid #e0e0e0; font-weight: 600; color: #666; background: #fafafa;">
-                                        ${timeSlotLabels[timeSlot]}
+                                    <td style="padding: 4px; border: 1px solid #e0e0e0; font-weight: 600; color: #666; background: #fafafa; font-size: 0.65rem;">
+                                        ${slot.label}
                                     </td>
-                                    ${daysOrder.map(day => {
-                                        const isAvailable = availabilitySlots[day] && availabilitySlots[day].includes(timeSlot);
+                                    ${miniDaysOrder.map(day => {
+                                        const isAvailable = availabilitySlots[day] && availabilitySlots[day].includes(slot.value);
                                         return `
-                                            <td style="padding: 6px; border: 1px solid #e0e0e0; text-align: center; background: ${isAvailable ? '#d4edda' : 'white'};">
-                                                ${isAvailable ? '<i class="fas fa-check" style="color: #28a745; font-size: 0.9rem;"></i>' : '-'}
+                                            <td style="padding: 4px; border: 1px solid #e0e0e0; text-align: center; background: ${isAvailable ? '#d4edda' : 'white'};">
+                                                ${isAvailable ? '<i class="fas fa-check" style="color: #28a745; font-size: 0.8rem;"></i>' : ''}
                                             </td>
                                         `;
                                     }).join('')}
@@ -3391,33 +3396,70 @@ async function loadDesistementsPlanning() {
 }
 
 function generateDesistementsGrid(availabilities, container) {
-    const daysOfWeek = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+    // Jours en minuscule (= format stocké côté élève)
+    const daysOfWeek = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
+    const daysLabels = { lundi: 'Lundi', mardi: 'Mardi', mercredi: 'Mercredi', jeudi: 'Jeudi', vendredi: 'Vendredi', samedi: 'Samedi' };
+    
+    // Créneaux horaires réels de l'auto-école (= format stocké côté élève)
     const timeSlots = [
-        { label: '07:00 - 09:00', value: 'morning' },
-        { label: '09:00 - 12:00', value: 'morning' },
-        { label: '12:00 - 14:00', value: 'afternoon' },
-        { label: '14:00 - 17:00', value: 'afternoon' },
-        { label: '17:00 - 19:00', value: 'evening' },
-        { label: '19:00 - 21:00', value: 'evening' }
+        { label: '07h - 09h', value: '07:00-09:00' },
+        { label: '09h - 11h', value: '09:00-11:00' },
+        { label: '11h - 13h', value: '11:00-13:00' },
+        { label: '13h - 15h', value: '13:00-15:00' },
+        { label: '15h - 17h', value: '15:00-17:00' },
+        { label: '17h - 19h', value: '17:00-19:00' }
     ];
     
-    // Calculer le numéro de semaine actuel
-    const today = new Date();
-    const startOfYear = new Date(today.getFullYear(), 0, 1);
-    const days = Math.floor((today - startOfYear) / (24 * 60 * 60 * 1000));
-    const currentWeekNumber = Math.ceil((days + startOfYear.getDay() + 1) / 7);
+    // Calculer quelle "semaine1", "semaine2" etc. correspond à la semaine admin affichée
+    // Le format stocké est "semaine1" = semaine en cours, "semaine2" = semaine +1, etc.
+    // "toutes" = toutes les semaines
+    // On récupère le weekOffset du planning admin
+    const adminWeekOffset = window.planningState?.weekOffset || 0;
+    const targetSemaineKey = `semaine${adminWeekOffset + 1}`;
     
-    console.log('📅 Semaine actuelle:', currentWeekNumber);
+    console.log('📅 Planning désistements - Semaine admin offset:', adminWeekOffset, '→ clé:', targetSemaineKey);
+    console.log('📊 Disponibilités brutes:', availabilities);
+    
+    // Calculer les dates de la semaine affichée
+    const today = new Date();
+    const currentDay = today.getDay();
+    const diff = currentDay === 0 ? -6 : 1 - currentDay;
+    const monday = new Date(today);
+    monday.setDate(today.getDate() + diff + (adminWeekOffset * 7));
+    
+    const weekDates = [];
+    for (let i = 0; i < 6; i++) {
+        const d = new Date(monday);
+        d.setDate(monday.getDate() + i);
+        weekDates.push(d);
+    }
+    
+    const weekStartStr = weekDates[0].toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
+    const weekEndStr = weekDates[5].toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
     
     let html = `
-        <div style="background: white; border-radius: 12px; overflow: hidden; border: 1px solid #e0e0e0;">
-            <table style="width: 100%; border-collapse: collapse;">
+        <div style="margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between;">
+            <div style="font-weight: 600; color: #333;">
+                <i class="fas fa-calendar"></i> Semaine du ${weekStartStr} au ${weekEndStr}
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <button onclick="changeDesistementWeek(-1)" style="padding: 6px 12px; border: 1px solid #ddd; border-radius: 6px; background: white; cursor: pointer; font-size: 0.85rem;">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button onclick="changeDesistementWeek(1)" style="padding: 6px 12px; border: 1px solid #ddd; border-radius: 6px; background: white; cursor: pointer; font-size: 0.85rem;">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+        <div style="background: white; border-radius: 12px; overflow-x: auto; border: 1px solid #e0e0e0;">
+            <table style="width: 100%; border-collapse: collapse; min-width: 700px;">
                 <thead>
                     <tr style="background: #f5f5f7;">
-                        <th style="padding: 12px; border: 1px solid #e0e0e0; font-weight: 600; text-align: center; width: 120px;">Horaire</th>
-                        ${daysOfWeek.map(day => `
-                            <th style="padding: 12px; border: 1px solid #e0e0e0; font-weight: 600; text-align: center;">
-                                ${day}
+                        <th style="padding: 12px; border: 1px solid #e0e0e0; font-weight: 700; text-align: center; width: 100px;">Horaire</th>
+                        ${daysOfWeek.map((day, i) => `
+                            <th style="padding: 10px 8px; border: 1px solid #e0e0e0; font-weight: 700; text-align: center;">
+                                ${daysLabels[day]}<br>
+                                <span style="font-weight: 400; font-size: 0.8rem; color: #666;">${weekDates[i].toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' })}</span>
                             </th>
                         `).join('')}
                     </tr>
@@ -3427,56 +3469,45 @@ function generateDesistementsGrid(availabilities, container) {
     
     timeSlots.forEach(slot => {
         html += `<tr>`;
-        html += `<td style="padding: 12px; border: 1px solid #e0e0e0; font-weight: 600; text-align: center; background: #fafafa; color: #666;">
+        html += `<td style="padding: 10px; border: 1px solid #e0e0e0; font-weight: 700; text-align: center; background: #fafafa; color: #555; font-size: 0.9rem;">
             ${slot.label}
         </td>`;
         
         daysOfWeek.forEach(dayName => {
             // Trouver les élèves disponibles pour ce jour et ce créneau
             const availableStudents = availabilities.filter(avail => {
-                // Vérifier si l'élève est disponible pour la semaine actuelle
+                // Vérifier la semaine
                 const weeks = avail.availability_weeks || [];
-                console.log(`Élève ${avail.user_name}: semaines dispo =`, weeks, 'semaine actuelle =', currentWeekNumber);
+                const isWeekOk = weeks.includes(targetSemaineKey) || weeks.includes('toutes');
+                if (!isWeekOk) return false;
                 
-                if (!weeks.includes(currentWeekNumber)) {
-                    console.log(`❌ ${avail.user_name} pas dispo cette semaine`);
-                    return false;
-                }
-                
+                // Vérifier le jour et le créneau
                 const slots = typeof avail.availability_slots === 'string' 
                     ? JSON.parse(avail.availability_slots) 
                     : avail.availability_slots;
                 
                 if (!slots || !slots[dayName]) return false;
                 
-                const isAvailable = slots[dayName].includes(slot.value);
-                if (isAvailable) {
-                    console.log(`✅ ${avail.user_name} dispo ${dayName} ${slot.value}`);
-                }
-                return isAvailable;
+                return slots[dayName].includes(slot.value);
             });
             
-            html += `<td style="padding: 8px; border: 1px solid #e0e0e0; vertical-align: top; min-height: 60px; background: ${availableStudents.length > 0 ? '#f0fdf4' : 'white'};">`;
+            html += `<td style="padding: 6px; border: 1px solid #e0e0e0; vertical-align: top; background: ${availableStudents.length > 0 ? '#f0fdf4' : 'white'};">`;
             
             if (availableStudents.length > 0) {
-                // Afficher le compteur d'élèves
-                html += `<div style="font-size: 0.75rem; color: #059669; font-weight: 700; margin-bottom: 4px;">
-                    <i class="fas fa-users"></i> ${availableStudents.length} élève${availableStudents.length > 1 ? 's' : ''}
-                </div>`;
-                
                 availableStudents.forEach(student => {
+                    const escapedName = (student.user_name || '').replace(/'/g, "\\'");
+                    const escapedEmail = (student.user_email || '').replace(/'/g, "\\'");
+                    const escapedPhone = (student.user_phone || '').replace(/'/g, "\\'");
                     html += `
-                        <div style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white; padding: 6px 10px; border-radius: 6px; margin: 2px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s;" 
-                             onclick="showStudentInfo('${student.user_email}', '${student.user_name}', '${student.user_phone || ''}')"
-                             onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(76, 175, 80, 0.3)';"
-                             onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';"
-                             title="Cliquer pour voir les coordonnées">
-                            <i class="fas fa-user"></i> ${student.user_name}
+                        <div style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white; padding: 5px 8px; border-radius: 6px; margin: 2px 0; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 4px;" 
+                             onclick="showStudentInfo('${escapedEmail}', '${escapedName}', '${escapedPhone}')"
+                             onmouseover="this.style.transform='scale(1.03)'; this.style.boxShadow='0 3px 8px rgba(76,175,80,0.3)';"
+                             onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';"
+                             title="${student.user_name} - ${student.user_phone || 'Pas de tél'}">
+                            <i class="fas fa-user" style="font-size: 0.7rem;"></i> ${student.user_name}
                         </div>
                     `;
                 });
-            } else {
-                html += `<span style="color: #ccc; font-style: italic; font-size: 0.85rem;">Aucun élève</span>`;
             }
             
             html += `</td>`;
@@ -3494,7 +3525,22 @@ function generateDesistementsGrid(availabilities, container) {
     container.innerHTML = html;
 }
 
+// Navigation par semaine du planning désistements
+let desistementWeekOffset = 0;
+
+window.changeDesistementWeek = async function(direction) {
+    desistementWeekOffset += direction;
+    if (desistementWeekOffset < 0) desistementWeekOffset = 0;
+    if (desistementWeekOffset > 3) desistementWeekOffset = 3;
+    
+    // Sauvegarder l'offset pour le planning
+    if (!window.planningState) window.planningState = {};
+    window.planningState.weekOffset = desistementWeekOffset;
+    
+    await loadDesistementsPlanning();
+};
+
 window.showStudentInfo = function(email, name, phone) {
-    const phoneText = phone ? `\nTéléphone: ${phone}` : '\nTéléphone: Non renseigné';
-    alert(`📞 Contacter ${name}\n\nEmail: ${email}${phoneText}\n\nVous pouvez contacter cet élève pour lui proposer ce créneau en cas de désistement.`);
+    const phoneText = phone ? `\n📞 Téléphone: ${phone}` : '\n📞 Téléphone: Non renseigné';
+    alert(`Contacter ${name}\n\n📧 Email: ${email}${phoneText}\n\n💡 Contactez cet élève pour lui proposer le créneau libéré.`);
 };
