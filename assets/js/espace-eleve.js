@@ -2930,11 +2930,31 @@ function displayAvailabilitySummary(availability) {
     const daysMap = { lundi: 'Lundi', mardi: 'Mardi', mercredi: 'Mercredi', jeudi: 'Jeudi', vendredi: 'Vendredi', samedi: 'Samedi' };
     const slotsMap = { '07:00-09:00': '07h-09h', '09:00-11:00': '09h-11h', '11:00-13:00': '11h-13h', '13:00-15:00': '13h-15h', '15:00-17:00': '15h-17h', '17:00-19:00': '17h-19h' };
     
+    // Fonction pour calculer les dates d'une semaine
+    const getWeekDates = (weekKey) => {
+        if (weekKey === 'toutes') return 'Toutes les semaines';
+        
+        const weekNum = parseInt(weekKey.replace('semaine', ''));
+        const today = new Date();
+        const currentDay = today.getDay();
+        const diff = currentDay === 0 ? -6 : 1 - currentDay;
+        const monday = new Date(today);
+        monday.setDate(today.getDate() + diff + ((weekNum - 1) * 7));
+        
+        const saturday = new Date(monday);
+        saturday.setDate(monday.getDate() + 5);
+        
+        const startStr = monday.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
+        const endStr = saturday.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
+        
+        return `${startStr} → ${endStr}`;
+    };
+    
     let html = '<div style="margin-bottom: 0.75rem;"><strong>📅 Semaines :</strong> ';
     if (weeks.includes('toutes')) {
         html += 'Toutes les semaines';
     } else {
-        html += weeks.map(w => w.replace('semaine', 'Semaine ')).join(', ');
+        html += weeks.map(w => getWeekDates(w)).join(', ');
     }
     html += '</div>';
     
