@@ -192,10 +192,12 @@ let skipPack = false;
 function toggleDocumentsSection() {
     const selectedPack = document.querySelector('input[name="pack"]:checked');
     const documentsSection = document.getElementById('documentsSection');
+    const commentaireSection = document.getElementById('commentaireSection');
     const permisInvalide = document.querySelector('input[name="permisInvalide"]:checked')?.value === 'oui';
     
     if (selectedPack && documentsSection) {
         documentsSection.style.display = 'block';
+        if (commentaireSection) commentaireSection.style.display = 'block';
         
         // Show/hide documents based on license invalidation status
         const allDocs = documentsSection.querySelectorAll('.file-upload-wrapper');
@@ -225,8 +227,9 @@ function toggleDocumentsSection() {
         
         // Re-check age to ensure parent document visibility is correct
         checkAge();
-    } else if (documentsSection) {
-        documentsSection.style.display = 'none';
+    } else {
+        if (documentsSection) documentsSection.style.display = 'none';
+        if (commentaireSection) commentaireSection.style.display = 'none';
     }
 }
 
@@ -1022,7 +1025,8 @@ async function processInscription(data) {
                 parent_prenom: data.parentPrenom || null,
                 parent_nom: data.parentNom || null,
                 is_heberge: data.heberge || null,
-                permis_invalide: data.permisInvalide || null
+                permis_invalide: data.permisInvalide || null,
+                notes_admin: data.commentaireInscription || null
             };
             
             // Calculer heures selon le pack
