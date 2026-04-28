@@ -460,9 +460,10 @@ function renderSlotGrid() {
                         <span class="slot-status">RÉSERVÉ</span>
                     `;
                 } else {
-                    // Créneau disponible : ne rien afficher (juste l'heure)
+                    // Créneau disponible : afficher DISPONIBLE
                     slotContent = `
                         <span class="slot-label">${label}</span>
+                        <span class="slot-status" style="color: #155724; font-weight: 700;">DISPONIBLE ✓</span>
                     `;
                 }
                 
