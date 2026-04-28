@@ -411,6 +411,13 @@ function renderSlotGrid() {
                 const isDisabled = isPast || isBooked;
                 const isSelected = !isDisabled && dashboardState.selectedSlotId === slot.id;
                 
+                // Debug: afficher pourquoi le créneau est désactivé
+                if (isDisabled && !slot.isJourFerme && !slot.isFerie) {
+                    console.log(`⚠️ Créneau désactivé: ${slot.id} (${slot.date} ${slot.start})`);
+                    console.log(`  - isPast: ${isPast} (slotTime: ${new Date(slotTime).toLocaleString()}, now: ${new Date(now).toLocaleString()})`);
+                    console.log(`  - isBooked: ${isBooked}`);
+                }
+                
                 if (isBooked) {
                     console.log(`🔒 Créneau RÉSERVÉ détecté: ${slot.id} (${slot.date} ${slot.start})`);
                 }
