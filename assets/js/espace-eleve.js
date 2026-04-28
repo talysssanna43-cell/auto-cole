@@ -2804,11 +2804,28 @@ async function loadInvoices() {
 // OPEN AVAILABILITY MODAL (bouton "Mes disponibilités")
 // ============================================
 
-window.openAvailabilityModal = function() {
+window.openAvailabilityModal = async function() {
     // Supprimer toute notification existante
     const existingNotif = document.getElementById('bookingNotification');
     if (existingNotif) {
         existingNotif.remove();
+    }
+    
+    const userEmail = dashboardState.user?.email;
+    
+    // Charger les disponibilités existantes
+    let existingAvailability = null;
+    if (userEmail) {
+        try {
+            const { data } = await window.supabaseClient
+                .from('student_availability')
+                .select('*')
+                .eq('user_email', userEmail)
+                .maybeSingle();
+            existingAvailability = data;
+        } catch (e) {
+            console.error('Erreur chargement dispo:', e);
+        }
     }
     
     // Créer la popup de disponibilités
@@ -2822,8 +2839,19 @@ window.openAvailabilityModal = function() {
                 </div>
                 <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">📅 Mes disponibilités</h3>
                 <p style="color: #6c757d; margin-bottom: 1rem; font-size: 0.85rem;">
-                    Indique-nous quand tu es disponible pour qu'on puisse te proposer des créneaux en cas de désistement.
+                    ${existingAvailability ? 'Voici tes disponibilités actuelles. Tu peux les modifier ci-dessous.' : 'Indique-nous quand tu es disponible pour qu\'on puisse te proposer des créneaux en cas de désistement.'}
                 </p>
+                ${existingAvailability ? `
+                    <div id="currentAvailabilityDisplay" style="background: #e8f5e9; padding: 1rem; border-radius: 12px; margin-bottom: 1rem; border-left: 4px solid #34c759;">
+                        <h4 style="margin: 0 0 0.75rem 0; font-size: 0.95rem; color: #2e7d32; font-weight: 700;">
+                            <i class="fas fa-check-circle"></i> Tes disponibilités enregistrées
+                        </h4>
+                        <div id="availabilitySummary" style="font-size: 0.85rem; color: #2e7d32;"></div>
+                    </div>
+                    <button onclick="showAvailabilityEditForm()" style="width: 100%; padding: 0.75rem; border: none; border-radius: 12px; background: #0071e3; color: white; font-weight: 700; cursor: pointer; margin-bottom: 0.5rem;">
+                        <i class="fas fa-edit"></i> Modifier mes disponibilités
+                    </button>
+                ` : ''}
             </div>
         </div>
     `;
@@ -2836,10 +2864,50 @@ window.openAvailabilityModal = function() {
         if (notification) {
             notification.classList.add('show');
             
-            // Appeler directement handleCancellationInterest(true) pour afficher le formulaire
-            handleCancellationInterest(true);
+            if (existingAvailability) {
+                // Afficher le résumé des disponibilités
+                displayAvailabilitySummary(existingAvailability);
+            } else {
+                // Pas de dispo, afficher directement le formulaire
+                handleCancellationInterest(true);
+            }
         }
     }, 100);
+};
+
+// Afficher le résumé des disponibilités
+function displayAvailabilitySummary(availability) {
+    const summaryDiv = document.getElementById('availabilitySummary');
+    if (!summaryDiv) return;
+    
+    const weeks = availability.availability_weeks || [];
+    const slots = typeof availability.availability_slots === 'string' 
+        ? JSON.parse(availability.availability_slots) 
+        : availability.availability_slots;
+    
+    const daysMap = { lundi: 'Lundi', mardi: 'Mardi', mercredi: 'Mercredi', jeudi: 'Jeudi', vendredi: 'Vendredi', samedi: 'Samedi' };
+    const slotsMap = { '07:00-09:00': '07h-09h', '09:00-11:00': '09h-11h', '11:00-13:00': '11h-13h', '13:00-15:00': '13h-15h', '15:00-17:00': '15h-17h', '17:00-19:00': '17h-19h' };
+    
+    let html = '<div style="margin-bottom: 0.75rem;"><strong>📅 Semaines :</strong> ';
+    if (weeks.includes('toutes')) {
+        html += 'Toutes les semaines';
+    } else {
+        html += weeks.map(w => w.replace('semaine', 'Semaine ')).join(', ');
+    }
+    html += '</div>';
+    
+    html += '<div><strong>🕐 Créneaux :</strong></div>';
+    Object.keys(slots).forEach(day => {
+        const daySlots = slots[day].map(s => slotsMap[s] || s).join(', ');
+        html += `<div style="margin-left: 1rem; margin-top: 0.25rem;">• <strong>${daysMap[day] || day}</strong> : ${daySlots}</div>`;
+    });
+    
+    summaryDiv.innerHTML = html;
+}
+
+// Afficher le formulaire d'édition
+window.showAvailabilityEditForm = function() {
+    handleCancellationInterest(true);
 };
 
 // Initialisation au chargement de la page
