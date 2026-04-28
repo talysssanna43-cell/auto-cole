@@ -1026,6 +1026,32 @@ window.displayStudentDetails = async function(student) {
             </div>
         `;
         
+        // Section Notes Admin
+        modalBody.innerHTML += `
+            <div class="info-section" style="background: #fff3cd; border-left: 4px solid #ffc107;">
+                <h3 style="color: #856404;"><i class="fas fa-sticky-note"></i> Notes admin (non incluses dans le PDF/Email)</h3>
+                <div style="margin-top: 1rem;">
+                    <textarea id="adminNotesTextarea" 
+                        style="width: 100%; min-height: 120px; padding: 12px; border: 2px solid #ffc107; border-radius: 8px; font-size: 0.95rem; font-family: inherit; resize: vertical;"
+                        placeholder="Ajoutez des notes ou commentaires sur cet élève (visible uniquement côté admin)...">${student.notes_admin || ''}</textarea>
+                    <div style="margin-top: 0.75rem; display: flex; gap: 0.75rem;">
+                        <button onclick="saveAdminNotes('${student.email}')" 
+                            style="background: #28a745; color: white; border: none; padding: 0.5rem 1.25rem; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.5rem;"
+                            onmouseover="this.style.background='#218838';"
+                            onmouseout="this.style.background='#28a745';">
+                            <i class="fas fa-save"></i> Sauvegarder les notes
+                        </button>
+                        <button onclick="clearAdminNotes('${student.email}')" 
+                            style="background: #dc3545; color: white; border: none; padding: 0.5rem 1.25rem; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.5rem;"
+                            onmouseover="this.style.background='#c82333';"
+                            onmouseout="this.style.background='#dc3545';">
+                            <i class="fas fa-eraser"></i> Effacer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
         // Boutons d'action
         modalBody.innerHTML += `
             <div class="info-section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
@@ -3168,6 +3194,76 @@ window.deleteStudentAvailability = async function(userEmail) {
     } catch (err) {
         console.error('Error deleting availability:', err);
         alert('❌ Erreur lors de la suppression. Réessaie.');
+    }
+};
+
+// ══════════════════════════════════════════════════════════════════════════════
+// NOTES ADMIN FUNCTIONALITY
+// ══════════════════════════════════════════════════════════════════════════════
+
+// Sauvegarder les notes admin pour un élève
+window.saveAdminNotes = async function(studentEmail) {
+    const textarea = document.getElementById('adminNotesTextarea');
+    if (!textarea) return;
+    
+    const notes = textarea.value.trim();
+    
+    try {
+        const { error } = await window.supabaseClient
+            .from('users')
+            .update({ notes_admin: notes })
+            .eq('email', studentEmail);
+        
+        if (error) throw error;
+        
+        // Notification de succès
+        const btn = event.target.closest('button');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i> Sauvegardé !';
+        btn.style.background = '#218838';
+        
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.style.background = '#28a745';
+        }, 2000);
+        
+    } catch (err) {
+        console.error('Erreur sauvegarde notes:', err);
+        alert('❌ Erreur lors de la sauvegarde des notes.');
+    }
+};
+
+// Effacer les notes admin pour un élève
+window.clearAdminNotes = async function(studentEmail) {
+    if (!confirm('Êtes-vous sûr de vouloir effacer ces notes ?')) return;
+    
+    const textarea = document.getElementById('adminNotesTextarea');
+    if (!textarea) return;
+    
+    try {
+        const { error } = await window.supabaseClient
+            .from('users')
+            .update({ notes_admin: null })
+            .eq('email', studentEmail);
+        
+        if (error) throw error;
+        
+        textarea.value = '';
+        
+        // Notification de succès
+        const btn = event.target.closest('button');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i> Effacé !';
+        btn.style.background = '#c82333';
+        
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.style.background = '#dc3545';
+        }, 2000);
+        
+    } catch (err) {
+        console.error('Erreur effacement notes:', err);
+        alert('❌ Erreur lors de l\'effacement des notes.');
     }
 };
 
