@@ -3401,6 +3401,14 @@ function generateDesistementsGrid(availabilities, container) {
         { label: '19:00 - 21:00', value: 'evening' }
     ];
     
+    // Calculer le numéro de semaine actuel
+    const today = new Date();
+    const startOfYear = new Date(today.getFullYear(), 0, 1);
+    const days = Math.floor((today - startOfYear) / (24 * 60 * 60 * 1000));
+    const currentWeekNumber = Math.ceil((days + startOfYear.getDay() + 1) / 7);
+    
+    console.log('📅 Semaine actuelle:', currentWeekNumber);
+    
     let html = `
         <div style="background: white; border-radius: 12px; overflow: hidden; border: 1px solid #e0e0e0;">
             <table style="width: 100%; border-collapse: collapse;">
@@ -3426,13 +3434,26 @@ function generateDesistementsGrid(availabilities, container) {
         daysOfWeek.forEach(dayName => {
             // Trouver les élèves disponibles pour ce jour et ce créneau
             const availableStudents = availabilities.filter(avail => {
+                // Vérifier si l'élève est disponible pour la semaine actuelle
+                const weeks = avail.availability_weeks || [];
+                console.log(`Élève ${avail.user_name}: semaines dispo =`, weeks, 'semaine actuelle =', currentWeekNumber);
+                
+                if (!weeks.includes(currentWeekNumber)) {
+                    console.log(`❌ ${avail.user_name} pas dispo cette semaine`);
+                    return false;
+                }
+                
                 const slots = typeof avail.availability_slots === 'string' 
                     ? JSON.parse(avail.availability_slots) 
                     : avail.availability_slots;
                 
                 if (!slots || !slots[dayName]) return false;
                 
-                return slots[dayName].includes(slot.value);
+                const isAvailable = slots[dayName].includes(slot.value);
+                if (isAvailable) {
+                    console.log(`✅ ${avail.user_name} dispo ${dayName} ${slot.value}`);
+                }
+                return isAvailable;
             });
             
             html += `<td style="padding: 8px; border: 1px solid #e0e0e0; vertical-align: top; min-height: 60px; background: ${availableStudents.length > 0 ? '#f0fdf4' : 'white'};">`;
