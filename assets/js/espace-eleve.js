@@ -1121,6 +1121,14 @@ async function fetchBookedSlotsFromSupabase() {
             const d = new Date(slot.start_at);
             const endD = new Date(slot.end_at);
             if (Number.isNaN(d.getTime())) return;
+            
+            // CRITIQUE: Ignorer les créneaux de Mylène après le 1er mai 2026
+            // Car Mylène n'est plus disponible et ces créneaux sont pour Nail
+            const mayFirst2026 = new Date('2026-05-01T00:00:00');
+            if (slot.instructor === 'Mylène' && d >= mayFirst2026) {
+                console.log(`⚠️ SKIP: Créneau Mylène après le 1er mai ignoré (${toInputDate(d)} ${padNumber(d.getHours())}:${padNumber(d.getMinutes())})`);
+                return;
+            }
 
             const dateStr = toInputDate(d);
             const startStr = `${padNumber(d.getHours())}:${padNumber(d.getMinutes())}`;
