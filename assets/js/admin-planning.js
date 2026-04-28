@@ -798,6 +798,7 @@ window.handleCancellationDecision = async function(requestId, decision) {
 setTimeout(() => {
     loadCancellationRequests();
     loadInscriptionNotifications();
+    loadDesistementsPlanning();
 }, 1000);
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -3356,3 +3357,118 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }, 500);
 });
+
+// ============================================
+// PLANNING DÉSISTEMENTS
+// ============================================
+
+async function loadDesistementsPlanning() {
+    try {
+        console.log('📅 Chargement du planning désistements...');
+        
+        const container = document.getElementById('desistementsPlanning');
+        if (!container) return;
+        
+        // Récupérer toutes les disponibilités
+        const { data: availabilities, error } = await window.supabaseClient
+            .from('student_availability')
+            .select('*')
+            .eq('wants_cancellation_notifications', true);
+        
+        if (error) {
+            console.error('Erreur chargement disponibilités:', error);
+            return;
+        }
+        
+        console.log(`✅ ${availabilities?.length || 0} élèves avec disponibilités`);
+        
+        // Générer le planning visuel
+        generateDesistementsGrid(availabilities || [], container);
+        
+    } catch (err) {
+        console.error('Erreur:', err);
+    }
+}
+
+function generateDesistementsGrid(availabilities, container) {
+    const daysOfWeek = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+    const timeSlots = [
+        { label: '07:00 - 09:00', value: 'morning' },
+        { label: '09:00 - 12:00', value: 'morning' },
+        { label: '12:00 - 14:00', value: 'afternoon' },
+        { label: '14:00 - 17:00', value: 'afternoon' },
+        { label: '17:00 - 19:00', value: 'evening' },
+        { label: '19:00 - 21:00', value: 'evening' }
+    ];
+    
+    let html = `
+        <div style="background: white; border-radius: 12px; overflow: hidden; border: 1px solid #e0e0e0;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: #f5f5f7;">
+                        <th style="padding: 12px; border: 1px solid #e0e0e0; font-weight: 600; text-align: center; width: 120px;">Horaire</th>
+                        ${daysOfWeek.map(day => `
+                            <th style="padding: 12px; border: 1px solid #e0e0e0; font-weight: 600; text-align: center;">
+                                ${day}
+                            </th>
+                        `).join('')}
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+    
+    timeSlots.forEach(slot => {
+        html += `<tr>`;
+        html += `<td style="padding: 12px; border: 1px solid #e0e0e0; font-weight: 600; text-align: center; background: #fafafa; color: #666;">
+            ${slot.label}
+        </td>`;
+        
+        daysOfWeek.forEach(dayName => {
+            // Trouver les élèves disponibles pour ce jour et ce créneau
+            const availableStudents = availabilities.filter(avail => {
+                const slots = typeof avail.availability_slots === 'string' 
+                    ? JSON.parse(avail.availability_slots) 
+                    : avail.availability_slots;
+                
+                if (!slots || !slots[dayName]) return false;
+                
+                return slots[dayName].includes(slot.value);
+            });
+            
+            html += `<td style="padding: 8px; border: 1px solid #e0e0e0; vertical-align: top; min-height: 60px;">`;
+            
+            if (availableStudents.length > 0) {
+                availableStudents.forEach(student => {
+                    html += `
+                        <div style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white; padding: 6px 10px; border-radius: 6px; margin: 2px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s;" 
+                             onclick="showStudentInfo('${student.user_email}', '${student.user_name}', '${student.user_phone || ''}')"
+                             onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(76, 175, 80, 0.3)';"
+                             onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';"
+                             title="Cliquer pour voir les coordonnées">
+                            <i class="fas fa-user"></i> ${student.user_name}
+                        </div>
+                    `;
+                });
+            } else {
+                html += `<span style="color: #ccc; font-style: italic; font-size: 0.85rem;">-</span>`;
+            }
+            
+            html += `</td>`;
+        });
+        
+        html += `</tr>`;
+    });
+    
+    html += `
+                </tbody>
+            </table>
+        </div>
+    `;
+    
+    container.innerHTML = html;
+}
+
+window.showStudentInfo = function(email, name, phone) {
+    const phoneText = phone ? `\nTéléphone: ${phone}` : '\nTéléphone: Non renseigné';
+    alert(`📞 Contacter ${name}\n\nEmail: ${email}${phoneText}\n\nVous pouvez contacter cet élève pour lui proposer ce créneau en cas de désistement.`);
+};
