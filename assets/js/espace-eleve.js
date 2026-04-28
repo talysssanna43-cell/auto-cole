@@ -2800,6 +2800,48 @@ async function loadInvoices() {
     }
 }
 
+// ============================================
+// OPEN AVAILABILITY MODAL (bouton "Mes disponibilités")
+// ============================================
+
+window.openAvailabilityModal = function() {
+    // Supprimer toute notification existante
+    const existingNotif = document.getElementById('bookingNotification');
+    if (existingNotif) {
+        existingNotif.remove();
+    }
+    
+    // Créer la popup de disponibilités
+    const notificationHTML = `
+        <div id="bookingNotification" class="booking-notification">
+            <div class="notification-content">
+                <div style="position: relative;">
+                    <button onclick="closeBookingNotification()" style="position: absolute; top: -0.5rem; right: -0.5rem; width: 28px; height: 28px; border-radius: 50%; border: none; background: #ff3b30; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; z-index: 10;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">📅 Mes disponibilités</h3>
+                <p style="color: #6c757d; margin-bottom: 1rem; font-size: 0.85rem;">
+                    Indique-nous quand tu es disponible pour qu'on puisse te proposer des créneaux en cas de désistement.
+                </p>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', notificationHTML);
+    
+    // Afficher la popup avec animation
+    setTimeout(() => {
+        const notification = document.getElementById('bookingNotification');
+        if (notification) {
+            notification.classList.add('show');
+            
+            // Appeler directement handleCancellationInterest(true) pour afficher le formulaire
+            handleCancellationInterest(true);
+        }
+    }, 100);
+};
+
 // Initialisation au chargement de la page
 if (document.readyState === 'loading') {
     initStudentDashboard();
