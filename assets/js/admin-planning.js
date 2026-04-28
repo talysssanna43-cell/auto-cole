@@ -3430,29 +3430,8 @@ function generateDesistementsGrid(availabilities, container) {
     // Stocker les dispo pour le onclick
     window._desistAvailabilities = availabilities;
     
-    // Palette de couleurs variées pour chaque élève
-    const studentColors = [
-        { bg: '#0071e3', shadow: 'rgba(0,113,227,0.3)' },
-        { bg: '#ff6b6b', shadow: 'rgba(255,107,107,0.3)' },
-        { bg: '#34c759', shadow: 'rgba(52,199,89,0.3)' },
-        { bg: '#af52de', shadow: 'rgba(175,82,222,0.3)' },
-        { bg: '#ff9500', shadow: 'rgba(255,149,0,0.3)' },
-        { bg: '#00c7be', shadow: 'rgba(0,199,190,0.3)' },
-        { bg: '#ff2d55', shadow: 'rgba(255,45,85,0.3)' },
-        { bg: '#5856d6', shadow: 'rgba(88,86,214,0.3)' },
-        { bg: '#64d2ff', shadow: 'rgba(100,210,255,0.3)' },
-        { bg: '#30b0c7', shadow: 'rgba(48,176,199,0.3)' }
-    ];
-    
-    // Associer une couleur à chaque email unique
-    const emailColorMap = {};
-    let colorIdx = 0;
-    availabilities.forEach(a => {
-        if (!emailColorMap[a.user_email]) {
-            emailColorMap[a.user_email] = studentColors[colorIdx % studentColors.length];
-            colorIdx++;
-        }
-    });
+    // Couleur unique élégante pour tous les élèves
+    const studentColor = { bg: '#0071e3', shadow: 'rgba(0,113,227,0.25)' };
     
     let html = `
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
@@ -3519,12 +3498,11 @@ function generateDesistementsGrid(availabilities, container) {
             if (availableStudents.length > 0) {
                 availableStudents.forEach(student => {
                     const escapedEmail = (student.user_email || '').replace(/'/g, "\\'");
-                    const color = emailColorMap[student.user_email] || studentColors[0];
                     const initials = (student.user_name || '').split(' ').map(n => n[0]).join('').toUpperCase();
                     html += `
                         <div onclick="showDesistementStudentModal('${escapedEmail}', '${dateStr}', '${creneauStr}')"
-                             style="background: ${color.bg}; color: white; padding: 4px 6px; border-radius: 8px; margin: 2px; font-size: 0.72rem; font-weight: 600; cursor: pointer; transition: all 0.15s ease; display: flex; align-items: center; gap: 4px; overflow: hidden;"
-                             onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 3px 10px ${color.shadow}';"
+                             style="background: ${studentColor.bg}; color: white; padding: 4px 6px; border-radius: 8px; margin: 2px; font-size: 0.72rem; font-weight: 600; cursor: pointer; transition: all 0.15s ease; display: flex; align-items: center; gap: 4px; overflow: hidden;"
+                             onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 3px 10px ${studentColor.shadow}';"
                              onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
                             <span style="width: 20px; height: 20px; min-width: 20px; border-radius: 50%; background: rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; font-size: 0.58rem;">${initials}</span>
                             <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${student.user_name}</span>
