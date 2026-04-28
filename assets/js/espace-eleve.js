@@ -2885,10 +2885,16 @@ function displayAvailabilitySummary(availability) {
     const summaryDiv = document.getElementById('availabilitySummary');
     if (!summaryDiv) return;
     
+    console.log('🔍 DEBUG - Disponibilités brutes:', availability);
+    
     const weeks = availability.availability_weeks || [];
     const slots = typeof availability.availability_slots === 'string' 
         ? JSON.parse(availability.availability_slots) 
         : availability.availability_slots;
+    
+    console.log('📅 Semaines:', weeks);
+    console.log('🕐 Créneaux parsés:', slots);
+    console.log('🔑 Clés des créneaux:', Object.keys(slots));
     
     const daysMap = { lundi: 'Lundi', mardi: 'Mardi', mercredi: 'Mercredi', jeudi: 'Jeudi', vendredi: 'Vendredi', samedi: 'Samedi' };
     const slotsMap = { '07:00-09:00': '07h-09h', '09:00-11:00': '09h-11h', '11:00-13:00': '11h-13h', '13:00-15:00': '13h-15h', '15:00-17:00': '15h-17h', '17:00-19:00': '17h-19h' };
@@ -2907,7 +2913,10 @@ function displayAvailabilitySummary(availability) {
     const daysOrder = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
     const sortedDays = Object.keys(slots).sort((a, b) => daysOrder.indexOf(a) - daysOrder.indexOf(b));
     
+    console.log('📋 Jours triés:', sortedDays);
+    
     sortedDays.forEach(day => {
+        console.log(`   Jour ${day}:`, slots[day]);
         if (slots[day] && slots[day].length > 0) {
             const daySlots = slots[day].map(s => slotsMap[s] || s).join(', ');
             html += `<div style="margin-left: 1rem; margin-top: 0.25rem;">• <strong>${daysMap[day] || day}</strong> : ${daySlots}</div>`;
