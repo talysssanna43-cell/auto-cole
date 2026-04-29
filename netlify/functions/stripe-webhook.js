@@ -93,7 +93,7 @@ exports.handler = async (event) => {
                                 user_name: studentName,
                                 pack: gearboxType === 'automatic' ? 'heures_auto' : 'heures_supplementaires',
                                 hours_purchased: quantity,
-                                amount: amount,
+                                amount_paid: amount,
                                 payment_method: 'Carte bancaire (Stripe)',
                                 status: 'confirmed',
                                 created_at: new Date().toISOString()

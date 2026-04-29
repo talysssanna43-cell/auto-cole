@@ -6,7 +6,7 @@ INSERT INTO inscription_notifications (
     user_name,
     pack,
     hours_purchased,
-    amount,
+    amount_paid,
     payment_method,
     status,
     created_at
@@ -26,8 +26,9 @@ VALUES (
 SELECT 
     pack,
     hours_purchased,
-    amount,
+    amount_paid,
     payment_method,
+    transmission_type,
     created_at
 FROM inscription_notifications
 WHERE user_email = 'victorbouvet13@gmail.com'
