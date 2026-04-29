@@ -91,7 +91,6 @@ exports.handler = async (event) => {
                             await supabase.from('inscription_notifications').insert({
                                 user_email: email,
                                 user_name: studentName,
-                                user_phone: userData?.telephone || '',
                                 pack: gearboxType === 'automatic' ? 'heures_auto' : 'heures_supplementaires',
                                 hours_purchased: quantity,
                                 amount: amount,

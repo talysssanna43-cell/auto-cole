@@ -4,7 +4,6 @@
 INSERT INTO inscription_notifications (
     user_email,
     user_name,
-    user_phone,
     pack,
     hours_purchased,
     amount,
@@ -15,15 +14,13 @@ INSERT INTO inscription_notifications (
 VALUES (
     'victorbouvet13@gmail.com',
     'VICTOR BOUVET',
-    '', -- Téléphone inconnu, à compléter si nécessaire
     'heures_auto',
     1,
     50.00,
     'Carte bancaire (Stripe)',
     'confirmed',
     '2026-04-26T00:00:00Z'
-)
-ON CONFLICT DO NOTHING;
+);
 
 -- Vérification : afficher toutes les inscriptions de Victor
 SELECT 
