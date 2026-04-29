@@ -63,7 +63,7 @@ exports.handler = async (event) => {
                             // Créer une facture
                             const { data: userData } = await supabase
                                 .from('users')
-                                .select('prenom, nom')
+                                .select('prenom, nom, telephone')
                                 .eq('email', email)
                                 .single();
                             
@@ -80,12 +80,27 @@ exports.handler = async (event) => {
                                 student_name: studentName,
                                 amount: amount,
                                 payment_method: 'Carte bancaire (Stripe)',
-                                description: `${quantity} heure(s) de conduite supplémentaire(s)`,
+                                description: `${quantity} heure(s) de conduite supplémentaire(s) - ${gearboxType === 'automatic' ? 'Boîte auto' : 'Boîte manuelle'}`,
                                 hours_purchased: quantity,
                                 payment_date: new Date().toISOString()
                             });
                             
                             console.log(`📄 Facture créée: ${invoiceNumber} pour ${email}`);
+                            
+                            // Créer une entrée dans inscription_notifications pour que l'espace élève compte ces heures
+                            await supabase.from('inscription_notifications').insert({
+                                user_email: email,
+                                user_name: studentName,
+                                user_phone: userData?.telephone || '',
+                                pack: gearboxType === 'automatic' ? 'heures_auto' : 'heures_supplementaires',
+                                hours_purchased: quantity,
+                                amount: amount,
+                                payment_method: 'Carte bancaire (Stripe)',
+                                status: 'confirmed',
+                                created_at: new Date().toISOString()
+                            });
+                            
+                            console.log(`✅ Inscription créée dans inscription_notifications: ${quantity}h pour ${email}`);
                         } else {
                             console.error('Error updating hours_goal:', updateError);
                         }
