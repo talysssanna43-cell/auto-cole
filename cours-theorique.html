@@ -110,9 +110,16 @@
             margin-bottom: 1.5rem;
         }
         .question-illustration {
-            width: 80px; height: 80px; border-radius: 20px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 2rem; color: white; margin: 0 auto 1.5rem;
+            width: 100%; max-width: 480px; height: 200px; border-radius: 16px;
+            margin: 0 auto 1.5rem; overflow: hidden; position: relative;
+            background: #f1f5f9;
+        }
+        .question-illustration img {
+            width: 100%; height: 100%; object-fit: cover; display: block;
+        }
+        .question-illustration .img-fallback {
+            width: 100%; height: 100%; display: flex; align-items: center;
+            justify-content: center; font-size: 3rem; color: white;
         }
         .question-text {
             font-size: 1.15rem; font-weight: 600; color: #0f172a;
@@ -281,6 +288,127 @@
 
     <script src="assets/js/quiz-data.js"></script>
     <script>
+        // Images thématiques par séance et question
+        const questionImages = {
+            1: [ // Sécurité & Intérieur
+                'https://images.unsplash.com/photo-1590362891818-a0a26e4ec3a6?w=500&h=250&fit=crop', // enfant siège avant
+                'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=500&h=250&fit=crop', // appui-tête
+                'https://images.unsplash.com/photo-1590362891818-a0a26e4ec3a6?w=500&h=250&fit=crop', // isofix
+                'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=500&h=250&fit=crop', // rétroviseur
+                'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=500&h=250&fit=crop', // rétro nuit
+                'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=500&h=250&fit=crop', // portière
+                'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=500&h=250&fit=crop', // ceinture
+                'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=500&h=250&fit=crop', // portière voyant
+                'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=500&h=250&fit=crop', // ceinture voyant
+                'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=500&h=250&fit=crop', // réglages
+                'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=500&h=250&fit=crop', // ceinture toujours
+                'https://images.unsplash.com/photo-1494976388531-d1058494ceb8?w=500&h=250&fit=crop', // pare-brise
+                'https://images.unsplash.com/photo-1489824904134-891ab64532f1?w=500&h=250&fit=crop', // airbag
+                'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=500&h=250&fit=crop'  // verrouillage
+            ],
+            2: [ // Voyants
+                'https://images.unsplash.com/photo-1611083360739-bdad6e0eb1fa?w=500&h=250&fit=crop', // carburant
+                'https://images.unsplash.com/photo-1494976388531-d1058494ceb8?w=500&h=250&fit=crop', // lunette arrière
+                'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=500&h=250&fit=crop', // huile
+                'https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?w=500&h=250&fit=crop', // batterie
+                'https://images.unsplash.com/photo-1600712242805-5f78671b24da?w=500&h=250&fit=crop', // freins
+                'https://images.unsplash.com/photo-1600712242805-5f78671b24da?w=500&h=250&fit=crop', // frein parking
+                'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=500&h=250&fit=crop', // température
+                'https://images.unsplash.com/photo-1489824904134-891ab64532f1?w=500&h=250&fit=crop', // voyants couleur
+                'https://images.unsplash.com/photo-1493238792000-8113da705763?w=500&h=250&fit=crop', // feux route
+                'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=500&h=250&fit=crop', // pression pneus
+                'https://images.unsplash.com/photo-1513162337305-f58f8be04b88?w=500&h=250&fit=crop', // brouillard
+                'https://images.unsplash.com/photo-1493238792000-8113da705763?w=500&h=250&fit=crop', // hauteur feux
+                'https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?w=500&h=250&fit=crop', // voyant batterie
+                'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=500&h=250&fit=crop'  // voyant huile
+            ],
+            3: [ // Commandes
+                'https://images.unsplash.com/photo-1494976388531-d1058494ceb8?w=500&h=250&fit=crop', // essuie-glaces
+                'https://images.unsplash.com/photo-1494976388531-d1058494ceb8?w=500&h=250&fit=crop', // désembuage
+                'https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=500&h=250&fit=crop', // feux détresse
+                'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=500&h=250&fit=crop', // régulateur
+                'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=500&h=250&fit=crop', // klaxon
+                'https://images.unsplash.com/photo-1494976388531-d1058494ceb8?w=500&h=250&fit=crop', // recyclage air
+                'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=500&h=250&fit=crop', // limiteur
+                'https://images.unsplash.com/photo-1494976388531-d1058494ceb8?w=500&h=250&fit=crop', // dégivrage arr
+                'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=500&h=250&fit=crop', // régul vs limit
+                'https://images.unsplash.com/photo-1494976388531-d1058494ceb8?w=500&h=250&fit=crop', // pare-brise air
+                'https://images.unsplash.com/photo-1494976388531-d1058494ceb8?w=500&h=250&fit=crop', // lave-glace
+                'https://images.unsplash.com/photo-1493238792000-8113da705763?w=500&h=250&fit=crop', // hauteur feux
+                'https://images.unsplash.com/photo-1493238792000-8113da705763?w=500&h=250&fit=crop', // croisement
+                'https://images.unsplash.com/photo-1513162337305-f58f8be04b88?w=500&h=250&fit=crop'  // tunnel
+            ],
+            4: [ // Sous le capot
+                'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=500&h=250&fit=crop', // lave-glace
+                'https://images.unsplash.com/photo-1600712242805-5f78671b24da?w=500&h=250&fit=crop', // liquide frein
+                'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=500&h=250&fit=crop', // refroidissement
+                'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=500&h=250&fit=crop', // huile moteur
+                'https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?w=500&h=250&fit=crop', // batterie panne
+                'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=500&h=250&fit=crop', // capot
+                'https://images.unsplash.com/photo-1494976388531-d1058494ceb8?w=500&h=250&fit=crop', // lave-glace vide
+                'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=500&h=250&fit=crop', // refroidissement rôle
+                'https://images.unsplash.com/photo-1600712242805-5f78671b24da?w=500&h=250&fit=crop', // frein vérif
+                'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=500&h=250&fit=crop', // alternateur
+                'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=500&h=250&fit=crop', // jauge huile
+                'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=500&h=250&fit=crop', // température
+                'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=500&h=250&fit=crop', // long trajet
+                'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=500&h=250&fit=crop'  // refroidissement risque
+            ],
+            5: [ // Pneumatiques & Extérieur
+                'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=500&h=250&fit=crop', // sculptures
+                'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=500&h=250&fit=crop', // sous-gonflés
+                'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=500&h=250&fit=crop', // surgonflés
+                'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=500&h=250&fit=crop', // pression info
+                'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=500&h=250&fit=crop', // même essieu
+                'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=500&h=250&fit=crop', // vérif visuelle
+                'https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=500&h=250&fit=crop', // gilet
+                'https://images.unsplash.com/photo-1545987796-200677ee1011?w=500&h=250&fit=crop', // triangle
+                'https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=500&h=250&fit=crop', // gilet sortie
+                'https://images.unsplash.com/photo-1493238792000-8113da705763?w=500&h=250&fit=crop', // catadioptres
+                'https://images.unsplash.com/photo-1493238792000-8113da705763?w=500&h=250&fit=crop', // feux nuit
+                'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=500&h=250&fit=crop', // pression froid
+                'https://images.unsplash.com/photo-1493238792000-8113da705763?w=500&h=250&fit=crop', // feux arrière
+                'https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=500&h=250&fit=crop'  // plaque
+            ],
+            6: [ // Premiers secours: Alerter
+                'https://images.unsplash.com/photo-1587614382346-4ec70e388b28?w=500&h=250&fit=crop', // numéros urgence
+                'https://images.unsplash.com/photo-1545987796-200677ee1011?w=500&h=250&fit=crop', // autoroute
+                'https://images.unsplash.com/photo-1587614382346-4ec70e388b28?w=500&h=250&fit=crop', // alerte rapide
+                'https://images.unsplash.com/photo-1587614382346-4ec70e388b28?w=500&h=250&fit=crop', // 3 infos
+                'https://images.unsplash.com/photo-1587614382346-4ec70e388b28?w=500&h=250&fit=crop', // moyens alerte
+                'https://images.unsplash.com/photo-1587614382346-4ec70e388b28?w=500&h=250&fit=crop', // raccrocher
+                'https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=500&h=250&fit=crop', // respiration
+                'https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=500&h=250&fit=crop', // dégagement
+                'https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=500&h=250&fit=crop', // déplacer victime
+                'https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=500&h=250&fit=crop', // conscience
+                'https://images.unsplash.com/photo-1587614382346-4ec70e388b28?w=500&h=250&fit=crop', // SAIP
+                'https://images.unsplash.com/photo-1587614382346-4ec70e388b28?w=500&h=250&fit=crop', // sirènes
+                'https://images.unsplash.com/photo-1587614382346-4ec70e388b28?w=500&h=250&fit=crop', // diffusion
+                'https://images.unsplash.com/photo-1587614382346-4ec70e388b28?w=500&h=250&fit=crop'  // objectif SAIP
+            ],
+            7: [ // Premiers secours: Secourir
+                'https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=500&h=250&fit=crop', // défibrillateur
+                'https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=500&h=250&fit=crop', // perte connaissance
+                'https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=500&h=250&fit=crop', // hémorragie
+                'https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=500&h=250&fit=crop', // PLS
+                'https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=500&h=250&fit=crop', // âge formation
+                'https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=500&h=250&fit=crop', // RCP
+                'https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=500&h=250&fit=crop', // risque dos
+                'https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=500&h=250&fit=crop', // DAE sûr
+                'https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=500&h=250&fit=crop', // hémorragie def
+                'https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=500&h=250&fit=crop', // hémorragie risque
+                'https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=500&h=250&fit=crop', // signes arrêt
+                'https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=500&h=250&fit=crop', // arrêt cardiaque
+                'https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=500&h=250&fit=crop', // risque sans secours
+                'https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=500&h=250&fit=crop'  // inconscient PLS
+            ]
+        };
+        function getQuestionImage(sessionId, qIndex) {
+            const imgs = questionImages[sessionId];
+            if (imgs && imgs[qIndex]) return imgs[qIndex];
+            return '';
+        }
+
         let currentSession = null;
         let currentQuestionIndex = 0;
         let score = 0;
@@ -368,8 +496,8 @@
             document.getElementById('questionText').textContent = q.q;
 
             const illust = document.getElementById('questionIllustration');
-            illust.style.background = currentSession.color;
-            illust.innerHTML = `<i class="${currentSession.icon}"></i>`;
+            const imgUrl = getQuestionImage(currentSession.id, currentQuestionIndex);
+            illust.innerHTML = `<img src="${imgUrl}" alt="Illustration" onerror="this.parentElement.innerHTML='<div class=img-fallback style=background:${currentSession.color}><i class=${currentSession.icon}></i></div>'">`;
 
             const grid = document.getElementById('choicesGrid');
             grid.innerHTML = '';
