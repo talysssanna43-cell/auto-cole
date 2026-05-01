@@ -207,7 +207,7 @@
                     </div>
                     <p class="hp-feat-title">Contenu du pack :</p>
                     <ul class="hp-feat">
-                        <li><i class="fas fa-check-circle"></i> 20 cours de conduite <i class="hp-info">ℹ<span class="hp-tip">Chaque cours d'une heure se décompose en 15 mn de préparation en ligne et en 45 mn de cours en circulation</span></i></li>
+                        <li id="hp-cours-zen"><i class="fas fa-check-circle"></i> <span class="hp-cours-count">20</span> cours de conduite <i class="hp-info">ℹ<span class="hp-tip">Chaque cours d'une heure se décompose en 15 mn de préparation en ligne et en 45 mn de cours en circulation</span></i></li>
                         <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
                         <li><i class="fas fa-check-circle"></i> Formation au Code</li>
                         <li><span class="hp-x">✕</span> <span class="hp-dis">Formation en 30 jours</span></li>
@@ -239,7 +239,7 @@
                     </div>
                     <p class="hp-feat-title">Contenu du pack :</p>
                     <ul class="hp-feat">
-                        <li><i class="fas fa-check-circle"></i> 20 cours de conduite <i class="hp-info">ℹ<span class="hp-tip">Chaque cours d'une heure se décompose en 15 mn de préparation en ligne et en 45 mn de cours en circulation</span></i></li>
+                        <li id="hp-cours-premium"><i class="fas fa-check-circle"></i> <span class="hp-cours-count">20</span> cours de conduite <i class="hp-info">ℹ<span class="hp-tip">Chaque cours d'une heure se décompose en 15 mn de préparation en ligne et en 45 mn de cours en circulation</span></i></li>
                         <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
                         <li><i class="fas fa-check-circle"></i> Formation au Code</li>
                         <li><i class="fas fa-check-circle"></i> Date de convocation à l'examen sous 30 jours</li>
@@ -271,7 +271,7 @@
                     </div>
                     <p class="hp-feat-title">Contenu du pack :</p>
                     <ul class="hp-feat">
-                        <li><i class="fas fa-check-circle"></i> 20 cours de conduite <i class="hp-info">ℹ<span class="hp-tip">Chaque cours d'une heure se décompose en 15 mn de préparation en ligne et en 45 mn de cours en circulation</span></i></li>
+                        <li id="hp-cours-accelere"><i class="fas fa-check-circle"></i> <span class="hp-cours-count">20</span> cours de conduite <i class="hp-info">ℹ<span class="hp-tip">Chaque cours d'une heure se décompose en 15 mn de préparation en ligne et en 45 mn de cours en circulation</span></i></li>
                         <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
                         <li><i class="fas fa-check-circle"></i> Formation au Code</li>
                         <li><i class="fas fa-check-circle"></i> Formation en 30 jours</li>
@@ -297,6 +297,8 @@
                 };
                 document.getElementById('hp-' + pack + '-price').innerHTML = prices[pack][hours] + '<span>€</span>';
                 document.getElementById('hp-' + pack + '-old').textContent = oldPrices[pack][hours] + '€';
+                var coursEl = document.querySelector('#hp-cours-' + pack + ' .hp-cours-count');
+                if (coursEl) coursEl.textContent = hours;
             }
             </script>
 

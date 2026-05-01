@@ -710,7 +710,7 @@
                 
                 <p class="features-title">Contenu du pack :</p>
                 <ul class="features-list">
-                    <li><i class="fas fa-check-circle"></i> 20 cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours d'une heure se décompose en 15 mn de préparation en ligne et en 45 mn de cours en circulation</span></i></li>
+                    <li id="cours-zen"><i class="fas fa-check-circle"></i> <span class="cours-count">20</span> cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours d'une heure se décompose en 15 mn de préparation en ligne et en 45 mn de cours en circulation</span></i></li>
                     <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
                     <li><i class="fas fa-check-circle"></i> Formation au Code</li>
                     <li><span class="feature-x">✕</span> <span class="feature-disabled">Formation en 30 jours</span></li>
@@ -762,7 +762,7 @@
                 
                 <p class="features-title">Contenu du pack :</p>
                 <ul class="features-list">
-                    <li><i class="fas fa-check-circle"></i> 20 cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours d'une heure se décompose en 15 mn de préparation en ligne et en 45 mn de cours en circulation</span></i></li>
+                    <li id="cours-premium"><i class="fas fa-check-circle"></i> <span class="cours-count">20</span> cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours d'une heure se décompose en 15 mn de préparation en ligne et en 45 mn de cours en circulation</span></i></li>
                     <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
                     <li><i class="fas fa-check-circle"></i> Formation au Code</li>
                     <li><i class="fas fa-check-circle"></i> Date de convocation à l'examen sous 30 jours</li>
@@ -814,7 +814,7 @@
                 
                 <p class="features-title">Contenu du pack :</p>
                 <ul class="features-list">
-                    <li><i class="fas fa-check-circle"></i> 20 cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours d'une heure se décompose en 15 mn de préparation en ligne et en 45 mn de cours en circulation</span></i></li>
+                    <li id="cours-accelere"><i class="fas fa-check-circle"></i> <span class="cours-count">20</span> cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours d'une heure se décompose en 15 mn de préparation en ligne et en 45 mn de cours en circulation</span></i></li>
                     <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
                     <li><i class="fas fa-check-circle"></i> Formation au Code</li>
                     <li><i class="fas fa-check-circle"></i> Formation en 30 jours</li>
@@ -864,7 +864,7 @@
                 
                 <p class="features-title">Contenu du pack :</p>
                 <ul class="features-list">
-                    <li><i class="fas fa-check-circle"></i> 13 cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours d'une heure se décompose en 15 mn de préparation en ligne et en 45 mn de cours en circulation</span></i></li>
+                    <li id="cours-zen-auto"><i class="fas fa-check-circle"></i> <span class="cours-count">13</span> cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours d'une heure se décompose en 15 mn de préparation en ligne et en 45 mn de cours en circulation</span></i></li>
                     <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
                     <li><i class="fas fa-check-circle"></i> Formation au Code</li>
                     <li><span class="feature-x">✕</span> <span class="feature-disabled">Date de convocation à l'examen sous 30 jours</span></li>
@@ -908,7 +908,7 @@
                 
                 <p class="features-title">Contenu du pack :</p>
                 <ul class="features-list">
-                    <li><i class="fas fa-check-circle"></i> 13 cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours d'une heure se décompose en 15 mn de préparation en ligne et en 45 mn de cours en circulation</span></i></li>
+                    <li id="cours-premium-auto"><i class="fas fa-check-circle"></i> <span class="cours-count">13</span> cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours d'une heure se décompose en 15 mn de préparation en ligne et en 45 mn de cours en circulation</span></i></li>
                     <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
                     <li><i class="fas fa-check-circle"></i> Formation au Code</li>
                     <li><i class="fas fa-check-circle"></i> Date de convocation à l'examen sous 30 jours</li>
@@ -952,7 +952,7 @@
                 
                 <p class="features-title">Contenu du pack :</p>
                 <ul class="features-list">
-                    <li><i class="fas fa-check-circle"></i> 13 cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours d'une heure se décompose en 15 mn de préparation en ligne et en 45 mn de cours en circulation</span></i></li>
+                    <li id="cours-accelere-auto"><i class="fas fa-check-circle"></i> <span class="cours-count">13</span> cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours d'une heure se décompose en 15 mn de préparation en ligne et en 45 mn de cours en circulation</span></i></li>
                     <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
                     <li><i class="fas fa-check-circle"></i> Formation au Code</li>
                     <li><i class="fas fa-check-circle"></i> Date de convocation à l'examen sous 30 jours</li>
@@ -1269,6 +1269,11 @@
             const priceElement = document.getElementById(pack + '-price');
             if (priceElement && prices[pack] && prices[pack][hours]) {
                 priceElement.innerHTML = prices[pack][hours] + '<span class="price-asterisk">€</span>';
+            }
+            
+            const coursElement = document.querySelector('#cours-' + pack + ' .cours-count');
+            if (coursElement) {
+                coursElement.textContent = hours;
             }
         }
     </script>
