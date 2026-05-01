@@ -16,7 +16,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Un enfant peut être installé à l'avant à partir de 10 ans.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1590362891818-a0a26e4ec3a6?w=520&h=260&fit=crop"
       },
       {
         "q": "Quelle est l'utilité de l'appui-tête du siège conducteur ?",
@@ -112,7 +112,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "18 (pompiers), 15 (Samu), 112 (numéro d'urgence européen).",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=520&h=260&fit=crop"
       },
       {
         "q": "Qu'est-ce qu'un défibrillateur automatisé externe (DAE) ?",
@@ -124,7 +124,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Le DAE analyse le rythme cardiaque et délivre un choc si nécessaire.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=520&h=260&fit=crop"
       },
       {
         "q": "De quelle couleur est le voyant de défaillance du freinage ?",
@@ -184,7 +184,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Indiquer le numéro de l'autoroute, le sens et le point kilométrique.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=520&h=260&fit=crop"
       },
       {
         "q": "Quel équipement est obligatoire en cas de panne ?",
@@ -196,7 +196,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Le gilet et le triangle sont obligatoires.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment arrêter une hémorragie ?",
@@ -208,7 +208,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Appuyer fortement et directement sur la plaie avec un tissu propre.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1584515933487-779824d29309?w=520&h=260&fit=crop"
       },
       {
         "q": "Que signifie le voyant de charge batterie allumé en roulant ?",
@@ -232,7 +232,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Le triangle se place à environ 30 mètres de l'obstacle.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=520&h=260&fit=crop"
       },
       {
         "q": "Quels sont les signes d'un arrêt cardiaque ?",
@@ -244,7 +244,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Absence de réponse, absence de réaction ET absence de respiration normale.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1559757175-7cb057fba93c?w=520&h=260&fit=crop"
       }
     ]
   },
@@ -349,7 +349,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Une alerte rapide et précise permet des secours adaptés au plus vite.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=520&h=260&fit=crop"
       },
       {
         "q": "Dans quel cas positionner une victime en PLS ?",
@@ -361,7 +361,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "La PLS s'applique si la victime est inconsciente mais respire.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?w=520&h=260&fit=crop"
       },
       {
         "q": "Quelle conséquence d'une panne de dégivrage de la lunette arrière ?",
@@ -421,7 +421,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Donner : votre numéro, la nature du problème et la localisation précise.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=520&h=260&fit=crop"
       },
       {
         "q": "Montrez la commande d'essuie-glaces. Où se trouve-t-elle ?",
@@ -457,7 +457,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Saignement abondant qui ne s'arrête pas spontanément.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1584515933487-779824d29309?w=520&h=260&fit=crop"
       },
       {
         "q": "Quel risque d'un capot mal fermé en roulant ?",
@@ -493,7 +493,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Le cerveau ne supporte pas plus de 3-5 min sans oxygène.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1559757175-7cb057fba93c?w=520&h=260&fit=crop"
       }
     ]
   },
@@ -514,7 +514,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Les feux de route éblouissent les conducteurs en face.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1506241537529-eefea1fae3e0?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment reconnaît-on le voyant des feux de route ?",
@@ -538,7 +538,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Pousser le commodo d'éclairage vers l'avant (loin du conducteur).",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=520&h=260&fit=crop"
       },
       {
         "q": "Quelles conditions pour contrôler le niveau d'huile ?",
@@ -598,7 +598,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Dans un tunnel, même éclairé, allumer les feux de croisement.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1545987796-200677ee1011?w=520&h=260&fit=crop"
       },
       {
         "q": "Quel est le risque d'un pare-brise sale ou endommagé ?",
@@ -622,7 +622,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Appeler les secours et commencer la réanimation cardio-pulmonaire (RCP).",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment vérifier la respiration d'une victime ?",
@@ -634,7 +634,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Libérer les voies aériennes, approcher sa joue et observer le thorax pendant 10 secondes.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?w=520&h=260&fit=crop"
       },
       {
         "q": "Montrez le bouchon de remplissage d'huile. Quel est son symbole ?",
@@ -670,7 +670,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "La pression se vérifie à froid car la chaleur fausse la mesure.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=520&h=260&fit=crop"
       },
       {
         "q": "Quel équipement de sécurité enfiler AVANT de sortir du véhicule en panne ?",
@@ -682,7 +682,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Le gilet doit être enfilé AVANT de sortir pour être visible.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1590362891818-a0a26e4ec3a6?w=520&h=260&fit=crop"
       },
       {
         "q": "Montrez les feux arrière. Combien de fonctions assurent-ils ?",
@@ -706,7 +706,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Téléphone portable, fixe ou borne d'appel d'urgence (autoroute : tous les 2 km).",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=520&h=260&fit=crop"
       },
       {
         "q": "À quoi sert la molette de réglage de hauteur des phares ?",
@@ -730,7 +730,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Un feu arrière défaillant rend le véhicule invisible aux suiveurs.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1506241537529-eefea1fae3e0?w=520&h=260&fit=crop"
       },
       {
         "q": "À partir de quel âge peut-on apprendre les gestes de premiers secours ?",
@@ -742,7 +742,7 @@ const quizSessions = [
         ],
         "correct": 3,
         "explanation": "Il n'y a aucun âge minimum pour apprendre les gestes de premiers secours.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=520&h=260&fit=crop"
       }
     ]
   },
@@ -871,7 +871,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Les secours peuvent guider vos gestes en attendant leur arrivée.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=520&h=260&fit=crop"
       },
       {
         "q": "Que peut provoquer la décharge batterie moteur éteint ?",
@@ -895,7 +895,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Feux sales ou défaillants réduisent l'éclairage et la visibilité.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1506241537529-eefea1fae3e0?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment vérifier visuellement l'état d'un pneu ?",
@@ -943,7 +943,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Un long trajet sollicite davantage. Vérifier les niveaux prévient les pannes.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1590362891818-a0a26e4ec3a6?w=520&h=260&fit=crop"
       },
       {
         "q": "Que faire si le voyant STOP s'allume en roulant ?",
@@ -967,7 +967,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "La langue peut basculer et obstruer les voies aériennes. D'où la PLS.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?w=520&h=260&fit=crop"
       },
       {
         "q": "À quoi sert le voyant de préchauffage diesel ?",
@@ -1108,7 +1108,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Vérifier la pression une fois par mois et avant chaque long trajet, à froid.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=520&h=260&fit=crop"
       },
       {
         "q": "Montrez le bouton des feux de détresse. Quel est son symbole ?",
@@ -1144,7 +1144,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "RCP adulte : 30 compressions thoraciques puis 2 insufflations.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1559757175-7cb057fba93c?w=520&h=260&fit=crop"
       },
       {
         "q": "Où placer les mains pour un massage cardiaque ?",
@@ -1156,7 +1156,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Placer les mains au centre de la poitrine, sur le sternum.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1559757175-7cb057fba93c?w=520&h=260&fit=crop"
       },
       {
         "q": "Quel risque d'un manque de liquide de refroidissement ?",
@@ -1168,7 +1168,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Sans refroidissement suffisant, le moteur surchauffe et peut casser.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=520&h=260&fit=crop"
       },
       {
         "q": "Montrez la commande de recyclage d'air. Quand l'utiliser ?",
@@ -1204,7 +1204,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Toujours utiliser le liquide recommandé par le constructeur.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1590362891818-a0a26e4ec3a6?w=520&h=260&fit=crop"
       },
       {
         "q": "Principal risque d'une absence de liquide lave-glace ?",
@@ -1240,7 +1240,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Le DAE analyse le rythme et décide seul si un choc électrique est nécessaire.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=520&h=260&fit=crop"
       }
     ]
   },
@@ -1273,7 +1273,7 @@ const quizSessions = [
         ],
         "correct": 3,
         "explanation": "Voyant du tableau de bord + tirer les poignées + écouter le clic.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=520&h=260&fit=crop"
       },
       {
         "q": "Que faire si le voyant airbag reste allumé ?",
@@ -1309,7 +1309,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "L'étiquette indique 2,6 bars pour le véhicule chargé.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=520&h=260&fit=crop"
       },
       {
         "q": "Montrez le bouton de désembuage pare-brise avant.",
@@ -1369,7 +1369,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Le gilet doit être accessible depuis l'habitacle pour l'enfiler avant de sortir.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment protéger la zone d'un accident ?",
@@ -1393,7 +1393,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "PLS = Position Latérale de Sécurité pour les victimes inconscientes qui respirent.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?w=520&h=260&fit=crop"
       },
       {
         "q": "Quel est le rythme du massage cardiaque sur un adulte ?",
@@ -1405,7 +1405,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Le rythme est de 100 à 120 compressions par minute.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1559757175-7cb057fba93c?w=520&h=260&fit=crop"
       },
       {
         "q": "Faut-il retirer le casque d'un motard accidenté ?",
@@ -1417,7 +1417,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Ne retirer le casque que si la victime ne respire pas, à deux de préférence.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=520&h=260&fit=crop"
       },
       {
         "q": "Montrez l'emplacement de l'antenne sur ce véhicule.",
@@ -1465,7 +1465,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Le DAE est conçu pour être utilisé par n'importe qui, il donne des instructions vocales.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=520&h=260&fit=crop"
       },
       {
         "q": "Pourquoi connaître la signification des voyants ?",
@@ -1522,7 +1522,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Feux de croisement : nuit et de jour si visibilité réduite.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1506241537529-eefea1fae3e0?w=520&h=260&fit=crop"
       },
       {
         "q": "Montrez le voyant de niveau de carburant. Quel risque si vide ?",
@@ -1594,7 +1594,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Appuyer sur la pédale de frein pendant qu'une personne vérifie à l'arrière.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment réagir si le voyant de pression d'huile s'allume en conduisant ?",
@@ -1618,7 +1618,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "La carte grise doit être à jour et présente lors de tout contrôle.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=520&h=260&fit=crop"
       },
       {
         "q": "Que faire en premier face à un accident de la route ?",
@@ -1630,7 +1630,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "PAS : Protéger la zone, Alerter les secours, Secourir les victimes.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment protéger un accident sur autoroute ?",
@@ -1642,7 +1642,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Se garer en aval, warnings, gilet avant de sortir, triangle 30m en amont.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=520&h=260&fit=crop"
       },
       {
         "q": "Quelle est la position correcte pour la PLS ?",
@@ -1654,7 +1654,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "PLS : sur le côté, bouche ouverte vers le sol pour que les liquides s'écoulent.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?w=520&h=260&fit=crop"
       },
       {
         "q": "Que faire si une victime convulse ?",
@@ -1666,7 +1666,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Protéger la tête, ne rien mettre dans la bouche, appeler les secours après la crise.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment vérifier que les clignotants fonctionnent ?",
@@ -1678,7 +1678,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Mettre le contact, actionner chaque clignotant et vérifier visuellement.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=520&h=260&fit=crop"
       },
       {
         "q": "Quel pneu est le plus sollicité en virage à droite ?",
@@ -1702,7 +1702,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "La permutation uniformise l'usure car les pneus avant s'usent plus vite.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=520&h=260&fit=crop"
       },
       {
         "q": "Que peut causer un filtre à air encrassé ?",
@@ -1738,7 +1738,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Ne pas déplacer sauf danger vital. Couper le contact et alerter les secours.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?w=520&h=260&fit=crop"
       }
     ]
   },
@@ -1855,7 +1855,7 @@ const quizSessions = [
         ],
         "correct": 0,
         "explanation": "La vitesse excessive est la première cause d'accident mortel en France.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=520&h=260&fit=crop"
       },
       {
         "q": "Quel est le taux d'alcool maximal autorisé pour un conducteur novice ?",
@@ -1867,7 +1867,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Pour un permis probatoire, le taux maximal est de 0,2 g/l de sang.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=520&h=260&fit=crop"
       },
       {
         "q": "Que vérifier sur les essuie-glaces régulièrement ?",
@@ -1927,7 +1927,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Vérifier conscience et respiration, alerter les secours, agir selon l'état.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?w=520&h=260&fit=crop"
       },
       {
         "q": "Combien de temps peut-on maintenir un massage cardiaque ?",
@@ -1939,7 +1939,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Le massage cardiaque se poursuit jusqu'à l'arrivée des secours ou du DAE.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1559757175-7cb057fba93c?w=520&h=260&fit=crop"
       },
       {
         "q": "Que faire si un enfant s'étouffe ?",
@@ -1951,7 +1951,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "5 tapes dans le dos puis 5 compressions (Heimlich pour adulte/enfant).",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1590362891818-a0a26e4ec3a6?w=520&h=260&fit=crop"
       },
       {
         "q": "Quel est l'angle mort d'un véhicule ?",
@@ -1975,7 +1975,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Téléphoner au volant multiplie le risque d'accident par 3 à 5.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=520&h=260&fit=crop"
       },
       {
         "q": "Que faire si le volant vibre à haute vitesse ?",
@@ -1987,7 +1987,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Des vibrations au volant indiquent souvent un déséquilibrage des roues.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1494976388531-d1058494ceb8?w=520&h=260&fit=crop"
       }
     ]
   },
@@ -2032,7 +2032,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Éco-conduite : anticiper, vitesse stable, utiliser le frein moteur.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=520&h=260&fit=crop"
       },
       {
         "q": "Que signifie le panneau rond rouge avec un trait blanc horizontal ?",
@@ -2044,7 +2044,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Cercle rouge avec barre blanche = sens interdit.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1566847926613-4bf4f25be5b6?w=520&h=260&fit=crop"
       },
       {
         "q": "Que signifie un triangle rouge pointe en haut ?",
@@ -2056,7 +2056,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Triangle rouge pointe en haut = cédez le passage.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=520&h=260&fit=crop"
       },
       {
         "q": "Quelle distance de sécurité sur autoroute à 130 km/h ?",
@@ -2068,7 +2068,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Distance de sécurité = 2 secondes minimum, soit ~70m à 130 km/h.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1545987796-200677ee1011?w=520&h=260&fit=crop"
       },
       {
         "q": "En cas de crevaison, où s'arrêter de préférence ?",
@@ -2092,7 +2092,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Les véhicules récents ont souvent un kit anti-crevaison ou une roue galette.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=520&h=260&fit=crop"
       },
       {
         "q": "Quel est le risque de rouler avec un pneu crevé ?",
@@ -2116,7 +2116,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Resserrer les écrous après 50-100 km car ils peuvent se desserrer.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=520&h=260&fit=crop"
       },
       {
         "q": "Quand changer les balais d'essuie-glaces ?",
@@ -2152,7 +2152,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Sur route mouillée, freiner progressivement pour éviter le blocage des roues.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment réagir en cas d'aquaplaning ?",
@@ -2164,7 +2164,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Aquaplaning : ne pas freiner, relâcher l'accélérateur, volant droit.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?w=520&h=260&fit=crop"
       },
       {
         "q": "Quel geste faire si une personne s'étouffe et tousse encore ?",
@@ -2224,7 +2224,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Par temps de pluie, réduire la vitesse d'au moins 20 km/h.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment savoir si le liquide de refroidissement est suffisant ?",
@@ -2257,7 +2257,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Par temps de pluie, la vitesse maximale sur autoroute est réduite à 110 km/h.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1545987796-200677ee1011?w=520&h=260&fit=crop"
       },
       {
         "q": "Quel est l'effet de la fatigue sur la conduite ?",
@@ -2269,7 +2269,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "La fatigue diminue la vigilance et allonge le temps de réaction.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1506241537529-eefea1fae3e0?w=520&h=260&fit=crop"
       },
       {
         "q": "Tous les combien faire une pause sur autoroute ?",
@@ -2281,7 +2281,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Pause toutes les 2 heures minimum pour lutter contre la fatigue.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1545987796-200677ee1011?w=520&h=260&fit=crop"
       },
       {
         "q": "Que signifie le panneau carré bleu avec un P blanc ?",
@@ -2293,7 +2293,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Carré bleu avec P = zone de stationnement autorisé.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1566847926613-4bf4f25be5b6?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment réagir si un témoin d'accident arrive le premier ?",
@@ -2305,7 +2305,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "PAS : Protéger, Alerter les secours (15/18/112), Secourir.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=520&h=260&fit=crop"
       },
       {
         "q": "Que vérifier régulièrement sur les feux du véhicule ?",
@@ -2329,7 +2329,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "L'étiquette portière indique 2,1 bars avant et arrière à vide.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=520&h=260&fit=crop"
       },
       {
         "q": "Pourquoi ne pas laisser tourner le moteur à l'arrêt ?",
@@ -2341,7 +2341,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Moteur au ralenti = pollution, gaspillage et risque d'intoxication au CO en espace fermé.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=520&h=260&fit=crop"
       },
       {
         "q": "Que faire si le voyant de liquide de frein s'allume ?",
@@ -2377,7 +2377,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "L'ABS empêche le blocage des roues, permettant de garder le contrôle et d'éviter un obstacle.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1494976388531-d1058494ceb8?w=520&h=260&fit=crop"
       },
       {
         "q": "Quand allumer les feux de position ?",
@@ -2401,7 +2401,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Vérifier le niveau sur la jauge du bocal, moteur éteint et à froid.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=520&h=260&fit=crop"
       },
       {
         "q": "Que signifie le marquage 185/65 R15 sur un pneu ?",
@@ -2413,7 +2413,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "185=largeur en mm, 65=rapport hauteur/largeur, R=radial, 15=diamètre jante pouces.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment se comporter en zone 30 km/h ?",
@@ -2425,7 +2425,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Zone 30 : vitesse max 30 km/h, priorité aux piétons et cyclistes.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1494976388531-d1058494ceb8?w=520&h=260&fit=crop"
       },
       {
         "q": "Que faire face à une brûlure thermique ?",
@@ -2437,7 +2437,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Refroidir immédiatement la brûlure sous l'eau froide pendant 10-15 minutes.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1584515933487-779824d29309?w=520&h=260&fit=crop"
       },
       {
         "q": "Quel numéro appeler pour une urgence médicale ?",
@@ -2449,7 +2449,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Le 15 est le numéro du Samu pour les urgences médicales.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=520&h=260&fit=crop"
       },
       {
         "q": "Quelle est la réaction correcte face à un malaise d'un passager ?",
@@ -2461,7 +2461,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "S'arrêter en sécurité, évaluer l'état du passager et appeler les secours si besoin.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=520&h=260&fit=crop"
       },
       {
         "q": "Pourquoi le filtre à particules est-il important ?",
@@ -2530,7 +2530,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Rond blanc bordé de rouge = panneau d'interdiction.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1566847926613-4bf4f25be5b6?w=520&h=260&fit=crop"
       },
       {
         "q": "Que signifie un panneau rond à fond bleu ?",
@@ -2542,7 +2542,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Rond bleu = panneau d'obligation (direction, vitesse minimale, etc.).",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1566847926613-4bf4f25be5b6?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment réagir face à un piéton qui s'engage sur un passage protégé ?",
@@ -2554,7 +2554,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Le piéton engagé sur un passage a toujours la priorité. S'arrêter.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=520&h=260&fit=crop"
       },
       {
         "q": "Quel équipement est obligatoire pour les cyclistes de nuit ?",
@@ -2566,7 +2566,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Éclairage avant/arrière obligatoire + gilet rétro-réfléchissant hors agglomération.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment réagir si un voyant rouge s'allume en conduisant ?",
@@ -2626,7 +2626,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Le losange jaune bordé de blanc indique que vous êtes sur une route prioritaire.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1566847926613-4bf4f25be5b6?w=520&h=260&fit=crop"
       },
       {
         "q": "Que faire en cas de panne sur une voie rapide ?",
@@ -2638,7 +2638,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Se garer à droite, warnings, gilet AVANT de sortir, se mettre en sécurité derrière la glissière.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1545987796-200677ee1011?w=520&h=260&fit=crop"
       },
       {
         "q": "Quelle distance de sécurité en agglomération à 50 km/h ?",
@@ -2650,7 +2650,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Distance de sécurité = 2 secondes minimum, soit ~28m à 50 km/h.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1494976388531-d1058494ceb8?w=520&h=260&fit=crop"
       },
       {
         "q": "Peut-on utiliser des pneus hiver toute l'année ?",
@@ -2674,7 +2674,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "L'asseoir confortablement, la rassurer, appeler le 15 et surveiller.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment reconnaître un AVC (Accident Vasculaire Cérébral) ?",
@@ -2686,7 +2686,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "FAST : Face (paralysie), Arms (bras faible), Speech (trouble parole), Time (appeler vite).",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=520&h=260&fit=crop"
       },
       {
         "q": "Que signifie le sigle ESP ?",
@@ -2755,7 +2755,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "La distance de freinage est environ doublée sur route mouillée.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment réagir en cas de brouillard dense ?",
@@ -2791,7 +2791,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Les angles morts cachent des usagers vulnérables (piétons, vélos, motos).",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment vérifier l'angle mort avant de changer de voie ?",
@@ -2815,7 +2815,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "En sens unique, on peut stationner des deux côtés sauf signalisation contraire.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment se garer en créneau ?",
@@ -2851,7 +2851,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Un véhicule stationné en virage n'est pas visible, créant un danger pour les autres.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment éviter l'éblouissement par le soleil bas ?",
@@ -2887,7 +2887,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Triangle avec flocon/bonhomme de neige = risque de verglas ou neige.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1566847926613-4bf4f25be5b6?w=520&h=260&fit=crop"
       },
       {
         "q": "Quel véhicule est prioritaire avec un gyrophare bleu et une sirène ?",
@@ -2899,7 +2899,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Gyrophare bleu + sirène = véhicule prioritaire en intervention.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment réagir face à un véhicule de secours ?",
@@ -2911,7 +2911,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Se ranger à droite et s'arrêter si nécessaire. Ne jamais bloquer le passage.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=520&h=260&fit=crop"
       },
       {
         "q": "Que signifie une ligne continue blanche ?",
@@ -2935,7 +2935,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "S'arrêter, protéger la tête du passager, ne rien mettre dans la bouche.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=520&h=260&fit=crop"
       },
       {
         "q": "Quelle est la sanction pour non-port de ceinture ?",
@@ -2971,7 +2971,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Warnings, gilet haute visibilité, lampe pour être visible et triangle.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1506241537529-eefea1fae3e0?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment réagir si un bébé s'étouffe ?",
@@ -3028,7 +3028,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Carré bleu avec flèche blanche = sens obligatoire dans la direction indiquée.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1566847926613-4bf4f25be5b6?w=520&h=260&fit=crop"
       },
       {
         "q": "Quelle vitesse maximale sur route nationale hors agglomération ?",
@@ -3040,7 +3040,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "80 km/h sur route nationale à double sens depuis juillet 2018.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1494976388531-d1058494ceb8?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment utiliser les voies d'insertion sur autoroute ?",
@@ -3052,7 +3052,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Utiliser la voie d'accélération pour adapter sa vitesse au flux autoroutier.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1545987796-200677ee1011?w=520&h=260&fit=crop"
       },
       {
         "q": "Que signifie le panneau avec un trait rouge sur un fond blanc ?",
@@ -3064,7 +3064,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Panneau rond blanc avec barre oblique = fin de toutes les interdictions.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1566847926613-4bf4f25be5b6?w=520&h=260&fit=crop"
       },
       {
         "q": "Montrez la commande de recyclage d'air. Pourquoi ne pas l'utiliser en continu ?",
@@ -3136,7 +3136,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Triangle avec vagues = risque de vent latéral.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1566847926613-4bf4f25be5b6?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment positionner le triangle en virage ?",
@@ -3148,7 +3148,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Le triangle doit être visible en amont : le placer avant le virage.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=520&h=260&fit=crop"
       },
       {
         "q": "Quelle est la signification d'une double ligne continue ?",
@@ -3184,7 +3184,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Pas de respiration = commencer le massage cardiaque et appeler les secours.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?w=520&h=260&fit=crop"
       },
       {
         "q": "Que vérifier sur un DAE avant utilisation ?",
@@ -3196,7 +3196,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Poitrine sèche, pas de bijou métallique, personne ne touche la victime pendant le choc.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment nettoyer les phares pour maintenir une bonne visibilité ?",
@@ -3208,7 +3208,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Un chiffon humide et du produit nettoyant. Les phares sales réduisent l'éclairage de 30%.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1506241537529-eefea1fae3e0?w=520&h=260&fit=crop"
       },
       {
         "q": "Que faire face à un animal sur la route ?",
@@ -3220,7 +3220,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Freiner progressivement, ne pas faire d'écart brusque qui pourrait causer un accident.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1484406566174-9da000fda645?w=520&h=260&fit=crop"
       },
       {
         "q": "Quelle est la distance d'arrêt à 50 km/h sur route sèche ?",
@@ -3232,7 +3232,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Distance d'arrêt à 50 km/h ≈ 25-28m (temps de réaction + freinage).",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1494976388531-d1058494ceb8?w=520&h=260&fit=crop"
       }
     ]
   },
@@ -3277,7 +3277,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Dépassement par la droite interdit sauf si le véhicule devant tourne à gauche.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=520&h=260&fit=crop"
       },
       {
         "q": "Quelle distance respecter pour doubler un cycliste hors agglo ?",
@@ -3289,7 +3289,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Hors agglomération : 1,5 mètre minimum pour doubler un cycliste.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1541625602330-2277a4c46182?w=520&h=260&fit=crop"
       },
       {
         "q": "Quelle distance pour doubler un cycliste en ville ?",
@@ -3301,7 +3301,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "En agglomération : 1 mètre minimum pour doubler un cycliste.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1541625602330-2277a4c46182?w=520&h=260&fit=crop"
       },
       {
         "q": "Montrez comment régler l'appui-tête. À quelle hauteur ?",
@@ -3361,7 +3361,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Rétrograder avant la descente pour utiliser le frein moteur.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1494976388531-d1058494ceb8?w=520&h=260&fit=crop"
       },
       {
         "q": "Que signifie le panneau triangulaire avec un virage ?",
@@ -3373,7 +3373,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Triangle avec virage = danger, virage dangereux à venir.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1566847926613-4bf4f25be5b6?w=520&h=260&fit=crop"
       },
       {
         "q": "Montrez le bouchon du liquide de refroidissement.",
@@ -3445,7 +3445,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Aquaplaning : le pneu glisse sur un film d'eau, perte totale d'adhérence.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?w=520&h=260&fit=crop"
       },
       {
         "q": "Quels sont les 3 comportements à risque au volant ?",
@@ -3457,7 +3457,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Alcool, vitesse excessive et téléphone au volant sont les principales causes d'accidents.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=520&h=260&fit=crop"
       },
       {
         "q": "Que faire si une victime saigne du nez abondamment ?",
@@ -3469,7 +3469,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Tête penchée en avant, pincer les narines pendant 10 minutes.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?w=520&h=260&fit=crop"
       },
       {
         "q": "Quand peut-on déplacer une victime d'accident ?",
@@ -3481,7 +3481,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Ne déplacer que si danger vital imminent (incendie, risque d'explosion).",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?w=520&h=260&fit=crop"
       }
     ]
   },
@@ -3502,7 +3502,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Fond bleu avec barre rouge oblique = stationnement interdit.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=520&h=260&fit=crop"
       },
       {
         "q": "Différence entre arrêt et stationnement ?",
@@ -3514,7 +3514,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Arrêt : conducteur reste au volant. Stationnement : conducteur quitte le véhicule.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=520&h=260&fit=crop"
       },
       {
         "q": "Quelle manœuvre est interdite sur autoroute ?",
@@ -3526,7 +3526,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Demi-tour, marche arrière et arrêt sur la chaussée sont interdits sur autoroute.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1545987796-200677ee1011?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment entrer dans une voie d'insertion ?",
@@ -3550,7 +3550,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "STOP = arrêt obligatoire marqué, même si personne ne vient.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1566847926613-4bf4f25be5b6?w=520&h=260&fit=crop"
       },
       {
         "q": "Montrez le voyant de frein. Quand s'allume-t-il hors frein à main ?",
@@ -3574,7 +3574,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Vérifier visibilité et priorités, réaliser en plusieurs manœuvres si la voie est étroite.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=520&h=260&fit=crop"
       },
       {
         "q": "Que faire si le feu passe à l'orange et qu'on ne peut pas s'arrêter ?",
@@ -3586,7 +3586,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Passer si l'arrêt brutal serait dangereux, sinon s'arrêter.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=520&h=260&fit=crop"
       },
       {
         "q": "Montrez le bouchon d'huile moteur. Quand ajouter de l'huile ?",
@@ -3622,7 +3622,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "50 km/h en agglomération sauf signalisation contraire.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1494976388531-d1058494ceb8?w=520&h=260&fit=crop"
       },
       {
         "q": "Montrez la jauge d'huile sous le capot. À quoi sert-elle ?",
@@ -3694,7 +3694,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Allonger, surélever les jambes, couvrir et rassurer en attendant les secours.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment reconnaître un choc anaphylactique ?",
@@ -3718,7 +3718,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Électrode droite sous la clavicule droite, gauche sous l'aisselle gauche.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=520&h=260&fit=crop"
       },
       {
         "q": "Faut-il continuer le massage en attendant le DAE ?",
@@ -3730,7 +3730,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Le massage continue jusqu'à ce que le DAE demande de s'écarter pour l'analyse.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=520&h=260&fit=crop"
       }
     ]
   },
@@ -3751,7 +3751,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "À 90 km/h : ~25m réaction + ~40m freinage = ~65m d'arrêt.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1494976388531-d1058494ceb8?w=520&h=260&fit=crop"
       },
       {
         "q": "Quelle est la distance d'arrêt à 130 km/h ?",
@@ -3763,7 +3763,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "À 130 km/h : ~36m réaction + ~90m freinage ≈ 125m d'arrêt.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1494976388531-d1058494ceb8?w=520&h=260&fit=crop"
       },
       {
         "q": "Que risque un conducteur avec un taux d'alcool supérieur à 0,5 g/l ?",
@@ -3775,7 +3775,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Alcool > 0.5g/l : 135€ d'amende, 6 points retirés, suspension possible.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=520&h=260&fit=crop"
       },
       {
         "q": "Montrez le voyant batterie. Quelle action en cas d'allumage prolongé ?",
@@ -3799,7 +3799,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Rétroviseurs propres, bien réglés pour couvrir les zones latérales.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment vérifier le fonctionnement des feux stop sans aide ?",
@@ -3811,7 +3811,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Reculer près d'une surface réfléchissante et appuyer sur le frein.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=520&h=260&fit=crop"
       },
       {
         "q": "Que signifie le panneau d'agglomération (fond blanc, nom de ville) ?",
@@ -3823,7 +3823,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Panneau de localité = entrée en agglomération, vitesse max 50 km/h.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1566847926613-4bf4f25be5b6?w=520&h=260&fit=crop"
       },
       {
         "q": "Que signifie le panneau de sortie d'agglomération (barré en rouge) ?",
@@ -3835,7 +3835,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Panneau barré = sortie d'agglomération, vitesse hors agglo s'applique.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1566847926613-4bf4f25be5b6?w=520&h=260&fit=crop"
       },
       {
         "q": "Montrez le commodo d'éclairage. Quelle position pour les feux de position ?",
@@ -3895,7 +3895,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Couper le contact, évacuer tous les occupants et appeler les pompiers (18).",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=520&h=260&fit=crop"
       },
       {
         "q": "Que faire si l'on est témoin d'un accident sans blessé ?",
@@ -3907,7 +3907,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Protéger, échanger informations et remplir un constat amiable.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=520&h=260&fit=crop"
       },
       {
         "q": "Que contient un constat amiable ?",
@@ -3919,7 +3919,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Le constat contient les circonstances, croquis, identités, assurances et signatures.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=520&h=260&fit=crop"
       },
       {
         "q": "Que faire si la victime vomit pendant la PLS ?",
@@ -3931,7 +3931,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "En PLS, la bouche est orientée vers le sol pour l'évacuation des liquides.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?w=520&h=260&fit=crop"
       },
       {
         "q": "Quel est le délai pour déclarer un accident à l'assurance ?",
@@ -3943,7 +3943,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "L'accident doit être déclaré à l'assurance dans les 5 jours ouvrés.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=520&h=260&fit=crop"
       },
       {
         "q": "Pourquoi le sous-gonflage augmente la consommation ?",
@@ -3967,7 +3967,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Vérifier la date de péremption et que l'extincteur est accessible et fonctionnel.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment réagir si un passager fait un malaise hypoglycémique ?",
@@ -3979,7 +3979,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "S'arrêter, donner du sucre rapide et surveiller l'amélioration.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=520&h=260&fit=crop"
       }
     ]
   },
@@ -4000,7 +4000,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Respecter la distance latérale minimale et vérifier les angles morts.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1541625602330-2277a4c46182?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment réagir face à un bus scolaire à l'arrêt ?",
@@ -4012,7 +4012,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Ralentir car des enfants peuvent traverser devant ou derrière le bus.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=520&h=260&fit=crop"
       },
       {
         "q": "Montrez le bouton de chauffage du pare-brise. Son avantage en hiver ?",
@@ -4036,7 +4036,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Éco-conduite, entretien régulier et pneus bien gonflés réduisent les émissions.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=520&h=260&fit=crop"
       },
       {
         "q": "Que signifie le label Crit'Air ?",
@@ -4048,7 +4048,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Crit'Air classe les véhicules selon leur niveau de pollution.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=520&h=260&fit=crop"
       },
       {
         "q": "Montrez le voyant de température. Pourquoi surveiller la température en été ?",
@@ -4072,7 +4072,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "La consommation augmente fortement avec la vitesse (résistance de l'air).",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1494976388531-d1058494ceb8?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment stationner en côte montante ?",
@@ -4084,7 +4084,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "En côte montante, braquer les roues à gauche (vers la route) et serrer le frein.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment stationner en côte descendante ?",
@@ -4096,7 +4096,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "En descente, braquer vers le trottoir (droite) et mettre en 1ère ou P.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=520&h=260&fit=crop"
       },
       {
         "q": "Que signifie le panneau bleu avec un vélo blanc ?",
@@ -4108,7 +4108,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Rond bleu avec vélo blanc = piste cyclable obligatoire.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1541625602330-2277a4c46182?w=520&h=260&fit=crop"
       },
       {
         "q": "Montrez le bouchon de lave-glace. Quel produit utiliser ?",
@@ -4132,7 +4132,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Stationner sur un passage piéton met les piétons en danger et est verbalisé.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=520&h=260&fit=crop"
       },
       {
         "q": "Quel est le rôle du pot catalytique ?",
@@ -4180,7 +4180,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Rassurer, couvrir, surveiller. Ne rien donner à boire ni à manger.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?w=520&h=260&fit=crop"
       },
       {
         "q": "Quel est le numéro européen d'urgence ?",
@@ -4192,7 +4192,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Le 112 est le numéro d'urgence européen, valable dans tous les pays de l'UE.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment signaler un danger sur la route aux autres conducteurs ?",
@@ -4228,7 +4228,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Si le DAE dit « choc non recommandé », reprendre le massage cardiaque immédiatement.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=520&h=260&fit=crop"
       }
     ]
   },
@@ -4249,7 +4249,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Nuit : visibilité réduite, fatigue accrue, risque d'éblouissement.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1506241537529-eefea1fae3e0?w=520&h=260&fit=crop"
       },
       {
         "q": "À quelle distance voit-on avec les feux de croisement ?",
@@ -4261,7 +4261,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Les feux de croisement éclairent à environ 30-40 mètres devant.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1506241537529-eefea1fae3e0?w=520&h=260&fit=crop"
       },
       {
         "q": "À quelle distance voit-on avec les feux de route ?",
@@ -4285,7 +4285,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "La seule solution efficace : s'arrêter et dormir 15-20 minutes.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1506241537529-eefea1fae3e0?w=520&h=260&fit=crop"
       },
       {
         "q": "Quel est l'effet du cannabis sur la conduite ?",
@@ -4297,7 +4297,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Cannabis : baisse d'attention, temps de réaction allongé, perception altérée.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=520&h=260&fit=crop"
       },
       {
         "q": "Montrez les feux de route. Pourquoi les éteindre en croisement ?",
@@ -4309,7 +4309,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Les feux de route éblouissent les conducteurs en face, risque d'accident.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1506241537529-eefea1fae3e0?w=520&h=260&fit=crop"
       },
       {
         "q": "Que signifie le panneau triangulaire avec un cerf ?",
@@ -4321,7 +4321,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Triangle avec animal sauvage = risque de traversée d'animaux.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1566847926613-4bf4f25be5b6?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment adapter sa vitesse la nuit ?",
@@ -4333,7 +4333,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Ne jamais rouler plus vite que la distance éclairée par les phares.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1506241537529-eefea1fae3e0?w=520&h=260&fit=crop"
       },
       {
         "q": "Montrez le commodo d'éclairage. Position AUTO signifie quoi ?",
@@ -4357,7 +4357,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Stupéfiants au volant : 2 ans prison, 4500€, 6 points, annulation de permis.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment vérifier que les phares sont bien réglés ?",
@@ -4369,7 +4369,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Face à un mur : faisceaux symétriques, légèrement inclinés vers le bas et la droite.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1506241537529-eefea1fae3e0?w=520&h=260&fit=crop"
       },
       {
         "q": "Montrez le voyant de frein à main électrique. Comment le désactiver ?",
@@ -4405,7 +4405,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Certains médicaments (pictogramme sur la boîte) altèrent la conduite.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment réduire la pollution sonore en conduisant ?",
@@ -4417,7 +4417,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Vitesse modérée et pot d'échappement en bon état réduisent le bruit.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=520&h=260&fit=crop"
       },
       {
         "q": "Que vérifier sur les balais d'essuie-glaces ?",
@@ -4453,7 +4453,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Pomper la pédale, frein moteur en rétrogradant, frein de parking en dernier recours.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment évaluer l'état de conscience d'une victime ?",
@@ -4465,7 +4465,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Stimuler verbalement et physiquement : parler, demander de serrer la main.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?w=520&h=260&fit=crop"
       },
       {
         "q": "Que faire si la victime d'un accident de moto porte un casque et respire ?",
@@ -4477,7 +4477,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Laisser le casque, détacher la jugulaire et surveiller la respiration.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?w=520&h=260&fit=crop"
       }
     ]
   },
@@ -4498,7 +4498,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "L'éco-conduite réduit la consommation de 10-15%, l'usure et les risques.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=520&h=260&fit=crop"
       },
       {
         "q": "Pourquoi anticiper le trafic en regardant loin ?",
@@ -4534,7 +4534,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Zone scolaire : 30 km/h max, vigilance extrême aux heures d'entrée/sortie.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=520&h=260&fit=crop"
       },
       {
         "q": "Montrez le bocal de refroidissement. Comment vérifier sans ouvrir ?",
@@ -4558,7 +4558,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Zone de rencontre : 20 km/h max, piétons prioritaires sur toute la chaussée.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment réagir si un pneu éclate en roulant ?",
@@ -4606,7 +4606,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Cercle rouge avec 30 = vitesse limitée à 30 km/h.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1566847926613-4bf4f25be5b6?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment réagir si de la fumée blanche sort du capot ?",
@@ -4642,7 +4642,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Le permis C est nécessaire pour les véhicules de plus de 3,5 tonnes.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment faire le point de patinage en côte ?",
@@ -4654,7 +4654,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Relâcher l'embrayage doucement jusqu'au point de patinage (le véhicule « tire »).",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1494976388531-d1058494ceb8?w=520&h=260&fit=crop"
       },
       {
         "q": "Que faire face à un tramway ?",
@@ -4666,7 +4666,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Ne jamais s'engager sur les rails et toujours céder la priorité au tramway.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=520&h=260&fit=crop"
       },
       {
         "q": "Quel est le risque d'une température d'huile trop élevée ?",
@@ -4690,7 +4690,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Toujours s'arrêter et attendre qu'un piéton aveugle ait fini de traverser.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment pratiquer le bouche-à-bouche ?",
@@ -4702,7 +4702,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Basculer la tête, pincer le nez, souffler 2 fois progressivement dans la bouche.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1559757175-7cb057fba93c?w=520&h=260&fit=crop"
       },
       {
         "q": "Comment reconnaître un arrêt respiratoire ?",
@@ -4714,7 +4714,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Aucun signe de respiration pendant 10 secondes = arrêt respiratoire.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1559757175-7cb057fba93c?w=520&h=260&fit=crop"
       },
       {
         "q": "Que signifie le sigle RCP ?",
@@ -4726,7 +4726,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "RCP = Réanimation Cardio-Pulmonaire (massage cardiaque + insufflations).",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1559757175-7cb057fba93c?w=520&h=260&fit=crop"
       }
     ]
   },
@@ -4831,7 +4831,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Tout conducteur doit connaître : PAS, PLS, massage cardiaque et compression hémorragie.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=520&h=260&fit=crop"
       },
       {
         "q": "Quelle est la meilleure position du siège pour conduire ?",
@@ -4879,7 +4879,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Vérifier la batterie. Ne pas insister : risque de noyer le moteur ou user le démarreur.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=520&h=260&fit=crop"
       },
       {
         "q": "Quelle est l'importance du contrôle des angles morts avant chaque manœuvre ?",
@@ -4891,7 +4891,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Les angles morts peuvent cacher piétons, vélos et motos. Toujours vérifier.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1590362891818-a0a26e4ec3a6?w=520&h=260&fit=crop"
       },
       {
         "q": "Montrez le coffre. Quels équipements de sécurité y trouver ?",
@@ -4915,7 +4915,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "PAS : 1.Protéger la zone 2.Alerter (15/18/112) 3.Secourir la victime.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=520&h=260&fit=crop"
       },
       {
         "q": "Quel document justifie l'assurance du véhicule ?",
@@ -4927,7 +4927,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "La carte verte (attestation d'assurance) doit être présente dans le véhicule.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=520&h=260&fit=crop"
       },
       {
         "q": "Quels documents avoir obligatoirement dans le véhicule ?",
@@ -4951,7 +4951,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Un entretien régulier garantit sécurité, fiabilité et performances du véhicule.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=520&h=260&fit=crop"
       },
       {
         "q": "Quel geste résume le mieux la conduite responsable ?",
@@ -4963,7 +4963,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Conduite responsable = anticipation, respect des règles, partage de la route et vigilance.",
-        "img": null
+        "img": "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=520&h=260&fit=crop"
       },
       {
         "q": "Montrez le volant. Quelle position des mains est recommandée ?",

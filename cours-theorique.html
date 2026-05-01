@@ -110,12 +110,12 @@
             margin-bottom: 1.5rem;
         }
         .question-illustration {
-            width: 100%; max-width: 480px; height: 200px; border-radius: 16px;
+            width: 100%; max-width: 520px; height: 260px; border-radius: 16px;
             margin: 0 auto 1.5rem; overflow: hidden; position: relative;
-            background: #f1f5f9;
+            background: #1e293b;
         }
         .question-illustration img {
-            width: 100%; height: 100%; object-fit: cover; display: block;
+            width: 100%; height: 100%; object-fit: contain; display: block;
         }
         .question-illustration .img-fallback {
             width: 100%; height: 100%; display: flex; align-items: center;
@@ -373,10 +373,28 @@
             }, 1000);
         }
 
+        let shuffledCorrect = 0; // tracks correct answer position after shuffle
+
+        function shuffleChoices(choices, correctIndex) {
+            const indices = choices.map((_, i) => i);
+            // Fisher-Yates shuffle
+            for (let i = indices.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [indices[i], indices[j]] = [indices[j], indices[i]];
+            }
+            const shuffled = indices.map(i => choices[i]);
+            const newCorrect = indices.indexOf(correctIndex);
+            return { choices: shuffled, correct: newCorrect };
+        }
+
         function showQuestion() {
             answered = false;
             const q = currentSession.questions[currentQuestionIndex];
             const total = currentSession.questions.length;
+
+            // Shuffle choices so correct answer position is random
+            const shuffled = shuffleChoices(q.choices, q.correct);
+            shuffledCorrect = shuffled.correct;
 
             document.getElementById('quizCounter').textContent = `${currentQuestionIndex + 1} / ${total}`;
             document.getElementById('quizProgress').style.width = `${((currentQuestionIndex) / total) * 100}%`;
@@ -393,7 +411,7 @@
             const grid = document.getElementById('choicesGrid');
             grid.innerHTML = '';
             const letters = ['A', 'B', 'C', 'D'];
-            q.choices.forEach((choice, i) => {
+            shuffled.choices.forEach((choice, i) => {
                 const btn = document.createElement('button');
                 btn.className = 'choice-btn';
                 btn.innerHTML = `<span class="choice-letter">${letters[i]}</span><span>${choice}</span>`;
@@ -414,11 +432,11 @@
             answered = true;
             const q = currentSession.questions[currentQuestionIndex];
             const buttons = document.querySelectorAll('.choice-btn');
-            const isCorrect = index === q.correct;
+            const isCorrect = index === shuffledCorrect;
 
             buttons.forEach((btn, i) => {
                 btn.classList.add('disabled');
-                if (i === q.correct) btn.classList.add('correct');
+                if (i === shuffledCorrect) btn.classList.add('correct');
                 if (i === index && !isCorrect) btn.classList.add('wrong');
             });
 
