@@ -481,10 +481,10 @@
     <section style="background: white; border-bottom: 1px solid #e2e8f0; padding: 0;">
         <div style="max-width: 1200px; margin: 0 auto; padding: 0 2rem; text-align: center;">
             <nav style="display: inline-flex; gap: 2rem; overflow-x: auto;">
-                <a href="#permis-conduire" class="category-tab active" style="padding: 1.25rem 0; border-bottom: 3px solid #ec4899; color: #ec4899; text-decoration: none; font-weight: 600; white-space: nowrap; transition: all 0.3s;">
+                <a href="#permis-conduire" class="category-tab active" onclick="showSection('permis'); return false;" style="padding: 1.25rem 0; border-bottom: 3px solid #ec4899; color: #ec4899; text-decoration: none; font-weight: 600; white-space: nowrap; transition: all 0.3s;">
                     Permis de conduire
                 </a>
-                <a href="#" class="category-tab" style="padding: 1.25rem 0; border-bottom: 3px solid transparent; color: #64748b; text-decoration: none; font-weight: 500; white-space: nowrap; transition: all 0.3s;">
+                <a href="#aac" class="category-tab" onclick="showSection('aac'); return false;" style="padding: 1.25rem 0; border-bottom: 3px solid transparent; color: #64748b; text-decoration: none; font-weight: 500; white-space: nowrap; transition: all 0.3s;">
                     Conduite accompagnée/supervisée
                 </a>
                 <a href="#" class="category-tab" style="padding: 1.25rem 0; border-bottom: 3px solid transparent; color: #64748b; text-decoration: none; font-weight: 500; white-space: nowrap; transition: all 0.3s;">
@@ -773,6 +773,85 @@
         </div>
     </section>
 
+    <!-- Conduite Accompagnée Section (hidden by default) -->
+    <section class="pricing-section" id="aac-section" style="display: none;">
+        <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 3rem;">
+            Notre pack <span style="color: #ec4899;">conduite accompagnée</span>
+        </h2>
+        
+        <!-- AAC Tabs -->
+        <div style="text-align: center; margin-bottom: 3rem;">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchAACTab('manual')">
+                    Boîte Manuelle
+                </button>
+                <button class="tab-btn" onclick="switchAACTab('auto')">
+                    Boîte Automatique
+                </button>
+            </div>
+        </div>
+
+        <!-- AAC Manual -->
+        <div id="aac-manual" style="max-width: 600px; margin: 0 auto;">
+            <div class="pricing-card" style="border: 2px solid #ec4899;">
+                <div class="card-header">
+                    <h3>Conduite Accompagnée</h3>
+                    <p class="card-subtitle">Code + 20 cours de conduite</p>
+                </div>
+                
+                <div class="price-display">
+                    <p class="price-label">French Days</p>
+                    <div class="price">949<span class="price-asterisk">€*</span></div>
+                    <p class="price-note">prix public</p>
+                </div>
+                
+                <ul class="features-list">
+                    <li><i class="fas fa-check-circle"></i> 20 cours de conduite</li>
+                    <li><i class="fas fa-check-circle"></i> Âge : Dès 15 ans</li>
+                    <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
+                    <li><i class="fas fa-check-circle"></i> Formation au Code</li>
+                    <li><i class="fas fa-check-circle"></i> Suivi de formation par un coach</li>
+                    <li><i class="fas fa-check-circle"></i> Livret d'apprentissage (en ligne)</li>
+                    <li><i class="fas fa-check-circle"></i> Rendez-vous préalable conduite accompagnée</li>
+                </ul>
+                
+                <a href="inscription.html?pack=aac" class="btn btn-primary card-cta">
+                    Inscris-toi
+                </a>
+            </div>
+        </div>
+
+        <!-- AAC Auto -->
+        <div id="aac-auto" style="max-width: 600px; margin: 0 auto; display: none;">
+            <div class="pricing-card" style="border: 2px solid #ec4899;">
+                <div class="card-header">
+                    <h3>Conduite Accompagnée boîte automatique</h3>
+                    <p class="card-subtitle">Code + 13 cours de conduite</p>
+                </div>
+                
+                <div class="price-display">
+                    <p class="price-label">French Days</p>
+                    <div class="price">749<span class="price-asterisk">€*</span></div>
+                    <p class="price-note">prix public</p>
+                </div>
+                
+                <ul class="features-list">
+                    <li><i class="fas fa-check-circle"></i> 13 cours de conduite</li>
+                    <li><i class="fas fa-check-circle"></i> Âge : Dès 15 ans</li>
+                    <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
+                    <li><i class="fas fa-check-circle"></i> Formation au Code</li>
+                    <li><i class="fas fa-check-circle"></i> Suivi de formation par un coach</li>
+                    <li><i class="fas fa-check-circle"></i> Livret d'apprentissage (en ligne)</li>
+                    <li><i class="fas fa-check-circle"></i> Rendez-vous préalable conduite accompagnée</li>
+                </ul>
+                
+                <a href="inscription.html?pack=aac" class="btn btn-primary card-cta">
+                    Inscris-toi
+                </a>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer>
         <div class="footer-content">
@@ -802,6 +881,38 @@
     </footer>
 
     <script>
+        function showSection(section) {
+            const categoryTabs = document.querySelectorAll('.category-tab');
+            const permisSection = document.getElementById('manual-pricing');
+            const autoSection = document.getElementById('auto-pricing');
+            const aacSection = document.getElementById('aac-section');
+            const tabsContainer = document.querySelector('.tabs-container');
+            
+            // Update active tab
+            categoryTabs.forEach(tab => {
+                tab.classList.remove('active');
+                tab.style.borderBottomColor = 'transparent';
+                tab.style.color = '#64748b';
+                tab.style.fontWeight = '500';
+            });
+            event.target.classList.add('active');
+            event.target.style.borderBottomColor = '#ec4899';
+            event.target.style.color = '#ec4899';
+            event.target.style.fontWeight = '600';
+            
+            if (section === 'permis') {
+                permisSection.style.display = 'block';
+                autoSection.style.display = 'none';
+                aacSection.style.display = 'none';
+                tabsContainer.style.display = 'block';
+            } else if (section === 'aac') {
+                permisSection.style.display = 'none';
+                autoSection.style.display = 'none';
+                aacSection.style.display = 'block';
+                tabsContainer.style.display = 'none';
+            }
+        }
+        
         function switchTab(type) {
             const tabs = document.querySelectorAll('.tab-btn');
             const manualSection = document.getElementById('manual-pricing');
@@ -816,6 +927,19 @@
             } else {
                 manualSection.style.display = 'none';
                 autoSection.style.display = 'block';
+            }
+        }
+        
+        function switchAACTab(type) {
+            const aacManual = document.getElementById('aac-manual');
+            const aacAuto = document.getElementById('aac-auto');
+            
+            if (type === 'manual') {
+                aacManual.style.display = 'block';
+                aacAuto.style.display = 'none';
+            } else {
+                aacManual.style.display = 'none';
+                aacAuto.style.display = 'block';
             }
         }
         
