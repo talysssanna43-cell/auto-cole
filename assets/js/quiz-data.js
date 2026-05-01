@@ -16,7 +16,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Un enfant peut être installé à l'avant à partir de 10 ans.",
-        "img": "assets/images/quiz/quiz-img-002.jpeg"
+        "img": null
       },
       {
         "q": "Quelle est l'utilité de l'appui-tête du siège conducteur ?",
@@ -196,7 +196,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Le gilet et le triangle sont obligatoires.",
-        "img": "assets/images/quiz/quiz-img-045.jpeg"
+        "img": null
       },
       {
         "q": "Comment arrêter une hémorragie ?",
@@ -232,7 +232,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Le triangle se place à environ 30 mètres de l'obstacle.",
-        "img": "assets/images/quiz/quiz-img-057.jpeg"
+        "img": null
       },
       {
         "q": "Quels sont les signes d'un arrêt cardiaque ?",
@@ -337,7 +337,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Ce voyant indique qu'une ou plusieurs portières ne sont pas correctement fermées.",
-        "img": "assets/images/quiz/quiz-img-014.jpeg"
+        "img": "assets/images/quiz/quiz-img-014.png"
       },
       {
         "q": "Pourquoi l'alerte aux secours doit-elle être rapide et précise ?",
@@ -514,7 +514,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Les feux de route éblouissent les conducteurs en face.",
-        "img": "assets/images/quiz/quiz-img-016.jpeg"
+        "img": null
       },
       {
         "q": "Comment reconnaît-on le voyant des feux de route ?",
@@ -538,7 +538,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Pousser le commodo d'éclairage vers l'avant (loin du conducteur).",
-        "img": "assets/images/quiz/quiz-img-027.jpeg"
+        "img": null
       },
       {
         "q": "Quelles conditions pour contrôler le niveau d'huile ?",
@@ -598,7 +598,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Dans un tunnel, même éclairé, allumer les feux de croisement.",
-        "img": "assets/images/quiz/quiz-img-024.jpeg"
+        "img": null
       },
       {
         "q": "Quel est le risque d'un pare-brise sale ou endommagé ?",
@@ -670,7 +670,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "La pression se vérifie à froid car la chaleur fausse la mesure.",
-        "img": "assets/images/quiz/quiz-img-042.jpeg"
+        "img": null
       },
       {
         "q": "Quel équipement de sécurité enfiler AVANT de sortir du véhicule en panne ?",
@@ -682,7 +682,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Le gilet doit être enfilé AVANT de sortir pour être visible.",
-        "img": "assets/images/quiz/quiz-img-045.jpeg"
+        "img": null
       },
       {
         "q": "Montrez les feux arrière. Combien de fonctions assurent-ils ?",
@@ -730,7 +730,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Un feu arrière défaillant rend le véhicule invisible aux suiveurs.",
-        "img": "assets/images/quiz/quiz-img-052.jpeg"
+        "img": null
       },
       {
         "q": "À partir de quel âge peut-on apprendre les gestes de premiers secours ?",
@@ -811,7 +811,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Brancher des câbles : + avec +, - avec - (ou masse métallique).",
-        "img": "assets/images/quiz/quiz-img-035.jpeg"
+        "img": null
       },
       {
         "q": "Que vérifier sur la plaque d'immatriculation ?",
@@ -847,7 +847,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "La sécurité enfant est sur la tranche des portières arrière.",
-        "img": "assets/images/quiz/quiz-img-043.jpeg"
+        "img": "assets/images/quiz/quiz-img-036.jpeg"
       },
       {
         "q": "Quel voyant s'allume quand le frein de stationnement est activé ?",
@@ -895,7 +895,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Feux sales ou défaillants réduisent l'éclairage et la visibilité.",
-        "img": "assets/images/quiz/quiz-img-050.jpeg"
+        "img": null
       },
       {
         "q": "Comment vérifier visuellement l'état d'un pneu ?",
@@ -943,7 +943,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Un long trajet sollicite davantage. Vérifier les niveaux prévient les pannes.",
-        "img": "assets/images/quiz/quiz-img-032.jpeg"
+        "img": null
       },
       {
         "q": "Que faire si le voyant STOP s'allume en roulant ?",
@@ -955,7 +955,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Voyant STOP = danger critique. S'arrêter et couper le moteur.",
-        "img": "assets/images/quiz/quiz-img-009.jpeg"
+        "img": null
       },
       {
         "q": "Que risque un inconscient laissé sur le dos ?",
@@ -979,7 +979,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Les bougies de préchauffage facilitent le démarrage à froid d'un diesel.",
-        "img": "assets/images/quiz/quiz-img-002.jpeg"
+        "img": null
       },
       {
         "q": "Quand utiliser le feu de brouillard arrière ?",
@@ -1048,7 +1048,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Voyant ABS orange ou rouge : l'antiblocage ne fonctionne plus.",
-        "img": "assets/images/quiz/quiz-img-002.jpeg"
+        "img": null
       },
       {
         "q": "Montrez la commande d'éclairage. Comment allumer les feux de croisement ?",
@@ -1072,7 +1072,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "ESP clignotant = le système intervient. Fixe = désactivé ou en panne.",
-        "img": "assets/images/quiz/quiz-img-002.jpeg"
+        "img": null
       },
       {
         "q": "À quoi sert le liquide de refroidissement ?",
@@ -1084,7 +1084,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Le liquide de refroidissement circule pour absorber la chaleur via le radiateur.",
-        "img": "assets/images/quiz/quiz-img-031.jpeg"
+        "img": null
       },
       {
         "q": "Quel est le rôle de l'alternateur ?",
@@ -1108,7 +1108,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Vérifier la pression une fois par mois et avant chaque long trajet, à froid.",
-        "img": "assets/images/quiz/quiz-img-017.jpeg"
+        "img": null
       },
       {
         "q": "Montrez le bouton des feux de détresse. Quel est son symbole ?",
@@ -1168,7 +1168,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Sans refroidissement suffisant, le moteur surchauffe et peut casser.",
-        "img": "assets/images/quiz/quiz-img-031.jpeg"
+        "img": null
       },
       {
         "q": "Montrez la commande de recyclage d'air. Quand l'utiliser ?",
@@ -1204,7 +1204,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Toujours utiliser le liquide recommandé par le constructeur.",
-        "img": "assets/images/quiz/quiz-img-029.jpeg"
+        "img": null
       },
       {
         "q": "Principal risque d'une absence de liquide lave-glace ?",
@@ -1273,7 +1273,7 @@ const quizSessions = [
         ],
         "correct": 3,
         "explanation": "Voyant du tableau de bord + tirer les poignées + écouter le clic.",
-        "img": "assets/images/quiz/quiz-img-014.png"
+        "img": null
       },
       {
         "q": "Que faire si le voyant airbag reste allumé ?",
@@ -1285,7 +1285,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Voyant airbag allumé = dysfonctionnement. Consulter un garagiste.",
-        "img": "assets/images/quiz/quiz-img-002.jpeg"
+        "img": "assets/images/quiz/quiz-img-025.jpeg"
       },
       {
         "q": "Quelle est la fonction du prétensionneur de ceinture ?",
@@ -1309,7 +1309,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "L'étiquette indique 2,6 bars pour le véhicule chargé.",
-        "img": "assets/images/quiz/quiz-img-042.jpeg"
+        "img": null
       },
       {
         "q": "Montrez le bouton de désembuage pare-brise avant.",
@@ -1333,7 +1333,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Le désembuage arrière élimine la buée sur la lunette arrière.",
-        "img": "assets/images/quiz/quiz-img-008.jpeg"
+        "img": "assets/images/quiz/quiz-img-020.jpeg"
       },
       {
         "q": "Quel risque de mélanger deux types d'huile moteur ?",
@@ -1369,7 +1369,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Le gilet doit être accessible depuis l'habitacle pour l'enfiler avant de sortir.",
-        "img": "assets/images/quiz/quiz-img-045.jpeg"
+        "img": null
       },
       {
         "q": "Comment protéger la zone d'un accident ?",
@@ -1453,7 +1453,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Câbles de démarrage ou assistance routière.",
-        "img": "assets/images/quiz/quiz-img-035.jpeg"
+        "img": null
       },
       {
         "q": "Un DAE est-il utilisable par un non-professionnel ?",
@@ -1477,7 +1477,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Connaître les voyants = réagir vite : s'arrêter si rouge, vérifier si orange.",
-        "img": "assets/images/quiz/quiz-img-002.jpeg"
+        "img": null
       },
       {
         "q": "Quelle est la conduite à tenir face à un blessé qui saigne abondamment ?",
@@ -1510,7 +1510,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Le lave-glace s'actionne en manipulant le commodo d'essuie-glace.",
-        "img": "assets/images/quiz/quiz-img-020.jpeg"
+        "img": "assets/images/quiz/quiz-img-030.jpeg"
       },
       {
         "q": "Quand faut-il utiliser les feux de croisement ?",
@@ -1522,7 +1522,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Feux de croisement : nuit et de jour si visibilité réduite.",
-        "img": "assets/images/quiz/quiz-img-024.jpeg"
+        "img": null
       },
       {
         "q": "Montrez le voyant de niveau de carburant. Quel risque si vide ?",
@@ -1582,7 +1582,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Voyant direction assistée = dysfonctionnement. La direction devient plus dure.",
-        "img": "assets/images/quiz/quiz-img-002.jpeg"
+        "img": null
       },
       {
         "q": "Comment vérifier le bon fonctionnement des feux stop ?",
@@ -1594,7 +1594,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Appuyer sur la pédale de frein pendant qu'une personne vérifie à l'arrière.",
-        "img": "assets/images/quiz/quiz-img-052.jpeg"
+        "img": null
       },
       {
         "q": "Comment réagir si le voyant de pression d'huile s'allume en conduisant ?",
@@ -1618,7 +1618,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "La carte grise doit être à jour et présente lors de tout contrôle.",
-        "img": "assets/images/quiz/quiz-img-056.jpeg"
+        "img": null
       },
       {
         "q": "Que faire en premier face à un accident de la route ?",
@@ -1642,7 +1642,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Se garer en aval, warnings, gilet avant de sortir, triangle 30m en amont.",
-        "img": "assets/images/quiz/quiz-img-045.jpeg"
+        "img": null
       },
       {
         "q": "Quelle est la position correcte pour la PLS ?",
@@ -1678,7 +1678,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Mettre le contact, actionner chaque clignotant et vérifier visuellement.",
-        "img": "assets/images/quiz/quiz-img-052.jpeg"
+        "img": null
       },
       {
         "q": "Quel pneu est le plus sollicité en virage à droite ?",
@@ -1690,7 +1690,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "En virage à droite, le pneu avant gauche supporte le plus de charge (force centrifuge).",
-        "img": "assets/images/quiz/quiz-img-058.jpeg"
+        "img": null
       },
       {
         "q": "Pourquoi faut-il permuter les pneus régulièrement ?",
@@ -1702,7 +1702,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "La permutation uniformise l'usure car les pneus avant s'usent plus vite.",
-        "img": "assets/images/quiz/quiz-img-038.jpeg"
+        "img": null
       },
       {
         "q": "Que peut causer un filtre à air encrassé ?",
@@ -1759,7 +1759,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Voyant moteur orange = défaut moteur/antipollution à faire vérifier rapidement.",
-        "img": "assets/images/quiz/quiz-img-002.jpeg"
+        "img": null
       },
       {
         "q": "Quelle est la durée de vie moyenne d'une batterie de voiture ?",
@@ -1771,7 +1771,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Une batterie dure en moyenne 4 à 5 ans selon les conditions d'utilisation.",
-        "img": "assets/images/quiz/quiz-img-035.jpeg"
+        "img": null
       },
       {
         "q": "Montrez où se branchent les câbles de démarrage sur la batterie.",
@@ -1783,7 +1783,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Le câble rouge sur + des deux batteries, le noir sur - puis sur une masse métallique.",
-        "img": "assets/images/quiz/quiz-img-035.jpeg"
+        "img": null
       },
       {
         "q": "Quand utiliser la climatisation en hiver ?",
@@ -1795,7 +1795,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "La climatisation assèche l'air et aide à désembuer rapidement les vitres.",
-        "img": "assets/images/quiz/quiz-img-026.jpeg"
+        "img": null
       },
       {
         "q": "Comment ajuster la hauteur des phares quand le véhicule est chargé ?",
@@ -1831,7 +1831,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Ce voyant indique que le coffre n'est pas fermé correctement.",
-        "img": "assets/images/quiz/quiz-img-014.png"
+        "img": null
       },
       {
         "q": "Quel liquide a un bouchon jaune sous le capot ?",
@@ -1843,7 +1843,7 @@ const quizSessions = [
         ],
         "correct": 2,
         "explanation": "La jauge d'huile a souvent une poignée jaune pour la repérer facilement.",
-        "img": "assets/images/quiz/quiz-img-032.jpeg"
+        "img": "assets/images/quiz/quiz-img-035.jpeg"
       },
       {
         "q": "Quelle est la principale cause d'accident mortel en France ?",
@@ -1903,7 +1903,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Au démarrage, tous les voyants s'allument pour un auto-test puis s'éteignent.",
-        "img": "assets/images/quiz/quiz-img-002.jpeg"
+        "img": null
       },
       {
         "q": "À quoi sert le filtre d'habitacle ?",
@@ -1987,7 +1987,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Des vibrations au volant indiquent souvent un déséquilibrage des roues.",
-        "img": "assets/images/quiz/quiz-img-058.jpeg"
+        "img": null
       }
     ]
   },
@@ -2032,7 +2032,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Éco-conduite : anticiper, vitesse stable, utiliser le frein moteur.",
-        "img": "assets/images/quiz/quiz-img-025.jpeg"
+        "img": null
       },
       {
         "q": "Que signifie le panneau rond rouge avec un trait blanc horizontal ?",
@@ -2092,7 +2092,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Les véhicules récents ont souvent un kit anti-crevaison ou une roue galette.",
-        "img": "assets/images/quiz/quiz-img-045.jpeg"
+        "img": null
       },
       {
         "q": "Quel est le risque de rouler avec un pneu crevé ?",
@@ -2116,7 +2116,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Resserrer les écrous après 50-100 km car ils peuvent se desserrer.",
-        "img": "assets/images/quiz/quiz-img-058.jpeg"
+        "img": null
       },
       {
         "q": "Quand changer les balais d'essuie-glaces ?",
@@ -2200,7 +2200,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Voyant anti-démarrage = la clé n'est pas reconnue. Le moteur ne démarrera pas.",
-        "img": "assets/images/quiz/quiz-img-002.jpeg"
+        "img": null
       },
       {
         "q": "Qu'est-ce que le sous-virage ?",
@@ -2212,7 +2212,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Sous-virage : l'avant du véhicule dérive vers l'extérieur du virage.",
-        "img": null
+        "img": "assets/images/quiz/quiz-img-058.jpeg"
       },
       {
         "q": "À quelle vitesse adapter sa conduite par temps de pluie ?",
@@ -2236,7 +2236,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Vérifier visuellement le niveau entre les repères MIN et MAX sur le vase d'expansion.",
-        "img": "assets/images/quiz/quiz-img-031.jpeg"
+        "img": null
       }
     ]
   },
@@ -2329,7 +2329,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "L'étiquette portière indique 2,1 bars avant et arrière à vide.",
-        "img": "assets/images/quiz/quiz-img-042.jpeg"
+        "img": null
       },
       {
         "q": "Pourquoi ne pas laisser tourner le moteur à l'arrêt ?",
@@ -2401,7 +2401,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Vérifier le niveau sur la jauge du bocal, moteur éteint et à froid.",
-        "img": "assets/images/quiz/quiz-img-035.jpeg"
+        "img": null
       },
       {
         "q": "Que signifie le marquage 185/65 R15 sur un pneu ?",
@@ -2413,7 +2413,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "185=largeur en mm, 65=rapport hauteur/largeur, R=radial, 15=diamètre jante pouces.",
-        "img": "assets/images/quiz/quiz-img-038.jpeg"
+        "img": null
       },
       {
         "q": "Comment se comporter en zone 30 km/h ?",
@@ -2473,7 +2473,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Le filtre à particules capture les particules fines émises par le moteur.",
-        "img": null
+        "img": "assets/images/quiz/quiz-img-035.jpeg"
       },
       {
         "q": "Comment se positionner sur la route pour tourner à gauche ?",
@@ -2638,7 +2638,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Se garer à droite, warnings, gilet AVANT de sortir, se mettre en sécurité derrière la glissière.",
-        "img": "assets/images/quiz/quiz-img-045.jpeg"
+        "img": null
       },
       {
         "q": "Quelle distance de sécurité en agglomération à 50 km/h ?",
@@ -2698,7 +2698,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "ESP = Electronic Stability Program, aide à maintenir la trajectoire en virage.",
-        "img": "assets/images/quiz/quiz-img-002.jpeg"
+        "img": null
       },
       {
         "q": "Comment fonctionne l'aide au démarrage en côte ?",
@@ -2767,7 +2767,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Feux de brouillard, vitesse réduite et distances de sécurité augmentées.",
-        "img": "assets/images/quiz/quiz-img-015.jpeg"
+        "img": null
       },
       {
         "q": "Que signifie un feu clignotant orange à une intersection ?",
@@ -2791,7 +2791,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Les angles morts cachent des usagers vulnérables (piétons, vélos, motos).",
-        "img": "assets/images/quiz/quiz-img-019.jpeg"
+        "img": null
       },
       {
         "q": "Comment vérifier l'angle mort avant de changer de voie ?",
@@ -2971,7 +2971,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Warnings, gilet haute visibilité, lampe pour être visible et triangle.",
-        "img": "assets/images/quiz/quiz-img-045.jpeg"
+        "img": null
       },
       {
         "q": "Comment réagir si un bébé s'étouffe ?",
@@ -3088,7 +3088,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Voyant huile clignotant = niveau bas. Vérifier et compléter si nécessaire.",
-        "img": "assets/images/quiz/quiz-img-009.jpeg"
+        "img": null
       },
       {
         "q": "Quel est le rôle du liquide de direction assistée ?",
@@ -3100,7 +3100,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Le liquide hydraulique de direction assistée facilite le braquage.",
-        "img": "assets/images/quiz/quiz-img-035.jpeg"
+        "img": null
       },
       {
         "q": "Pourquoi les pneus hiver sont-ils plus efficaces par temps froid ?",
@@ -3148,7 +3148,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Le triangle doit être visible en amont : le placer avant le virage.",
-        "img": "assets/images/quiz/quiz-img-057.jpeg"
+        "img": null
       },
       {
         "q": "Quelle est la signification d'une double ligne continue ?",
@@ -3208,7 +3208,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Un chiffon humide et du produit nettoyant. Les phares sales réduisent l'éclairage de 30%.",
-        "img": "assets/images/quiz/quiz-img-039.jpeg"
+        "img": null
       },
       {
         "q": "Que faire face à un animal sur la route ?",
@@ -3433,7 +3433,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Un véhicule qui tire peut indiquer un problème de parallélisme ou pression inégale.",
-        "img": "assets/images/quiz/quiz-img-058.jpeg"
+        "img": null
       },
       {
         "q": "Que signifie le mot « aquaplaning » ?",
@@ -3646,7 +3646,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Regonfler si possible et aller au garage pour réparer ou remplacer.",
-        "img": "assets/images/quiz/quiz-img-042.jpeg"
+        "img": "assets/images/quiz/quiz-img-058.jpeg"
       },
       {
         "q": "Que faire si le liquide de refroidissement est sous le MIN ?",
@@ -3658,7 +3658,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Compléter avec le liquide préconisé, toujours moteur froid.",
-        "img": "assets/images/quiz/quiz-img-031.jpeg"
+        "img": null
       },
       {
         "q": "Quel est le rôle du frein moteur ?",
@@ -3811,7 +3811,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Reculer près d'une surface réfléchissante et appuyer sur le frein.",
-        "img": "assets/images/quiz/quiz-img-052.jpeg"
+        "img": null
       },
       {
         "q": "Que signifie le panneau d'agglomération (fond blanc, nom de ville) ?",
@@ -3883,7 +3883,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Le liquide de refroidissement est coloré (vert, rose ou orange) pour le distinguer.",
-        "img": "assets/images/quiz/quiz-img-031.jpeg"
+        "img": null
       },
       {
         "q": "Comment réagir face à un feu de véhicule ?",
@@ -4144,7 +4144,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Le catalyseur convertit CO, NOx et hydrocarbures en CO2, N2 et H2O.",
-        "img": null
+        "img": "assets/images/quiz/quiz-img-050.jpeg"
       },
       {
         "q": "Montrez le voyant de pression d'huile. Sa forme ?",
@@ -4168,7 +4168,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Fumée noire excessive = problème de combustion à faire vérifier.",
-        "img": null
+        "img": "assets/images/quiz/quiz-img-035.jpeg"
       },
       {
         "q": "Comment aider une victime consciente en attendant les secours ?",
@@ -4216,7 +4216,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Pneus sous-gonflés = +3 à 5% de consommation à cause de la résistance au roulement.",
-        "img": "assets/images/quiz/quiz-img-042.jpeg"
+        "img": "assets/images/quiz/quiz-img-007.jpeg"
       },
       {
         "q": "Que faire si le DAE dit « choc non recommandé » ?",
@@ -4261,7 +4261,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Les feux de croisement éclairent à environ 30-40 mètres devant.",
-        "img": "assets/images/quiz/quiz-img-016.jpeg"
+        "img": null
       },
       {
         "q": "À quelle distance voit-on avec les feux de route ?",
@@ -4309,7 +4309,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Les feux de route éblouissent les conducteurs en face, risque d'accident.",
-        "img": "assets/images/quiz/quiz-img-016.jpeg"
+        "img": null
       },
       {
         "q": "Que signifie le panneau triangulaire avec un cerf ?",
@@ -4369,7 +4369,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Face à un mur : faisceaux symétriques, légèrement inclinés vers le bas et la droite.",
-        "img": "assets/images/quiz/quiz-img-039.jpeg"
+        "img": null
       },
       {
         "q": "Montrez le voyant de frein à main électrique. Comment le désactiver ?",
@@ -4393,7 +4393,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Un clignotement anormalement rapide indique qu'une ampoule est grillée.",
-        "img": "assets/images/quiz/quiz-img-052.jpeg"
+        "img": null
       },
       {
         "q": "Quel est le risque de conduire avec des médicaments ?",
@@ -4618,7 +4618,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Fumée blanche = probable fuite de refroidissement. S'arrêter et ne pas ouvrir le capot.",
-        "img": "assets/images/quiz/quiz-img-031.jpeg"
+        "img": "assets/images/quiz/quiz-img-035.jpeg"
       },
       {
         "q": "Montrez la jauge de carburant. Que signifie la petite flèche ?",
@@ -4759,7 +4759,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Deux pressions : à vide (usage normal) et à pleine charge (véhicule chargé).",
-        "img": "assets/images/quiz/quiz-img-042.jpeg"
+        "img": null
       },
       {
         "q": "Montrez la batterie. Quel risque si les bornes sont oxydées ?",
@@ -4783,7 +4783,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Les 5 niveaux : huile, liquide frein, refroidissement, lave-glace, direction assistée.",
-        "img": "assets/images/quiz/quiz-img-032.jpeg"
+        "img": "assets/images/quiz/quiz-img-035.jpeg"
       },
       {
         "q": "Montrez le bouchon d'huile. Quel symbole le distingue ?",
@@ -4879,7 +4879,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Vérifier la batterie. Ne pas insister : risque de noyer le moteur ou user le démarreur.",
-        "img": "assets/images/quiz/quiz-img-035.jpeg"
+        "img": null
       },
       {
         "q": "Quelle est l'importance du contrôle des angles morts avant chaque manœuvre ?",
@@ -4891,7 +4891,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Les angles morts peuvent cacher piétons, vélos et motos. Toujours vérifier.",
-        "img": "assets/images/quiz/quiz-img-019.jpeg"
+        "img": null
       },
       {
         "q": "Montrez le coffre. Quels équipements de sécurité y trouver ?",
@@ -4939,7 +4939,7 @@ const quizSessions = [
         ],
         "correct": 1,
         "explanation": "Les 3 documents obligatoires : permis, carte grise et attestation d'assurance.",
-        "img": null
+        "img": "assets/images/quiz/quiz-img-056.jpeg"
       },
       {
         "q": "Pourquoi vérifier l'ensemble du véhicule régulièrement ?",
