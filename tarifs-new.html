@@ -1185,13 +1185,27 @@
             
             // Update price based on hours
             const prices = {
-                'zen': { 5: 274, 10: 549, 20: 849, 30: 1349 },
-                'premium': { 5: 445, 10: 599, 20: 949, 30: 1449 },
-                'accelere': { 5: 549, 10: 749, 20: 1149, 30: 1649 },
-                'zen-auto': { 5: 299, 13: 699 },
-                'premium-auto': { 5: 429, 13: 799 },
-                'accelere-auto': { 5: 549, 13: 949 }
+                'zen': { 5: 499, 10: 649, 20: 849, 30: 1349 },
+                'premium': { 5: 599, 10: 749, 20: 949, 30: 1449 },
+                'accelere': { 5: 699, 10: 849, 20: 1149, 30: 1649 },
+                'zen-auto': { 5: 449, 13: 699 },
+                'premium-auto': { 5: 549, 13: 799 },
+                'accelere-auto': { 5: 649, 13: 949 }
             };
+            
+            const oldPrices = {
+                'zen': { 5: 599, 10: 799, 20: 999, 30: 1599 },
+                'premium': { 5: 749, 10: 899, 20: 1199, 30: 1699 },
+                'accelere': { 5: 849, 10: 999, 20: 1399, 30: 1899 },
+                'zen-auto': { 5: 549, 13: 849 },
+                'premium-auto': { 5: 699, 13: 999 },
+                'accelere-auto': { 5: 799, 13: 1149 }
+            };
+            
+            const oldPriceElement = document.getElementById(pack + '-old-price');
+            if (oldPriceElement && oldPrices[pack] && oldPrices[pack][hours]) {
+                oldPriceElement.textContent = oldPrices[pack][hours] + '€';
+            }
             
             const priceElement = document.getElementById(pack + '-price');
             if (priceElement && prices[pack] && prices[pack][hours]) {
