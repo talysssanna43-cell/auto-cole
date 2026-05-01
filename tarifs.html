@@ -591,7 +591,7 @@
                 <a href="#vsp" class="category-tab" onclick="showSection('vsp'); return false;" style="padding: 1.25rem 0; border-bottom: 3px solid transparent; color: #64748b; text-decoration: none; font-weight: 500; white-space: nowrap; transition: all 0.3s;">
                     Voiture sans permis
                 </a>
-                <a href="#" class="category-tab" style="padding: 1.25rem 0; border-bottom: 3px solid transparent; color: #64748b; text-decoration: none; font-weight: 500; white-space: nowrap; transition: all 0.3s;">
+                <a href="#" class="category-tab" onclick="showSection('code')" style="padding: 1.25rem 0; border-bottom: 3px solid transparent; color: #64748b; text-decoration: none; font-weight: 500; white-space: nowrap; transition: all 0.3s;">
                     Code
                 </a>
             </nav>
@@ -1015,6 +1015,66 @@
         </div>
     </section>
 
+    <!-- Code Section (hidden by default) -->
+    <section class="pricing-section" id="code-section" style="display: none;">
+        <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 3rem;">
+            Nos packs <span style="color: #ec4899;">Code</span>
+        </h2>
+        
+        <div class="pricing-grid" style="max-width: 900px; margin: 0 auto; grid-template-columns: repeat(2, 1fr);">
+            <!-- Pack Étudiant -->
+            <div class="pricing-card" style="border: 2px solid #e2e8f0;">
+                <div class="card-header">
+                    <h3>Pack Étudiant</h3>
+                    <p class="card-subtitle">Idéal pour réviser à ton rythme</p>
+                </div>
+                
+                <div class="price-display">
+                    <div class="price">15<span class="price-asterisk">€*</span></div>
+                    <p class="price-note">/ mois</p>
+                </div>
+                
+                <p class="features-title">Contenu du pack :</p>
+                <ul class="features-list">
+                    <li><i class="fas fa-check-circle"></i> Accès aux séries & examens blancs</li>
+                    <li><i class="fas fa-check-circle"></i> Corrections détaillées</li>
+                    <li><i class="fas fa-check-circle"></i> Suivi de progression</li>
+                    <li><i class="fas fa-check-circle"></i> Support & conseils</li>
+                </ul>
+                
+                <a href="inscription.html?pack=code-etudiant" class="btn btn-primary card-cta">
+                    Inscris-toi
+                </a>
+                <p style="color: #64748b; font-size: 0.85rem; margin-top: 0.75rem; text-align: center;">Tarif étudiant sur justificatif.</p>
+            </div>
+
+            <!-- Pack Classique -->
+            <div class="pricing-card" style="border: 2px solid #ec4899;">
+                <div class="card-header">
+                    <h3>Pack Classique</h3>
+                    <p class="card-subtitle">Le meilleur choix pour être prêt le jour J</p>
+                </div>
+                
+                <div class="price-display">
+                    <div class="price">20<span class="price-asterisk">€*</span></div>
+                    <p class="price-note">/ mois</p>
+                </div>
+                
+                <p class="features-title">Contenu du pack :</p>
+                <ul class="features-list">
+                    <li><i class="fas fa-check-circle"></i> Accès illimité 7j/7 (mobile & PC)</li>
+                    <li><i class="fas fa-check-circle"></i> Coaching personnalisé</li>
+                    <li><i class="fas fa-check-circle"></i> Simulations d'examen</li>
+                </ul>
+                
+                <a href="inscription.html?pack=code-classique" class="btn btn-primary card-cta">
+                    Inscris-toi
+                </a>
+                <p style="color: #64748b; font-size: 0.85rem; margin-top: 0.75rem; text-align: center;">Sans engagement — tu arrêtes quand tu veux.</p>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer>
         <div class="footer-content">
@@ -1050,6 +1110,7 @@
             const autoSection = document.getElementById('auto-pricing');
             const aacSection = document.getElementById('aac-section');
             const vspSection = document.getElementById('vsp-section');
+            const codeSection = document.getElementById('code-section');
             const tabsContainer = document.querySelector('.tabs-container');
             
             // Update active tab
@@ -1064,24 +1125,23 @@
             event.target.style.color = '#ec4899';
             event.target.style.fontWeight = '600';
             
+            // Hide all
+            permisSection.style.display = 'none';
+            autoSection.style.display = 'none';
+            aacSection.style.display = 'none';
+            vspSection.style.display = 'none';
+            codeSection.style.display = 'none';
+            tabsContainer.style.display = 'none';
+            
             if (section === 'permis') {
                 permisSection.style.display = 'block';
-                autoSection.style.display = 'none';
-                aacSection.style.display = 'none';
-                vspSection.style.display = 'none';
                 tabsContainer.style.display = 'block';
             } else if (section === 'aac') {
-                permisSection.style.display = 'none';
-                autoSection.style.display = 'none';
                 aacSection.style.display = 'block';
-                vspSection.style.display = 'none';
-                tabsContainer.style.display = 'none';
             } else if (section === 'vsp') {
-                permisSection.style.display = 'none';
-                autoSection.style.display = 'none';
-                aacSection.style.display = 'none';
                 vspSection.style.display = 'block';
-                tabsContainer.style.display = 'none';
+            } else if (section === 'code') {
+                codeSection.style.display = 'block';
             }
         }
         
