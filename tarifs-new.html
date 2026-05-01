@@ -1105,6 +1105,10 @@
         function switchAACTab(type) {
             const aacManual = document.getElementById('aac-manual');
             const aacAuto = document.getElementById('aac-auto');
+            const aacBtns = document.querySelectorAll('#aac-section .tab-btn');
+            
+            aacBtns.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
             
             if (type === 'manual') {
                 aacManual.style.display = 'block';
