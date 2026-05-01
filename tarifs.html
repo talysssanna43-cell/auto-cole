@@ -382,6 +382,7 @@
             background-clip: text;
             line-height: 1;
             letter-spacing: -1px;
+            text-align: center;
         }
         
         .price-asterisk {
@@ -649,7 +650,7 @@
                             <p class="price-note">prix public</p>
                         </div>
                     </div>
-                    <div class="price" id="zen-price">749<span class="price-asterisk">€*</span></div>
+                    <div class="price" id="zen-price">749<span class="price-asterisk">€</span></div>
                 </div>
                 
                 <p class="features-title">Contenu du pack :</p>
@@ -701,7 +702,7 @@
                             <p class="price-note">prix public</p>
                         </div>
                     </div>
-                    <div class="price" id="premium-price">849<span class="price-asterisk">€*</span></div>
+                    <div class="price" id="premium-price">849<span class="price-asterisk">€</span></div>
                 </div>
                 
                 <p class="features-title">Contenu du pack :</p>
@@ -753,7 +754,7 @@
                             <p class="price-note">prix public</p>
                         </div>
                     </div>
-                    <div class="price" id="accelere-price">1049<span class="price-asterisk">€*</span></div>
+                    <div class="price" id="accelere-price">1049<span class="price-asterisk">€</span></div>
                 </div>
                 
                 <p class="features-title">Contenu du pack :</p>
@@ -803,7 +804,7 @@
                             <p class="price-note">prix public</p>
                         </div>
                     </div>
-                    <div class="price" id="zen-auto-price">599<span class="price-asterisk">€*</span></div>
+                    <div class="price" id="zen-auto-price">599<span class="price-asterisk">€</span></div>
                 </div>
                 
                 <p class="features-title">Contenu du pack :</p>
@@ -847,7 +848,7 @@
                             <p class="price-note">prix public</p>
                         </div>
                     </div>
-                    <div class="price" id="premium-auto-price">699<span class="price-asterisk">€*</span></div>
+                    <div class="price" id="premium-auto-price">699<span class="price-asterisk">€</span></div>
                 </div>
                 
                 <p class="features-title">Contenu du pack :</p>
@@ -891,7 +892,7 @@
                             <p class="price-note">prix public</p>
                         </div>
                     </div>
-                    <div class="price" id="accelere-auto-price">849<span class="price-asterisk">€*</span></div>
+                    <div class="price" id="accelere-auto-price">849<span class="price-asterisk">€</span></div>
                 </div>
                 
                 <p class="features-title">Contenu du pack :</p>
@@ -939,7 +940,7 @@
                 
                 <div class="price-display">
                     <p class="price-label"></p>
-                    <div class="price">880<span class="price-asterisk">€*</span></div>
+                    <div class="price">880<span class="price-asterisk">€</span></div>
                     <p class="price-note">prix public</p>
                 </div>
                 
@@ -969,7 +970,7 @@
                 
                 <div class="price-display">
                     <p class="price-label"></p>
-                    <div class="price">650<span class="price-asterisk">€*</span></div>
+                    <div class="price">650<span class="price-asterisk">€</span></div>
                     <p class="price-note">prix public</p>
                 </div>
                 
@@ -1033,7 +1034,7 @@
                 </div>
                 
                 <div class="price-display">
-                    <div class="price">15<span class="price-asterisk">€*</span></div>
+                    <div class="price">15<span class="price-asterisk">€</span></div>
                     <p class="price-note">/ mois</p>
                 </div>
                 
@@ -1058,7 +1059,7 @@
                 </div>
                 
                 <div class="price-display">
-                    <div class="price">20<span class="price-asterisk">€*</span></div>
+                    <div class="price">20<span class="price-asterisk">€</span></div>
                     <p class="price-note">/ mois</p>
                 </div>
                 
@@ -1212,7 +1213,7 @@
             
             const priceElement = document.getElementById(pack + '-price');
             if (priceElement && prices[pack] && prices[pack][hours]) {
-                priceElement.innerHTML = prices[pack][hours] + '<span class="price-asterisk">€*</span>';
+                priceElement.innerHTML = prices[pack][hours] + '<span class="price-asterisk">€</span>';
             }
         }
     </script>
