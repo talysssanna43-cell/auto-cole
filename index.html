@@ -150,70 +150,150 @@
         <div class="container">
             <h2 class="section-title">Des offres adaptées à tous</h2>
             
+            <style>
+                .hp-card { background: #fff; border-radius: 18px; padding: 2rem 1.5rem; border: 1px solid #e2e8f0; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+                .hp-card h3 { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.25rem; }
+                .hp-subtitle { color: #64748b; font-size: 0.95rem; margin-bottom: 0.5rem; }
+                .hp-highlight { display: inline-block; background: #fff0f7; color: #ec4899; padding: 0.3rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; border: 1px solid #fce7f3; margin-bottom: 1rem; }
+                .hp-hours { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+                .hp-hour { flex: 1; text-align: center; padding: 0.6rem 0.25rem; border-radius: 10px; border: 2px solid #e2e8f0; cursor: pointer; transition: all 0.2s; background: white; }
+                .hp-hour:hover { border-color: #ec4899; }
+                .hp-hour.selected { background: #ec4899; border-color: #ec4899; color: white; }
+                .hp-hour .num { display: block; font-size: 1.1rem; font-weight: 700; }
+                .hp-hour .lbl { display: block; font-size: 0.7rem; color: #64748b; }
+                .hp-hour.selected .lbl { color: white; }
+                .hp-price-box { background: linear-gradient(135deg, #f8fafc, #f1f5f9); padding: 0.75rem 1.25rem; border-radius: 14px; border: 1px solid #e2e8f0; margin-bottom: 1rem; text-align: center; }
+                .hp-price-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+                .hp-old { font-size: 1.1rem; color: #1a1a1a; text-decoration: line-through; text-decoration-color: #10b981; font-weight: 600; }
+                .hp-note { font-size: 0.8rem; color: #64748b; }
+                .hp-price { font-size: 3.2rem; font-weight: 700; font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #ec4899, #db2777); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1; letter-spacing: -1px; }
+                .hp-price span { font-size: 1.5rem; vertical-align: super; }
+                .hp-feat-title { font-size: 1.1rem; font-weight: 800; color: #0f172a; margin-bottom: 0.75rem; }
+                .hp-feat { list-style: none; padding: 0; margin: 0 0 1.5rem 0; }
+                .hp-feat li { padding: 0.3rem 0; display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.95rem; font-weight: 600; color: #1e293b; }
+                .hp-feat i { color: #10b981; font-size: 1.1rem; margin-top: 2px; }
+                .hp-dis { color: #cbd5e1 !important; font-weight: 400 !important; }
+                .hp-x { color: #cbd5e1; font-size: 1.1rem; margin-top: 2px; }
+                .hp-btn { display: block; width: 100%; padding: 1rem; font-size: 1.05rem; font-weight: 700; border-radius: 50px; background: linear-gradient(135deg, #ec4899, #db2777); color: white; text-align: center; text-decoration: none; border: none; cursor: pointer; box-shadow: 0 4px 16px rgba(236,72,153,0.3); transition: all 0.3s; }
+                .hp-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(236,72,153,0.4); }
+            </style>
+
             <div class="packs-grid">
                 <!-- Permis Zen -->
-                <div class="pack-card">
-                    <h3 class="pack-title">Permis Zen</h3>
-                    <p style="color: var(--text-light); margin-bottom: 0.25rem;">Code + 20 cours de conduite</p>
-                    <span class="pack-badge">Offre la plus économique</span>
-                    <div class="pack-price" style="flex-direction: column; align-items: center;">
-                        <span class="price-old" style="color: #1a1a1a; text-decoration: line-through; text-decoration-color: #10b981;">899€</span>
-                        <span style="color: var(--text-light); font-size: 0.85rem;">prix public</span>
-                        <span class="price-amount" style="font-size: 2.5rem; font-weight: 700; background: linear-gradient(135deg, #ec4899, #db2777); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">749€</span>
+                <div class="hp-card">
+                    <h3>Permis Zen</h3>
+                    <p class="hp-subtitle">Code + 20 cours de conduite</p>
+                    <span class="hp-highlight">Offre la plus économique</span>
+                    <div class="hp-hours">
+                        <div class="hp-hour" onclick="hpSelect(this,'zen',5)"><span class="num">5</span><span class="lbl">cours</span></div>
+                        <div class="hp-hour" onclick="hpSelect(this,'zen',10)"><span class="num">10</span><span class="lbl">cours</span></div>
+                        <div class="hp-hour selected" onclick="hpSelect(this,'zen',20)"><span class="num">20</span><span class="lbl">cours</span></div>
+                        <div class="hp-hour" onclick="hpSelect(this,'zen',30)"><span class="num">30</span><span class="lbl">cours</span></div>
                     </div>
-                    <p style="font-weight: 800; margin-bottom: 0.75rem;">Contenu du pack :</p>
-                    <ul class="pack-features">
-                        <li><i class="fas fa-check-circle" style="color: #10b981;"></i> 20 cours de conduite</li>
-                        <li><i class="fas fa-check-circle" style="color: #10b981;"></i> Évaluation initiale</li>
-                        <li><i class="fas fa-check-circle" style="color: #10b981;"></i> Formation au Code</li>
-                        <li style="color: #cbd5e1;">✕ Formation en 30 jours</li>
-                        <li style="color: #cbd5e1;">✕ Date de convocation à l'examen sous 30 jours</li>
+                    <div class="hp-price-box">
+                        <div class="hp-price-row">
+                            <span></span>
+                            <div style="text-align:right;">
+                                <span class="hp-old" id="hp-zen-old">899€</span>
+                                <p class="hp-note">prix public</p>
+                            </div>
+                        </div>
+                        <div class="hp-price" id="hp-zen-price">749<span>€</span></div>
+                    </div>
+                    <p class="hp-feat-title">Contenu du pack :</p>
+                    <ul class="hp-feat">
+                        <li><i class="fas fa-check-circle"></i> 20 cours de conduite</li>
+                        <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
+                        <li><i class="fas fa-check-circle"></i> Formation au Code</li>
+                        <li><span class="hp-x">✕</span> <span class="hp-dis">Formation en 30 jours</span></li>
+                        <li><span class="hp-x">✕</span> <span class="hp-dis">Date de convocation à l'examen sous 30 jours</span></li>
                     </ul>
-                    <a href="inscription.html?pack=zen" class="btn-primary btn-block" style="border-radius: 50px;">Inscris-toi</a>
+                    <a href="inscription.html?pack=zen" class="hp-btn">Inscris-toi</a>
                 </div>
 
                 <!-- Permis Premium -->
-                <div class="pack-card pack-featured">
-                    <h3 class="pack-title">Permis Premium</h3>
-                    <p style="color: var(--text-light); margin-bottom: 0.25rem;">Code + 20 cours de conduite</p>
-                    <span class="pack-badge popular">Date d'examen pratique sous 30 jours</span>
-                    <div class="pack-price" style="flex-direction: column; align-items: center;">
-                        <span class="price-old" style="color: #1a1a1a; text-decoration: line-through; text-decoration-color: #10b981;">999€</span>
-                        <span style="color: var(--text-light); font-size: 0.85rem;">prix public</span>
-                        <span class="price-amount" style="font-size: 2.5rem; font-weight: 700; background: linear-gradient(135deg, #ec4899, #db2777); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">849€</span>
+                <div class="hp-card" style="border: 2px solid #ec4899;">
+                    <h3>Permis Premium</h3>
+                    <p class="hp-subtitle">Code + 20 cours de conduite</p>
+                    <span class="hp-highlight">Date d'examen pratique sous 30 jours</span>
+                    <div class="hp-hours">
+                        <div class="hp-hour" onclick="hpSelect(this,'premium',5)"><span class="num">5</span><span class="lbl">cours</span></div>
+                        <div class="hp-hour" onclick="hpSelect(this,'premium',10)"><span class="num">10</span><span class="lbl">cours</span></div>
+                        <div class="hp-hour selected" onclick="hpSelect(this,'premium',20)"><span class="num">20</span><span class="lbl">cours</span></div>
+                        <div class="hp-hour" onclick="hpSelect(this,'premium',30)"><span class="num">30</span><span class="lbl">cours</span></div>
                     </div>
-                    <p style="font-weight: 800; margin-bottom: 0.75rem;">Contenu du pack :</p>
-                    <ul class="pack-features">
-                        <li><i class="fas fa-check-circle" style="color: #10b981;"></i> 20 cours de conduite</li>
-                        <li><i class="fas fa-check-circle" style="color: #10b981;"></i> Évaluation initiale</li>
-                        <li><i class="fas fa-check-circle" style="color: #10b981;"></i> Formation au Code</li>
-                        <li><i class="fas fa-check-circle" style="color: #10b981;"></i> Date de convocation à l'examen sous 30 jours</li>
-                        <li style="color: #cbd5e1;">✕ Formation en 30 jours</li>
+                    <div class="hp-price-box">
+                        <div class="hp-price-row">
+                            <span></span>
+                            <div style="text-align:right;">
+                                <span class="hp-old" id="hp-premium-old">999€</span>
+                                <p class="hp-note">prix public</p>
+                            </div>
+                        </div>
+                        <div class="hp-price" id="hp-premium-price">849<span>€</span></div>
+                    </div>
+                    <p class="hp-feat-title">Contenu du pack :</p>
+                    <ul class="hp-feat">
+                        <li><i class="fas fa-check-circle"></i> 20 cours de conduite</li>
+                        <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
+                        <li><i class="fas fa-check-circle"></i> Formation au Code</li>
+                        <li><i class="fas fa-check-circle"></i> Date de convocation à l'examen sous 30 jours</li>
+                        <li><span class="hp-x">✕</span> <span class="hp-dis">Formation en 30 jours</span></li>
                     </ul>
-                    <a href="inscription.html?pack=premium" class="btn-primary btn-block" style="border-radius: 50px;">Inscris-toi</a>
+                    <a href="inscription.html?pack=premium" class="hp-btn">Inscris-toi</a>
                 </div>
 
                 <!-- Permis Accéléré -->
-                <div class="pack-card">
-                    <h3 class="pack-title">Permis Accéléré</h3>
-                    <p style="color: var(--text-light); margin-bottom: 0.25rem;">Code + 20 cours de conduite</p>
-                    <span class="pack-badge">Formation en 30 jours</span>
-                    <div class="pack-price" style="flex-direction: column; align-items: center;">
-                        <span class="price-old" style="color: #1a1a1a; text-decoration: line-through; text-decoration-color: #10b981;">1249€</span>
-                        <span style="color: var(--text-light); font-size: 0.85rem;">prix public</span>
-                        <span class="price-amount" style="font-size: 2.5rem; font-weight: 700; background: linear-gradient(135deg, #ec4899, #db2777); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">1049€</span>
+                <div class="hp-card">
+                    <h3>Permis Accéléré</h3>
+                    <p class="hp-subtitle">Code + 20 cours de conduite</p>
+                    <span class="hp-highlight">Formation en 30 jours</span>
+                    <div class="hp-hours">
+                        <div class="hp-hour" onclick="hpSelect(this,'accelere',5)"><span class="num">5</span><span class="lbl">cours</span></div>
+                        <div class="hp-hour" onclick="hpSelect(this,'accelere',10)"><span class="num">10</span><span class="lbl">cours</span></div>
+                        <div class="hp-hour selected" onclick="hpSelect(this,'accelere',20)"><span class="num">20</span><span class="lbl">cours</span></div>
+                        <div class="hp-hour" onclick="hpSelect(this,'accelere',30)"><span class="num">30</span><span class="lbl">cours</span></div>
                     </div>
-                    <p style="font-weight: 800; margin-bottom: 0.75rem;">Contenu du pack :</p>
-                    <ul class="pack-features">
-                        <li><i class="fas fa-check-circle" style="color: #10b981;"></i> 20 cours de conduite</li>
-                        <li><i class="fas fa-check-circle" style="color: #10b981;"></i> Évaluation initiale</li>
-                        <li><i class="fas fa-check-circle" style="color: #10b981;"></i> Formation au Code</li>
-                        <li><i class="fas fa-check-circle" style="color: #10b981;"></i> Formation en 30 jours</li>
-                        <li><i class="fas fa-check-circle" style="color: #10b981;"></i> Date de convocation à l'examen sous 30 jours</li>
+                    <div class="hp-price-box">
+                        <div class="hp-price-row">
+                            <span></span>
+                            <div style="text-align:right;">
+                                <span class="hp-old" id="hp-accelere-old">1249€</span>
+                                <p class="hp-note">prix public</p>
+                            </div>
+                        </div>
+                        <div class="hp-price" id="hp-accelere-price">1049<span>€</span></div>
+                    </div>
+                    <p class="hp-feat-title">Contenu du pack :</p>
+                    <ul class="hp-feat">
+                        <li><i class="fas fa-check-circle"></i> 20 cours de conduite</li>
+                        <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
+                        <li><i class="fas fa-check-circle"></i> Formation au Code</li>
+                        <li><i class="fas fa-check-circle"></i> Formation en 30 jours</li>
+                        <li><i class="fas fa-check-circle"></i> Date de convocation à l'examen sous 30 jours</li>
                     </ul>
-                    <a href="inscription.html?pack=accelere" class="btn-primary btn-block" style="border-radius: 50px;">Inscris-toi</a>
+                    <a href="inscription.html?pack=accelere" class="hp-btn">Inscris-toi</a>
                 </div>
             </div>
+
+            <script>
+            function hpSelect(el, pack, hours) {
+                el.parentElement.querySelectorAll('.hp-hour').forEach(h => h.classList.remove('selected'));
+                el.classList.add('selected');
+                const prices = {
+                    'zen': { 5: 249, 10: 499, 20: 749, 30: 1249 },
+                    'premium': { 5: 395, 10: 549, 20: 849, 30: 1349 },
+                    'accelere': { 5: 499, 10: 699, 20: 1049, 30: 1549 }
+                };
+                const oldPrices = {
+                    'zen': { 5: 349, 10: 599, 20: 899, 30: 1499 },
+                    'premium': { 5: 495, 10: 699, 20: 999, 30: 1599 },
+                    'accelere': { 5: 599, 10: 849, 20: 1249, 30: 1799 }
+                };
+                document.getElementById('hp-' + pack + '-price').innerHTML = prices[pack][hours] + '<span>€</span>';
+                document.getElementById('hp-' + pack + '-old').textContent = oldPrices[pack][hours] + '€';
+            }
+            </script>
 
             <div class="offres-stats" style="margin-bottom: 2rem;">
                 <div class="offre-stat">
