@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Nos tarifs pour le permis de conduire à Marseille 13006. Packs adaptés à tous les besoins.">
+    
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <title>Nos Tarifs - Auto-Ecole Breteuil</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f8f9fa;
+            color: #1a1a1a;
+        }
+        
+        /* Navigation */
+        nav {
+            background: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: #1a1a1a;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+        
+        .logo img {
+            height: 40px;
+        }
+        
+        .logo strong {
+            color: #2563eb;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #1a1a1a;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #2563eb;
+        }
+        
+        .nav-cta {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+        
+        .btn-outline {
+            border: 2px solid #2563eb;
+            color: #2563eb;
+            background: white;
+        }
+        
+        .btn-outline:hover {
+            background: #2563eb;
+            color: white;
+        }
+        
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(37,99,235,0.3);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4rem 2rem 3rem;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+        
+        .hero .highlight {
+            color: #fbbf24;
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Tabs */
+        .tabs-container {
+            max-width: 1200px;
+            margin: -2rem auto 3rem;
+            padding: 0 2rem;
+        }
+        
+        .tabs {
+            background: white;
+            border-radius: 50px;
+            padding: 0.5rem;
+            display: inline-flex;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        
+        .tab-btn {
+            padding: 1rem 2.5rem;
+            border: none;
+            background: transparent;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #64748b;
+        }
+        
+        .tab-btn.active {
+            background: #2563eb;
+            color: white;
+            box-shadow: 0 4px 15px rgba(37,99,235,0.3);
+        }
+        
+        /* Pricing Cards */
+        .pricing-section {
+            max-width: 1400px;
+            margin: 0 auto 4rem;
+            padding: 0 2rem;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .pricing-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            position: relative;
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+            border-color: #2563eb;
+        }
+        
+        .pricing-card.popular {
+            border-color: #2563eb;
+            box-shadow: 0 10px 40px rgba(37,99,235,0.2);
+        }
+        
+        .popular-badge {
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(102,126,234,0.4);
+        }
+        
+        .card-header h3 {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+            color: #1a1a1a;
+        }
+        
+        .card-subtitle {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-highlight {
+            color: #2563eb;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .hours-selector {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .hour-option {
+            flex: 1;
+            min-width: 60px;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+        }
+        
+        .hour-option:hover {
+            border-color: #2563eb;
+            background: #eff6ff;
+        }
+        
+        .hour-option.selected {
+            border-color: #2563eb;
+            background: #2563eb;
+            color: white;
+        }
+        
+        .hour-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: block;
+        }
+        
+        .hour-label {
+            font-size: 0.75rem;
+            display: block;
+            margin-top: 0.25rem;
+            color: #64748b;
+        }
+        
+        .hour-option.selected .hour-label {
+            color: white;
+        }
+        
+        .price-display {
+            margin: 2rem 0;
+            text-align: center;
+        }
+        
+        .price-label {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-bottom: 0.5rem;
+        }
+        
+        .price {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #2563eb;
+            line-height: 1;
+        }
+        
+        .price-asterisk {
+            font-size: 1.5rem;
+            vertical-align: super;
+        }
+        
+        .price-note {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-top: 0.5rem;
+        }
+        
+        .features-list {
+            list-style: none;
+            margin: 2rem 0;
+        }
+        
+        .features-list li {
+            padding: 0.75rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #475569;
+            font-size: 0.95rem;
+        }
+        
+        .features-list i {
+            color: #10b981;
+            font-size: 1.1rem;
+        }
+        
+        .card-cta {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1rem;
+        }
+        
+        /* Footer */
+        footer {
+            background: #1a1a1a;
+            color: white;
+            padding: 3rem 2rem 2rem;
+            margin-top: 4rem;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-section h4 {
+            margin-bottom: 1rem;
+            color: #2563eb;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section a {
+            color: #cbd5e1;
+            text-decoration: none;
+            display: block;
+            padding: 0.5rem 0;
+            transition: color 0.3s;
+        }
+        
+        .footer-section a:hover {
+            color: white;
+        }
+        
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 2rem auto 0;
+            padding-top: 2rem;
+            border-top: 1px solid #334155;
+            text-align: center;
+            color: #94a3b8;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .tab-btn {
+                flex: 1;
+                padding: 1rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="assets/logo.png" alt="Auto-Ecole Breteuil">
+                <span>Auto-Ecole <strong>Breteuil</strong></span>
+            </a>
+            
+            <ul class="nav-links">
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="recrutement.html">Recrutement</a></li>
+                <li><a href="qui-sommes-nous.html">Qui sommes-nous</a></li>
+                <li><a href="tarifs.html">Tarifs</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            
+            <div class="nav-cta">
+                <a href="connexion.html" class="btn btn-outline">Se connecter</a>
+                <a href="inscription.html" class="btn btn-primary">S'inscrire</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1>Nos <span class="highlight">tarifs</span></h1>
+        <p>Des forfaits adaptés à tous les besoins, transparents et sans frais cachés</p>
+    </section>
+
+    <!-- Tabs -->
+    <div class="tabs-container" style="text-align: center;">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('manual')">
+                Boîte Manuelle
+            </button>
+            <button class="tab-btn" onclick="switchTab('auto')">
+                Boîte Automatique
+            </button>
+        </div>
+    </div>
+
+    <!-- Pricing Section - Manual -->
+    <section class="pricing-section" id="manual-pricing">
+        <div class="pricing-grid">
+            <!-- Permis Zen -->
+            <div class="pricing-card">
+                <div class="card-header">
+                    <h3>Permis Zen</h3>
+                    <p class="card-subtitle">Code + 20 cours de conduite</p>
+                    <p class="card-highlight">Offre la plus économique</p>
+                </div>
+                
+                <div class="hours-selector">
+                    <div class="hour-option" onclick="selectHours(this, 'zen', 5)">
+                        <span class="hour-number">5</span>
+                        <span class="hour-label">cours</span>
+                    </div>
+                    <div class="hour-option" onclick="selectHours(this, 'zen', 10)">
+                        <span class="hour-number">10</span>
+                        <span class="hour-label">cours</span>
+                    </div>
+                    <div class="hour-option selected" onclick="selectHours(this, 'zen', 20)">
+                        <span class="hour-number">20</span>
+                        <span class="hour-label">cours</span>
+                    </div>
+                    <div class="hour-option" onclick="selectHours(this, 'zen', 30)">
+                        <span class="hour-number">30</span>
+                        <span class="hour-label">cours</span>
+                    </div>
+                </div>
+                
+                <div class="price-display">
+                    <p class="price-label">French Days</p>
+                    <div class="price" id="zen-price">949<span class="price-asterisk">€*</span></div>
+                    <p class="price-note">prix public</p>
+                </div>
+                
+                <ul class="features-list">
+                    <li><i class="fas fa-check-circle"></i> 20 cours de conduite</li>
+                    <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
+                    <li><i class="fas fa-check-circle"></i> Formation au Code</li>
+                    <li><i class="fas fa-check-circle"></i> Formation en 30 jours</li>
+                    <li><i class="fas fa-check-circle"></i> Date d'examen sous 30 jours</li>
+                </ul>
+                
+                <a href="inscription.html?pack=zen" class="btn btn-primary card-cta">
+                    Je m'inscris
+                </a>
+            </div>
+
+            <!-- Permis Premium -->
+            <div class="pricing-card popular">
+                <div class="popular-badge">Le plus populaire</div>
+                <div class="card-header">
+                    <h3>Permis Premium</h3>
+                    <p class="card-subtitle">Code + 20 cours de conduite</p>
+                    <p class="card-highlight">Date d'examen pratique sous 30 jours</p>
+                </div>
+                
+                <div class="hours-selector">
+                    <div class="hour-option" onclick="selectHours(this, 'premium', 5)">
+                        <span class="hour-number">5</span>
+                        <span class="hour-label">cours</span>
+                    </div>
+                    <div class="hour-option" onclick="selectHours(this, 'premium', 10)">
+                        <span class="hour-number">10</span>
+                        <span class="hour-label">cours</span>
+                    </div>
+                    <div class="hour-option selected" onclick="selectHours(this, 'premium', 20)">
+                        <span class="hour-number">20</span>
+                        <span class="hour-label">cours</span>
+                    </div>
+                    <div class="hour-option" onclick="selectHours(this, 'premium', 30)">
+                        <span class="hour-number">30</span>
+                        <span class="hour-label">cours</span>
+                    </div>
+                </div>
+                
+                <div class="price-display">
+                    <p class="price-label">French Days</p>
+                    <div class="price" id="premium-price">1199<span class="price-asterisk">€*</span></div>
+                    <p class="price-note">prix public</p>
+                </div>
+                
+                <ul class="features-list">
+                    <li><i class="fas fa-check-circle"></i> 20 cours de conduite</li>
+                    <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
+                    <li><i class="fas fa-check-circle"></i> Formation au Code</li>
+                    <li><i class="fas fa-check-circle"></i> Date d'examen sous 30 jours</li>
+                    <li><i class="fas fa-check-circle"></i> Formation en 30 jours</li>
+                </ul>
+                
+                <a href="inscription.html?pack=aac" class="btn btn-primary card-cta">
+                    Je m'inscris
+                </a>
+            </div>
+
+            <!-- Permis Accéléré -->
+            <div class="pricing-card">
+                <div class="card-header">
+                    <h3>Permis Accéléré</h3>
+                    <p class="card-subtitle">Code + 20 cours de conduite</p>
+                    <p class="card-highlight">Formation en 30 jours</p>
+                </div>
+                
+                <div class="hours-selector">
+                    <div class="hour-option" onclick="selectHours(this, 'accelere', 5)">
+                        <span class="hour-number">5</span>
+                        <span class="hour-label">cours</span>
+                    </div>
+                    <div class="hour-option" onclick="selectHours(this, 'accelere', 10)">
+                        <span class="hour-number">10</span>
+                        <span class="hour-label">cours</span>
+                    </div>
+                    <div class="hour-option selected" onclick="selectHours(this, 'accelere', 20)">
+                        <span class="hour-number">20</span>
+                        <span class="hour-label">cours</span>
+                    </div>
+                    <div class="hour-option" onclick="selectHours(this, 'accelere', 30)">
+                        <span class="hour-number">30</span>
+                        <span class="hour-label">cours</span>
+                    </div>
+                </div>
+                
+                <div class="price-display">
+                    <p class="price-label">French Days</p>
+                    <div class="price" id="accelere-price">1149<span class="price-asterisk">€*</span></div>
+                    <p class="price-note">prix public</p>
+                </div>
+                
+                <ul class="features-list">
+                    <li><i class="fas fa-check-circle"></i> 20 cours de conduite</li>
+                    <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
+                    <li><i class="fas fa-check-circle"></i> Formation au Code</li>
+                    <li><i class="fas fa-check-circle"></i> Formation en 30 jours</li>
+                    <li><i class="fas fa-check-circle"></i> Date d'examen sous 30 jours</li>
+                </ul>
+                
+                <a href="inscription.html?pack=accelere" class="btn btn-primary card-cta">
+                    Je m'inscris
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section - Auto (hidden by default) -->
+    <section class="pricing-section" id="auto-pricing" style="display: none;">
+        <div class="pricing-grid">
+            <!-- Permis Zen BA -->
+            <div class="pricing-card">
+                <div class="card-header">
+                    <h3>Permis Zen</h3>
+                    <p class="card-subtitle">Code + 13 cours de conduite</p>
+                    <p class="card-highlight">Offre la plus économique</p>
+                </div>
+                
+                <div class="hours-selector">
+                    <div class="hour-option" onclick="selectHours(this, 'zen-auto', 5)">
+                        <span class="hour-number">5</span>
+                        <span class="hour-label">cours</span>
+                    </div>
+                    <div class="hour-option selected" onclick="selectHours(this, 'zen-auto', 13)">
+                        <span class="hour-number">13</span>
+                        <span class="hour-label">cours</span>
+                    </div>
+                </div>
+                
+                <div class="price-display">
+                    <p class="price-label">French Days</p>
+                    <div class="price" id="zen-auto-price">849<span class="price-asterisk">€*</span></div>
+                    <p class="price-note">prix public</p>
+                </div>
+                
+                <ul class="features-list">
+                    <li><i class="fas fa-check-circle"></i> 13 cours de conduite</li>
+                    <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
+                    <li><i class="fas fa-check-circle"></i> Formation au Code</li>
+                    <li><i class="fas fa-check-circle"></i> Formation en 30 jours</li>
+                    <li><i class="fas fa-check-circle"></i> Date d'examen sous 30 jours</li>
+                </ul>
+                
+                <a href="inscription.html?pack=boite-auto" class="btn btn-primary card-cta">
+                    Je m'inscris
+                </a>
+            </div>
+
+            <!-- AM/VSP -->
+            <div class="pricing-card popular">
+                <div class="popular-badge">Permis AM</div>
+                <div class="card-header">
+                    <h3>Permis AM (VSP)</h3>
+                    <p class="card-subtitle">8 heures de formation</p>
+                    <p class="card-highlight">Dès 14 ans</p>
+                </div>
+                
+                <div class="price-display">
+                    <p class="price-label">Tarif</p>
+                    <div class="price">399<span class="price-asterisk">€*</span></div>
+                    <p class="price-note">prix public</p>
+                </div>
+                
+                <ul class="features-list">
+                    <li><i class="fas fa-check-circle"></i> 8 heures de formation</li>
+                    <li><i class="fas fa-check-circle"></i> Théorique et pratique</li>
+                    <li><i class="fas fa-check-circle"></i> Conduite sur voie publique</li>
+                    <li><i class="fas fa-check-circle"></i> Attestation de formation</li>
+                </ul>
+                
+                <a href="inscription.html?pack=am" class="btn btn-primary card-cta">
+                    Je m'inscris
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Auto-Ecole Breteuil</h4>
+                <p style="color: #cbd5e1;">Votre auto-école de confiance à Marseille 13006</p>
+            </div>
+            <div class="footer-section">
+                <h4>Navigation</h4>
+                <ul>
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="tarifs.html">Tarifs</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <ul>
+                    <li><a href="tel:0491372828"><i class="fas fa-phone"></i> 04 91 37 28 28</a></li>
+                    <li><a href="mailto:contact@auto-ecole-breteuil.fr"><i class="fas fa-envelope"></i> contact@auto-ecole-breteuil.fr</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Auto-Ecole Breteuil. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchTab(type) {
+            const tabs = document.querySelectorAll('.tab-btn');
+            const manualSection = document.getElementById('manual-pricing');
+            const autoSection = document.getElementById('auto-pricing');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (type === 'manual') {
+                manualSection.style.display = 'block';
+                autoSection.style.display = 'none';
+            } else {
+                manualSection.style.display = 'none';
+                autoSection.style.display = 'block';
+            }
+        }
+        
+        function selectHours(element, pack, hours) {
+            const parent = element.parentElement;
+            parent.querySelectorAll('.hour-option').forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+            
+            // Update price based on hours (example prices)
+            const prices = {
+                'zen': { 5: 549, 10: 749, 20: 949, 30: 1149 },
+                'premium': { 5: 699, 10: 899, 20: 1199, 30: 1399 },
+                'accelere': { 5: 649, 10: 849, 20: 1149, 30: 1349 },
+                'zen-auto': { 5: 499, 13: 849 }
+            };
+            
+            const priceElement = document.getElementById(pack + '-price');
+            if (priceElement && prices[pack] && prices[pack][hours]) {
+                priceElement.innerHTML = prices[pack][hours] + '<span class="price-asterisk">€*</span>';
+            }
+        }
+    </script>
+</body>
+</html>
