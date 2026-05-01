@@ -213,56 +213,89 @@
         }
         
         .pricing-card {
-            background: white;
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            transition: all 0.3s;
-            border: 2px solid transparent;
+            background: linear-gradient(to bottom, #ffffff 0%, #fafafa 100%);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #e5e7eb;
             position: relative;
+            overflow: hidden;
+        }
+        
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ec4899, #db2777, #f472b6);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        
+        .pricing-card:hover::before {
+            opacity: 1;
         }
         
         .pricing-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 48px rgba(0,0,0,0.12), 0 8px 16px rgba(236,72,153,0.1);
             border-color: #ec4899;
         }
         
         .pricing-card.popular {
-            border-color: #ec4899;
-            box-shadow: 0 10px 40px rgba(236,72,153,0.2);
+            background: linear-gradient(135deg, #fdf2f8 0%, #ffffff 100%);
+            border: 2px solid #ec4899;
+            box-shadow: 0 12px 48px rgba(236,72,153,0.15), 0 4px 12px rgba(236,72,153,0.1);
+            transform: scale(1.05);
+        }
+        
+        .pricing-card.popular:hover {
+            transform: translateY(-8px) scale(1.07);
         }
         
         .popular-badge {
             position: absolute;
-            top: -12px;
+            top: 20px;
             right: 20px;
             background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
             color: white;
-            padding: 0.5rem 1.5rem;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            box-shadow: 0 4px 15px rgba(236,72,153,0.4);
+            padding: 0.6rem 1.2rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 20px rgba(236,72,153,0.5);
         }
         
         .card-header h3 {
-            font-size: 1.75rem;
-            margin-bottom: 0.5rem;
-            color: #1a1a1a;
+            font-size: 1.9rem;
+            margin-bottom: 0.75rem;
+            color: #0f172a;
+            font-weight: 700;
+            letter-spacing: -0.5px;
         }
         
         .card-subtitle {
             color: #64748b;
-            font-size: 0.95rem;
+            font-size: 1rem;
             margin-bottom: 0.5rem;
+            font-weight: 500;
         }
         
         .card-highlight {
-            color: #ec4899;
-            font-weight: 600;
-            font-size: 0.9rem;
+            display: inline-block;
+            background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);
+            color: #db2777;
+            font-weight: 700;
+            font-size: 0.85rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
             margin-bottom: 1.5rem;
+            border: 1px solid #f9a8d4;
         }
         
         .hours-selector {
@@ -315,22 +348,38 @@
         .price-display {
             margin: 2rem 0;
             text-align: center;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
         }
         
         .price-label {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #64748b;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .old-price {
+            font-size: 1.2rem;
+            color: #94a3b8;
+            text-decoration: line-through;
             margin-bottom: 0.5rem;
+            font-weight: 500;
         }
         
         .price {
-            font-size: 3rem;
-            font-weight: 800;
+            font-size: 4rem;
+            font-weight: 900;
             background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             line-height: 1;
+            letter-spacing: -2px;
         }
         
         .price-asterisk {
@@ -339,9 +388,23 @@
         }
         
         .price-note {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: #64748b;
+            margin-top: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .price-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
             margin-top: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .features-list {
@@ -365,8 +428,23 @@
         
         .card-cta {
             width: 100%;
-            padding: 1rem;
-            font-size: 1rem;
+            padding: 1.2rem 2rem;
+            font-size: 1.05rem;
+            font-weight: 700;
+            border-radius: 14px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 16px rgba(236,72,153,0.3);
+            text-transform: none;
+            letter-spacing: 0.3px;
+        }
+        
+        .card-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(236,72,153,0.4);
+        }
+        
+        .card-cta:active {
+            transform: translateY(0);
         }
         
         /* Footer */
@@ -427,21 +505,7 @@
             }
             
             .hero h1 {
-                font-size: 1.75rem !important;
-            }
-            
-            .hero > div {
-                grid-template-columns: 1fr !important;
-                gap: 2rem !important;
-            }
-            
-            .hero img {
-                width: 250px !important;
-                height: 250px !important;
-            }
-            
-            .hero > div > div:last-child {
-                text-align: center !important;
+                font-size: 2rem;
             }
             
             .pricing-grid {
@@ -486,30 +550,9 @@
     </nav>
 
     <!-- Hero -->
-    <section class="hero" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 3rem 2rem; position: relative; overflow: hidden;">
-        <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center;">
-            <!-- Left Content -->
-            <div>
-                <h1 style="font-size: 3rem; margin-bottom: 1rem; color: #1a1a1a;">
-                    Nos tarifs <span style="color: #ec4899;">jusqu'à 37% moins chers*</span>
-                </h1>
-                <div style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-top: 2rem;">
-                    <p style="font-weight: 600; color: #1a1a1a; margin-bottom: 0.5rem;">Ton code postal est le <span style="color: #ec4899;">13006</span></p>
-                    <p style="color: #64748b; font-size: 0.9rem;">Pas ton lieu d'apprentissage ? Modifie-le</p>
-                </div>
-            </div>
-            
-            <!-- Right Image -->
-            <div style="position: relative; text-align: right;">
-                <div style="position: relative; display: inline-block;">
-                    <div style="position: absolute; top: -20px; right: -20px; width: 400px; height: 400px; background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%); border-radius: 50%; opacity: 0.2; z-index: 0;"></div>
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop" alt="Élève souriant" style="width: 350px; height: 350px; object-fit: cover; border-radius: 50%; position: relative; z-index: 1; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
-                </div>
-                <div style="background: white; padding: 0.75rem 1.5rem; border-radius: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: inline-block; margin-top: 1rem; position: relative; z-index: 2;">
-                    <p style="color: #ec4899; font-weight: 600; margin: 0;">Être accompagné par un conseiller</p>
-                </div>
-            </div>
-        </div>
+    <section class="hero">
+        <h1>Nos <span class="highlight">tarifs</span></h1>
+        <p>Des forfaits adaptés à tous les besoins, transparents et sans frais cachés</p>
     </section>
 
     <!-- Category Tabs -->
@@ -525,7 +568,7 @@
                 <a href="#vsp" class="category-tab" onclick="showSection('vsp'); return false;" style="padding: 1.25rem 0; border-bottom: 3px solid transparent; color: #64748b; text-decoration: none; font-weight: 500; white-space: nowrap; transition: all 0.3s;">
                     Voiture sans permis
                 </a>
-                <a href="#code" class="category-tab" onclick="showSection('code'); return false;" style="padding: 1.25rem 0; border-bottom: 3px solid transparent; color: #64748b; text-decoration: none; font-weight: 500; white-space: nowrap; transition: all 0.3s;">
+                <a href="#" class="category-tab" style="padding: 1.25rem 0; border-bottom: 3px solid transparent; color: #64748b; text-decoration: none; font-weight: 500; white-space: nowrap; transition: all 0.3s;">
                     Code
                 </a>
             </nav>
@@ -576,8 +619,10 @@
                 
                 <div class="price-display">
                     <p class="price-label">French Days</p>
+                    <p class="old-price">999€</p>
                     <div class="price" id="zen-price">849<span class="price-asterisk">€*</span></div>
                     <p class="price-note">prix public</p>
+                    <span class="price-badge">-15%</span>
                 </div>
                 
                 <ul class="features-list">
@@ -623,8 +668,10 @@
                 
                 <div class="price-display">
                     <p class="price-label">French Days</p>
+                    <p class="old-price">1199€</p>
                     <div class="price" id="premium-price">949<span class="price-asterisk">€*</span></div>
                     <p class="price-note">prix public</p>
+                    <span class="price-badge">-21%</span>
                 </div>
                 
                 <ul class="features-list">
@@ -669,8 +716,10 @@
                 
                 <div class="price-display">
                     <p class="price-label">French Days</p>
+                    <p class="old-price">1399€</p>
                     <div class="price" id="accelere-price">1149<span class="price-asterisk">€*</span></div>
                     <p class="price-note">prix public</p>
+                    <span class="price-badge">-18%</span>
                 </div>
                 
                 <ul class="features-list">
@@ -712,8 +761,10 @@
                 
                 <div class="price-display">
                     <p class="price-label">French Days</p>
+                    <p class="old-price">849€</p>
                     <div class="price" id="zen-auto-price">699<span class="price-asterisk">€*</span></div>
                     <p class="price-note">prix public</p>
+                    <span class="price-badge">-18%</span>
                 </div>
                 
                 <ul class="features-list">
@@ -751,8 +802,10 @@
                 
                 <div class="price-display">
                     <p class="price-label">French Days</p>
+                    <p class="old-price">999€</p>
                     <div class="price" id="premium-auto-price">799<span class="price-asterisk">€*</span></div>
                     <p class="price-note">prix public</p>
+                    <span class="price-badge">-20%</span>
                 </div>
                 
                 <ul class="features-list">
@@ -789,8 +842,10 @@
                 
                 <div class="price-display">
                     <p class="price-label">French Days</p>
+                    <p class="old-price">1149€</p>
                     <div class="price" id="accelere-auto-price">949<span class="price-asterisk">€*</span></div>
                     <p class="price-note">prix public</p>
+                    <span class="price-badge">-17%</span>
                 </div>
                 
                 <ul class="features-list">
@@ -915,68 +970,6 @@
         </div>
     </section>
 
-    <!-- Code Section (hidden by default) -->
-    <section class="pricing-section" id="code-section" style="display: none;">
-        <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 3rem;">
-            Nos forfaits <span style="color: #ec4899;">code de la route</span>
-        </h2>
-        
-        <div class="pricing-grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 500px)); justify-content: center;">
-            <!-- Code Standard -->
-            <div class="pricing-card" style="border: 2px solid #ec4899;">
-                <div class="card-header">
-                    <h3>Code Standard</h3>
-                    <p class="card-subtitle">Formation complète</p>
-                </div>
-                
-                <div class="price-display">
-                    <div class="price" style="font-size: 4rem;">20<span class="price-asterisk">€</span></div>
-                    <p style="color: #64748b; font-size: 1rem; margin-top: 0.5rem;">par mois</p>
-                </div>
-                
-                <h4 style="color: #1a1a1a; font-size: 1.1rem; margin: 2rem 0 1rem; font-weight: 600;">Contenu du pack :</h4>
-                
-                <ul class="features-list" style="margin: 0;">
-                    <li><i class="fas fa-check-circle"></i> Durée : 1 mois</li>
-                    <li><i class="fas fa-check-circle"></i> Accès à l'app de code</li>
-                    <li><i class="fas fa-check-circle"></i> Cours en vidéos et manuel en ligne</li>
-                    <li><i class="fas fa-check-circle"></i> 5000 questions et 30 examens blancs</li>
-                </ul>
-                
-                <a href="inscription.html?pack=code" class="btn btn-primary card-cta" style="margin-top: 2rem;">
-                    Inscris-toi
-                </a>
-            </div>
-
-            <!-- Code Étudiant -->
-            <div class="pricing-card popular" style="border: 2px solid #ec4899;">
-                <div class="popular-badge">Tarif étudiant</div>
-                <div class="card-header">
-                    <h3>Code Étudiant</h3>
-                    <p class="card-subtitle">Formation complète</p>
-                </div>
-                
-                <div class="price-display">
-                    <div class="price" style="font-size: 4rem;">15<span class="price-asterisk">€</span></div>
-                    <p style="color: #64748b; font-size: 1rem; margin-top: 0.5rem;">par mois</p>
-                </div>
-                
-                <h4 style="color: #1a1a1a; font-size: 1.1rem; margin: 2rem 0 1rem; font-weight: 600;">Contenu du pack :</h4>
-                
-                <ul class="features-list" style="margin: 0;">
-                    <li><i class="fas fa-check-circle"></i> Durée : 1 mois</li>
-                    <li><i class="fas fa-check-circle"></i> Accès à l'app de code</li>
-                    <li><i class="fas fa-check-circle"></i> Cours en vidéos et manuel en ligne</li>
-                    <li><i class="fas fa-check-circle"></i> 5000 questions et 30 examens blancs</li>
-                </ul>
-                
-                <a href="inscription.html?pack=code" class="btn btn-primary card-cta" style="margin-top: 2rem;">
-                    Inscris-toi
-                </a>
-            </div>
-        </div>
-    </section>
-
     <!-- Footer -->
     <footer>
         <div class="footer-content">
@@ -1012,7 +1005,6 @@
             const autoSection = document.getElementById('auto-pricing');
             const aacSection = document.getElementById('aac-section');
             const vspSection = document.getElementById('vsp-section');
-            const codeSection = document.getElementById('code-section');
             const tabsContainer = document.querySelector('.tabs-container');
             
             // Update active tab
@@ -1032,28 +1024,18 @@
                 autoSection.style.display = 'none';
                 aacSection.style.display = 'none';
                 vspSection.style.display = 'none';
-                codeSection.style.display = 'none';
                 tabsContainer.style.display = 'block';
             } else if (section === 'aac') {
                 permisSection.style.display = 'none';
                 autoSection.style.display = 'none';
                 aacSection.style.display = 'block';
                 vspSection.style.display = 'none';
-                codeSection.style.display = 'none';
                 tabsContainer.style.display = 'none';
             } else if (section === 'vsp') {
                 permisSection.style.display = 'none';
                 autoSection.style.display = 'none';
                 aacSection.style.display = 'none';
                 vspSection.style.display = 'block';
-                codeSection.style.display = 'none';
-                tabsContainer.style.display = 'none';
-            } else if (section === 'code') {
-                permisSection.style.display = 'none';
-                autoSection.style.display = 'none';
-                aacSection.style.display = 'none';
-                vspSection.style.display = 'none';
-                codeSection.style.display = 'block';
                 tabsContainer.style.display = 'none';
             }
         }
