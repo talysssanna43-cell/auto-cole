@@ -174,6 +174,11 @@
                 .hp-feat i { color: #10b981; font-size: 1.1rem; margin-top: 2px; }
                 .hp-dis { color: #cbd5e1 !important; font-weight: 400 !important; }
                 .hp-x { color: #cbd5e1; font-size: 1.1rem; margin-top: 2px; }
+                .hp-info { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; background: #e2e8f0; color: #64748b; font-size: 0.7rem; font-weight: 700; cursor: pointer; margin-left: 4px; font-style: normal; }
+                .hp-info:hover { background: #ec4899; color: white; }
+                .hp-info .hp-tip { visibility: hidden; opacity: 0; position: absolute; bottom: 130%; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #1e293b, #334155); color: white; padding: 0.75rem 1rem; border-radius: 10px; font-size: 0.8rem; font-weight: 500; line-height: 1.4; width: 260px; text-align: center; box-shadow: 0 8px 24px rgba(0,0,0,0.2); transition: all 0.2s; z-index: 100; pointer-events: none; }
+                .hp-info .hp-tip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 6px solid transparent; border-top-color: #334155; }
+                .hp-info:hover .hp-tip { visibility: visible; opacity: 1; }
                 .hp-btn { display: block; width: 100%; padding: 1rem; font-size: 1.05rem; font-weight: 700; border-radius: 50px; background: linear-gradient(135deg, #ec4899, #db2777); color: white; text-align: center; text-decoration: none; border: none; cursor: pointer; box-shadow: 0 4px 16px rgba(236,72,153,0.3); transition: all 0.3s; }
                 .hp-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(236,72,153,0.4); }
             </style>
@@ -202,7 +207,7 @@
                     </div>
                     <p class="hp-feat-title">Contenu du pack :</p>
                     <ul class="hp-feat">
-                        <li><i class="fas fa-check-circle"></i> 20 cours de conduite</li>
+                        <li><i class="fas fa-check-circle"></i> 20 cours de conduite <i class="hp-info">ℹ<span class="hp-tip">Chaque cours d'une heure se décompose en 15 mn de préparation en ligne et en 45 mn de cours en circulation</span></i></li>
                         <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
                         <li><i class="fas fa-check-circle"></i> Formation au Code</li>
                         <li><span class="hp-x">✕</span> <span class="hp-dis">Formation en 30 jours</span></li>
@@ -234,7 +239,7 @@
                     </div>
                     <p class="hp-feat-title">Contenu du pack :</p>
                     <ul class="hp-feat">
-                        <li><i class="fas fa-check-circle"></i> 20 cours de conduite</li>
+                        <li><i class="fas fa-check-circle"></i> 20 cours de conduite <i class="hp-info">ℹ<span class="hp-tip">Chaque cours d'une heure se décompose en 15 mn de préparation en ligne et en 45 mn de cours en circulation</span></i></li>
                         <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
                         <li><i class="fas fa-check-circle"></i> Formation au Code</li>
                         <li><i class="fas fa-check-circle"></i> Date de convocation à l'examen sous 30 jours</li>
@@ -266,7 +271,7 @@
                     </div>
                     <p class="hp-feat-title">Contenu du pack :</p>
                     <ul class="hp-feat">
-                        <li><i class="fas fa-check-circle"></i> 20 cours de conduite</li>
+                        <li><i class="fas fa-check-circle"></i> 20 cours de conduite <i class="hp-info">ℹ<span class="hp-tip">Chaque cours d'une heure se décompose en 15 mn de préparation en ligne et en 45 mn de cours en circulation</span></i></li>
                         <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
                         <li><i class="fas fa-check-circle"></i> Formation au Code</li>
                         <li><i class="fas fa-check-circle"></i> Formation en 30 jours</li>
