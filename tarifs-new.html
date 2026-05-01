@@ -633,7 +633,7 @@
             <!-- Permis Zen BA -->
             <div class="pricing-card">
                 <div class="card-header">
-                    <h3>Permis Zen</h3>
+                    <h3>Permis Zen<br>boîte automatique</h3>
                     <p class="card-subtitle">Code + 13 cours de conduite</p>
                     <p class="card-highlight">Offre la plus économique</p>
                 </div>
@@ -651,7 +651,7 @@
                 
                 <div class="price-display">
                     <p class="price-label">French Days</p>
-                    <div class="price" id="zen-auto-price">849<span class="price-asterisk">€*</span></div>
+                    <div class="price" id="zen-auto-price">699<span class="price-asterisk">€*</span></div>
                     <p class="price-note">prix public</p>
                 </div>
                 
@@ -659,39 +659,89 @@
                     <li><i class="fas fa-check-circle"></i> 13 cours de conduite</li>
                     <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
                     <li><i class="fas fa-check-circle"></i> Formation au Code</li>
-                    <li><i class="fas fa-check-circle"></i> Formation en 30 jours</li>
-                    <li><i class="fas fa-check-circle"></i> Date d'examen sous 30 jours</li>
+                    <li><i class="fas fa-times-circle" style="color: #94a3b8;"></i> <span style="color: #94a3b8;">Date de convocation à l'examen sous 30 jours</span></li>
+                    <li><i class="fas fa-times-circle" style="color: #94a3b8;"></i> <span style="color: #94a3b8;">Formation en 30 jours</span></li>
                 </ul>
                 
                 <a href="inscription.html?pack=boite-auto" class="btn btn-primary card-cta">
-                    Je m'inscris
+                    Inscris-toi
                 </a>
             </div>
 
-            <!-- AM/VSP -->
+            <!-- Permis Premium BA -->
             <div class="pricing-card popular">
-                <div class="popular-badge">Permis AM</div>
+                <div class="popular-badge">Le plus populaire</div>
                 <div class="card-header">
-                    <h3>Permis AM (VSP)</h3>
-                    <p class="card-subtitle">8 heures de formation</p>
-                    <p class="card-highlight">Dès 14 ans</p>
+                    <h3>Permis Premium<br>boîte automatique</h3>
+                    <p class="card-subtitle">Code + 13 cours de conduite</p>
+                    <p class="card-highlight">Date d'examen pratique sous 30 jours</p>
+                </div>
+                
+                <div class="hours-selector">
+                    <div class="hour-option" onclick="selectHours(this, 'premium-auto', 5)">
+                        <span class="hour-number">5</span>
+                        <span class="hour-label">cours</span>
+                    </div>
+                    <div class="hour-option selected" onclick="selectHours(this, 'premium-auto', 13)">
+                        <span class="hour-number">13</span>
+                        <span class="hour-label">cours</span>
+                    </div>
                 </div>
                 
                 <div class="price-display">
-                    <p class="price-label">Tarif</p>
-                    <div class="price">399<span class="price-asterisk">€*</span></div>
+                    <p class="price-label">French Days</p>
+                    <div class="price" id="premium-auto-price">799<span class="price-asterisk">€*</span></div>
                     <p class="price-note">prix public</p>
                 </div>
                 
                 <ul class="features-list">
-                    <li><i class="fas fa-check-circle"></i> 8 heures de formation</li>
-                    <li><i class="fas fa-check-circle"></i> Théorique et pratique</li>
-                    <li><i class="fas fa-check-circle"></i> Conduite sur voie publique</li>
-                    <li><i class="fas fa-check-circle"></i> Attestation de formation</li>
+                    <li><i class="fas fa-check-circle"></i> 13 cours de conduite</li>
+                    <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
+                    <li><i class="fas fa-check-circle"></i> Formation au Code</li>
+                    <li><i class="fas fa-check-circle"></i> Date de convocation à l'examen sous 30 jours</li>
+                    <li><i class="fas fa-times-circle" style="color: #94a3b8;"></i> <span style="color: #94a3b8;">Formation en 30 jours</span></li>
                 </ul>
                 
-                <a href="inscription.html?pack=am" class="btn btn-primary card-cta">
-                    Je m'inscris
+                <a href="inscription.html?pack=boite-auto" class="btn btn-primary card-cta">
+                    Inscris-toi
+                </a>
+            </div>
+
+            <!-- Permis Accéléré BA -->
+            <div class="pricing-card">
+                <div class="card-header">
+                    <h3>Permis Accéléré<br>boîte automatique</h3>
+                    <p class="card-subtitle">Code + 13 cours de conduite</p>
+                    <p class="card-highlight">Formation en 30 jours</p>
+                </div>
+                
+                <div class="hours-selector">
+                    <div class="hour-option" onclick="selectHours(this, 'accelere-auto', 5)">
+                        <span class="hour-number">5</span>
+                        <span class="hour-label">cours</span>
+                    </div>
+                    <div class="hour-option selected" onclick="selectHours(this, 'accelere-auto', 13)">
+                        <span class="hour-number">13</span>
+                        <span class="hour-label">cours</span>
+                    </div>
+                </div>
+                
+                <div class="price-display">
+                    <p class="price-label">French Days</p>
+                    <div class="price" id="accelere-auto-price">949<span class="price-asterisk">€*</span></div>
+                    <p class="price-note">prix public</p>
+                </div>
+                
+                <ul class="features-list">
+                    <li><i class="fas fa-check-circle"></i> 13 cours de conduite</li>
+                    <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
+                    <li><i class="fas fa-check-circle"></i> Formation au Code</li>
+                    <li><i class="fas fa-check-circle"></i> Date de convocation à l'examen sous 30 jours</li>
+                    <li><i class="fas fa-check-circle"></i> Formation en 30 jours</li>
+                </ul>
+                
+                <a href="inscription.html?pack=boite-auto" class="btn btn-primary card-cta">
+                    Inscris-toi
                 </a>
             </div>
         </div>
@@ -753,7 +803,9 @@
                 'zen': { 5: 549, 10: 749, 20: 949, 30: 1149 },
                 'premium': { 5: 699, 10: 899, 20: 1199, 30: 1399 },
                 'accelere': { 5: 649, 10: 849, 20: 1149, 30: 1349 },
-                'zen-auto': { 5: 499, 13: 849 }
+                'zen-auto': { 5: 499, 13: 699 },
+                'premium-auto': { 5: 599, 13: 799 },
+                'accelere-auto': { 5: 699, 13: 949 }
             };
             
             const priceElement = document.getElementById(pack + '-price');
