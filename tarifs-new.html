@@ -487,7 +487,7 @@
                 <a href="#aac" class="category-tab" onclick="showSection('aac'); return false;" style="padding: 1.25rem 0; border-bottom: 3px solid transparent; color: #64748b; text-decoration: none; font-weight: 500; white-space: nowrap; transition: all 0.3s;">
                     Conduite accompagnée/supervisée
                 </a>
-                <a href="#" class="category-tab" style="padding: 1.25rem 0; border-bottom: 3px solid transparent; color: #64748b; text-decoration: none; font-weight: 500; white-space: nowrap; transition: all 0.3s;">
+                <a href="#vsp" class="category-tab" onclick="showSection('vsp'); return false;" style="padding: 1.25rem 0; border-bottom: 3px solid transparent; color: #64748b; text-decoration: none; font-weight: 500; white-space: nowrap; transition: all 0.3s;">
                     Voiture sans permis
                 </a>
                 <a href="#" class="category-tab" style="padding: 1.25rem 0; border-bottom: 3px solid transparent; color: #64748b; text-decoration: none; font-weight: 500; white-space: nowrap; transition: all 0.3s;">
@@ -852,6 +852,34 @@
         </div>
     </section>
 
+    <!-- VSP Section (hidden by default) -->
+    <section class="pricing-section" id="vsp-section" style="display: none;">
+        <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 1rem;">
+            Voiture sans permis <span style="color: #64748b; font-size: 1.5rem;">(Permis AM)</span>
+        </h2>
+        
+        <div style="max-width: 600px; margin: 0 auto;">
+            <div class="pricing-card" style="border: 2px solid #ec4899;">
+                <div class="price-display" style="margin: 0 0 2rem 0;">
+                    <div class="price" style="font-size: 4rem;">350<span class="price-asterisk">€</span></div>
+                    <p style="color: #64748b; font-size: 1.1rem; margin-top: 0.5rem;">Formation complète</p>
+                </div>
+                
+                <ul class="features-list" style="margin: 0;">
+                    <li><i class="fas fa-check-circle"></i> Inscription administrative offerte</li>
+                    <li><i class="fas fa-check-circle"></i> Suivi numérique</li>
+                    <li><i class="fas fa-check-circle"></i> 8h de pratique</li>
+                    <li><i class="fas fa-check-circle"></i> Module code</li>
+                    <li><i class="fas fa-check-circle"></i> <strong>Permis blanc</strong></li>
+                </ul>
+                
+                <a href="inscription.html?pack=am" class="btn btn-primary card-cta" style="margin-top: 2rem;">
+                    Inscris-toi
+                </a>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer>
         <div class="footer-content">
@@ -886,6 +914,7 @@
             const permisSection = document.getElementById('manual-pricing');
             const autoSection = document.getElementById('auto-pricing');
             const aacSection = document.getElementById('aac-section');
+            const vspSection = document.getElementById('vsp-section');
             const tabsContainer = document.querySelector('.tabs-container');
             
             // Update active tab
@@ -904,11 +933,19 @@
                 permisSection.style.display = 'block';
                 autoSection.style.display = 'none';
                 aacSection.style.display = 'none';
+                vspSection.style.display = 'none';
                 tabsContainer.style.display = 'block';
             } else if (section === 'aac') {
                 permisSection.style.display = 'none';
                 autoSection.style.display = 'none';
                 aacSection.style.display = 'block';
+                vspSection.style.display = 'none';
+                tabsContainer.style.display = 'none';
+            } else if (section === 'vsp') {
+                permisSection.style.display = 'none';
+                autoSection.style.display = 'none';
+                aacSection.style.display = 'none';
+                vspSection.style.display = 'block';
                 tabsContainer.style.display = 'none';
             }
         }
