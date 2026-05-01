@@ -408,16 +408,17 @@
         }
         
         .card-cta {
+            display: block;
             width: 100%;
-            padding: 1rem 1.5rem;
-            font-size: 1rem;
+            padding: 1.1rem 1.5rem;
+            font-size: 1.1rem;
             font-weight: 700;
-            border-radius: 12px;
+            border-radius: 50px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 4px 16px rgba(236,72,153,0.3);
             text-transform: none;
             letter-spacing: 0.3px;
-            margin-top: 1.5rem;
+            text-align: center;
         }
         
         .card-cta:hover {
@@ -600,23 +601,27 @@
                 </div>
                 
                 <div class="price-display">
-                    <p class="price-label">French Days</p>
-                    <p class="old-price">999€</p>
+                    <div class="price-top-row">
+                        <span class="price-label">French Days</span>
+                        <div class="price-right">
+                            <span class="old-price" id="zen-old-price">999€</span>
+                            <p class="price-note">prix public</p>
+                        </div>
+                    </div>
                     <div class="price" id="zen-price">849<span class="price-asterisk">€*</span></div>
-                    <p class="price-note">prix public</p>
-                    <span class="price-badge">-15%</span>
                 </div>
                 
+                <p class="features-title">Contenu du pack :</p>
                 <ul class="features-list">
                     <li><i class="fas fa-check-circle"></i> 20 cours de conduite</li>
                     <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
                     <li><i class="fas fa-check-circle"></i> Formation au Code</li>
-                    <li><i class="fas fa-times-circle" style="color: #94a3b8;"></i> <span style="color: #94a3b8;">Formation en 30 jours</span></li>
-                    <li><i class="fas fa-times-circle" style="color: #94a3b8;"></i> <span style="color: #94a3b8;">Date de convocation à l'examen sous 30 jours</span></li>
+                    <li><span class="feature-x">✕</span> <span class="feature-disabled">Formation en 30 jours</span></li>
+                    <li><span class="feature-x">✕</span> <span class="feature-disabled">Date de convocation à l'examen sous 30 jours</span></li>
                 </ul>
                 
                 <a href="inscription.html?pack=zen" class="btn btn-primary card-cta">
-                    Je m'inscris
+                    Inscris-toi
                 </a>
             </div>
 
@@ -649,23 +654,27 @@
                 </div>
                 
                 <div class="price-display">
-                    <p class="price-label">French Days</p>
-                    <p class="old-price">1199€</p>
+                    <div class="price-top-row">
+                        <span class="price-label">French Days</span>
+                        <div class="price-right">
+                            <span class="old-price" id="premium-old-price">1199€</span>
+                            <p class="price-note">prix public</p>
+                        </div>
+                    </div>
                     <div class="price" id="premium-price">949<span class="price-asterisk">€*</span></div>
-                    <p class="price-note">prix public</p>
-                    <span class="price-badge">-21%</span>
                 </div>
                 
+                <p class="features-title">Contenu du pack :</p>
                 <ul class="features-list">
                     <li><i class="fas fa-check-circle"></i> 20 cours de conduite</li>
                     <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
                     <li><i class="fas fa-check-circle"></i> Formation au Code</li>
                     <li><i class="fas fa-check-circle"></i> Date de convocation à l'examen sous 30 jours</li>
-                    <li><i class="fas fa-times-circle" style="color: #94a3b8;"></i> <span style="color: #94a3b8;">Formation en 30 jours</span></li>
+                    <li><span class="feature-x">✕</span> <span class="feature-disabled">Formation en 30 jours</span></li>
                 </ul>
                 
-                <a href="inscription.html?pack=aac" class="btn btn-primary card-cta">
-                    Je m'inscris
+                <a href="inscription.html?pack=premium" class="btn btn-primary card-cta">
+                    Inscris-toi
                 </a>
             </div>
 
@@ -697,23 +706,27 @@
                 </div>
                 
                 <div class="price-display">
-                    <p class="price-label">French Days</p>
-                    <p class="old-price">1399€</p>
+                    <div class="price-top-row">
+                        <span class="price-label">French Days</span>
+                        <div class="price-right">
+                            <span class="old-price" id="accelere-old-price">1399€</span>
+                            <p class="price-note">prix public</p>
+                        </div>
+                    </div>
                     <div class="price" id="accelere-price">1149<span class="price-asterisk">€*</span></div>
-                    <p class="price-note">prix public</p>
-                    <span class="price-badge">-18%</span>
                 </div>
                 
+                <p class="features-title">Contenu du pack :</p>
                 <ul class="features-list">
                     <li><i class="fas fa-check-circle"></i> 20 cours de conduite</li>
                     <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
                     <li><i class="fas fa-check-circle"></i> Formation au Code</li>
                     <li><i class="fas fa-check-circle"></i> Formation en 30 jours</li>
-                    <li><i class="fas fa-check-circle"></i> Date d'examen sous 30 jours</li>
+                    <li><i class="fas fa-check-circle"></i> Date de convocation à l'examen sous 30 jours</li>
                 </ul>
                 
                 <a href="inscription.html?pack=accelere" class="btn btn-primary card-cta">
-                    Je m'inscris
+                    Inscris-toi
                 </a>
             </div>
         </div>
@@ -742,19 +755,23 @@
                 </div>
                 
                 <div class="price-display">
-                    <p class="price-label">French Days</p>
-                    <p class="old-price">849€</p>
+                    <div class="price-top-row">
+                        <span class="price-label">French Days</span>
+                        <div class="price-right">
+                            <span class="old-price" id="zen-auto-old-price">849€</span>
+                            <p class="price-note">prix public</p>
+                        </div>
+                    </div>
                     <div class="price" id="zen-auto-price">699<span class="price-asterisk">€*</span></div>
-                    <p class="price-note">prix public</p>
-                    <span class="price-badge">-18%</span>
                 </div>
                 
+                <p class="features-title">Contenu du pack :</p>
                 <ul class="features-list">
                     <li><i class="fas fa-check-circle"></i> 13 cours de conduite</li>
                     <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
                     <li><i class="fas fa-check-circle"></i> Formation au Code</li>
-                    <li><i class="fas fa-times-circle" style="color: #94a3b8;"></i> <span style="color: #94a3b8;">Date de convocation à l'examen sous 30 jours</span></li>
-                    <li><i class="fas fa-times-circle" style="color: #94a3b8;"></i> <span style="color: #94a3b8;">Formation en 30 jours</span></li>
+                    <li><span class="feature-x">✕</span> <span class="feature-disabled">Date de convocation à l'examen sous 30 jours</span></li>
+                    <li><span class="feature-x">✕</span> <span class="feature-disabled">Formation en 30 jours</span></li>
                 </ul>
                 
                 <a href="inscription.html?pack=boite-auto" class="btn btn-primary card-cta">
@@ -783,19 +800,23 @@
                 </div>
                 
                 <div class="price-display">
-                    <p class="price-label">French Days</p>
-                    <p class="old-price">999€</p>
+                    <div class="price-top-row">
+                        <span class="price-label">French Days</span>
+                        <div class="price-right">
+                            <span class="old-price" id="premium-auto-old-price">999€</span>
+                            <p class="price-note">prix public</p>
+                        </div>
+                    </div>
                     <div class="price" id="premium-auto-price">799<span class="price-asterisk">€*</span></div>
-                    <p class="price-note">prix public</p>
-                    <span class="price-badge">-20%</span>
                 </div>
                 
+                <p class="features-title">Contenu du pack :</p>
                 <ul class="features-list">
                     <li><i class="fas fa-check-circle"></i> 13 cours de conduite</li>
                     <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
                     <li><i class="fas fa-check-circle"></i> Formation au Code</li>
                     <li><i class="fas fa-check-circle"></i> Date de convocation à l'examen sous 30 jours</li>
-                    <li><i class="fas fa-times-circle" style="color: #94a3b8;"></i> <span style="color: #94a3b8;">Formation en 30 jours</span></li>
+                    <li><span class="feature-x">✕</span> <span class="feature-disabled">Formation en 30 jours</span></li>
                 </ul>
                 
                 <a href="inscription.html?pack=boite-auto" class="btn btn-primary card-cta">
@@ -823,13 +844,17 @@
                 </div>
                 
                 <div class="price-display">
-                    <p class="price-label">French Days</p>
-                    <p class="old-price">1149€</p>
+                    <div class="price-top-row">
+                        <span class="price-label">French Days</span>
+                        <div class="price-right">
+                            <span class="old-price" id="accelere-auto-old-price">1149€</span>
+                            <p class="price-note">prix public</p>
+                        </div>
+                    </div>
                     <div class="price" id="accelere-auto-price">949<span class="price-asterisk">€*</span></div>
-                    <p class="price-note">prix public</p>
-                    <span class="price-badge">-17%</span>
                 </div>
                 
+                <p class="features-title">Contenu du pack :</p>
                 <ul class="features-list">
                     <li><i class="fas fa-check-circle"></i> 13 cours de conduite</li>
                     <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
