@@ -490,7 +490,7 @@
                 <a href="#vsp" class="category-tab" onclick="showSection('vsp'); return false;" style="padding: 1.25rem 0; border-bottom: 3px solid transparent; color: #64748b; text-decoration: none; font-weight: 500; white-space: nowrap; transition: all 0.3s;">
                     Voiture sans permis
                 </a>
-                <a href="#" class="category-tab" style="padding: 1.25rem 0; border-bottom: 3px solid transparent; color: #64748b; text-decoration: none; font-weight: 500; white-space: nowrap; transition: all 0.3s;">
+                <a href="#code" class="category-tab" onclick="showSection('code'); return false;" style="padding: 1.25rem 0; border-bottom: 3px solid transparent; color: #64748b; text-decoration: none; font-weight: 500; white-space: nowrap; transition: all 0.3s;">
                     Code
                 </a>
             </nav>
@@ -880,6 +880,68 @@
         </div>
     </section>
 
+    <!-- Code Section (hidden by default) -->
+    <section class="pricing-section" id="code-section" style="display: none;">
+        <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 3rem;">
+            Nos forfaits <span style="color: #ec4899;">code de la route</span>
+        </h2>
+        
+        <div class="pricing-grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 500px)); justify-content: center;">
+            <!-- Code Standard -->
+            <div class="pricing-card" style="border: 2px solid #ec4899;">
+                <div class="card-header">
+                    <h3>Code Standard</h3>
+                    <p class="card-subtitle">Formation complète</p>
+                </div>
+                
+                <div class="price-display">
+                    <div class="price" style="font-size: 4rem;">20<span class="price-asterisk">€</span></div>
+                    <p style="color: #64748b; font-size: 1rem; margin-top: 0.5rem;">par mois</p>
+                </div>
+                
+                <h4 style="color: #1a1a1a; font-size: 1.1rem; margin: 2rem 0 1rem; font-weight: 600;">Contenu du pack :</h4>
+                
+                <ul class="features-list" style="margin: 0;">
+                    <li><i class="fas fa-check-circle"></i> Durée : 1 mois</li>
+                    <li><i class="fas fa-check-circle"></i> Accès à l'app de code</li>
+                    <li><i class="fas fa-check-circle"></i> Cours en vidéos et manuel en ligne</li>
+                    <li><i class="fas fa-check-circle"></i> 5000 questions et 30 examens blancs</li>
+                </ul>
+                
+                <a href="inscription.html?pack=code" class="btn btn-primary card-cta" style="margin-top: 2rem;">
+                    Inscris-toi
+                </a>
+            </div>
+
+            <!-- Code Étudiant -->
+            <div class="pricing-card popular" style="border: 2px solid #ec4899;">
+                <div class="popular-badge">Tarif étudiant</div>
+                <div class="card-header">
+                    <h3>Code Étudiant</h3>
+                    <p class="card-subtitle">Formation complète</p>
+                </div>
+                
+                <div class="price-display">
+                    <div class="price" style="font-size: 4rem;">15<span class="price-asterisk">€</span></div>
+                    <p style="color: #64748b; font-size: 1rem; margin-top: 0.5rem;">par mois</p>
+                </div>
+                
+                <h4 style="color: #1a1a1a; font-size: 1.1rem; margin: 2rem 0 1rem; font-weight: 600;">Contenu du pack :</h4>
+                
+                <ul class="features-list" style="margin: 0;">
+                    <li><i class="fas fa-check-circle"></i> Durée : 1 mois</li>
+                    <li><i class="fas fa-check-circle"></i> Accès à l'app de code</li>
+                    <li><i class="fas fa-check-circle"></i> Cours en vidéos et manuel en ligne</li>
+                    <li><i class="fas fa-check-circle"></i> 5000 questions et 30 examens blancs</li>
+                </ul>
+                
+                <a href="inscription.html?pack=code" class="btn btn-primary card-cta" style="margin-top: 2rem;">
+                    Inscris-toi
+                </a>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer>
         <div class="footer-content">
@@ -915,6 +977,7 @@
             const autoSection = document.getElementById('auto-pricing');
             const aacSection = document.getElementById('aac-section');
             const vspSection = document.getElementById('vsp-section');
+            const codeSection = document.getElementById('code-section');
             const tabsContainer = document.querySelector('.tabs-container');
             
             // Update active tab
@@ -934,18 +997,28 @@
                 autoSection.style.display = 'none';
                 aacSection.style.display = 'none';
                 vspSection.style.display = 'none';
+                codeSection.style.display = 'none';
                 tabsContainer.style.display = 'block';
             } else if (section === 'aac') {
                 permisSection.style.display = 'none';
                 autoSection.style.display = 'none';
                 aacSection.style.display = 'block';
                 vspSection.style.display = 'none';
+                codeSection.style.display = 'none';
                 tabsContainer.style.display = 'none';
             } else if (section === 'vsp') {
                 permisSection.style.display = 'none';
                 autoSection.style.display = 'none';
                 aacSection.style.display = 'none';
                 vspSection.style.display = 'block';
+                codeSection.style.display = 'none';
+                tabsContainer.style.display = 'none';
+            } else if (section === 'code') {
+                permisSection.style.display = 'none';
+                autoSection.style.display = 'none';
+                aacSection.style.display = 'none';
+                vspSection.style.display = 'none';
+                codeSection.style.display = 'block';
                 tabsContainer.style.display = 'none';
             }
         }
