@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours Théorique - Auto-Ecole Breteuil</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', -apple-system, sans-serif; background: linear-gradient(180deg, #f5f7fa, #e8ecf1); min-height: 100vh; }
+
+        .quiz-header {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            color: white;
+            padding: 2rem 1.5rem;
+            text-align: center;
+        }
+        .quiz-header h1 { font-size: 2rem; margin-bottom: 0.25rem; }
+        .quiz-header p { color: #94a3b8; font-size: 0.95rem; }
+        .quiz-header .back-link {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            color: #ec4899; text-decoration: none; font-weight: 600;
+            margin-bottom: 1rem; font-size: 0.9rem;
+        }
+        .quiz-header .back-link:hover { color: #f472b6; }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+        /* Session cards grid */
+        .sessions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        .session-card {
+            background: white;
+            border-radius: 20px;
+            padding: 1.75rem;
+            border: 2px solid #e5e7eb;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .session-card:hover {
+            border-color: #ec4899;
+            transform: translateY(-6px);
+            box-shadow: 0 12px 32px rgba(236,72,153,0.15);
+        }
+        .session-card .session-icon {
+            width: 56px; height: 56px; border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; color: white; margin-bottom: 1rem;
+        }
+        .session-card h3 { font-size: 1.15rem; font-weight: 700; color: #0f172a; margin-bottom: 0.25rem; }
+        .session-card .session-desc { color: #64748b; font-size: 0.85rem; margin-bottom: 1rem; }
+        .session-card .session-meta {
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 0.8rem; color: #94a3b8;
+        }
+        .session-card .session-badge {
+            background: #f1f5f9; color: #475569; padding: 0.25rem 0.75rem;
+            border-radius: 20px; font-weight: 600; font-size: 0.75rem;
+        }
+        .session-card .session-progress {
+            width: 100%; height: 4px; background: #e2e8f0;
+            border-radius: 4px; margin-top: 0.75rem; overflow: hidden;
+        }
+        .session-card .session-progress-bar {
+            height: 100%; border-radius: 4px; transition: width 0.5s;
+        }
+        .session-card.completed { border-color: #10b981; }
+        .session-card.completed::after {
+            content: '✓'; position: absolute; top: 1rem; right: 1rem;
+            background: #10b981; color: white; width: 28px; height: 28px;
+            border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; font-weight: 700; font-size: 0.85rem;
+        }
+
+        /* Quiz view */
+        #quizView { display: none; }
+        .quiz-top-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            background: white; border-radius: 16px; padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem; box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            flex-wrap: wrap; gap: 0.75rem;
+        }
+        .quiz-top-bar .quiz-title { font-weight: 700; color: #0f172a; font-size: 1rem; }
+        .quiz-top-bar .quiz-counter { color: #64748b; font-weight: 600; font-size: 0.9rem; }
+        .quiz-top-bar .quiz-timer {
+            display: flex; align-items: center; gap: 0.5rem;
+            background: #f1f5f9; padding: 0.4rem 0.75rem;
+            border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: #475569;
+        }
+        .quiz-progress-bar {
+            width: 100%; height: 6px; background: #e2e8f0;
+            border-radius: 6px; margin-bottom: 1.5rem; overflow: hidden;
+        }
+        .quiz-progress-fill {
+            height: 100%; background: linear-gradient(90deg, #ec4899, #db2777);
+            border-radius: 6px; transition: width 0.4s ease;
+        }
+
+        /* Question card */
+        .question-card {
+            background: white; border-radius: 24px;
+            padding: 2rem; box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+            margin-bottom: 1.5rem;
+        }
+        .question-illustration {
+            width: 80px; height: 80px; border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; color: white; margin: 0 auto 1.5rem;
+        }
+        .question-text {
+            font-size: 1.15rem; font-weight: 600; color: #0f172a;
+            text-align: center; line-height: 1.6; margin-bottom: 1.75rem;
+        }
+        .speaker-btn {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            background: #f1f5f9; border: none; padding: 0.4rem 0.75rem;
+            border-radius: 20px; cursor: pointer; font-size: 0.8rem;
+            color: #64748b; transition: all 0.2s; margin: 0 auto 1rem;
+        }
+        .speaker-btn:hover { background: #ec4899; color: white; }
+        .speaker-btn.speaking { background: #ec4899; color: white; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+        /* Choices */
+        .choices-grid { display: grid; gap: 0.75rem; }
+        .choice-btn {
+            display: flex; align-items: center; gap: 1rem;
+            width: 100%; padding: 1rem 1.25rem; background: #f8fafc;
+            border: 2px solid #e2e8f0; border-radius: 14px;
+            cursor: pointer; font-size: 0.95rem; font-weight: 500;
+            color: #334155; text-align: left; transition: all 0.25s;
+        }
+        .choice-btn:hover:not(.disabled) {
+            border-color: #ec4899; background: #fff0f7; transform: translateX(4px);
+        }
+        .choice-letter {
+            min-width: 36px; height: 36px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            background: #e2e8f0; font-weight: 700; font-size: 0.9rem; color: #475569;
+            flex-shrink: 0;
+        }
+        .choice-btn.correct {
+            border-color: #10b981; background: #ecfdf5;
+        }
+        .choice-btn.correct .choice-letter { background: #10b981; color: white; }
+        .choice-btn.wrong {
+            border-color: #ef4444; background: #fef2f2;
+        }
+        .choice-btn.wrong .choice-letter { background: #ef4444; color: white; }
+        .choice-btn.disabled { cursor: default; opacity: 0.7; }
+        .choice-btn.disabled:hover { transform: none; }
+
+        /* Correction */
+        .correction-box {
+            display: none; margin-top: 1.5rem; padding: 1.25rem 1.5rem;
+            border-radius: 16px; font-size: 0.9rem; line-height: 1.6;
+        }
+        .correction-box.correct-box {
+            background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+            border: 2px solid #10b981; color: #065f46;
+        }
+        .correction-box.wrong-box {
+            background: linear-gradient(135deg, #fef2f2, #fecaca);
+            border: 2px solid #ef4444; color: #991b1b;
+        }
+        .correction-box .correction-title {
+            font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+
+        /* Next button */
+        .next-btn {
+            display: none; width: 100%; padding: 1rem;
+            background: linear-gradient(135deg, #ec4899, #db2777);
+            color: white; border: none; border-radius: 50px;
+            font-size: 1.05rem; font-weight: 700; cursor: pointer;
+            box-shadow: 0 4px 16px rgba(236,72,153,0.3);
+            transition: all 0.3s; margin-top: 1rem;
+        }
+        .next-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(236,72,153,0.4); }
+
+        /* Results */
+        .results-card {
+            display: none; background: white; border-radius: 24px;
+            padding: 3rem 2rem; text-align: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+        }
+        .results-score {
+            width: 140px; height: 140px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 1.5rem; font-size: 2.5rem; font-weight: 800; color: white;
+        }
+        .results-score.good { background: linear-gradient(135deg, #10b981, #059669); }
+        .results-score.average { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .results-score.bad { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .results-card h2 { font-size: 1.5rem; margin-bottom: 0.5rem; color: #0f172a; }
+        .results-card p { color: #64748b; margin-bottom: 1.5rem; }
+        .results-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+        .results-actions button {
+            padding: 0.75rem 1.5rem; border-radius: 50px; font-weight: 600;
+            font-size: 0.95rem; cursor: pointer; transition: all 0.3s; border: none;
+        }
+        .btn-retry { background: linear-gradient(135deg, #ec4899, #db2777); color: white; }
+        .btn-back { background: #f1f5f9; color: #475569; }
+        .btn-retry:hover { transform: translateY(-2px); }
+        .btn-back:hover { background: #e2e8f0; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .quiz-header h1 { font-size: 1.5rem; }
+            .sessions-grid { grid-template-columns: 1fr; }
+            .question-card { padding: 1.5rem; }
+            .question-text { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-header">
+        <a href="espace-eleve.html" class="back-link"><i class="fas fa-arrow-left"></i> Retour à l'espace élève</a>
+        <h1><i class="fas fa-graduation-cap"></i> Cours Théoriques</h1>
+        <p>7 séances de 15 minutes • 98 questions QCM • Correction vocale</p>
+    </div>
+
+    <div class="container">
+        <!-- Sessions list -->
+        <div id="sessionsView">
+            <h2 style="font-size: 1.3rem; color: #0f172a; margin-bottom: 0.5rem;">Choisis ta séance</h2>
+            <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1.5rem;">Chaque séance dure environ 15 minutes. Les questions sont lues à voix haute et la correction est expliquée oralement.</p>
+            <div class="sessions-grid" id="sessionsGrid"></div>
+        </div>
+
+        <!-- Quiz view -->
+        <div id="quizView">
+            <div class="quiz-top-bar">
+                <span class="quiz-title" id="quizTitle"></span>
+                <span class="quiz-counter" id="quizCounter"></span>
+                <span class="quiz-timer"><i class="fas fa-clock"></i> <span id="quizTimer">15:00</span></span>
+            </div>
+            <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quizProgress"></div></div>
+
+            <div class="question-card" id="questionCard">
+                <div class="question-illustration" id="questionIllustration"></div>
+                <div style="text-align: center;">
+                    <button class="speaker-btn" id="speakQuestionBtn" onclick="speakQuestion()">
+                        <i class="fas fa-volume-up"></i> Écouter la question
+                    </button>
+                </div>
+                <p class="question-text" id="questionText"></p>
+                <div class="choices-grid" id="choicesGrid"></div>
+                <div class="correction-box" id="correctionBox">
+                    <div class="correction-title" id="correctionTitle"></div>
+                    <p id="correctionText"></p>
+                    <button class="speaker-btn" id="speakCorrectionBtn" onclick="speakCorrection()" style="margin-top: 0.75rem;">
+                        <i class="fas fa-volume-up"></i> Écouter la correction
+                    </button>
+                </div>
+            </div>
+            <button class="next-btn" id="nextBtn" onclick="nextQuestion()">
+                Question suivante <i class="fas fa-arrow-right"></i>
+            </button>
+
+            <!-- Results -->
+            <div class="results-card" id="resultsCard">
+                <div class="results-score" id="resultsScore"></div>
+                <h2 id="resultsTitle"></h2>
+                <p id="resultsText"></p>
+                <div class="results-actions">
+                    <button class="btn-retry" onclick="retrySession()"><i class="fas fa-redo"></i> Recommencer</button>
+                    <button class="btn-back" onclick="backToSessions()"><i class="fas fa-th-large"></i> Toutes les séances</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/quiz-data.js"></script>
+    <script>
+        let currentSession = null;
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answered = false;
+        let timerInterval = null;
+        let timeLeft = 900;
+        let speechSynth = window.speechSynthesis;
+        let currentUtterance = null;
+
+        function getProgress() {
+            try { return JSON.parse(localStorage.getItem('quizProgress') || '{}'); } catch { return {}; }
+        }
+        function saveProgress(sessionId, s, total) {
+            const p = getProgress();
+            if (!p[sessionId] || s > p[sessionId].score) {
+                p[sessionId] = { score: s, total: total, date: new Date().toISOString() };
+            }
+            localStorage.setItem('quizProgress', JSON.stringify(p));
+        }
+
+        function renderSessions() {
+            const grid = document.getElementById('sessionsGrid');
+            const progress = getProgress();
+            grid.innerHTML = '';
+            quizSessions.forEach(session => {
+                const prog = progress[session.id];
+                const pct = prog ? Math.round((prog.score / prog.total) * 100) : 0;
+                const isCompleted = prog && pct >= 70;
+                const card = document.createElement('div');
+                card.className = 'session-card' + (isCompleted ? ' completed' : '');
+                card.onclick = () => startSession(session.id);
+                card.innerHTML = `
+                    <div class="session-icon" style="background: ${session.color};">
+                        <i class="${session.icon}"></i>
+                    </div>
+                    <h3>Séance ${session.id} : ${session.title}</h3>
+                    <p class="session-desc">${session.description}</p>
+                    <div class="session-meta">
+                        <span>${session.questions.length} questions</span>
+                        <span class="session-badge">~15 min</span>
+                    </div>
+                    <div class="session-progress">
+                        <div class="session-progress-bar" style="width: ${pct}%; background: ${isCompleted ? '#10b981' : session.color};"></div>
+                    </div>
+                    ${prog ? `<span style="font-size:0.75rem; color:#64748b; margin-top:0.5rem; display:block;">Dernier score : ${prog.score}/${prog.total} (${pct}%)</span>` : ''}
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function startSession(id) {
+            currentSession = quizSessions.find(s => s.id === id);
+            currentQuestionIndex = 0;
+            score = 0;
+            answered = false;
+            timeLeft = 900;
+            document.getElementById('sessionsView').style.display = 'none';
+            document.getElementById('quizView').style.display = 'block';
+            document.getElementById('resultsCard').style.display = 'none';
+            document.getElementById('questionCard').style.display = 'block';
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('quizTitle').textContent = currentSession.title;
+            startTimer();
+            showQuestion();
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                const m = Math.floor(timeLeft / 60);
+                const s = timeLeft % 60;
+                document.getElementById('quizTimer').textContent = `${m}:${s.toString().padStart(2, '0')}`;
+                if (timeLeft <= 0) { clearInterval(timerInterval); showResults(); }
+            }, 1000);
+        }
+
+        function showQuestion() {
+            answered = false;
+            const q = currentSession.questions[currentQuestionIndex];
+            const total = currentSession.questions.length;
+
+            document.getElementById('quizCounter').textContent = `${currentQuestionIndex + 1} / ${total}`;
+            document.getElementById('quizProgress').style.width = `${((currentQuestionIndex) / total) * 100}%`;
+            document.getElementById('questionText').textContent = q.q;
+
+            const illust = document.getElementById('questionIllustration');
+            illust.style.background = currentSession.color;
+            illust.innerHTML = `<i class="${currentSession.icon}"></i>`;
+
+            const grid = document.getElementById('choicesGrid');
+            grid.innerHTML = '';
+            const letters = ['A', 'B', 'C', 'D'];
+            q.choices.forEach((choice, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'choice-btn';
+                btn.innerHTML = `<span class="choice-letter">${letters[i]}</span><span>${choice}</span>`;
+                btn.onclick = () => selectAnswer(i);
+                grid.appendChild(btn);
+            });
+
+            document.getElementById('correctionBox').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('speakQuestionBtn').classList.remove('speaking');
+
+            // Auto read question
+            setTimeout(() => speakQuestion(), 600);
+        }
+
+        function selectAnswer(index) {
+            if (answered) return;
+            answered = true;
+            const q = currentSession.questions[currentQuestionIndex];
+            const buttons = document.querySelectorAll('.choice-btn');
+            const isCorrect = index === q.correct;
+
+            buttons.forEach((btn, i) => {
+                btn.classList.add('disabled');
+                if (i === q.correct) btn.classList.add('correct');
+                if (i === index && !isCorrect) btn.classList.add('wrong');
+            });
+
+            if (isCorrect) score++;
+
+            const box = document.getElementById('correctionBox');
+            box.style.display = 'block';
+            box.className = 'correction-box ' + (isCorrect ? 'correct-box' : 'wrong-box');
+            document.getElementById('correctionTitle').innerHTML = isCorrect
+                ? '<i class="fas fa-check-circle"></i> Bonne réponse !'
+                : '<i class="fas fa-times-circle"></i> Mauvaise réponse';
+            document.getElementById('correctionText').textContent = q.explanation;
+
+            const nextBtn = document.getElementById('nextBtn');
+            nextBtn.style.display = 'block';
+            nextBtn.textContent = currentQuestionIndex < currentSession.questions.length - 1
+                ? 'Question suivante →' : 'Voir les résultats →';
+
+            // Auto read correction
+            setTimeout(() => speakCorrection(), 500);
+        }
+
+        function nextQuestion() {
+            stopSpeaking();
+            currentQuestionIndex++;
+            if (currentQuestionIndex >= currentSession.questions.length) {
+                showResults();
+            } else {
+                showQuestion();
+            }
+        }
+
+        function showResults() {
+            clearInterval(timerInterval);
+            stopSpeaking();
+            document.getElementById('questionCard').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'none';
+            const card = document.getElementById('resultsCard');
+            card.style.display = 'block';
+
+            const total = currentSession.questions.length;
+            const pct = Math.round((score / total) * 100);
+            const scoreEl = document.getElementById('resultsScore');
+            scoreEl.textContent = `${pct}%`;
+            scoreEl.className = 'results-score ' + (pct >= 70 ? 'good' : pct >= 50 ? 'average' : 'bad');
+
+            document.getElementById('resultsTitle').textContent = pct >= 70
+                ? 'Excellent travail !' : pct >= 50 ? 'Pas mal, continue !' : 'Il faut réviser !';
+            document.getElementById('resultsText').textContent = `Tu as obtenu ${score} bonnes réponses sur ${total} questions.`;
+
+            saveProgress(currentSession.id, score, total);
+
+            // Speak results
+            speak(`Tu as obtenu ${score} bonnes réponses sur ${total}. Soit ${pct} pourcent.`);
+        }
+
+        function retrySession() {
+            startSession(currentSession.id);
+        }
+        function backToSessions() {
+            stopSpeaking();
+            clearInterval(timerInterval);
+            document.getElementById('quizView').style.display = 'none';
+            document.getElementById('sessionsView').style.display = 'block';
+            renderSessions();
+        }
+
+        // Text-to-Speech
+        function speak(text, onEnd) {
+            stopSpeaking();
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = 'fr-FR';
+            utter.rate = 0.95;
+            utter.pitch = 1;
+            // Try to find a French voice
+            const voices = speechSynth.getVoices();
+            const frVoice = voices.find(v => v.lang.startsWith('fr'));
+            if (frVoice) utter.voice = frVoice;
+            if (onEnd) utter.onend = onEnd;
+            currentUtterance = utter;
+            speechSynth.speak(utter);
+        }
+        function stopSpeaking() {
+            speechSynth.cancel();
+        }
+        function speakQuestion() {
+            const q = currentSession.questions[currentQuestionIndex];
+            const btn = document.getElementById('speakQuestionBtn');
+            btn.classList.add('speaking');
+            speak(q.q, () => btn.classList.remove('speaking'));
+        }
+        function speakCorrection() {
+            const q = currentSession.questions[currentQuestionIndex];
+            const btn = document.getElementById('speakCorrectionBtn');
+            btn.classList.add('speaking');
+            speak(q.explanation, () => btn.classList.remove('speaking'));
+        }
+
+        // Init voices
+        speechSynth.onvoiceschanged = () => {};
+
+        // Start
+        renderSessions();
+    </script>
+</body>
+</html>
