@@ -427,7 +427,21 @@
             }
             
             .hero h1 {
-                font-size: 2rem;
+                font-size: 1.75rem !important;
+            }
+            
+            .hero > div {
+                grid-template-columns: 1fr !important;
+                gap: 2rem !important;
+            }
+            
+            .hero img {
+                width: 250px !important;
+                height: 250px !important;
+            }
+            
+            .hero > div > div:last-child {
+                text-align: center !important;
             }
             
             .pricing-grid {
@@ -472,9 +486,30 @@
     </nav>
 
     <!-- Hero -->
-    <section class="hero">
-        <h1>Nos <span class="highlight">tarifs</span></h1>
-        <p>Des forfaits adaptés à tous les besoins, transparents et sans frais cachés</p>
+    <section class="hero" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 3rem 2rem; position: relative; overflow: hidden;">
+        <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center;">
+            <!-- Left Content -->
+            <div>
+                <h1 style="font-size: 3rem; margin-bottom: 1rem; color: #1a1a1a;">
+                    Nos tarifs <span style="color: #ec4899;">jusqu'à 37% moins chers*</span>
+                </h1>
+                <div style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-top: 2rem;">
+                    <p style="font-weight: 600; color: #1a1a1a; margin-bottom: 0.5rem;">Ton code postal est le <span style="color: #ec4899;">13006</span></p>
+                    <p style="color: #64748b; font-size: 0.9rem;">Pas ton lieu d'apprentissage ? Modifie-le</p>
+                </div>
+            </div>
+            
+            <!-- Right Image -->
+            <div style="position: relative; text-align: right;">
+                <div style="position: relative; display: inline-block;">
+                    <div style="position: absolute; top: -20px; right: -20px; width: 400px; height: 400px; background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%); border-radius: 50%; opacity: 0.2; z-index: 0;"></div>
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop" alt="Élève souriant" style="width: 350px; height: 350px; object-fit: cover; border-radius: 50%; position: relative; z-index: 1; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                </div>
+                <div style="background: white; padding: 0.75rem 1.5rem; border-radius: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: inline-block; margin-top: 1rem; position: relative; z-index: 2;">
+                    <p style="color: #ec4899; font-weight: 600; margin: 0;">Être accompagné par un conseiller</p>
+                </div>
+            </div>
+        </div>
     </section>
 
     <!-- Category Tabs -->
