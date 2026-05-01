@@ -326,6 +326,18 @@
             border-color: #ec4899;
             background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
             color: white;
+            box-shadow: 0 0 0 3px rgba(236,72,153,0.2), 0 4px 12px rgba(236,72,153,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+            transform: scale(1.05);
+            position: relative;
+        }
+        
+        .hour-option.selected::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border: 2px solid #ec4899;
+            border-radius: 12px;
+            opacity: 0.4;
         }
         
         .hour-number {
@@ -374,12 +386,24 @@
         .price {
             font-size: 3.5rem;
             font-weight: 900;
-            background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #ec4899;
             line-height: 1;
             letter-spacing: -2px;
+            position: relative;
+            display: inline-block;
+            text-shadow: 
+                0 1px 0 #f472b6,
+                0 2px 0 #f472b6,
+                0 3px 0 #db2777,
+                0 4px 0 #db2777,
+                0 5px 0 #be185d,
+                0 6px 1px rgba(0,0,0,.1),
+                0 0 5px rgba(236,72,153,.3),
+                0 1px 3px rgba(0,0,0,.15),
+                0 3px 5px rgba(0,0,0,.2),
+                0 5px 10px rgba(236,72,153,.25),
+                0 10px 20px rgba(236,72,153,.2);
+            transform: translateY(-2px);
         }
         
         .price-asterisk {
