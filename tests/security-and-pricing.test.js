@@ -138,6 +138,28 @@ test('les formules fixes restent compactes sans masquer leur nombre de cours', (
     ]);
 });
 
+test('le devis propose toutes les offres avec des montants reconnus par le serveur', () => {
+    const fs = require('node:fs');
+    const source = fs.readFileSync(require.resolve('../devis.html'), 'utf8');
+    const options = [...source.matchAll(/<option[^>]+data-pack-id="([^"]+)"[^>]+data-price="(\d+)"[^>]+data-hours="(\d+)"[^>]+data-transmission="([^"]+)"/g)];
+
+    assert.equal(options.length, 30);
+    for (const option of options) {
+        const [, packId, price, hours, transmission] = option;
+        assert.equal(
+            validatePurchase({ amount: Number(price) * 100, hours: Number(hours), transmission }, packId),
+            true,
+            `${packId} doit correspondre au catalogue serveur`
+        );
+    }
+});
+
+test('les six packs promotionnels affichent clairement Super Promo', () => {
+    const fs = require('node:fs');
+    const source = fs.readFileSync(require.resolve('../tarifs.html'), 'utf8');
+    assert.equal((source.match(/<span class="price-label">Super Promo/g) || []).length, 6);
+});
+
 test('active admin workflows do not rely on unsupported prompt dialogs', () => {
     const fs = require('node:fs');
     const planning = fs.readFileSync(require.resolve('../assets/js/admin-planning.js'), 'utf8');

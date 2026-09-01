@@ -440,8 +440,16 @@
         }
 
         .price-top-row {
-            grid-column: 2;
+            grid-column: 1 / -1;
             grid-row: 1;
+            min-width: 0;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .price-promo-copy {
             min-width: 0;
         }
 
@@ -450,16 +458,32 @@
         }
 
         .price-label {
-            font-size: 0.75rem;
-            color: #64748b;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            display: inline-flex;
+            align-items: center;
+            color: #1d1d1f;
+            font-size: 0.98rem;
+            line-height: 1.1;
+            font-weight: 700;
+            letter-spacing: 0;
         }
 
         .price-label:empty {
             display: none;
+        }
+
+        .price-prefix {
+            display: block;
+            margin-top: 0.3rem;
+            color: #6f7178;
+            font-size: 0.94rem;
+            font-weight: 500;
+        }
+
+        .price-display:has(.price-top-row) .price {
+            grid-column: 1 / -1;
+            grid-row: 2;
+            align-self: auto;
+            margin-top: 0.05rem;
         }
 
         .old-price {
@@ -1376,7 +1400,10 @@
 
                 <div class="price-display">
                     <div class="price-top-row">
-                        <span class="price-label"></span>
+                        <div class="price-promo-copy">
+                            <span class="price-label">Super Promo <i class="info-tooltip" tabindex="0" aria-label="Information sur le tarif promotionnel">i<span class="tooltip-text">Prix promotionnel affiché pour l'agence Auto-Ecole Breteuil.</span></i></span>
+                            <span class="price-prefix">à partir de</span>
+                        </div>
                         <div class="price-right">
                             <span class="old-price" id="chill-old-price">849€</span>
                             <p class="price-note">prix public</p>
@@ -1432,7 +1459,10 @@
 
                 <div class="price-display">
                     <div class="price-top-row">
-                        <span class="price-label"></span>
+                        <div class="price-promo-copy">
+                            <span class="price-label">Super Promo <i class="info-tooltip" tabindex="0" aria-label="Information sur le tarif promotionnel">i<span class="tooltip-text">Prix promotionnel affiché pour l'agence Auto-Ecole Breteuil.</span></i></span>
+                            <span class="price-prefix">à partir de</span>
+                        </div>
                         <div class="price-right">
                             <span class="old-price" id="premium-old-price">1049€</span>
                             <p class="price-note">prix public</p>
@@ -1488,7 +1518,10 @@
 
                 <div class="price-display">
                     <div class="price-top-row">
-                        <span class="price-label"></span>
+                        <div class="price-promo-copy">
+                            <span class="price-label">Super Promo <i class="info-tooltip" tabindex="0" aria-label="Information sur le tarif promotionnel">i<span class="tooltip-text">Prix promotionnel affiché pour l'agence Auto-Ecole Breteuil.</span></i></span>
+                            <span class="price-prefix">à partir de</span>
+                        </div>
                         <div class="price-right">
                             <span class="old-price" id="accelere-old-price">1249€</span>
                             <p class="price-note">prix public</p>
@@ -1542,7 +1575,10 @@
 
                 <div class="price-display">
                     <div class="price-top-row">
-                        <span class="price-label"></span>
+                        <div class="price-promo-copy">
+                            <span class="price-label">Super Promo <i class="info-tooltip" tabindex="0" aria-label="Information sur le tarif promotionnel">i<span class="tooltip-text">Prix promotionnel affiché pour l'agence Auto-Ecole Breteuil.</span></i></span>
+                            <span class="price-prefix">à partir de</span>
+                        </div>
                         <div class="price-right">
                             <span class="old-price" id="chill-auto-old-price">699€</span>
                             <p class="price-note">prix public</p>
@@ -1590,7 +1626,10 @@
 
                 <div class="price-display">
                     <div class="price-top-row">
-                        <span class="price-label"></span>
+                        <div class="price-promo-copy">
+                            <span class="price-label">Super Promo <i class="info-tooltip" tabindex="0" aria-label="Information sur le tarif promotionnel">i<span class="tooltip-text">Prix promotionnel affiché pour l'agence Auto-Ecole Breteuil.</span></i></span>
+                            <span class="price-prefix">à partir de</span>
+                        </div>
                         <div class="price-right">
                             <span class="old-price" id="premium-auto-old-price">899€</span>
                             <p class="price-note">prix public</p>
@@ -1638,7 +1677,10 @@
 
                 <div class="price-display">
                     <div class="price-top-row">
-                        <span class="price-label"></span>
+                        <div class="price-promo-copy">
+                            <span class="price-label">Super Promo <i class="info-tooltip" tabindex="0" aria-label="Information sur le tarif promotionnel">i<span class="tooltip-text">Prix promotionnel affiché pour l'agence Auto-Ecole Breteuil.</span></i></span>
+                            <span class="price-prefix">à partir de</span>
+                        </div>
                         <div class="price-right">
                             <span class="old-price" id="accelere-auto-old-price">1049€</span>
                             <p class="price-note">prix public</p>
