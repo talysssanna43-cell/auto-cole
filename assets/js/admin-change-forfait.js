@@ -1,18 +1,21 @@
 // ===== CHANGEMENT DE FORFAIT ELEVE =====
 
 const changeForfaitCatalog = Object.freeze({
-    'tarif-chill-5': { label: 'Chill boite manuelle', price: 249, courses: 5, transmission: 'manual', group: 'Permis Chill' },
-    'tarif-chill-10': { label: 'Chill boite manuelle', price: 499, courses: 10, transmission: 'manual', group: 'Permis Chill' },
-    'tarif-chill-20': { label: 'Chill boite manuelle', price: 649, courses: 20, transmission: 'manual', group: 'Permis Chill' },
-    'tarif-chill-30': { label: 'Chill boite manuelle', price: 1149, courses: 30, transmission: 'manual', group: 'Permis Chill' },
-    'tarif-premium-5': { label: 'Premium boite manuelle', price: 395, courses: 5, transmission: 'manual', group: 'Permis Premium' },
+    'tarif-chill-5': { label: 'Chill boite manuelle', price: 239, courses: 5, transmission: 'manual', group: 'Permis Chill' },
+    'tarif-chill-10': { label: 'Chill boite manuelle', price: 489, courses: 10, transmission: 'manual', group: 'Permis Chill' },
+    'tarif-chill-20': { label: 'Chill boite manuelle', price: 699, courses: 20, transmission: 'manual', group: 'Permis Chill' },
+    'tarif-chill-25': { label: 'Chill boite manuelle', price: 965, courses: 25, transmission: 'manual', group: 'Permis Chill' },
+    'tarif-chill-30': { label: 'Chill boite manuelle', price: 1149, courses: 30, transmission: 'manual', group: 'Ancien pack', legacy: true },
+    'tarif-premium-5': { label: 'Premium boite manuelle', price: 389, courses: 5, transmission: 'manual', group: 'Permis Premium' },
     'tarif-premium-10': { label: 'Premium boite manuelle', price: 599, courses: 10, transmission: 'manual', group: 'Permis Premium' },
-    'tarif-premium-20': { label: 'Premium boite manuelle', price: 749, courses: 20, transmission: 'manual', group: 'Permis Premium' },
-    'tarif-premium-30': { label: 'Premium boite manuelle', price: 1249, courses: 30, transmission: 'manual', group: 'Permis Premium' },
-    'tarif-accelere-5': { label: 'Accelere boite manuelle', price: 499, courses: 5, transmission: 'manual', group: 'Permis Accelere' },
+    'tarif-premium-20': { label: 'Premium boite manuelle', price: 799, courses: 20, transmission: 'manual', group: 'Permis Premium' },
+    'tarif-premium-25': { label: 'Premium boite manuelle', price: 1095, courses: 25, transmission: 'manual', group: 'Permis Premium' },
+    'tarif-premium-30': { label: 'Premium boite manuelle', price: 1249, courses: 30, transmission: 'manual', group: 'Ancien pack', legacy: true },
+    'tarif-accelere-5': { label: 'Accelere boite manuelle', price: 489, courses: 5, transmission: 'manual', group: 'Permis Accelere' },
     'tarif-accelere-10': { label: 'Accelere boite manuelle', price: 749, courses: 10, transmission: 'manual', group: 'Permis Accelere' },
     'tarif-accelere-20': { label: 'Accelere boite manuelle', price: 899, courses: 20, transmission: 'manual', group: 'Permis Accelere' },
-    'tarif-accelere-30': { label: 'Accelere boite manuelle', price: 1399, courses: 30, transmission: 'manual', group: 'Permis Accelere' },
+    'tarif-accelere-25': { label: 'Accelere boite manuelle', price: 1199, courses: 25, transmission: 'manual', group: 'Permis Accelere' },
+    'tarif-accelere-30': { label: 'Accelere boite manuelle', price: 1399, courses: 30, transmission: 'manual', group: 'Ancien pack', legacy: true },
     'tarif-chill-auto-5': { label: 'Chill boite automatique', price: 269, courses: 5, transmission: 'auto', group: 'Chill BA' },
     'tarif-chill-auto-13': { label: 'Chill boite automatique', price: 499, courses: 13, transmission: 'auto', group: 'Chill BA' },
     'tarif-premium-auto-5': { label: 'Premium boite automatique', price: 379, courses: 5, transmission: 'auto', group: 'Premium BA' },
@@ -28,9 +31,9 @@ const changeForfaitCatalog = Object.freeze({
     am: { label: 'Voiture sans permis AM', price: 350, courses: 8, transmission: 'auto', group: 'AM' },
     'second-chance': { label: 'Forfait Second Chance', price: 569, courses: 6, transmission: 'manual', group: 'Second Chance' },
     'boite-auto': { label: 'Chill boite automatique', price: 499, courses: 13, transmission: 'auto', group: 'Ancien alias' },
-    '20h': { label: 'Chill boite manuelle', price: 649, courses: 20, transmission: 'manual', group: 'Ancien alias' },
-    chill: { label: 'Chill boite manuelle', price: 649, courses: 20, transmission: 'manual', group: 'Ancien alias' },
-    zen: { label: 'Chill boite manuelle', price: 649, courses: 20, transmission: 'manual', group: 'Ancien alias' },
+    '20h': { label: 'Chill boite manuelle', price: 699, courses: 20, transmission: 'manual', group: 'Ancien alias' },
+    chill: { label: 'Chill boite manuelle', price: 699, courses: 20, transmission: 'manual', group: 'Ancien alias' },
+    zen: { label: 'Chill boite manuelle', price: 699, courses: 20, transmission: 'manual', group: 'Ancien alias' },
     accelere: { label: 'Accelere boite manuelle', price: 899, courses: 20, transmission: 'manual', group: 'Ancien alias' },
     aac: { label: 'Conduite accompagnee', price: 889, courses: 20, transmission: 'manual', group: 'Ancien alias' },
     supervisee: { label: 'Conduite supervisee', price: 889, courses: 20, transmission: 'manual', group: 'Ancien alias' }
@@ -96,7 +99,7 @@ window.openChangeForfaitModal = function(email, prenom, nom, currentForfait, cou
     const currentPack = changeForfaitCatalog[currentForfait] || { label: currentForfait || 'Non defini', price: 0 };
     const safeEmail = String(email || '').replace(/'/g, '&#39;');
     const cards = Object.entries(changeForfaitCatalog)
-        .filter(([id]) => id.startsWith('tarif-') || ['code', 'code-etudiant', 'am', 'second-chance'].includes(id))
+        .filter(([id, pack]) => !pack.legacy && (id.startsWith('tarif-') || ['code', 'code-etudiant', 'am', 'second-chance'].includes(id)))
         .map(([id, pack]) => `
             <button type="button" class="change-pack-card" data-pack="${id}">
                 <span>${pack.group}</span>

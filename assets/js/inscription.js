@@ -9,22 +9,22 @@ const packPrices = {
     'code-etudiant': 15,
     'code-classique': 20,
     am: 350,
-    'tarif-chill-5': 249,
-    'tarif-chill-10': 499,
-    'tarif-chill-20': 649,
-    'tarif-chill-30': 1149,
-    'tarif-zen-5': 249,
-    'tarif-zen-10': 499,
-    'tarif-zen-20': 649,
-    'tarif-zen-30': 1149,
-    'tarif-premium-5': 395,
+    'tarif-chill-5': 239,
+    'tarif-chill-10': 489,
+    'tarif-chill-20': 699,
+    'tarif-chill-25': 965,
+    'tarif-zen-5': 239,
+    'tarif-zen-10': 489,
+    'tarif-zen-20': 699,
+    'tarif-zen-25': 965,
+    'tarif-premium-5': 389,
     'tarif-premium-10': 599,
-    'tarif-premium-20': 749,
-    'tarif-premium-30': 1249,
-    'tarif-accelere-5': 499,
+    'tarif-premium-20': 799,
+    'tarif-premium-25': 1095,
+    'tarif-accelere-5': 489,
     'tarif-accelere-10': 749,
     'tarif-accelere-20': 899,
-    'tarif-accelere-30': 1399,
+    'tarif-accelere-25': 1199,
     'tarif-chill-auto-5': 269,
     'tarif-chill-auto-13': 499,
     'tarif-zen-auto-5': 269,
@@ -45,9 +45,9 @@ const packPrices = {
     'second-chance': 569,
     // Legacy aliases kept only for old bookmarked links.
     'boite-auto': 499,
-    '20h': 649,
-    chill: 649,
-    zen: 649,
+    '20h': 699,
+    chill: 699,
+    zen: 699,
     'zen-auto': 499,
     accelere: 899,
     aac: 889,
@@ -63,19 +63,19 @@ const packHours = {
     'tarif-chill-5': 5,
     'tarif-chill-10': 10,
     'tarif-chill-20': 20,
-    'tarif-chill-30': 30,
+    'tarif-chill-25': 25,
     'tarif-zen-5': 5,
     'tarif-zen-10': 10,
     'tarif-zen-20': 20,
-    'tarif-zen-30': 30,
+    'tarif-zen-25': 25,
     'tarif-premium-5': 5,
     'tarif-premium-10': 10,
     'tarif-premium-20': 20,
-    'tarif-premium-30': 30,
+    'tarif-premium-25': 25,
     'tarif-accelere-5': 5,
     'tarif-accelere-10': 10,
     'tarif-accelere-20': 20,
-    'tarif-accelere-30': 30,
+    'tarif-accelere-25': 25,
     'tarif-chill-auto-5': 5,
     'tarif-chill-auto-13': 13,
     'tarif-zen-auto-5': 5,
@@ -119,7 +119,11 @@ function normalizePackId(packId) {
         'tarif-zen-5': 'tarif-chill-5',
         'tarif-zen-10': 'tarif-chill-10',
         'tarif-zen-20': 'tarif-chill-20',
-        'tarif-zen-30': 'tarif-chill-30',
+        'tarif-zen-25': 'tarif-chill-25',
+        'tarif-chill-30': 'tarif-chill-25',
+        'tarif-zen-30': 'tarif-chill-25',
+        'tarif-premium-30': 'tarif-premium-25',
+        'tarif-accelere-30': 'tarif-accelere-25',
         'tarif-zen-auto-5': 'tarif-chill-auto-5',
         'tarif-zen-auto-13': 'tarif-chill-auto-13',
         accelere: 'tarif-accelere-20',
@@ -129,18 +133,18 @@ function normalizePackId(packId) {
 }
 
 const inscriptionPackCatalog = [
-    { id: 'tarif-chill-5', title: 'Chill boîte manuelle', price: 249, hours: 5, transmission: 'manual', vehicle: 'assets/acceuil.png', badge: '5 cours', items: ['5 cours de conduite', 'Boîte manuelle', 'Suivi numérique'] },
-    { id: 'tarif-chill-10', title: 'Chill boîte manuelle', price: 499, hours: 10, transmission: 'manual', vehicle: 'assets/acceuil.png', badge: '10 cours', items: ['10 cours de conduite', 'Boîte manuelle', 'Suivi numérique'] },
-    { id: 'tarif-chill-20', title: 'Chill boîte manuelle', price: 649, hours: 20, transmission: 'manual', vehicle: 'assets/acceuil.png', badge: 'Populaire', featured: true, items: ['20 cours de conduite', 'Boîte manuelle', 'Permis blanc inclus'] },
-    { id: 'tarif-chill-30', title: 'Chill boîte manuelle', price: 1149, hours: 30, transmission: 'manual', vehicle: 'assets/acceuil.png', badge: '30 cours', items: ['30 cours de conduite', 'Boîte manuelle', 'Accompagnement renforcé'] },
-    { id: 'tarif-premium-5', title: 'Premium boîte manuelle', price: 395, hours: 5, transmission: 'manual', vehicle: 'assets/acceuil.png', badge: '5 cours', items: ['5 cours de conduite', 'Priorité planning', 'Suivi premium'] },
+    { id: 'tarif-chill-5', title: 'Chill boîte manuelle', price: 239, hours: 5, transmission: 'manual', vehicle: 'assets/acceuil.png', badge: '5 cours', items: ['5 cours de conduite', 'Boîte manuelle', 'Suivi numérique'] },
+    { id: 'tarif-chill-10', title: 'Chill boîte manuelle', price: 489, hours: 10, transmission: 'manual', vehicle: 'assets/acceuil.png', badge: '10 cours', items: ['10 cours de conduite', 'Boîte manuelle', 'Suivi numérique'] },
+    { id: 'tarif-chill-20', title: 'Chill boîte manuelle', price: 699, hours: 20, transmission: 'manual', vehicle: 'assets/acceuil.png', badge: 'Populaire', featured: true, items: ['20 cours de conduite', 'Boîte manuelle', 'Permis blanc inclus'] },
+    { id: 'tarif-chill-25', title: 'Chill boîte manuelle', price: 965, hours: 25, transmission: 'manual', vehicle: 'assets/acceuil.png', badge: '25 cours', items: ['25 cours de conduite', 'Boîte manuelle', 'Accompagnement renforcé'] },
+    { id: 'tarif-premium-5', title: 'Premium boîte manuelle', price: 389, hours: 5, transmission: 'manual', vehicle: 'assets/acceuil.png', badge: '5 cours', items: ['5 cours de conduite', 'Priorité planning', 'Suivi premium'] },
     { id: 'tarif-premium-10', title: 'Premium boîte manuelle', price: 599, hours: 10, transmission: 'manual', vehicle: 'assets/acceuil.png', badge: '10 cours', items: ['10 cours de conduite', 'Priorité planning', 'Suivi premium'] },
-    { id: 'tarif-premium-20', title: 'Premium boîte manuelle', price: 749, hours: 20, transmission: 'manual', vehicle: 'assets/acceuil.png', badge: '20 cours', items: ['20 cours de conduite', 'Priorité planning', 'Suivi premium'] },
-    { id: 'tarif-premium-30', title: 'Premium boîte manuelle', price: 1249, hours: 30, transmission: 'manual', vehicle: 'assets/acceuil.png', badge: '30 cours', items: ['30 cours de conduite', 'Priorité planning', 'Suivi premium'] },
-    { id: 'tarif-accelere-5', title: 'Accéléré boîte manuelle', price: 499, hours: 5, transmission: 'manual', vehicle: 'assets/acceuil.png', badge: '5 cours', items: ['5 cours de conduite', 'Planning intensif', 'Boîte manuelle'] },
+    { id: 'tarif-premium-20', title: 'Premium boîte manuelle', price: 799, hours: 20, transmission: 'manual', vehicle: 'assets/acceuil.png', badge: '20 cours', items: ['20 cours de conduite', 'Priorité planning', 'Suivi premium'] },
+    { id: 'tarif-premium-25', title: 'Premium boîte manuelle', price: 1095, hours: 25, transmission: 'manual', vehicle: 'assets/acceuil.png', badge: '25 cours', items: ['25 cours de conduite', 'Priorité planning', 'Suivi premium'] },
+    { id: 'tarif-accelere-5', title: 'Accéléré boîte manuelle', price: 489, hours: 5, transmission: 'manual', vehicle: 'assets/acceuil.png', badge: '5 cours', items: ['5 cours de conduite', 'Planning intensif', 'Boîte manuelle'] },
     { id: 'tarif-accelere-10', title: 'Accéléré boîte manuelle', price: 749, hours: 10, transmission: 'manual', vehicle: 'assets/acceuil.png', badge: '10 cours', items: ['10 cours de conduite', 'Planning intensif', 'Boîte manuelle'] },
     { id: 'tarif-accelere-20', title: 'Accéléré boîte manuelle', price: 899, hours: 20, transmission: 'manual', vehicle: 'assets/acceuil.png', badge: '20 cours', items: ['20 cours de conduite', 'Planning intensif', 'Accompagnement rapide'] },
-    { id: 'tarif-accelere-30', title: 'Accéléré boîte manuelle', price: 1399, hours: 30, transmission: 'manual', vehicle: 'assets/acceuil.png', badge: '30 cours', items: ['30 cours de conduite', 'Planning intensif', 'Accompagnement rapide'] },
+    { id: 'tarif-accelere-25', title: 'Accéléré boîte manuelle', price: 1199, hours: 25, transmission: 'manual', vehicle: 'assets/acceuil.png', badge: '25 cours', items: ['25 cours de conduite', 'Planning intensif', 'Accompagnement rapide'] },
     { id: 'tarif-chill-auto-5', title: 'Chill boîte automatique', price: 269, hours: 5, transmission: 'auto', vehicle: 'assets/vehicule-boite-auto.png', badge: '5 cours', items: ['5 cours de conduite', 'Boîte automatique', 'Suivi numérique'] },
     { id: 'tarif-chill-auto-13', title: 'Chill boîte automatique', price: 499, hours: 13, transmission: 'auto', vehicle: 'assets/vehicule-boite-auto.png', badge: '13 cours', items: ['13 cours de conduite', 'Boîte automatique', 'Permis blanc inclus'] },
     { id: 'tarif-premium-auto-5', title: 'Premium boîte automatique', price: 379, hours: 5, transmission: 'auto', vehicle: 'assets/vehicule-boite-auto.png', badge: '5 cours', items: ['5 cours de conduite', 'Boîte automatique', 'Suivi premium'] },
@@ -162,9 +166,9 @@ function renderInscriptionTariffPacks() {
     if (!packSelection) return;
 
     const grouped = [
-        { key: 'chill', title: 'Permis Chill', transmission: 'manual', ids: ['tarif-chill-5', 'tarif-chill-10', 'tarif-chill-20', 'tarif-chill-30'], featured: false },
-        { key: 'premium', title: 'Permis Premium', transmission: 'manual', ids: ['tarif-premium-5', 'tarif-premium-10', 'tarif-premium-20', 'tarif-premium-30'], featured: true },
-        { key: 'accelere', title: 'Permis Accéléré', transmission: 'manual', ids: ['tarif-accelere-5', 'tarif-accelere-10', 'tarif-accelere-20', 'tarif-accelere-30'], featured: false },
+        { key: 'chill', title: 'Permis Chill', transmission: 'manual', ids: ['tarif-chill-5', 'tarif-chill-10', 'tarif-chill-20', 'tarif-chill-25'], featured: false },
+        { key: 'premium', title: 'Permis Premium', transmission: 'manual', ids: ['tarif-premium-5', 'tarif-premium-10', 'tarif-premium-20', 'tarif-premium-25'], featured: true },
+        { key: 'accelere', title: 'Permis Accéléré', transmission: 'manual', ids: ['tarif-accelere-5', 'tarif-accelere-10', 'tarif-accelere-20', 'tarif-accelere-25'], featured: false },
         { key: 'chill-auto', title: 'Permis Chill boîte automatique', transmission: 'auto', ids: ['tarif-chill-auto-5', 'tarif-chill-auto-13'], featured: false },
         { key: 'premium-auto', title: 'Permis Premium boîte automatique', transmission: 'auto', ids: ['tarif-premium-auto-5', 'tarif-premium-auto-13'], featured: true },
         { key: 'accelere-auto', title: 'Permis Accéléré boîte automatique', transmission: 'auto', ids: ['tarif-accelere-auto-5', 'tarif-accelere-auto-13'], featured: false }
@@ -243,8 +247,11 @@ function selectInscriptionPack(packId, button) {
 
 function addDynamicTariffPack(urlParams) {
     const packParam = normalizePackId(urlParams.get('pack'));
-    const priceParam = parseInt(urlParams.get('price') || '', 10);
-    const hoursParam = parseInt(urlParams.get('hours') || '0', 10);
+    const requestedPrice = parseInt(urlParams.get('price') || '', 10);
+    const requestedHours = parseInt(urlParams.get('hours') || '0', 10);
+    const knownPack = Boolean(packParam && Object.prototype.hasOwnProperty.call(packPrices, packParam));
+    const priceParam = knownPack ? Number(packPrices[packParam]) : requestedPrice;
+    const hoursParam = knownPack ? Number(packHours[packParam] || 0) : requestedHours;
     const labelParam = urlParams.get('label') || packParam;
     const transmissionParam = urlParams.get('transmission') || 'manual';
     const safeLabel = String(labelParam).replace(/[&<>"']/g, char => ({
@@ -259,8 +266,10 @@ function addDynamicTariffPack(urlParams) {
         return;
     }
 
-    packPrices[packParam] = priceParam;
-    packHours[packParam] = Number.isFinite(hoursParam) ? hoursParam : 0;
+    if (!knownPack) {
+        packPrices[packParam] = priceParam;
+        packHours[packParam] = Number.isFinite(hoursParam) ? hoursParam : 0;
+    }
 
     let radio = document.getElementById(`pack-${packParam}`);
     if (!radio) {
@@ -293,10 +302,15 @@ function addDynamicTariffPack(urlParams) {
         const priceEl = option?.querySelector('.pack-option-price');
         const titleEl = option?.querySelector('h3');
         const subtitleEl = option?.querySelector('p');
+        const hoursEl = option?.querySelector('[data-hours]');
 
         if (priceEl) priceEl.textContent = `${priceParam}€`;
-        if (titleEl) titleEl.textContent = labelParam;
-        if (subtitleEl && hoursParam > 0) subtitleEl.textContent = `${hoursParam} cours de conduite`;
+        if (!knownPack && titleEl) titleEl.textContent = labelParam;
+        if (hoursEl && hoursParam > 0) {
+            hoursEl.textContent = String(hoursParam);
+        } else if (subtitleEl && hoursParam > 0) {
+            subtitleEl.textContent = `${hoursParam} cours de conduite`;
+        }
     }
 
     radio.checked = true;

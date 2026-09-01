@@ -108,7 +108,7 @@ function businessInfo(args) {
             address: BUSINESS.address,
             phone: BUSINESS.phone,
             email: BUSINESS.email,
-            manualPermit: 'Permis B boite manuelle: minimum legal 20h. Offres serveur connues: 5 cours 249 EUR, 10 cours 499 EUR, 20 cours 649 EUR, 30 cours 1149 EUR en Chill; Premium et accelere disponibles.',
+            manualPermit: 'Permis B boite manuelle: minimum legal 20h. Offres promotionnelles: Chill 5 cours 239 EUR, 10 cours 489 EUR, 20 cours 699 EUR, 25 cours 965 EUR; Premium 5 cours 389 EUR, 10 cours 599 EUR, 20 cours 799 EUR, 25 cours 1095 EUR; Accelere 5 cours 489 EUR, 10 cours 749 EUR, 20 cours 899 EUR, 25 cours 1199 EUR.',
             automaticPermit: 'Permis B boite automatique: minimum legal 13h. Offres serveur connues: Chill 5 cours 269 EUR, Chill 13 cours 499 EUR, Premium 5 cours 379 EUR, Premium 13 cours 599 EUR, accelere 5 cours 499 EUR, accelere 13 cours 749 EUR.',
             hourlyLessons: 'Cours a l unite: 50 EUR/cours en boite manuelle, 60 EUR/cours en boite automatique.',
             code: 'Code de la route: offres connues a 15 EUR et 20 EUR selon la formule.',

@@ -43,8 +43,8 @@ test('le serveur exige le consentement avant de creer un paiement fractionne', (
 test('a displayed pack cannot credit more courses than its official definition', () => {
     assert.equal(validatePurchase({ amount: 49900, hours: 13, transmission: 'auto' }, 'boite-auto'), true);
     assert.equal(validatePurchase({ amount: 49900, hours: 99, transmission: 'auto' }, 'boite-auto'), false);
-    assert.equal(validatePurchase({ amount: 24900, hours: 5, transmission: 'manual' }, 'tarif-chill-5'), true);
-    assert.equal(validatePurchase({ amount: 24900, hours: 5, transmission: 'manual' }, 'tarif-zen-5'), true);
+    assert.equal(validatePurchase({ amount: 23900, hours: 5, transmission: 'manual' }, 'tarif-chill-5'), true);
+    assert.equal(validatePurchase({ amount: 23900, hours: 5, transmission: 'manual' }, 'tarif-zen-5'), true);
     assert.equal(validatePurchase({ amount: 49900, hours: 13, transmission: 'auto' }, 'tarif-zen-auto-13'), true);
     assert.equal(validatePurchase({ amount: 100, hours: 5, transmission: 'manual' }, 'tarif-chill-5'), false);
 });
@@ -56,9 +56,68 @@ test('second chance and accelerated packs match the displayed offers', () => {
     assert.equal(validatePurchase({ amount: 73900, hours: 13, transmission: 'auto' }, 'tarif-aac-auto-accelere-13'), true);
 });
 
+test('les douze tarifs promotionnels manuels correspondent au classeur fourni', () => {
+    const expected = {
+        chill: { 5: 23900, 10: 48900, 20: 69900, 25: 96500 },
+        premium: { 5: 38900, 10: 59900, 20: 79900, 25: 109500 },
+        accelere: { 5: 48900, 10: 74900, 20: 89900, 25: 119900 }
+    };
+
+    for (const [pack, prices] of Object.entries(expected)) {
+        for (const [hours, amount] of Object.entries(prices)) {
+            assert.equal(
+                validatePurchase({ amount, hours: Number(hours), transmission: 'manual' }, `tarif-${pack}-${hours}`),
+                true,
+                `${pack} ${hours} cours`
+            );
+        }
+    }
+
+    assert.equal(validatePurchase({ amount: 114900, hours: 30, transmission: 'manual' }, 'tarif-chill-30'), false);
+    assert.equal(validatePurchase({ amount: 124900, hours: 30, transmission: 'manual' }, 'tarif-premium-30'), false);
+    assert.equal(validatePurchase({ amount: 139900, hours: 30, transmission: 'manual' }, 'tarif-accelere-30'), false);
+});
+
+test('les anciens packs 30 cours restent lisibles mais ne peuvent plus etre choisis', () => {
+    const { computePackChange, getCurrentPack, getPack } = require('../netlify/functions/_lib/pack-change');
+    assert.equal(getCurrentPack({ forfait: 'tarif-chill-30' }).courses, 30);
+    assert.equal(getPack('tarif-chill-30'), null);
+    assert.equal(getPack('tarif-chill-25').price, 965);
+    assert.throws(
+        () => computePackChange({ forfait: 'tarif-chill-20' }, 'tarif-chill-30'),
+        /INVALID_PACK/
+    );
+});
+
+test('Stripe valide les packs 25 cours au comptant et en plusieurs fois', () => {
+    const packs = [
+        { id: 'tarif-chill-25', amount: 96500 },
+        { id: 'tarif-premium-25', amount: 109500 },
+        { id: 'tarif-accelere-25', amount: 119900 }
+    ];
+
+    for (const pack of packs) {
+        assert.equal(validatePurchase({ amount: pack.amount, hours: 25, transmission: 'manual' }, pack.id), true);
+        for (const installments of [2, 3]) {
+            const total = Math.round(pack.amount * 1.03);
+            const payload = { amount: total, hours: 25, transmission: 'manual', installments };
+            assert.equal(validatePurchase(payload, pack.id), true);
+            const schedule = getInstallmentSchedule(payload, pack.id);
+            assert.equal(schedule.amounts.length, installments);
+            assert.equal(schedule.amounts.reduce((sum, amount) => sum + amount, 0), total);
+        }
+    }
+
+    const fs = require('node:fs');
+    const stripeSource = fs.readFileSync(require.resolve('../netlify/functions/create-payment-intent.js'), 'utf8');
+    assert.match(stripeSource, /validatePurchase\(payload, packId\)/);
+    assert.match(stripeSource, /amount:\s*chargedAmount/);
+    assert.match(stripeSource, /pack_id:\s*packId/);
+});
+
 test('the server rejects a transmission that does not match the selected pack', () => {
     assert.equal(validatePurchase({ amount: 49900, hours: 13, transmission: 'manual' }, 'tarif-chill-auto-13'), false);
-    assert.equal(validatePurchase({ amount: 64900, hours: 20, transmission: 'auto' }, 'tarif-chill-20'), false);
+    assert.equal(validatePurchase({ amount: 69900, hours: 20, transmission: 'auto' }, 'tarif-chill-20'), false);
 });
 
 test('active admin workflows do not rely on unsupported prompt dialogs', () => {

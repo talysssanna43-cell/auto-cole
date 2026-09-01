@@ -994,8 +994,8 @@
                         <span class="hour-number">20</span>
                         <span class="hour-label">cours</span>
                     </div>
-                    <div class="hour-option" onclick="selectHours(this, 'chill', 30)">
-                        <span class="hour-number">30</span>
+                    <div class="hour-option" onclick="selectHours(this, 'chill', 25)">
+                        <span class="hour-number">25</span>
                         <span class="hour-label">cours</span>
                     </div>
                 </div>
@@ -1008,7 +1008,7 @@
                             <p class="price-note">prix public</p>
                         </div>
                     </div>
-                    <div class="price" id="chill-price">649<span class="price-asterisk">€</span></div>
+                    <div class="price" id="chill-price">699<span class="price-asterisk">€</span></div>
                 </div>
                 
                 <p class="features-title">Contenu du pack :</p>
@@ -1046,8 +1046,8 @@
                         <span class="hour-number">20</span>
                         <span class="hour-label">cours</span>
                     </div>
-                    <div class="hour-option" onclick="selectHours(this, 'premium', 30)">
-                        <span class="hour-number">30</span>
+                    <div class="hour-option" onclick="selectHours(this, 'premium', 25)">
+                        <span class="hour-number">25</span>
                         <span class="hour-label">cours</span>
                     </div>
                 </div>
@@ -1060,7 +1060,7 @@
                             <p class="price-note">prix public</p>
                         </div>
                     </div>
-                    <div class="price" id="premium-price">749<span class="price-asterisk">€</span></div>
+                    <div class="price" id="premium-price">799<span class="price-asterisk">€</span></div>
                 </div>
                 
                 <p class="features-title">Contenu du pack :</p>
@@ -1098,8 +1098,8 @@
                         <span class="hour-number">20</span>
                         <span class="hour-label">cours</span>
                     </div>
-                    <div class="hour-option" onclick="selectHours(this, 'accelere', 30)">
-                        <span class="hour-number">30</span>
+                    <div class="hour-option" onclick="selectHours(this, 'accelere', 25)">
+                        <span class="hour-number">25</span>
                         <span class="hour-label">cours</span>
                     </div>
                 </div>
@@ -1612,23 +1612,24 @@
         
         function selectHours(element, pack, hours) {
             const parent = element.parentElement;
+            const card = element.closest('.pricing-card');
             parent.querySelectorAll('.hour-option').forEach(opt => opt.classList.remove('selected'));
             element.classList.add('selected');
             
             // Update price based on hours
             const prices = {
-                'chill': { 5: 249, 10: 499, 20: 649, 30: 1149 },
-                'premium': { 5: 395, 10: 599, 20: 749, 30: 1249 },
-                'accelere': { 5: 499, 10: 749, 20: 899, 30: 1399 },
+                'chill': { 5: 239, 10: 489, 20: 699, 25: 965 },
+                'premium': { 5: 389, 10: 599, 20: 799, 25: 1095 },
+                'accelere': { 5: 489, 10: 749, 20: 899, 25: 1199 },
                 'chill-auto': { 5: 269, 13: 499 },
                 'premium-auto': { 5: 379, 13: 599 },
                 'accelere-auto': { 5: 499, 13: 749 }
             };
 
             const oldPrices = {
-                'chill': { 5: 274, 10: 549, 20: 849, 30: 1349 },
-                'premium': { 5: 495, 10: 769, 20: 1049, 30: 1549 },
-                'accelere': { 5: 649, 10: 899, 20: 1249, 30: 1749 },
+                'chill': { 5: 274, 10: 549, 20: 849, 25: 1440 },
+                'premium': { 5: 495, 10: 769, 20: 1049, 25: 1450 },
+                'accelere': { 5: 649, 10: 899, 20: 1249, 25: 1440 },
                 'chill-auto': { 5: 299, 13: 699 },
                 'premium-auto': { 5: 529, 13: 899 },
                 'accelere-auto': { 5: 649, 13: 1049 }
@@ -1648,7 +1649,34 @@
             if (coursElement) {
                 coursElement.textContent = hours;
             }
+
+            const subtitle = card?.querySelector('.card-subtitle');
+            if (subtitle) {
+                subtitle.textContent = `Code + ${hours} cours de conduite`;
+            }
+
+            const price = prices[pack]?.[hours];
+            const cta = card?.querySelector('.card-cta');
+            if (cta && price) {
+                const transmission = pack.includes('-auto') ? 'auto' : 'manual';
+                const title = card.querySelector('.card-header h3')?.textContent.trim() || pack;
+                const params = new URLSearchParams({
+                    pack: `tarif-${pack}-${hours}`,
+                    price: String(price),
+                    hours: String(hours),
+                    transmission,
+                    label: `${title} - ${hours} cours`
+                });
+                cta.href = `inscription.html?${params.toString()}`;
+            }
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.hours-selector .hour-option.selected').forEach((option) => {
+                const match = (option.getAttribute('onclick') || '').match(/selectHours\(this,\s*'([^']+)',\s*(\d+)\)/);
+                if (match) selectHours(option, match[1], Number(match[2]));
+            });
+        });
     </script>
     <script src="assets/js/navbar.js"></script>
     <script src="assets/js/mobile-menu.js"></script>

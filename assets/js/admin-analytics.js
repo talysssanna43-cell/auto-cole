@@ -634,7 +634,7 @@ function renderProfitability(payload) {
             console.log('Packs des inscriptions:', signups.map(s => s.pack));
             
             // Filtrer les inscriptions par type de forfait
-            const manualPackIds = ['chill', 'zen', 'tarif-chill-5', 'tarif-chill-10', 'tarif-chill-20', 'tarif-chill-30', 'tarif-zen-5', 'tarif-zen-10', 'tarif-zen-20', 'tarif-zen-30', 'aac', 'supervisee', 'accelere', '20h', 'heures-conduite', 'heure-conduite-manual', 'second-chance'];
+            const manualPackIds = ['chill', 'zen', 'tarif-chill-5', 'tarif-chill-10', 'tarif-chill-20', 'tarif-chill-25', 'tarif-chill-30', 'tarif-zen-5', 'tarif-zen-10', 'tarif-zen-20', 'tarif-zen-25', 'tarif-zen-30', 'tarif-premium-5', 'tarif-premium-10', 'tarif-premium-20', 'tarif-premium-25', 'tarif-premium-30', 'tarif-accelere-5', 'tarif-accelere-10', 'tarif-accelere-20', 'tarif-accelere-25', 'tarif-accelere-30', 'aac', 'supervisee', 'accelere', '20h', 'heures-conduite', 'heure-conduite-manual', 'second-chance'];
             const autoPackIds = ['chill-auto', 'zen-auto', 'tarif-chill-auto-5', 'tarif-chill-auto-13', 'tarif-zen-auto-5', 'tarif-zen-auto-13', 'boite-auto', 'heure-conduite-auto'];
             const manualSignups = signups.filter(s => manualPackIds.includes(s.pack));
             const autoSignups = signups.filter(s => autoPackIds.includes(s.pack));
