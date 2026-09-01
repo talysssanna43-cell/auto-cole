@@ -356,11 +356,6 @@
             border: 1px solid #ececef;
         }
 
-        .hours-selector.is-static {
-            grid-template-columns: minmax(84px, 118px);
-            justify-content: start;
-        }
-
         .hour-option {
             min-height: 54px;
             padding: 0.5rem 0.4rem;
@@ -424,6 +419,10 @@
             padding: 1rem 1.15rem;
             border-radius: 16px;
             border: 1px solid #ececef;
+        }
+
+        .pricing-card.fixed-pack .price-display {
+            margin-top: 0.45rem;
         }
 
         .price-display:not(:has(.price-top-row)) {
@@ -1687,7 +1686,7 @@
 
         <!-- AAC Manual -->
         <div id="aac-manual" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; max-width: 720px; margin: 0 auto;">
-            <div class="pricing-card">
+            <div class="pricing-card fixed-pack">
                 <div class="card-header">
                     <h3>Conduite Accompagnée</h3>
                     <div class="pricing-vehicle">
@@ -1695,13 +1694,6 @@
                     </div>
                     <p class="card-subtitle">Code + 20 cours de conduite</p>
                     <p class="card-highlight">Dès 15 ans</p>
-                </div>
-
-                <div class="hours-selector is-static" aria-label="Nombre de cours inclus">
-                    <div class="hour-option selected">
-                        <span class="hour-number">20</span>
-                        <span class="hour-label">cours</span>
-                    </div>
                 </div>
 
                 <div class="price-display">
@@ -1727,7 +1719,7 @@
                 </a>
             </div>
 
-            <div class="pricing-card">
+            <div class="pricing-card fixed-pack">
                 <div class="card-header">
                     <h3>Conduite Supervisée</h3>
                     <div class="pricing-vehicle">
@@ -1735,13 +1727,6 @@
                     </div>
                     <p class="card-subtitle">Code + 20 cours de conduite</p>
                     <p class="card-highlight">Dès 18 ans</p>
-                </div>
-
-                <div class="hours-selector is-static" aria-label="Nombre de cours inclus">
-                    <div class="hour-option selected">
-                        <span class="hour-number">20</span>
-                        <span class="hour-label">cours</span>
-                    </div>
                 </div>
 
                 <div class="price-display">
@@ -1770,7 +1755,7 @@
 
         <!-- AAC Auto -->
         <div id="aac-auto" style="display: none; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; max-width: 720px; margin: 0 auto;">
-            <div class="pricing-card">
+            <div class="pricing-card fixed-pack">
                 <div class="card-header">
                     <h3>Conduite Accompagnée boîte automatique</h3>
                     <div class="pricing-vehicle">
@@ -1778,13 +1763,6 @@
                     </div>
                     <p class="card-subtitle">Code + 13 cours de conduite</p>
                     <p class="card-highlight">Dès 15 ans</p>
-                </div>
-
-                <div class="hours-selector is-static" aria-label="Nombre de cours inclus">
-                    <div class="hour-option selected">
-                        <span class="hour-number">13</span>
-                        <span class="hour-label">cours</span>
-                    </div>
                 </div>
 
                 <div class="price-display">
@@ -1810,7 +1788,7 @@
                 </a>
             </div>
 
-            <div class="pricing-card">
+            <div class="pricing-card fixed-pack">
                 <div class="card-header">
                     <h3>Conduite Supervisée boîte automatique</h3>
                     <div class="pricing-vehicle">
@@ -1818,13 +1796,6 @@
                     </div>
                     <p class="card-subtitle">Code + 13 cours de conduite</p>
                     <p class="card-highlight">Dès 18 ans</p>
-                </div>
-
-                <div class="hours-selector is-static" aria-label="Nombre de cours inclus">
-                    <div class="hour-option selected">
-                        <span class="hour-number">13</span>
-                        <span class="hour-label">cours</span>
-                    </div>
                 </div>
 
                 <div class="price-display">
@@ -1859,7 +1830,7 @@
         </h2>
 
         <div style="max-width: 360px; margin: 0 auto;">
-            <div class="pricing-card">
+            <div class="pricing-card fixed-pack">
                 <div class="card-header">
                     <h3>Permis Young</h3>
                     <div class="pricing-vehicle">
@@ -1867,13 +1838,6 @@
                     </div>
                     <p class="card-subtitle">Code + 8 cours de conduite</p>
                     <p class="card-highlight">Voiture sans permis</p>
-                </div>
-
-                <div class="hours-selector is-static" aria-label="Nombre de cours inclus">
-                    <div class="hour-option selected">
-                        <span class="hour-number">8</span>
-                        <span class="hour-label">cours</span>
-                    </div>
                 </div>
 
                 <div class="price-display">

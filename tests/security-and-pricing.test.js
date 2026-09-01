@@ -120,6 +120,24 @@ test('the server rejects a transmission that does not match the selected pack', 
     assert.equal(validatePurchase({ amount: 69900, hours: 20, transmission: 'auto' }, 'tarif-chill-20'), false);
 });
 
+test('les formules fixes restent compactes sans masquer leur nombre de cours', () => {
+    const fs = require('node:fs');
+    const source = fs.readFileSync(require.resolve('../tarifs.html'), 'utf8');
+
+    assert.doesNotMatch(source, /hours-selector\s+is-static/);
+    const fixedCards = [...source.matchAll(/<div class="pricing-card fixed-pack">([\s\S]*?)<div class="price-display">/g)];
+    const courseLabels = fixedCards.map((match) => match[1].match(/<p class="card-subtitle">(Code \+ \d+ cours de conduite)<\/p>/)?.[1]);
+
+    assert.equal(fixedCards.length, 5);
+    assert.deepEqual(courseLabels, [
+        'Code + 20 cours de conduite',
+        'Code + 20 cours de conduite',
+        'Code + 13 cours de conduite',
+        'Code + 13 cours de conduite',
+        'Code + 8 cours de conduite'
+    ]);
+});
+
 test('active admin workflows do not rely on unsupported prompt dialogs', () => {
     const fs = require('node:fs');
     const planning = fs.readFileSync(require.resolve('../assets/js/admin-planning.js'), 'utf8');
