@@ -98,7 +98,7 @@
       "path": "/tarifs.html",
       "title": "Prix auto-école à Marseille : tarifs 2026 | Breteuil",
       "description": "Consultez les tarifs 2026 de nos formations au permis à Marseille : boîte manuelle, automatique, conduite accompagnée, code et paiement fractionné.",
-      "h1Includes": ["Tarifs", "permis", "Marseille"],
+      "h1Includes": ["Tarifs"],
       "type": "CollectionPage",
       "priority": "0.9",
       "changefreq": "weekly"
