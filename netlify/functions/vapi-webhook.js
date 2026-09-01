@@ -7,7 +7,7 @@ const BUSINESS = Object.freeze({
     phone: '04 91 53 36 98',
     email: 'breteuilautoecole@gmail.com',
     address: '1A Rue Edouard Delanglade, 13006 Marseille',
-    website: 'https://auto-ecole-breteuil.fr'
+    website: 'https://autoecolebreteuil.com'
 });
 
 const SUBJECTS = new Set(['inscription', 'tarifs', 'planning', 'cpf', 'reclamation', 'autre']);

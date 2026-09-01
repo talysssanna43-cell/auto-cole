@@ -194,7 +194,7 @@
                             <li><i class="fas fa-house"></i> Bureau : Lun-Ven 17h-19h</li>
                         </ul>
                         <div class="footer-mini-badges">
-                            <span><i class="fas fa-star"></i> 4,8/5 Google</span>
+                            <span><i class="fas fa-star"></i> 4,6/5 Google</span>
                             <span><i class="fas fa-location-dot"></i> Marseille 6e</span>
                         </div>
                     </div>
@@ -207,6 +207,8 @@
                             <li><a href="devis.html">Demander un devis</a></li>
                             <li><a href="code.html">Code de la route</a></li>
                             <li><a href="permis-b.html">Permis B</a></li>
+                            <li><a href="permis-boite-manuelle.html">Permis boîte manuelle</a></li>
+                            <li><a href="permis-boite-automatique.html">Permis boîte automatique</a></li>
                             <li><a href="conduite-accompagnee.html">Conduite accompagnée</a></li>
                         </ul>
                     </div>
@@ -217,6 +219,8 @@
                             <li><a href="qui-sommes-nous.html">Qui sommes-nous</a></li>
                             <li><a href="tarifs.html#faq">FAQ</a></li>
                             <li><a href="forfait-second-chance.html">Forfait seconde chance</a></li>
+                            <li><a href="permis-accelere.html">Permis accéléré</a></li>
+                            <li><a href="financement-permis.html">Financement du permis</a></li>
                             <li><a href="avis.html">Avis des élèves</a></li>
                         </ul>
                     </div>
@@ -243,7 +247,7 @@
                 </div>
 
                 <div class="footer-bottom">
-                    <p>&copy; 2024 Auto-Ecole Breteuil. Tous droits réservés.</p>
+                    <p>&copy; 2026 Auto-Ecole Breteuil. Tous droits réservés.</p>
                     <div class="footer-links">
                         <a href="mentions-legales.html">Mentions légales</a>
                         <a href="cgv.html">CGV</a>

@@ -44,7 +44,7 @@ exports.legacyHandler = async function(event, context) {
             };
         }
         
-        const siteOrigin = event.headers.origin || event.headers.referer?.replace(/\/[^/]*$/, '') || 'https://auto-ecole-breteuil.fr';
+        const siteOrigin = event.headers.origin || event.headers.referer?.replace(/\/[^/]*$/, '') || 'https://autoecolebreteuil.com';
         const baseUrl = siteOrigin.replace(/\/$/, '');
         
         const firstName = customerName ? customerName.split(' ')[0] : '';

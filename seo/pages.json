@@ -1,0 +1,187 @@
+{
+  "site": {
+    "name": "Auto-Ecole Breteuil",
+    "baseUrl": "https://autoecolebreteuil.com",
+    "language": "fr-FR",
+    "defaultImage": "/assets/acceuil-hero.png",
+    "telephone": "+33491533698",
+    "email": "breteuilautoecole@gmail.com",
+    "streetAddress": "1A Rue Édouard Delanglade",
+    "postalCode": "13006",
+    "city": "Marseille",
+    "latitude": 43.2892337,
+    "longitude": 5.3758786,
+    "googleMapsUrl": "https://www.google.com/maps/place/Auto-Ecole+Breteuil/@43.2892337,5.3758786,17z",
+    "priceRange": "€€",
+    "services": [
+      { "name": "Formation au permis B", "path": "/permis-b.html" },
+      { "name": "Permis B en boîte manuelle", "path": "/permis-boite-manuelle.html" },
+      { "name": "Permis B en boîte automatique", "path": "/permis-boite-automatique.html" },
+      { "name": "Formation au permis accéléré", "path": "/permis-accelere.html" },
+      { "name": "Conduite accompagnée AAC", "path": "/conduite-accompagnee.html" },
+      { "name": "Formation au code de la route", "path": "/code.html" }
+    ]
+  },
+  "pages": [
+    {
+      "file": "index.html",
+      "path": "/",
+      "title": "Auto-école à Marseille 13006 | Auto-Ecole Breteuil",
+      "description": "Auto-école près de Castellane à Marseille 13006 : permis B manuel ou automatique, code, conduite accompagnée et formations accélérées.",
+      "h1Includes": ["Auto-école", "Marseille", "13006"],
+      "type": "WebPage",
+      "priority": "1.0",
+      "changefreq": "weekly"
+    },
+    {
+      "file": "permis-b.html",
+      "path": "/permis-b.html",
+      "title": "Permis B à Marseille 13006 | Auto-Ecole Breteuil",
+      "description": "Préparez votre permis B à Marseille 13006 : boîte manuelle ou automatique, code, conduite, suivi des progrès et choix de formules adaptés.",
+      "h1Includes": ["Permis B", "Marseille"],
+      "type": "WebPage",
+      "priority": "0.9",
+      "changefreq": "monthly"
+    },
+    {
+      "file": "permis-boite-manuelle.html",
+      "path": "/permis-boite-manuelle.html",
+      "title": "Permis boîte manuelle à Marseille | Breteuil",
+      "description": "Formation au permis B en boîte manuelle à Marseille 6e : évaluation, code, cours de conduite et formules Chill, Premium ou Accélérée.",
+      "h1Includes": ["boîte manuelle", "Marseille"],
+      "type": "WebPage",
+      "priority": "0.8",
+      "changefreq": "monthly"
+    },
+    {
+      "file": "permis-boite-automatique.html",
+      "path": "/permis-boite-automatique.html",
+      "title": "Permis boîte automatique à Marseille | Breteuil",
+      "description": "Passez le permis B en boîte automatique à Marseille 13006 avec une formation accessible, un suivi clair et des formules dès 13 cours.",
+      "h1Includes": ["boîte automatique", "Marseille"],
+      "type": "WebPage",
+      "priority": "0.8",
+      "changefreq": "monthly"
+    },
+    {
+      "file": "permis-accelere.html",
+      "path": "/permis-accelere.html",
+      "title": "Permis accéléré à Marseille | Auto-Ecole Breteuil",
+      "description": "Découvrez la formation permis accéléré à Marseille 6e : planning intensif, suivi régulier et formules en boîte manuelle ou automatique.",
+      "h1Includes": ["permis accéléré", "Marseille"],
+      "type": "WebPage",
+      "priority": "0.8",
+      "changefreq": "monthly"
+    },
+    {
+      "file": "conduite-accompagnee.html",
+      "path": "/conduite-accompagnee.html",
+      "title": "Conduite accompagnée à Marseille dès 15 ans | Breteuil",
+      "description": "Formation AAC à Marseille 13006 dès 15 ans : code, formation initiale, rendez-vous pédagogiques et accompagnement jusqu'au permis B.",
+      "h1Includes": ["conduite accompagnée", "Marseille"],
+      "type": "WebPage",
+      "priority": "0.8",
+      "changefreq": "monthly"
+    },
+    {
+      "file": "code.html",
+      "path": "/code.html",
+      "title": "Code de la route à Marseille | Auto-Ecole Breteuil",
+      "description": "Préparez le code de la route à Marseille avec une plateforme en ligne, des cours en salle, des séries illimitées et un suivi personnalisé.",
+      "h1Includes": ["code de la route", "Marseille"],
+      "type": "WebPage",
+      "priority": "0.8",
+      "changefreq": "monthly"
+    },
+    {
+      "file": "tarifs.html",
+      "path": "/tarifs.html",
+      "title": "Prix auto-école à Marseille : tarifs 2026 | Breteuil",
+      "description": "Consultez les tarifs 2026 de nos formations au permis à Marseille : boîte manuelle, automatique, conduite accompagnée, code et paiement fractionné.",
+      "h1Includes": ["Tarifs", "permis", "Marseille"],
+      "type": "CollectionPage",
+      "priority": "0.9",
+      "changefreq": "weekly"
+    },
+    {
+      "file": "financement-permis.html",
+      "path": "/financement-permis.html",
+      "title": "Financer son permis à Marseille : CPF et aides | Breteuil",
+      "description": "Étudiez les solutions de financement du permis à Marseille : CPF selon éligibilité, Mission Locale, Département 13 et France Travail.",
+      "h1Includes": ["financer", "permis", "Marseille"],
+      "type": "WebPage",
+      "priority": "0.8",
+      "changefreq": "monthly"
+    },
+    {
+      "file": "forfait-second-chance.html",
+      "path": "/forfait-second-chance.html",
+      "title": "Repasser le permis après un échec à Marseille | Breteuil",
+      "description": "Après un échec au permis, reprenez confiance avec un bilan, des cours ciblés et un accompagnement personnalisé à Marseille 6e.",
+      "h1Includes": ["permis", "échec", "Marseille"],
+      "type": "WebPage",
+      "priority": "0.7",
+      "changefreq": "monthly"
+    },
+    {
+      "file": "avis.html",
+      "path": "/avis.html",
+      "title": "Avis Google Auto-Ecole Breteuil à Marseille",
+      "description": "Consultez les avis Google vérifiés des élèves de l'Auto-Ecole Breteuil à Marseille 6e et découvrez leurs expériences de formation.",
+      "h1Includes": ["Avis", "Marseille"],
+      "type": "CollectionPage",
+      "priority": "0.7",
+      "changefreq": "weekly"
+    },
+    {
+      "file": "qui-sommes-nous.html",
+      "path": "/qui-sommes-nous.html",
+      "title": "Notre auto-école à Marseille 6e | Breteuil",
+      "description": "Découvrez l'équipe, les valeurs et l'accompagnement de l'Auto-Ecole Breteuil, située au 1A rue Édouard Delanglade à Marseille 13006.",
+      "h1Includes": ["auto-école", "Marseille"],
+      "type": "AboutPage",
+      "priority": "0.7",
+      "changefreq": "monthly"
+    },
+    {
+      "file": "contact.html",
+      "path": "/contact.html",
+      "title": "Contact Auto-Ecole Breteuil | Marseille 13006",
+      "description": "Contactez l'Auto-Ecole Breteuil à Marseille 6e : 1A rue Édouard Delanglade, 04 91 53 36 98. Formations permis et renseignements.",
+      "h1Includes": ["Contact", "Marseille"],
+      "type": "ContactPage",
+      "priority": "0.7",
+      "changefreq": "monthly"
+    },
+    {
+      "file": "devis.html",
+      "path": "/devis.html",
+      "title": "Devis formation permis à Marseille | Breteuil",
+      "description": "Demandez un devis personnalisé pour votre permis à Marseille : formule, financement et organisme. Réponse de l'Auto-Ecole Breteuil sous 48 h.",
+      "h1Includes": ["devis", "permis", "Marseille"],
+      "type": "WebPage",
+      "priority": "0.6",
+      "changefreq": "monthly"
+    },
+    {
+      "file": "recrutement.html",
+      "path": "/recrutement.html",
+      "title": "Recrutement auto-école à Marseille | Breteuil",
+      "description": "Consultez les offres d'emploi de l'Auto-Ecole Breteuil à Marseille et candidatez comme enseignant de la conduite ou personnel administratif.",
+      "h1Includes": ["recrute", "Marseille"],
+      "type": "WebPage",
+      "priority": "0.5",
+      "changefreq": "monthly"
+    },
+    {
+      "file": "conseiller.html",
+      "path": "/conseiller.html",
+      "title": "Être rappelé par une auto-école à Marseille | Breteuil",
+      "description": "Choisissez votre créneau pour être rappelé par un conseiller de l'Auto-Ecole Breteuil à Marseille 6e et trouver la bonne formation.",
+      "h1Includes": ["conseiller", "Marseille"],
+      "type": "WebPage",
+      "priority": "0.5",
+      "changefreq": "monthly"
+    }
+  ]
+}

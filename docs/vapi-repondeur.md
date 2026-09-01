@@ -15,7 +15,7 @@ Dans Netlify, ajouter ces variables dans Site configuration > Environment variab
 
 - `VAPI_PRIVATE_KEY`: cle privee Vapi, uniquement pour le script de creation/mise a jour.
 - `VAPI_WEBHOOK_SECRET`: secret partage envoye par Vapi en header `x-vapi-secret`.
-- `VAPI_WEBHOOK_URL`: optionnel. Par defaut: `https://auto-ecole-breteuil.fr/.netlify/functions/vapi-webhook`.
+- `VAPI_WEBHOOK_URL`: optionnel. Par defaut: `https://autoecolebreteuil.com/.netlify/functions/vapi-webhook`.
 - `VAPI_TRANSFER_PHONE_E164`: optionnel mais recommande, numero humain au format E.164, exemple `+33491533698`.
 - `VAPI_ASSISTANT_ID`: optionnel, a renseigner apres creation si on veut mettre a jour le meme assistant.
 - `VAPI_API_BASE_URL`: optionnel. Utiliser `https://api.eu.vapi.ai` si l'organisation Vapi est en region Europe.
@@ -36,7 +36,7 @@ Les variables Supabase existantes (`SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`) 
 
 2. Ajouter le Server URL
    - Assistant > Advanced > Server URL:
-     `https://auto-ecole-breteuil.fr/.netlify/functions/vapi-webhook`
+     `https://autoecolebreteuil.com/.netlify/functions/vapi-webhook`
    - Si vous utilisez un secret, configurer l'envoi de `x-vapi-secret` avec la meme valeur que `VAPI_WEBHOOK_SECRET`.
    - Les docs Vapi indiquent que les server URLs peuvent etre definies au niveau organisation, numero, assistant ou fonction. Ici le niveau assistant/fonction est le plus adapte.
 

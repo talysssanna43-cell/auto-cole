@@ -1,8 +1,8 @@
 // Avis Google - aucune donn?e d'avis invent?e.
 const GOOGLE_MAPS_URL = 'https://www.google.com/maps/place/Auto-Ecole+Breteuil/@43.2897957,5.3785036,15.24z/data=!3m1!5s0x12c9c0b775ba4549:0xbfe923b2b6f00aec!4m8!3m7!1s0x12c9c0b776a83425:0x6d9a5634af880116!8m2!3d43.2892337!4d5.3758786!9m1!1b1!16s%2Fg%2F1tfhpphl?entry=ttu&g_ep=EgoyMDI2MDgwNC4wIKXMDSoASAFQAw%3D%3D';
 const GOOGLE_FALLBACK = {
-    rating: 4.8,
-    total: 183,
+    rating: 4.6,
+    total: 184,
     reviews: [
         {
             author_name: 'Adrien GABOURG',

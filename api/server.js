@@ -352,8 +352,8 @@ app.get('/api/google-reviews', async (req, res) => {
     if (!apiKey || !placeId) {
         return res.json({
             configured: false,
-            rating: 4.8,
-            total: 183,
+            rating: 4.6,
+            total: 184,
             reviews: [],
             url: GOOGLE_MAPS_URL,
             reviewUrl: GOOGLE_MAPS_URL,
@@ -370,8 +370,8 @@ app.get('/api/google-reviews', async (req, res) => {
         if (!response.ok || payload.status !== 'OK') {
             return res.status(502).json({
                 configured: true,
-                rating: 4.8,
-                total: 183,
+                rating: 4.6,
+                total: 184,
                 reviews: [],
                 url: GOOGLE_MAPS_URL,
                 reviewUrl: googleWriteReviewUrl(placeId),
@@ -393,8 +393,8 @@ app.get('/api/google-reviews', async (req, res) => {
         console.error('Erreur Google reviews:', error);
         res.status(500).json({
             configured: true,
-            rating: 4.8,
-            total: 183,
+            rating: 4.6,
+            total: 184,
             reviews: [],
             url: GOOGLE_MAPS_URL,
             reviewUrl: googleWriteReviewUrl(placeId),

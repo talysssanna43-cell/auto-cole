@@ -1,4 +1,4 @@
-const DEFAULT_SITE_URL = 'https://auto-ecole-breteuil.fr';
+const DEFAULT_SITE_URL = 'https://autoecolebreteuil.com';
 
 function env(name, fallback = '') {
     return process.env[name] || fallback;
@@ -19,7 +19,7 @@ Informations fiables:
 - Adresse: 1A Rue Edouard Delanglade, 13006 Marseille.
 - Telephone: 04 91 53 36 98.
 - Email: breteuilautoecole@gmail.com.
-- Site: https://auto-ecole-breteuil.fr.
+- Site: https://autoecolebreteuil.com.
 - Permis B boite manuelle: minimum legal 20 heures. Offres promotionnelles: Chill 5 cours 239 EUR, 10 cours 489 EUR, 20 cours 699 EUR, 25 cours 965 EUR; Premium 5 cours 389 EUR, 10 cours 599 EUR, 20 cours 799 EUR, 25 cours 1095 EUR; Accelere 5 cours 489 EUR, 10 cours 749 EUR, 20 cours 899 EUR, 25 cours 1199 EUR.
 - Permis B boite automatique: minimum legal 13 heures. Offres connues: Chill 5 cours 269 EUR, Chill 13 cours 499 EUR, Premium 5 cours 379 EUR, Premium 13 cours 599 EUR, Accelere 5 cours 499 EUR, Accelere 13 cours 749 EUR.
 - Cours de conduite a l'unite: 45 EUR en boite manuelle, 50 EUR en boite automatique.

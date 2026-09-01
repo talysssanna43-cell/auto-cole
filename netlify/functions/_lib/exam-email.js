@@ -10,7 +10,7 @@ function escapeHtml(value) {
 }
 
 function siteUrl() {
-    return String(getEnv('URL') || getEnv('SITE_URL') || 'https://auto-ecole-breteuil.fr').replace(/\/$/, '');
+    return String(getEnv('URL') || getEnv('SITE_URL') || 'https://autoecolebreteuil.com').replace(/\/$/, '');
 }
 
 function formatDate(value) {

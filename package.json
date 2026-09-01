@@ -4,6 +4,8 @@
   "description": "Site internet moderne pour une auto-école, inspiré des meilleures pratiques du secteur.",
   "main": "index.js",
   "scripts": {
+    "build": "node scripts/apply-seo.js",
+    "seo:generate": "node scripts/apply-seo.js",
     "test": "node --test tests/*.test.js",
     "check": "npm test",
     "check:deployment": "node scripts/check-deployment-config.js",

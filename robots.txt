@@ -1,0 +1,23 @@
+User-agent: *
+Allow: /
+Disallow: /admin-
+Disallow: /espace-
+Disallow: /connexion
+Disallow: /inscription
+Disallow: /reservation
+Disallow: /reset-password
+Disallow: /devis-envoye
+Disallow: /recrutement-merci
+Disallow: /parrainage
+Disallow: /cours-theorique
+Disallow: /instructor-
+Disallow: /moniteur-
+Disallow: /test-
+Disallow: /debug-
+Disallow: /check-
+Disallow: /fix-
+Disallow: /auto-
+Disallow: /sync-
+Disallow: /.netlify/
+
+Sitemap: https://autoecolebreteuil.com/sitemap.xml

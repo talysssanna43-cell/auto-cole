@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex,nofollow">
+    <title>Référencement - Auto-Ecole Breteuil</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/admin-mobile.css?v=3">
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f5f7; color: #1d1d1f; }
+        .seo-topbar { position: sticky; top: 0; z-index: 50; min-height: 54px; display: flex; align-items: center; border-bottom: 1px solid #dedee2; background: rgba(255,255,255,.94); backdrop-filter: blur(16px); }
+        .seo-topbar-inner { width: min(1440px, calc(100% - 36px)); margin: 0 auto; display: flex; align-items: center; gap: 24px; }
+        .seo-brand { color: #1d1d1f; font-weight: 750; text-decoration: none; white-space: nowrap; }
+        .seo-tabs { display: flex; gap: 5px; overflow-x: auto; }
+        .seo-tabs a { padding: 7px 11px; border-radius: 6px; color: #5d6067; font-size: .8rem; text-decoration: none; white-space: nowrap; }
+        .seo-tabs a.active { background: #fce7f3; color: #be185d; font-weight: 750; }
+        .seo-main { width: min(1440px, calc(100% - 36px)); margin: 0 auto; padding: 34px 0 54px; }
+        .seo-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 26px; }
+        .seo-heading h1 { margin: 0 0 5px; font-size: 1.85rem; }
+        .seo-heading p { margin: 0; color: #6b6e75; }
+        .seo-status { padding: 8px 12px; border-radius: 6px; background: #e8f8ef; color: #176d3e; font-size: .82rem; font-weight: 700; }
+        .seo-status.error { background: #fff0f0; color: #b42318; }
+        .seo-layout { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 22px; align-items: start; }
+        .seo-pages { border: 1px solid #dedee2; border-radius: 8px; background: #fff; overflow: hidden; }
+        .seo-pages-header { padding: 14px 16px; border-bottom: 1px solid #e7e7ea; color: #6b6e75; font-size: .76rem; font-weight: 800; text-transform: uppercase; }
+        .seo-page-list { max-height: calc(100vh - 190px); overflow-y: auto; }
+        .seo-page-button { width: 100%; display: grid; grid-template-columns: 1fr auto; gap: 10px; padding: 13px 16px; border: 0; border-bottom: 1px solid #efeff1; background: #fff; color: #2b2c30; text-align: left; cursor: pointer; }
+        .seo-page-button:hover { background: #fafafa; }
+        .seo-page-button.active { background: #fdf2f8; color: #9d174d; }
+        .seo-page-button strong { display: block; font-size: .86rem; }
+        .seo-page-button small { display: block; margin-top: 3px; color: #85878d; overflow: hidden; text-overflow: ellipsis; }
+        .seo-page-button i { margin-top: 4px; color: #10b981; font-size: .66rem; }
+        .seo-page-button i.base { color: #c7c8cc; }
+        .seo-editor { padding: 28px; border: 1px solid #dedee2; border-radius: 8px; background: #fff; }
+        .seo-editor-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 18px; padding-bottom: 22px; border-bottom: 1px solid #e8e8eb; }
+        .seo-editor-head h2 { margin: 0 0 5px; font-size: 1.35rem; }
+        .seo-editor-head p { margin: 0; color: #74767d; font-size: .86rem; }
+        .seo-open { display: inline-flex; align-items: center; gap: 7px; color: #be185d; font-size: .84rem; font-weight: 700; text-decoration: none; }
+        .seo-form { display: grid; gap: 20px; margin-top: 24px; }
+        .seo-field label { display: flex; justify-content: space-between; gap: 15px; margin-bottom: 8px; font-size: .84rem; font-weight: 750; }
+        .seo-field label span { color: #8b8d93; font-weight: 500; }
+        .seo-field input, .seo-field textarea { width: 100%; border: 1px solid #cfd0d4; border-radius: 6px; padding: 12px 13px; font: inherit; color: #1d1d1f; background: #fff; outline: none; }
+        .seo-field textarea { min-height: 96px; resize: vertical; }
+        .seo-field input:focus, .seo-field textarea:focus { border-color: #ec4899; box-shadow: 0 0 0 3px rgba(236,72,153,.12); }
+        .seo-preview-title { margin: 30px 0 10px; color: #6b6e75; font-size: .75rem; font-weight: 800; text-transform: uppercase; }
+        .seo-preview { max-width: 680px; padding: 18px 20px; border: 1px solid #e1e2e5; border-radius: 8px; background: #fff; box-shadow: 0 5px 18px rgba(0,0,0,.05); }
+        .seo-preview-url { color: #27663c; font-size: .78rem; }
+        .seo-preview h3 { margin: 5px 0; color: #1a0dab; font-size: 1.18rem; font-weight: 500; }
+        .seo-preview p { margin: 0; color: #4d5156; font-size: .88rem; line-height: 1.45; }
+        .seo-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; padding-top: 22px; border-top: 1px solid #e8e8eb; }
+        .seo-button { min-height: 42px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 9px 16px; border: 1px solid transparent; border-radius: 6px; font-weight: 750; cursor: pointer; }
+        .seo-button.primary { background: #ec4899; color: #fff; }
+        .seo-button.secondary { border-color: #cfd0d4; background: #fff; color: #3c3e43; }
+        .seo-button:disabled { opacity: .5; cursor: not-allowed; }
+        .seo-feedback { min-height: 22px; margin: 14px 0 0; font-size: .84rem; color: #176d3e; }
+        .seo-feedback.error { color: #b42318; }
+        @media (max-width: 850px) { .seo-layout { grid-template-columns: 1fr; } .seo-page-list { max-height: 250px; } .seo-heading { align-items: flex-start; flex-direction: column; } .seo-editor { padding: 20px; } }
+    </style>
+</head>
+<body>
+    <header class="seo-topbar"><div class="seo-topbar-inner">
+        <a class="seo-brand" href="admin-planning.html">Auto-Ecole Breteuil</a>
+        <nav class="seo-tabs" aria-label="Navigation administration"><a href="admin-planning.html">Planning</a><a href="admin-analytics.html">Analytics</a><a href="admin-comptabilite.html">Comptabilité</a><a href="admin-contact.html">Contact</a><a href="admin-reviews.html">Avis</a><a class="active" href="admin-seo.html">Référencement</a></nav>
+    </div></header>
+    <main class="seo-main">
+        <div class="seo-heading"><div><h1>Référencement des pages</h1><p>Titres Google, descriptions et titres principaux des pages publiques.</p></div><span class="seo-status" id="seoStatus">Chargement…</span></div>
+        <div class="seo-layout">
+            <aside class="seo-pages"><div class="seo-pages-header">Pages publiques</div><div class="seo-page-list" id="seoPageList"></div></aside>
+            <section class="seo-editor" aria-live="polite">
+                <div class="seo-editor-head"><div><h2 id="seoEditorTitle">Sélectionne une page</h2><p id="seoEditorPath"></p></div><a class="seo-open" id="seoOpenPage" href="index.html" target="_blank" rel="noopener"><i class="fas fa-arrow-up-right-from-square"></i> Ouvrir</a></div>
+                <form class="seo-form" id="seoForm">
+                    <div class="seo-field"><label for="seoTitle">Titre SEO <span id="seoTitleCount">0 / 70</span></label><input id="seoTitle" maxlength="70" required></div>
+                    <div class="seo-field"><label for="seoDescription">Description Google <span id="seoDescriptionCount">0 / 180</span></label><textarea id="seoDescription" maxlength="180" required></textarea></div>
+                    <div class="seo-field"><label for="seoH1">Titre principal H1 <span id="seoH1Count">0 / 140</span></label><input id="seoH1" maxlength="140" required></div>
+                    <div><div class="seo-preview-title">Aperçu Google</div><div class="seo-preview"><span class="seo-preview-url" id="seoPreviewUrl"></span><h3 id="seoPreviewTitle"></h3><p id="seoPreviewDescription"></p></div></div>
+                    <div class="seo-actions"><button class="seo-button primary" id="seoSave" type="submit"><i class="fas fa-floppy-disk"></i> Enregistrer</button><button class="seo-button secondary" id="seoReset" type="button"><i class="fas fa-rotate-left"></i> Revenir à la version livrée</button></div>
+                    <p class="seo-feedback" id="seoFeedback"></p>
+                </form>
+            </section>
+        </div>
+    </main>
+    <script src="https://unpkg.com/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
+    <script src="assets/js/supabaseClient.js?v=8"></script>
+    <script src="assets/js/page-auth-guard.js?v=2" data-roles="admin"></script>
+    <script src="assets/js/admin-seo.js?v=1"></script>
+    <script src="assets/js/text-encoding-fix.js?v=2"></script>
+</body>
+</html>
