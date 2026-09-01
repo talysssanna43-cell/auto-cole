@@ -7,7 +7,7 @@
     <meta name="robots" content="noindex,nofollow">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/admin-inscriptions.css">
-    <link rel="stylesheet" href="assets/css/admin-mobile.css">
+    <link rel="stylesheet" href="assets/css/admin-mobile.css?v=3">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -33,10 +33,10 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ── Topbar ── */
+        /* -- Topbar -- */
         .topbar {
             position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-            height: 52px;
+            min-height: 58px;
             background: rgba(255,255,255,0.72);
             backdrop-filter: saturate(180%) blur(20px);
             -webkit-backdrop-filter: saturate(180%) blur(20px);
@@ -45,13 +45,17 @@
         }
         .topbar-inner {
             max-width: 1440px; width: 100%; margin: 0 auto;
-            display: flex; align-items: center; justify-content: space-between;
+            display: grid;
+            grid-template-columns: minmax(150px, 190px) minmax(360px, 1fr) auto auto;
+            align-items: center;
+            gap: 12px;
         }
-        .topbar-brand { font-size: 1.05rem; font-weight: 600; color: var(--text); text-decoration: none; }
+        .topbar-brand { font-size: 1.05rem; font-weight: 700; color: var(--text); text-decoration: none; line-height: 1.1; }
         .topbar-tabs {
             display: flex; gap: 4px; background: rgba(0,0,0,0.04); border-radius: 8px; padding: 3px;
             flex-wrap: nowrap;
             overflow-x: auto;
+            min-width: 0;
         }
         .topbar-tabs a {
             padding: 6px 12px; border-radius: 6px; font-size: 0.78rem; font-weight: 500;
@@ -80,25 +84,27 @@
         }
         .btn-inscription {
             display: inline-flex; align-items: center; gap: 6px;
-            padding: 6px 14px; border-radius: 8px; border: none;
+            padding: 8px 14px; border-radius: 8px; border: none;
             background: var(--green); color: white; font-size: 0.82rem; font-weight: 500;
             cursor: pointer; text-decoration: none; transition: all 0.2s;
+            white-space: nowrap;
         }
         .btn-inscription:hover { background: #2fb04f; transform: translateY(-1px); }
-        .topbar-right { display: flex; align-items: center; gap: 14px; }
+        .topbar-right { display: flex; align-items: center; justify-content: flex-end; gap: 10px; white-space: nowrap; }
         .topbar-right a { font-size: 0.82rem; color: var(--text2); text-decoration: none; }
         .topbar-right a:hover { color: var(--text); }
         .btn-logout {
             display: inline-flex; align-items: center; gap: 5px;
-            padding: 5px 12px; border-radius: 980px; border: none; background: none;
+            padding: 8px 12px; border-radius: 980px; border: none; background: rgba(0,0,0,0.04);
             font-size: 0.82rem; font-weight: 500; color: var(--text2); cursor: pointer;
+            white-space: nowrap;
         }
         .btn-logout:hover { color: var(--red); background: rgba(255,59,48,0.06); }
 
-        /* ── Layout ── */
+        /* -- Layout -- */
         .main { padding: 72px 24px 48px; max-width: 1440px; margin: 0 auto; }
 
-        /* ── Header Row ── */
+        /* -- Header Row -- */
         .header-row {
             display: flex; align-items: flex-end; justify-content: space-between;
             margin-bottom: 24px; flex-wrap: wrap; gap: 16px;
@@ -108,7 +114,7 @@
         }
         .header-row h1 span { color: var(--text2); font-weight: 400; font-size: 1rem; margin-left: 8px; }
 
-        /* ── Quick Stats ── */
+        /* -- Quick Stats -- */
         .quick-stats {
             display: flex; gap: 10px; margin-bottom: 24px;
         }
@@ -129,13 +135,20 @@
         .stat-pill .stat-value { font-size: 1.15rem; font-weight: 700; line-height: 1; }
         .stat-pill .stat-label { font-size: 0.7rem; color: var(--text2); font-weight: 500; margin-top: 2px; }
 
-        /* ── Controls ── */
+        /* -- Controls -- */
         .controls {
             display: flex; align-items: center; justify-content: space-between;
             gap: 12px; flex-wrap: wrap; margin-bottom: 16px;
         }
         .controls-left { display: flex; align-items: center; gap: 10px; }
-        .controls-right { display: flex; align-items: center; gap: 8px; }
+        .controls-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .controls-navigation { 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            width: 100%;
+            margin-top: 12px;
+        }
 
         .segment {
             display: flex; background: rgba(0,0,0,0.04); border-radius: 8px; padding: 3px;
@@ -176,6 +189,13 @@
             display: inline-flex; align-items: center; gap: 6px;
         }
         .btn-permis:hover { background: #7b1fa2; transform: translateY(-1px); }
+        .btn-exam-date {
+            padding: 6px 14px; border-radius: 980px; border: 1px solid var(--border);
+            background: #0ea5e9; font-size: 0.78rem; font-weight: 600;
+            color: #fff; cursor: pointer; transition: all 0.12s;
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+        .btn-exam-date:hover { background: #0284c7; transform: translateY(-1px); }
         
         .btn-indisponible {
             padding: 6px 14px; border-radius: 980px; border: 1px solid var(--border);
@@ -185,6 +205,14 @@
         }
         .btn-indisponible:hover { background: #c82333; transform: translateY(-1px); }
         
+        .btn-conges {
+            padding: 6px 14px; border-radius: 980px; border: 1px solid var(--border);
+            background: #17a2b8; font-size: 0.78rem; font-weight: 600;
+            color: #fff; cursor: pointer; transition: all 0.12s;
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+        .btn-conges:hover { background: #138496; transform: translateY(-1px); }
+        
         .btn-today {
             padding: 6px 14px; border-radius: 980px; border: 1px solid var(--border);
             background: var(--card); font-size: 0.78rem; font-weight: 600;
@@ -192,7 +220,7 @@
         }
         .btn-today:hover { background: rgba(0,113,227,0.06); border-color: rgba(0,113,227,0.2); }
 
-        /* ── Modal ── */
+        /* -- Modal -- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0,0,0,0.4); backdrop-filter: blur(4px);
@@ -222,7 +250,7 @@
         .modal-body .info-value { font-size: 0.88rem; font-weight: 600; }
         .modal-body .info-value a { color: var(--blue); text-decoration: none; }
 
-        /* ── Calendar Grid ── */
+        /* -- Calendar Grid -- */
         .planning { display: none; }
         .planning.visible { display: block; }
 
@@ -282,7 +310,7 @@
         }
         .cal-cell.today-col { background: rgba(0,113,227,0.018); }
 
-        /* ── Slot Event Cards ── */
+        /* -- Slot Event Cards -- */
         .ev {
             border-radius: 8px;
             padding: 8px 10px;
@@ -305,10 +333,11 @@
         .ev.done { background: rgba(52,199,89,0.06); }
         .ev.done::before { background: var(--green); }
 
-        .ev.available { background: rgba(0,0,0,0.03); }
-        .ev.available::before { background: #999; }
+        .ev.available { background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.22); }
+        .ev.available::before { background: #22c55e; }
+        .ev.available .ev-status { color: #15803d; font-weight: 700; }
 
-        .ev.permis { background: rgba(156, 39, 176, 0.15); cursor: not-allowed; }
+        .ev.permis { background: rgba(156, 39, 176, 0.15); cursor: pointer; }
         .ev.permis::before { background: #9c27b0; }
         .ev.permis .ev-status { color: #7b1fa2; font-weight: 700; }
 
@@ -316,7 +345,11 @@
         .ev.indisponible::before { background: #dc3545; }
         .ev.indisponible .ev-status { color: #c82333; font-weight: 700; }
 
-        /* Couleurs différentes pour BA et BM */
+        .ev.conges { background: rgba(23, 162, 184, 0.15); cursor: not-allowed; }
+        .ev.conges::before { background: #17a2b8; }
+        .ev.conges .ev-status { color: #138496; font-weight: 700; }
+
+        /* Couleurs differentes pour BA et BM */
         .ev.booked.transmission-auto { background: rgba(0, 113, 227, 0.08); }
         .ev.booked.transmission-auto::before { background: #0071e3; }
         .ev.booked.transmission-auto .ev-status { color: #0071e3; }
@@ -366,7 +399,7 @@
             font-size: 0.65rem; color: var(--text2); opacity: 0.4;
         }
 
-        /* ── Add Student Button ── */
+        /* -- Add Student Button -- */
         .add-student-btn {
             position: absolute;
             top: 65%;
@@ -397,12 +430,12 @@
             opacity: 1;
         }
 
-        /* ── Feedback ── */
+        /* -- Feedback -- */
         .feedback { font-size: 0.85rem; font-weight: 500; color: var(--text2); margin-top: 12px; }
         .feedback.error { color: var(--red); }
         .feedback.success { color: var(--green); }
 
-        /* ── Cancellation Panel ── */
+        /* -- Cancellation Panel -- */
         .cancellation-pill { animation: pulse-red 2s infinite; }
         @keyframes pulse-red {
             0%, 100% { box-shadow: var(--shadow); }
@@ -529,7 +562,7 @@
         }
         .cancellation-card .btn-refuse:hover { background: rgba(255,59,48,0.2); }
 
-        /* ── Student Details Modal ── */
+        /* -- Student Details Modal -- */
         .student-details-modal {
             display: none;
             position: fixed;
@@ -666,7 +699,7 @@
         .status-badge.cancelled { background: rgba(244,67,54,0.15); color: #c62828; }
         .status-badge.pending { background: rgba(255,152,0,0.15); color: #e65100; }
 
-        /* ── Autocomplete Suggestions ── */
+        /* -- Autocomplete Suggestions -- */
         .autocomplete-suggestions {
             position: absolute;
             top: 100%;
@@ -725,8 +758,12 @@
             color: var(--text2);
         }
 
-        /* ── Responsive ── */
+        /* -- Responsive -- */
         @media (max-width: 1024px) {
+            .topbar-inner {
+                grid-template-columns: minmax(130px, 170px) minmax(260px, 1fr) auto auto;
+                gap: 8px;
+            }
             .cal-grid { grid-template-columns: 60px repeat(7, minmax(130px, 1fr)); }
             .calendar { overflow-x: auto; }
             .main { padding: 68px 16px 32px; }
@@ -735,7 +772,13 @@
             .quick-stats { flex-wrap: wrap; }
         }
         @media (max-width: 600px) {
-            .topbar { padding: 0 16px; }
+            .topbar { padding: 8px 12px; min-height: 62px; }
+            .topbar-inner { grid-template-columns: 1fr auto auto; gap: 8px; }
+            .topbar-tabs { grid-column: 1 / -1; }
+            .btn-inscription { padding: 9px 10px; font-size: 0; border-radius: 10px; }
+            .btn-inscription i { font-size: 1rem; }
+            .btn-logout { padding: 9px 10px; font-size: 0; border-radius: 10px; }
+            .btn-logout i { font-size: 1rem; }
             .quick-stats { flex-direction: column; }
         }
     </style>
@@ -751,26 +794,27 @@
             </button>
             <div class="topbar-tabs" id="adminTabs">
                 <a href="admin-planning.html" class="active">Planning</a>
-                <a href="admin-desistements.html">Désistements</a>
                 <a href="admin-candidatures.html">Candidatures <span class="notif-badge" id="candidaturesBadge" style="display: none;">0</span></a>
                 <a href="admin-analytics.html">Analytics</a>
+                <a href="admin-comptabilite.html">Comptabilit&eacute;</a>
+                <a href="admin-moniteurs.html">Moniteurs</a>
                 <a href="admin-support.html">Support <span class="notif-badge" id="supportBadge" style="display: none;">0</span></a>
                 <a href="admin-contact.html">Contact <span class="notif-badge" id="contactBadge" style="display: none;">0</span></a>
                 <a href="admin-code-rousseau.html">Code Rousseau <span class="notif-badge" id="codeRousseuBadge" style="display: none;">0</span></a>
+                <a href="admin-reviews.html">Avis <span class="notif-badge" id="reviewsBadge" style="display: none;">0</span></a>
             </div>
             <div class="topbar-right">
                 <a href="inscription.html?admin=true" class="btn-inscription">
                     <i class="fas fa-user-plus"></i> Nouvelle inscription
                 </a>
-                <a href="index.html" style="color: #86868b; text-decoration: none; font-size: 14px;"><i class="fas fa-arrow-left"></i> Retour au site</a>
-                <button class="btn-logout" id="logoutBtn" style="background: none; border: none; color: #86868b; cursor: pointer; font-size: 14px;"><i class="fas fa-right-from-bracket"></i> Quitter</button>
+                <button class="btn-logout" id="logoutBtn" type="button"><i class="fas fa-right-from-bracket"></i> Quitter</button>
             </div>
         </div>
     </nav>
 
     <main class="main">
         <div class="header-row">
-            <h1>Planning <span id="instructorName">Mylène</span></h1>
+            <h1>Planning <span id="instructorName">Mylene</span></h1>
         </div>
 
         <!-- Student Search Bar -->
@@ -800,14 +844,14 @@
             <div class="stat-pill">
                 <div class="stat-icon blue"><i class="fas fa-calendar-day"></i></div>
                 <div class="stat-info">
-                    <div class="stat-label">Aujourd'hui</div>
+                    <div class="stat-label">Créneaux aujourd'hui</div>
                     <div class="stat-value" id="statToday">0</div>
                 </div>
             </div>
             <div class="stat-pill">
                 <div class="stat-icon green"><i class="fas fa-calendar-week"></i></div>
                 <div class="stat-info">
-                    <div class="stat-label">Cette semaine</div>
+                    <div class="stat-label">Créneaux semaine</div>
                     <div class="stat-value" id="statWeek">0</div>
                 </div>
             </div>
@@ -825,6 +869,20 @@
                     <span class="stat-label">Nouvelles inscriptions</span>
                 </div>
             </div>
+            <div class="stat-pill" id="documentReviewPill" style="display:none;cursor:pointer;" onclick="toggleDocumentReviewPanel()">
+                <div class="stat-icon blue" style="background:rgba(0,113,227,0.12);color:#0071e3;"><i class="fas fa-folder-open"></i></div>
+                <div class="stat-info">
+                    <span class="stat-value" id="statDocumentReviews" style="color:#0071e3;">0</span>
+                    <span class="stat-label">Documents &agrave; v&eacute;rifier</span>
+                </div>
+            </div>
+            <div class="stat-pill" id="cancellationPill" style="display:flex;cursor:pointer;" onclick="toggleCancellationPanel()">
+                <div class="stat-icon red" style="background:rgba(255,59,48,0.12);color:var(--red);"><i class="fas fa-calendar-times"></i></div>
+                <div class="stat-info">
+                    <span class="stat-value" id="statCancellations" style="color:var(--red);">0</span>
+                    <span class="stat-label">Demandes d'annulation</span>
+                </div>
+            </div>
         </div>
 
         <!-- Panneau des nouvelles inscriptions -->
@@ -838,7 +896,17 @@
             </div>
         </div>
 
-        <!-- Taux de réussite des moniteurs -->
+        <div class="cancellation-panel" id="documentReviewPanel" style="display:none;">
+            <div class="panel-header">
+                <h2><i class="fas fa-folder-open" style="color:#0071e3;margin-right:8px;"></i> Documents envoy&eacute;s &agrave; v&eacute;rifier</h2>
+                <button class="btn-close-panel" onclick="toggleDocumentReviewPanel()" aria-label="Fermer"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="cancellation-list" id="documentReviewList">
+                <p class="empty-message">Aucun document en attente de v&eacute;rification.</p>
+            </div>
+        </div>
+
+        <!-- Taux de reussite des moniteurs -->
         <div id="instructorSuccessRates" style="margin-bottom: 24px;"></div>
         
         <!-- Historique des primes du moniteur -->
@@ -863,21 +931,36 @@
                     <button data-instructor="Mylène" id="myleneBtn">Mylène</button>
                     <button data-instructor="Sammy">Sammy</button>
                     <button class="active" data-instructor="Nail">Nail</button>
+                    <button data-instructor="Daho">Daho</button>
                 </div>
                 <div class="legend">
-                    <span class="legend-item"><span class="legend-dot dot-booked"></span> Réservé</span>
-                    <span class="legend-item"><span class="legend-dot dot-done"></span> Réalisé</span>
+                    <span class="legend-item"><span class="legend-dot dot-booked"></span> Reserve</span>
+                    <span class="legend-item"><span class="legend-dot dot-done"></span> Realise</span>
                     <span class="legend-item"><span class="legend-dot" style="background: #ffc107;"></span> Permis</span>
                     <span class="legend-item"><span class="legend-dot dot-free"></span> Libre</span>
                 </div>
             </div>
             <div class="controls-right">
+                <button class="btn-indisponible" id="cancellationActionBtn" onclick="toggleCancellationPanel()" style="background:#fff1f2;color:#be123c;border:1px solid #fecdd3;">
+                    <i class="fas fa-calendar-times"></i> Demandes d'annulation <span id="cancellationActionCount" style="margin-left:6px;background:#be123c;color:white;border-radius:999px;padding:2px 7px;font-size:0.75rem;">0</span>
+                </button>
+                <button class="btn-exam-request" id="examRequestBtn" onclick="openExamRequestModal()">
+                    <i class="fas fa-flag-checkered"></i> Demande permis
+                </button>
+                <button class="btn-exam-date" id="examDateBtn" onclick="openExamDateModal()">
+                    <i class="fas fa-calendar-check"></i> Date d'examen
+                </button>
                 <button class="btn-permis" id="permisBtn" onclick="openPermisModal()">
                     <i class="fas fa-id-card"></i> Permis
                 </button>
                 <button class="btn-indisponible" id="indisponibleBtn" onclick="openIndisponibleModal()">
                     <i class="fas fa-ban"></i> Indisponible
                 </button>
+                <button class="btn-conges" id="congesBtn" onclick="openCongesModal()">
+                    <i class="fas fa-umbrella-beach"></i> Conges
+                </button>
+            </div>
+            <div class="controls-navigation">
                 <button class="btn-today" id="todayBtn">Aujourd'hui</button>
                 <div class="week-nav">
                     <button type="button" id="prevWeekBtn"><i class="fas fa-chevron-left"></i></button>
@@ -895,21 +978,21 @@
             <p class="feedback" id="planningFeedback"></p>
         </section>
 
-        <!-- Planning Désistements -->
+        <!-- Planning Desistements -->
         <section style="margin-top: 3rem;">
             <div style="background: var(--card); border-radius: var(--radius); padding: 2rem; box-shadow: var(--shadow);">
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
                     <h2 style="font-size: 1.5rem; font-weight: 700; display: flex; align-items: center; gap: 0.75rem;">
                         <i class="fas fa-calendar-alt" style="color: #4CAF50;"></i>
-                        Planning Désistements
+                        Planning Desistements
                     </h2>
                 </div>
                 <div style="background: #e8f5e9; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 4px solid #4CAF50;">
                     <p style="color: #2e7d32; margin: 0; font-size: 0.95rem; font-weight: 600;">
-                        <i class="fas fa-info-circle"></i> Ce planning affiche tous les élèves de la liste d'attente dans leurs créneaux de disponibilité.
+                        <i class="fas fa-info-circle"></i> Ce planning affiche tous les eleves de la liste d'attente dans leurs creneaux de disponibilite.
                     </p>
                     <p style="color: #2e7d32; margin: 0.5rem 0 0 0; font-size: 0.85rem;">
-                        💡 En cas de désistement, consultez ce planning pour voir quels élèves peuvent prendre le créneau libéré.
+                        Info En cas de desistement, consultez ce planning pour voir quels eleves peuvent prendre le creneau libere.
                     </p>
                 </div>
                 <div id="desistementsPlanning">
@@ -921,25 +1004,25 @@
             </div>
         </section>
 
-        <!-- Liste d'attente pour désistements - MASQUÉE (remplacée par le planning désistements ci-dessus) -->
+        <!-- Liste d'attente pour desistements - MASQUEE (remplacee par le planning desistements ci-dessus) -->
         <section style="margin-top: 3rem; display: none;">
             <div style="background: var(--card); border-radius: var(--radius); padding: 2rem; box-shadow: var(--shadow);">
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
                     <h2 style="font-size: 1.5rem; font-weight: 700; display: flex; align-items: center; gap: 0.75rem;">
                         <i class="fas fa-bell" style="color: var(--orange);"></i>
-                        Liste d'attente pour désistements
+                        Liste d'attente pour desistements
                     </h2>
                     <button onclick="refreshWaitlist()" style="padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid var(--border); background: white; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
                         <i class="fas fa-sync-alt"></i> Actualiser
                     </button>
                 </div>
                 <p style="color: var(--text2); margin-bottom: 1.5rem; font-size: 0.95rem;">
-                    Élèves ayant configuré leurs disponibilités pour être contactés en cas de désistement
+                    Eleves ayant configure leurs disponibilites pour etre contactes en cas de desistement
                 </p>
                 <div id="waitlistContainer">
                     <div style="text-align: center; padding: 2rem; color: var(--text2);">
                         <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 1rem;"></i>
-                        <p>Chargement des élèves...</p>
+                        <p>Chargement des eleves...</p>
                     </div>
                 </div>
             </div>
@@ -950,7 +1033,7 @@
     <div class="modal-overlay" id="studentModal">
         <div class="modal">
             <div class="modal-header">
-                <h3><i class="fas fa-user" style="margin-right:8px;"></i> Détails de l'élève</h3>
+                <h3><i class="fas fa-user" style="margin-right:8px;"></i> Details de l'eleve</h3>
                 <button class="modal-close" id="closeModal"><i class="fas fa-times"></i></button>
             </div>
             <div class="modal-body" id="studentDetails">
@@ -963,7 +1046,7 @@
     <div class="student-details-modal" id="studentDetailsModal">
         <div class="student-details-content">
             <div class="student-details-header">
-                <h2><i class="fas fa-user-graduate"></i> Profil de l'élève</h2>
+                <h2><i class="fas fa-user-graduate"></i> Profil de l'eleve</h2>
                 <button class="close-btn" onclick="closeStudentDetails()">
                     <i class="fas fa-times"></i>
                 </button>
@@ -974,11 +1057,11 @@
         </div>
     </div>
 
-    <!-- Modal: Bloquer créneau pour Permis -->
+    <!-- Modal: Bloquer creneau pour Permis -->
     <div class="modal-overlay" id="permisModal" style="display: none;">
         <div class="modal">
             <div class="modal-header">
-                <h3><i class="fas fa-id-card" style="margin-right:8px;"></i> Bloquer un créneau pour Permis</h3>
+                <h3><i class="fas fa-id-card" style="margin-right:8px;"></i> Bloquer un creneau pour Permis</h3>
                 <button class="modal-close" onclick="closePermisModal()"><i class="fas fa-times"></i></button>
             </div>
             <div class="modal-body">
@@ -995,7 +1078,7 @@
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                             <div>
                                 <label style="display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.9rem;">
-                                    Heure de départ
+                                    Heure de depart
                                 </label>
                                 <input type="time" id="permisStartTime" required
                                     style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem;">
@@ -1015,8 +1098,8 @@
                             </label>
                             <select id="permisInstructor" required
                                 style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem;">
-                                <option value="">Sélectionner un moniteur</option>
-                                <option value="Mylène">Mylène</option>
+                                <option value="">Selectionner un moniteur</option>
+                                <option value="Mylene">Mylene</option>
                                 <option value="Sammy">Sammy</option>
                                 <option value="Nail">Nail</option>
                             </select>
@@ -1028,7 +1111,7 @@
                             </label>
                             <select id="permisLocation" required
                                 style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem;">
-                                <option value="">Sélectionner un lieu</option>
+                                <option value="">Selectionner un lieu</option>
                                 <option value="Aubagne">Aubagne</option>
                                 <option value="Saint-Henri">Saint-Henri</option>
                                 <option value="Aix-en-Provence">Aix-en-Provence</option>
@@ -1043,14 +1126,14 @@
                             <div style="position: relative;">
                                 <input type="text" id="candidateSearch" 
                                     oninput="searchCandidate(this)" 
-                                    placeholder="Rechercher un élève (nom, prénom, email)..."
+                                    placeholder="Rechercher un eleve (nom, prenom, email)..."
                                     style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem;">
                                 <div id="candidateSuggestions" 
                                     style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid var(--border); border-radius: 8px; margin-top: 4px; max-height: 200px; overflow-y: auto; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
                                 </div>
                             </div>
                             <div id="selectedCandidatesList" style="margin-top: 12px; max-height: 200px; overflow-y: auto;">
-                                <p style="color: #999; font-style: italic; text-align: center; padding: 1rem;">Aucun candidat ajouté</p>
+                                <p style="color: #999; font-style: italic; text-align: center; padding: 1rem;">Aucun candidat ajoute</p>
                             </div>
                         </div>
                         
@@ -1066,7 +1149,7 @@
                         </div>
                         <button type="button" onclick="openDeletePermisModal()"
                             style="width: 100%; padding: 10px; border: 1px solid #dc3545; border-radius: 8px; background: white; color: #dc3545; font-weight: 600; cursor: pointer; margin-top: 8px; font-size: 0.85rem;">
-                            <i class="fas fa-trash"></i> Supprimer un créneau permis
+                            <i class="fas fa-trash"></i> Supprimer un creneau permis
                         </button>
                     </div>
                 </form>
@@ -1074,11 +1157,11 @@
         </div>
     </div>
 
-    <!-- Modal: Bloquer créneau Indisponible -->
+    <!-- Modal: Bloquer creneau Indisponible -->
     <div class="modal-overlay" id="indisponibleModal" style="display: none;">
         <div class="modal">
             <div class="modal-header">
-                <h3><i class="fas fa-ban" style="margin-right:8px;"></i> Bloquer un créneau Indisponible</h3>
+                <h3><i class="fas fa-ban" style="margin-right:8px;"></i> Bloquer un creneau Indisponible</h3>
                 <button class="modal-close" onclick="closeIndisponibleModal()"><i class="fas fa-times"></i></button>
             </div>
             <div class="modal-body">
@@ -1095,7 +1178,7 @@
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                             <div>
                                 <label style="display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.9rem;">
-                                    Heure de départ
+                                    Heure de depart
                                 </label>
                                 <input type="time" id="indisponibleStartTime" required
                                     style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem;">
@@ -1115,9 +1198,8 @@
                             </label>
                             <select id="indisponibleInstructor" required
                                 style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem;">
-                                <option value="">Sélectionner un moniteur</option>
-                                <option value="Mylène">Mylène</option>
-                                <option value="Sammy">Sammy</option>
+                                <option value="">Selectionner un moniteur</option>
+                                <option value="Daho">Daho</option>
                                 <option value="Nail">Nail</option>
                             </select>
                         </div>
@@ -1127,7 +1209,7 @@
                                 Raison (optionnel)
                             </label>
                             <input type="text" id="indisponibleReason" 
-                                placeholder="Ex: Congés, Formation, etc."
+                                placeholder="Ex: Conges, Formation, etc."
                                 style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem;">
                         </div>
                         
@@ -1143,7 +1225,89 @@
                         </div>
                         <button type="button" onclick="openDeleteIndisponibleModal()"
                             style="width: 100%; padding: 10px; border: 1px solid #dc3545; border-radius: 8px; background: white; color: #dc3545; font-weight: 600; cursor: pointer; margin-top: 8px; font-size: 0.85rem;">
-                            <i class="fas fa-trash"></i> Supprimer un créneau indisponible
+                            <i class="fas fa-trash"></i> Supprimer un creneau indisponible
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Bloquer periode de Conges -->
+    <div class="modal-overlay" id="congesModal" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-umbrella-beach" style="margin-right:8px;"></i> Bloquer une periode de Conges</h3>
+                <button class="modal-close" onclick="closeCongesModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="congesForm" onsubmit="submitCongesBlock(event)">
+                    <div style="display: grid; gap: 16px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div>
+                                <label style="display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.9rem;">
+                                    Date de debut
+                                </label>
+                                <input type="date" id="congesStartDate" required
+                                    style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.9rem;">
+                                    Date de fin
+                                </label>
+                                <input type="date" id="congesEndDate" required
+                                    style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem;">
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div>
+                                <label style="display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.9rem;">
+                                    Heure de depart
+                                </label>
+                                <input type="time" id="congesStartTime" value="07:00" required
+                                    style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.9rem;">
+                                    Heure de fin
+                                </label>
+                                <input type="time" id="congesEndTime" value="19:00" required
+                                    style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem;">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label style="display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.9rem;">
+                                Moniteur
+                            </label>
+                            <select id="congesInstructor" required
+                                style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem;">
+                                <option value="">Selectionner un moniteur</option>
+                                <option value="Daho">Daho</option>
+                                <option value="Nail">Nail</option>
+                            </select>
+                        </div>
+                        
+                        <div style="background: #fff3cd; padding: 12px; border-radius: 8px; border-left: 4px solid #ffc107;">
+                            <p style="margin: 0; font-size: 0.85rem; color: #856404;">
+                                <i class="fas fa-info-circle"></i> Les conges seront affiches sur le planning avec le nom du moniteur et la periode.
+                            </p>
+                        </div>
+                        
+                        <div style="display: flex; gap: 10px; margin-top: 8px;">
+                            <button type="button" onclick="closeCongesModal()"
+                                style="flex: 1; padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); font-weight: 600; cursor: pointer;">
+                                Annuler
+                            </button>
+                            <button type="submit"
+                                style="flex: 1; padding: 12px; border: none; border-radius: 8px; background: #17a2b8; color: #fff; font-weight: 600; cursor: pointer;">
+                                <i class="fas fa-check"></i> Bloquer les conges
+                            </button>
+                        </div>
+                        <button type="button" onclick="openDeleteCongesModal()"
+                            style="width: 100%; padding: 10px; border: 1px solid #dc3545; border-radius: 8px; background: white; color: #dc3545; font-weight: 600; cursor: pointer; margin-top: 8px; font-size: 0.85rem;">
+                            <i class="fas fa-trash"></i> Supprimer des conges
                         </button>
                     </div>
                 </form>
@@ -1166,11 +1330,80 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="examDateModal" style="display: none;">
+        <div class="modal" style="max-width: 620px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-calendar-check" style="margin-right:8px; color:#0ea5e9;"></i> Date d'examen</h3>
+                <button class="modal-close" onclick="closeExamDateModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="examDateForm" onsubmit="submitExamDate(event)">
+                    <input type="hidden" id="examDateStudentEmail">
+                    <input type="hidden" id="examDateStudentName">
+                    <div style="display:grid;gap:16px;">
+                        <div>
+                            <label style="display:block;font-weight:600;margin-bottom:6px;">Eleve</label>
+                            <div style="position:relative;">
+                                <input type="text" id="examDateStudentSearch" required
+                                    placeholder="Nom, prenom ou email..."
+                                    oninput="searchExamDateStudent(this.value)"
+                                    autocomplete="off"
+                                    style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:0.95rem;">
+                                <div id="examDateStudentSuggestions" class="autocomplete-suggestions"></div>
+                            </div>
+                            <p id="examDateSelectedStudent" style="display:none;margin-top:8px;color:#0f766e;font-weight:700;"></p>
+                        </div>
+                        <div>
+                            <label style="display:block;font-weight:600;margin-bottom:6px;">Lieu de l'examen</label>
+                            <select id="examDateLocation" required style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:0.95rem;">
+                                <option value="">Selectionner un lieu</option>
+                                <option value="Aubagne">Aubagne</option>
+                                <option value="Saint-Henri">Saint-Henri</option>
+                                <option value="Salon">Salon</option>
+                                <option value="Aix-en-Provence">Aix-en-Provence</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display:block;font-weight:600;margin-bottom:6px;">Date</label>
+                            <input type="date" id="examDateDate" required style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:0.95rem;">
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                            <div>
+                                <label style="display:block;font-weight:600;margin-bottom:6px;">Heure de debut</label>
+                                <input type="time" id="examDateStartTime" value="07:00" required style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:0.95rem;">
+                            </div>
+                            <div>
+                                <label style="display:block;font-weight:600;margin-bottom:6px;">Heure de fin</label>
+                                <input type="time" id="examDateEndTime" value="09:00" required style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:0.95rem;">
+                            </div>
+                        </div>
+                        <div>
+                            <label style="display:block;font-weight:600;margin-bottom:6px;">Moniteur accompagnateur</label>
+                            <select id="examDateInstructor" required style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:0.95rem;">
+                                <option value="">Selectionner un moniteur</option>
+                                <option value="Mylene">Mylene</option>
+                                <option value="Sammy">Sammy</option>
+                                <option value="Nail">Nail</option>
+                                <option value="Daho">Daho</option>
+                            </select>
+                        </div>
+                        <div style="display:flex;gap:10px;margin-top:8px;">
+                            <button type="button" onclick="closeExamDateModal()" style="flex:1;padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--card);font-weight:600;cursor:pointer;">Annuler</button>
+                            <button type="submit" style="flex:1;padding:12px;border:none;border-radius:8px;background:#0ea5e9;color:white;font-weight:700;cursor:pointer;">
+                                <i class="fas fa-paper-plane"></i> Envoyer la convocation
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal: Instructor Exam Results Details -->
     <div class="modal-overlay" id="instructorExamResultsModal" style="display: none;">
         <div class="modal" style="max-width: 900px; max-height: 90vh; overflow-y: auto;">
             <div class="modal-header">
-                <h3><i class="fas fa-chart-line" style="margin-right:8px; color: #667eea;"></i> Résultats d'examen - <span id="instructorNameDisplay"></span></h3>
+                <h3><i class="fas fa-chart-line" style="margin-right:8px; color: #667eea;"></i> Resultats d'examen - <span id="instructorNameDisplay"></span></h3>
                 <button class="modal-close" onclick="closeInstructorExamResultsModal()"><i class="fas fa-times"></i></button>
             </div>
             <div class="modal-body" id="instructorExamResultsBody">
@@ -1208,16 +1441,16 @@
                         
                         <div>
                             <label style="display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.9rem;">
-                                <i class="fas fa-check-circle"></i> Résultat
+                                <i class="fas fa-check-circle"></i> Resultat
                             </label>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                                 <label style="cursor: pointer;">
                                     <input type="radio" name="adminExamResult" value="passed" required style="margin-right: 6px;">
-                                    <span style="color: #2e7d32; font-weight: 600;">✅ Réussi</span>
+                                    <span style="color: #2e7d32; font-weight: 600;">Reussi Reussi</span>
                                 </label>
                                 <label style="cursor: pointer;">
                                     <input type="radio" name="adminExamResult" value="failed" required style="margin-right: 6px;">
-                                    <span style="color: #c62828; font-weight: 600;">❌ Échoué</span>
+                                    <span style="color: #c62828; font-weight: 600;">Echoue Echoue</span>
                                 </label>
                             </div>
                         </div>
@@ -1238,7 +1471,7 @@
                         
                         <div>
                             <label style="display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.9rem;">
-                                <i class="fas fa-comment"></i> Appréciation (optionnel)
+                                <i class="fas fa-comment"></i> Appreciation (optionnel)
                             </label>
                             <textarea id="adminAppreciation" rows="3" placeholder="Commentaire sur le moniteur..."
                                 style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; resize: vertical;"></textarea>
@@ -1262,16 +1495,27 @@
 
     <script src="https://unpkg.com/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="assets/js/supabaseClient.js?v=3"></script>
+    <script src="assets/js/supabaseClient.js?v=8"></script>
+    <script src="assets/js/page-auth-guard.js?v=2" data-roles="admin"></script>
     <script src="assets/js/admin-instructor-success.js"></script>
-    <script src="assets/js/admin-planning.js?v=63"></script>
-    <script src="assets/js/student-pdf-generator.js?v=5"></script>
-    <script src="assets/js/admin-cancel-slot.js"></script>
-    <script src="assets/js/admin-permis-block.js?v=10"></script>
-    <script src="assets/js/admin-indisponible-block.js?v=2"></script>
-    <script src="assets/js/admin-change-forfait.js?v=5"></script>
-    <script src="assets/js/admin-exam-result.js"></script>
+    <script src="assets/js/admin-planning.js?v=121"></script>
+    <script src="assets/js/admin-driving-prep.js?v=1"></script>
+    <script src="assets/js/student-pdf-generator.js?v=7"></script>
+    <script src="assets/js/admin-cancel-slot.js?v=2"></script>
+    <script src="assets/js/admin-permis-block.js?v=11"></script>
+    <script src="assets/js/admin-indisponible-block.js?v=5"></script>
+    <script src="assets/js/admin-conges.js?v=2"></script>
+    <script src="assets/js/admin-change-forfait.js?v=8"></script>
+    <script src="assets/js/exam-request.js?v=5"></script>
+    <script src="assets/js/admin-exam-result.js?v=2"></script>
+    <script src="assets/js/admin-exam-date.js?v=6"></script>
     <script src="assets/js/admin-notif-badge.js"></script>
-    <script src="assets/js/admin-mobile-menu.js"></script>
+    <script src="assets/js/admin-mobile-menu.js?v=3"></script>
+    <script src="assets/js/text-encoding-fix.js?v=2"></script>
 </body>
 </html>
+
+
+
+
+

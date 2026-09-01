@@ -193,6 +193,61 @@
     margin-bottom: var(--spacing-xl);
 }
 
+.inscription-pack-family {
+    min-width: 0;
+}
+
+.inscription-hours-selector {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.45rem;
+    margin: 1rem 0 1.25rem;
+}
+
+.inscription-pack-family[data-family$="-auto"] .inscription-hours-selector {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.inscription-hours-option {
+    min-height: 3.4rem;
+    border: 1px solid #d9dee8;
+    border-radius: 0.65rem;
+    background: #fff;
+    color: var(--text-dark);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.05;
+    transition: border-color var(--transition-base), background var(--transition-base), color var(--transition-base);
+}
+
+.inscription-hours-option strong {
+    font-size: 1.15rem;
+}
+
+.inscription-hours-option span {
+    font-size: 0.72rem;
+}
+
+.inscription-hours-option:hover,
+.inscription-hours-option.selected {
+    border-color: var(--primary-color);
+    background: var(--primary-color);
+    color: #fff;
+}
+
+@media (max-width: 640px) {
+    .pack-selection {
+        grid-template-columns: 1fr;
+    }
+
+    .inscription-hours-selector {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
 .pack-option {
     position: relative;
     border: 3px solid var(--border-color);
@@ -264,6 +319,27 @@
 
 .pack-option label {
     cursor: pointer;
+    display: block;
+}
+
+.pack-option-vehicle,
+.transmission-vehicle {
+    height: 112px;
+    margin-bottom: 1rem;
+    border-radius: 12px;
+    background: #f8fafc;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pack-option-vehicle img,
+.transmission-vehicle img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 0.35rem;
     display: block;
 }
 

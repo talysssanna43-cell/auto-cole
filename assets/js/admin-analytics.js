@@ -1,4 +1,4 @@
-function startOfMonth(date) {
+﻿function startOfMonth(date) {
     const d = new Date(date);
     d.setDate(1);
     d.setHours(0, 0, 0, 0);
@@ -28,8 +28,64 @@ function setFeedback(el, text, type) {
     el.className = `feedback${type ? ` ${type}` : ''}`;
 }
 
+const analyticsDataCache = new Map();
+
+async function fetchAnalyticsData(rangeStart, rangeEnd) {
+    const token = window.authSession?.getToken();
+    if (!token) throw new Error('AUTH_REQUIRED');
+
+    const start = rangeStart.toISOString();
+    const end = rangeEnd.toISOString();
+    const key = `${start}|${end}`;
+    if (analyticsDataCache.has(key)) return analyticsDataCache.get(key);
+
+    const request = fetch(`/.netlify/functions/admin-analytics-data?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`, {
+        headers: { Authorization: `Bearer ${token}` },
+        cache: 'no-store'
+    }).then(async (response) => {
+        const payload = await response.json().catch(() => ({ ok: false, error: 'INVALID_SERVER_RESPONSE' }));
+        if (!response.ok || !payload.ok) throw new Error(payload.error || 'ANALYTICS_LOAD_FAILED');
+        return payload;
+    });
+
+    analyticsDataCache.set(key, request);
+    return request;
+}
+
+async function fetchProfitabilityData(rangeStart, rangeEnd, hourlyRate) {
+    const token = window.authSession?.getToken();
+    if (!token) throw new Error('AUTH_REQUIRED');
+
+    const start = rangeStart.toISOString();
+    const end = rangeEnd.toISOString();
+    const rate = Number(hourlyRate || 45);
+    const request = await fetch(`/.netlify/functions/admin-profitability-data?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}&hourlyRate=${encodeURIComponent(rate)}`, {
+        headers: { Authorization: `Bearer ${token}` },
+        cache: 'no-store'
+    });
+    const payload = await request.json().catch(() => ({ ok: false, error: 'INVALID_SERVER_RESPONSE' }));
+    if (!request.ok || !payload.ok) throw new Error(payload.error || 'PROFITABILITY_LOAD_FAILED');
+    return payload;
+}
+
+async function saveProfitabilitySettings(data) {
+    const token = window.authSession?.getToken();
+    if (!token) throw new Error('AUTH_REQUIRED');
+    const request = await fetch('/.netlify/functions/admin-profitability-settings', {
+        method: 'POST',
+        headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+    const payload = await request.json().catch(() => ({ ok: false, error: 'INVALID_SERVER_RESPONSE' }));
+    if (!request.ok || !payload.ok) throw new Error(payload.error || 'PROFITABILITY_SETTINGS_FAILED');
+    return payload.setting;
+}
+
 function requireAdmin() {
-    const raw = localStorage.getItem('ae_user');
+    const raw = localStorage.getItem('ae_user') || sessionStorage.getItem('ae_user');
     if (!raw) return { ok: false, error: new Error('NOT_AUTHENTICATED') };
     try {
         const user = JSON.parse(raw);
@@ -42,6 +98,9 @@ function requireAdmin() {
 
 function logout() {
     localStorage.removeItem('ae_user');
+    localStorage.removeItem('ae_access_token');
+    sessionStorage.removeItem('ae_user');
+    sessionStorage.removeItem('ae_access_token');
     window.location.href = 'connexion.html';
 }
 
@@ -85,163 +144,23 @@ function bucketSumByMonth(items, getDate, getValue, months) {
 }
 
 async function fetchSignups(rangeStart, rangeEnd) {
-    // Compter depuis inscription_notifications (inscriptions validées par l'admin uniquement)
-    console.log('📊 Récupération des inscriptions...');
-    console.log('Plage de dates:', {
-        debut: rangeStart.toISOString(),
-        fin: rangeEnd.toISOString()
-    });
-    
-    // Vérifier le total d'inscriptions approuvées (sans filtre de date)
-    const { data: allApproved } = await window.supabaseClient
-        .from('inscription_notifications')
-        .select('id, created_at')
-        .eq('status', 'approved');
-    console.log('📊 TOTAL inscriptions approuvées (toutes dates confondues):', allApproved?.length || 0);
-    
-    const { data, error } = await window.supabaseClient
-        .from('inscription_notifications')
-        .select('id, created_at, pack, status')
-        .gte('created_at', rangeStart.toISOString())
-        .lt('created_at', rangeEnd.toISOString())
-        .eq('status', 'approved'); // Uniquement les inscriptions approuvées
-
-    if (error) {
-        console.error('❌ Erreur récupération inscriptions:', error);
-        throw error;
-    }
-    
-    console.log('✅ Inscriptions approuvées dans la période:', data?.length || 0);
-    if (data && data.length > 0) {
-        console.log('Première inscription:', data[0]);
-        console.log('Dernière inscription:', data[data.length - 1]);
-    }
-    
-    return data || [];
+    const payload = await fetchAnalyticsData(rangeStart, rangeEnd);
+    return payload.signups || [];
 }
 
 async function fetchCodeRousseauPayments(rangeStart, rangeEnd) {
-    const { data, error } = await window.supabaseClient
-        .from('inscription_notifications')
-        .select('id, created_at, amount_paid')
-        .eq('pack', 'code')
-        .gte('created_at', rangeStart.toISOString())
-        .lt('created_at', rangeEnd.toISOString());
-
-    if (error) throw error;
-    return (data || []).map(item => ({
-        ...item,
-        montant: item.amount_paid || 20
-    }));
+    const payload = await fetchAnalyticsData(rangeStart, rangeEnd);
+    return payload.codeRousseauPayments || [];
 }
 
 async function fetchPayments(rangeStart, rangeEnd) {
-    const { data, error } = await window.supabaseClient
-        .from('inscription_notifications')
-        .select('id, pack, created_at, hours_purchased, amount_paid, payment_method')
-        .gte('created_at', rangeStart.toISOString())
-        .lt('created_at', rangeEnd.toISOString());
-
-    if (error) throw error;
-    
-    // Convertir les forfaits en montants euros (prix de la page tarifs)
-    const packPrices = {
-        'code': 20,
-        'am': 350,
-        'aac': 1190,
-        'boite-auto': 859,
-        'supervisee': 1190,
-        'zen': 995,
-        'accelere': 999,
-        '20h': 900,
-        'heures-conduite': 0,  // Ancien format sans données précises - exclu du CA
-        'heure-conduite-manual': 90,  // Fallback si amount_paid absent
-        'heure-conduite-auto': 100,    // Fallback si amount_paid absent
-        'second-chance': 569
-    };
-    
-    return (data || []).map(item => {
-        // Pour heures-conduite ancien format : exclure si pas de amount_paid
-        if (item.pack === 'heures-conduite' && !item.amount_paid) {
-            console.warn('⚠️ Pack heures-conduite sans amount_paid exclu du CA:', item);
-            return {
-                ...item,
-                amount_eur: 0,
-                payment_method: item.payment_method || 'card'
-            };
-        }
-        
-        return {
-            ...item,
-            // Utiliser amount_paid si disponible, sinon prix par défaut
-            amount_eur: item.amount_paid || packPrices[item.pack] || 0,
-            payment_method: item.payment_method || 'card' // Par défaut card si non spécifié
-        };
-    });
+    const payload = await fetchAnalyticsData(rangeStart, rangeEnd);
+    return payload.payments || [];
 }
 
 async function fetchDoneHours(rangeStart, rangeEnd) {
-    console.log('Fetching slots from', rangeStart.toISOString(), 'to', rangeEnd.toISOString());
-    
-    const { data, error } = await window.supabaseClient
-        .from('slots')
-        .select('start_at, end_at, status, reservations(email)')
-        .eq('status', 'booked')
-        .gte('start_at', rangeStart.toISOString())
-        .lt('start_at', rangeEnd.toISOString());
-
-    if (error) throw error;
-
-    console.log('Slots récupérés:', data?.length || 0, data);
-
-    // "Réalisé" = créneau réservé dont le début est passé
-    const now = Date.now();
-    const doneSlots = (data || []).filter((row) => {
-        const t = new Date(row.start_at).getTime();
-        const isPast = !Number.isNaN(t) && t < now;
-        console.log('Slot:', row.start_at, 'isPast:', isPast, 'reservations:', row.reservations);
-        return isPast;
-    }).map(slot => ({
-        ...slot,
-        user_email: Array.isArray(slot.reservations) && slot.reservations.length > 0 
-            ? slot.reservations[0].email 
-            : null
-    }));
-
-    console.log('Slots réalisés (passés):', doneSlots.length);
-
-    // Récupérer les forfaits des utilisateurs
-    const emails = [...new Set(doneSlots.map(s => s.user_email).filter(Boolean))];
-    if (emails.length === 0) {
-        console.log('Aucun email trouvé dans les slots réalisés');
-        return [];
-    }
-
-    console.log('Emails à chercher:', emails);
-
-    const { data: inscriptions, error: inscError } = await window.supabaseClient
-        .from('inscription_notifications')
-        .select('user_email, pack')
-        .in('user_email', emails);
-
-    if (inscError) {
-        console.warn('Erreur récupération forfaits:', inscError);
-        return doneSlots;
-    }
-
-    console.log('Inscriptions trouvées:', inscriptions);
-
-    // Créer un map email -> pack
-    const emailToPack = {};
-    (inscriptions || []).forEach(ins => {
-        emailToPack[ins.user_email] = ins.pack;
-    });
-
-    // Ajouter le pack à chaque slot
-    return doneSlots.map(slot => ({
-        ...slot,
-        pack: emailToPack[slot.user_email] || 'unknown'
-    }));
+    const payload = await fetchAnalyticsData(rangeStart, rangeEnd);
+    return payload.doneSlots || [];
 }
 
 function createOrUpdateChart(existing, canvas, config) {
@@ -252,6 +171,376 @@ function createOrUpdateChart(existing, canvas, config) {
         return existing;
     }
     return new Chart(canvas, config);
+}
+
+function formatEuro(value) {
+    return `${Math.round(Number(value || 0)).toLocaleString('fr-FR')}\u20ac`;
+}
+
+function lineDataset(label, data, color, fill = false) {
+    return {
+        label,
+        data,
+        tension: 0.35,
+        borderColor: color,
+        backgroundColor: color.replace('0.9', '0.12'),
+        fill,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        borderWidth: 3
+    };
+}
+
+function lineOptions({ euro = false } = {}) {
+    return {
+        responsive: true,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+            legend: {
+                display: true,
+                position: 'bottom',
+                labels: { usePointStyle: true, boxWidth: 8, padding: 16 }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    callback(value) {
+                        return euro ? `${value}\u20ac` : value;
+                    }
+                }
+            }
+        }
+    };
+}
+
+function profitabilityLevel(row) {
+    const activityRate = Number(row?.activityRate || 0);
+    const profit = Number(row?.profitability || 0);
+    const fixedCharges = Number(row?.fixedCharges || 0);
+    const base = fixedCharges > 0 ? fixedCharges : 1;
+    let score;
+    if (!row) return { color: 'gray', label: 'Pas encore mesure', score: 0 };
+    if (profit < 0) {
+        score = Math.max(8, 35 + (profit / base) * 25);
+    } else if (profit < base * 0.25) {
+        score = 36 + (profit / (base * 0.25)) * 29;
+    } else {
+        score = 66 + Math.min(34, (profit / base) * 34);
+    }
+    if (activityRate < 50) score = Math.min(score, 34);
+    score = Math.max(0, Math.min(100, Math.round(score)));
+    if (profit < 0 || activityRate < 50) return { color: 'red', label: 'A surveiller', score };
+    if (profit < fixedCharges * 0.25) return { color: 'orange', label: 'A optimiser', score };
+    return { color: 'green', label: 'Bonne rentabilite', score };
+}
+
+function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+}
+
+function buildProfitabilityScale(items) {
+    const values = (items || [])
+        .map((item) => Number(item?.profitability || 0))
+        .filter((value) => Number.isFinite(value));
+    const minValue = Math.min(0, ...values);
+    const maxValue = Math.max(0, ...values);
+    const span = Math.max(1000, maxValue - minValue);
+    const padding = Math.max(250, span * 0.12);
+    const min = Math.floor((minValue - padding) / 100) * 100;
+    const max = Math.ceil((maxValue + padding) / 100) * 100;
+    return { min, max: max <= min ? min + 1000 : max };
+}
+
+function gaugeColorFromRatio(ratio) {
+    if (ratio < 1 / 3) return 'red';
+    if (ratio < 2 / 3) return 'orange';
+    return 'green';
+}
+
+function gaugePosition(value, scale) {
+    const min = Number(scale?.min ?? -1000);
+    const max = Number(scale?.max ?? 1000);
+    const clamped = clamp(Number(value || 0), min, max);
+    const ratio = (clamped - min) / Math.max(1, max - min);
+    return {
+        ratio,
+        color: gaugeColorFromRatio(ratio),
+        rotation: -90 + (ratio * 180)
+    };
+}
+
+function renderGauge(value, scale, label) {
+    const gauge = gaugePosition(value, scale);
+    return `
+        <div class="profitability-gauge" aria-label="${label} ${Math.round(gauge.ratio * 100)}%">
+            <div class="profitability-gauge-arc"></div>
+            <span class="profitability-needle ${gauge.color}" style="transform: translateX(-50%) rotate(${gauge.rotation.toFixed(2)}deg);"></span>
+            <span class="profitability-hub"></span>
+            <span class="profitability-gauge-labels">
+                <span>${formatEuro(scale.min)}</span>
+                <span>${formatEuro(scale.max)}</span>
+            </span>
+        </div>
+    `;
+}
+
+function startOfSelectedMonth(value) {
+    const now = new Date();
+    const match = String(value || '').match(/^(\d{4})-(\d{2})$/);
+    if (!match) return new Date(now.getFullYear(), now.getMonth(), 1);
+    return new Date(Number(match[1]), Number(match[2]) - 1, 1);
+}
+
+function selectedMonthRange() {
+    const input = document.getElementById('profitabilityMonth');
+    const start = startOfSelectedMonth(input?.value);
+    const end = new Date(start);
+    end.setMonth(end.getMonth() + 1);
+    return { start, end };
+}
+
+function setDefaultProfitabilityMonth() {
+    const input = document.getElementById('profitabilityMonth');
+    if (!input || input.value) return;
+    const now = new Date();
+    input.value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+}
+
+function todayInputValue() {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+}
+
+function ensureProfitabilityModal() {
+    let modal = document.getElementById('profitabilitySettingsModal');
+    if (modal) return modal;
+
+    modal = document.createElement('div');
+    modal.id = 'profitabilitySettingsModal';
+    modal.className = 'profitability-modal-backdrop';
+    modal.innerHTML = `
+        <div class="profitability-modal" role="dialog" aria-modal="true" aria-labelledby="profitabilityModalTitle">
+            <div class="profitability-modal-header">
+                <div>
+                    <h3 id="profitabilityModalTitle">Donnees moniteur</h3>
+                    <p>Ces valeurs seront appliquees a partir de la date choisie.</p>
+                </div>
+                <button type="button" class="profitability-modal-close" aria-label="Fermer" onclick="closeProfitabilitySettings()">x</button>
+            </div>
+            <form id="profitabilitySettingsForm">
+                <input type="hidden" id="profitabilityInstructorName">
+                <div class="profitability-form-grid">
+                    <label>Date d'effet
+                        <input type="date" id="profitabilityEffectiveDate" required>
+                    </label>
+                    <label>Heures max / jour
+                        <input type="number" id="profitabilityHoursPerDay" min="0" step="0.25" required>
+                    </label>
+                    <label>Salaire + charges / mois
+                        <input type="number" id="profitabilitySalaryCharges" min="0" step="1" required>
+                    </label>
+                    <label>Autres charges fixes / mois
+                        <input type="number" id="profitabilityExtraCharges" min="0" step="1">
+                    </label>
+                </div>
+                <div class="profitability-modal-actions">
+                    <button type="button" class="secondary" onclick="closeProfitabilitySettings()">Annuler</button>
+                    <button type="submit" class="primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    modal.querySelector('#profitabilitySettingsForm').addEventListener('submit', submitProfitabilitySettings);
+    modal.addEventListener('click', (event) => {
+        if (event.target === modal) closeProfitabilitySettings();
+    });
+    return modal;
+}
+
+function openProfitabilitySettings(encodedName) {
+    const instructor = decodeURIComponent(encodedName);
+    const row = (window.currentProfitabilityRows || []).find((item) => item.instructor === instructor);
+    const modal = ensureProfitabilityModal();
+    modal.querySelector('#profitabilityModalTitle').textContent = `Donnees - ${instructor}`;
+    modal.querySelector('#profitabilityInstructorName').value = instructor;
+    modal.querySelector('#profitabilityEffectiveDate').value = todayInputValue();
+    modal.querySelector('#profitabilityHoursPerDay').value = row?.hoursPerDay || 10;
+    modal.querySelector('#profitabilitySalaryCharges').value = row?.salaryAndSocialCharges || 2200;
+    modal.querySelector('#profitabilityExtraCharges').value = row?.extraFixedCharges || 0;
+    modal.classList.add('open');
+}
+
+function closeProfitabilitySettings() {
+    document.getElementById('profitabilitySettingsModal')?.classList.remove('open');
+}
+
+async function submitProfitabilitySettings(event) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const button = form.querySelector('.primary');
+    button.disabled = true;
+    button.textContent = 'Enregistrement...';
+    try {
+        const saved = await saveProfitabilitySettings({
+            instructor_name: form.querySelector('#profitabilityInstructorName').value,
+            effective_date: form.querySelector('#profitabilityEffectiveDate').value,
+            hours_per_day: Number(form.querySelector('#profitabilityHoursPerDay').value),
+            salary_and_social_charges: Number(form.querySelector('#profitabilitySalaryCharges').value),
+            vehicle_insurance: 0,
+            extra_fixed_charges: Number(form.querySelector('#profitabilityExtraCharges').value || 0)
+        });
+        closeProfitabilitySettings();
+        if (saved?.partial) {
+            alert("Le salaire du moniteur a ete mis a jour. Pour garder l'historique par date, installe aussi la migration SQL de rentabilite.");
+        }
+        await window.refreshAnalytics?.();
+    } catch (error) {
+        console.error(error);
+        if (error.message === 'PROFITABILITY_SETTINGS_TABLE_MISSING') {
+            alert("La table des donnees de rentabilite doit etre installee dans Supabase. Execute le fichier sql/instructor-profitability-settings.sql.");
+        } else if (error.message === 'INSTRUCTOR_SALARY_COLUMN_MISSING') {
+            alert("La colonne salaire des moniteurs manque dans Supabase. Execute la migration sql/profitability-storage.sql.");
+        } else {
+            alert("Impossible d'enregistrer ces donnees pour le moment.");
+        }
+    } finally {
+        button.disabled = false;
+        button.textContent = 'Enregistrer';
+    }
+}
+
+window.openProfitabilitySettings = openProfitabilitySettings;
+window.closeProfitabilitySettings = closeProfitabilitySettings;
+
+function renderProfitability(payload) {
+    const container = document.getElementById('profitabilityList');
+    const vehicleContainer = document.getElementById('vehicleProfitabilityList');
+    const totalContainer = document.getElementById('profitabilityTotal');
+    const instructorScaleContainer = document.getElementById('instructorProfitabilityScale');
+    const vehicleScaleContainer = document.getElementById('vehicleProfitabilityScale');
+    const note = document.getElementById('profitabilityNote');
+    if (!container) return;
+
+    const rows = (payload.rows || [])
+        .sort((a, b) => b.profitability - a.profitability);
+    const vehicles = (payload.vehicles || []).sort((a, b) => b.profitability - a.profitability);
+    const instructorScale = buildProfitabilityScale(rows);
+    const vehicleScale = buildProfitabilityScale(vehicles);
+    window.currentProfitabilityRows = rows;
+
+    if (instructorScaleContainer) {
+        instructorScaleContainer.textContent = `Echelle ${formatEuro(instructorScale.min)} -> ${formatEuro(instructorScale.max)}`;
+    }
+    if (vehicleScaleContainer) {
+        vehicleScaleContainer.textContent = `Echelle ${formatEuro(vehicleScale.min)} -> ${formatEuro(vehicleScale.max)}`;
+    }
+
+    if (!rows.length) {
+        container.innerHTML = '<div class="profitability-empty">Aucun moniteur actif trouve sur cette periode.</div>';
+    } else {
+        container.innerHTML = rows.map((row) => {
+            const level = profitabilityLevel(row);
+            const gauge = gaugePosition(row.profitability, instructorScale);
+            const displayColor = gauge.color;
+            const expenseCount = Array.isArray(row.expenseRows) ? row.expenseRows.length : 0;
+            return `
+                <article class="profitability-card">
+                    <div class="profitability-card-top">
+                        <div>
+                            <div class="profitability-name">${row.instructor}</div>
+    <div class="profitability-meta">${row.slots} creneau${row.slots > 1 ? 'x' : ''} passe${row.slots > 1 ? 's' : ''} - ${row.activityRate}% de la capacite mensuelle - salaire + charges ${formatEuro(row.salaryAndSocialCharges || 0)} - ${expenseCount} frais saisi${expenseCount > 1 ? 's' : ''}</div>
+                        </div>
+                        <div class="profitability-actions">
+                            <button type="button" class="profitability-data-btn" onclick="openProfitabilitySettings('${encodeURIComponent(row.instructor)}')">
+                                <i class="fas fa-sliders-h"></i> Donnees
+                            </button>
+                            <span class="profitability-status ${level.color}">
+                                <i class="fas fa-circle"></i> ${level.label}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="profitability-gauge-row">
+                        ${renderGauge(row.profitability, instructorScale, `Rentabilite ${row.instructor}`)}
+                        <div class="profitability-result">
+                            <span>Rentabilite</span>
+                            <strong class="${displayColor}">${formatEuro(row.profitability)}</strong>
+                        </div>
+                    </div>
+                    <div class="profitability-values">
+                        <span><strong>${row.hours}h / ${row.capacityHours}h</strong>Heures</span>
+                        <span><strong>${formatEuro(row.revenue)}</strong>CA estime</span>
+                        <span><strong>${formatEuro(row.fixedCharges)}</strong>Charges fixes</span>
+                        <span><strong>${formatEuro(row.expenses)}</strong>Frais saisis</span>
+                        <span><strong>${formatEuro(row.bonusCharges)}</strong>Bonus</span>
+                        <span><strong>${formatEuro(row.totalCharges)}</strong>Charges totales</span>
+                    </div>
+                </article>
+            `;
+        }).join('');
+    }
+
+    if (vehicleContainer) {
+        vehicleContainer.innerHTML = vehicles.length ? vehicles.map((vehicle) => {
+            const level = profitabilityLevel(vehicle);
+            const gauge = gaugePosition(vehicle.profitability, vehicleScale);
+            const displayColor = gauge.color;
+            const breakEvenStatus = vehicle.hours >= vehicle.breakEvenHours ? 'green' : 'red';
+            return `
+                <article class="profitability-card vehicle-profitability-card">
+                    <div class="profitability-card-top">
+                        <div>
+                            <div class="profitability-name">${vehicle.name} <span class="vehicle-tag ${vehicle.transmission}">${vehicle.label}</span></div>
+                            <div class="profitability-meta">${vehicle.slots} creneau${vehicle.slots > 1 ? 'x' : ''} passe${vehicle.slots > 1 ? 's' : ''} - ${vehicle.activityRate}% de la capacite vehicule - ${formatEuro(vehicle.hourlyRate)}/h</div>
+                        </div>
+                        <span class="profitability-status ${level.color}">
+                            <i class="fas fa-circle"></i> ${level.label}
+                        </span>
+                    </div>
+                    <div class="profitability-gauge-row">
+                        ${renderGauge(vehicle.profitability, vehicleScale, `Rentabilite vehicule ${vehicle.name}`)}
+                        <div class="profitability-result">
+                            <span>Rentabilite vehicule</span>
+                            <strong class="${displayColor}">${formatEuro(vehicle.profitability)}</strong>
+                        </div>
+                    </div>
+                    <div class="profitability-values vehicle-values">
+                        <span><strong>${vehicle.hours}h / ${vehicle.capacityHours}h</strong>Production</span>
+                        <span><strong>${formatEuro(vehicle.revenue)}</strong>Produit</span>
+                        <span><strong>${formatEuro(vehicle.insurance)}</strong>Assurance</span>
+                        <span><strong>${formatEuro(vehicle.expenses)}</strong>Essence + reparations</span>
+                        <span><strong class="${breakEvenStatus}">${vehicle.breakEvenHours}h</strong>Seuil de rentabilite</span>
+                        <span><strong>${formatEuro(vehicle.totalCharges)}</strong>Frais totaux</span>
+                    </div>
+                </article>
+            `;
+        }).join('') : '<div class="profitability-empty">Aucun vehicule trouve sur cette periode.</div>';
+    }
+
+    if (totalContainer) {
+        const totals = payload.totals || {};
+        const instructorTotal = totals.instructors || {};
+        const vehicleTotal = totals.vehicles || {};
+        const globalProfit = Number(totals.profitability || 0);
+        totalContainer.innerHTML = `
+            <div class="profitability-total-card">
+                <span>Renta moniteurs</span>
+                <strong class="${Number(instructorTotal.profitability || 0) >= 0 ? 'green' : 'red'}">${formatEuro(instructorTotal.profitability)}</strong>
+            </div>
+            <div class="profitability-total-card">
+                <span>Renta vehicules</span>
+                <strong class="${Number(vehicleTotal.profitability || 0) >= 0 ? 'green' : 'red'}">${formatEuro(vehicleTotal.profitability)}</strong>
+            </div>
+            <div class="profitability-total-card total">
+                <span>Rentabilite totale</span>
+                <strong class="${globalProfit >= 0 ? 'green' : 'red'}">${formatEuro(globalProfit)}</strong>
+            </div>
+        `;
+    }
+
+    if (note) note.textContent = '';
 }
 
 (function init() {
@@ -265,6 +554,8 @@ function createOrUpdateChart(existing, canvas, config) {
     const rangeLabel = document.getElementById('rangeLabel');
 
     const analyticsFeedback = document.getElementById('analyticsFeedback');
+    const profitabilityMonth = document.getElementById('profitabilityMonth');
+    const profitabilityHourlyRate = document.getElementById('profitabilityHourlyRate');
 
     const kpiSignups = document.getElementById('kpiSignups');
     const kpiRevenue = document.getElementById('kpiRevenue');
@@ -328,19 +619,29 @@ function createOrUpdateChart(existing, canvas, config) {
                 fetchDoneHours(rangeStart, rangeEnd),
                 fetchCodeRousseauPayments(rangeStart, rangeEnd)
             ]);
+            const profitMonth = selectedMonthRange();
+            fetchProfitabilityData(profitMonth.start, profitMonth.end, profitabilityHourlyRate?.value || 45)
+                .then(renderProfitability)
+                .catch((error) => {
+                    console.error(error);
+                    const container = document.getElementById('profitabilityList');
+                    if (container) container.innerHTML = '<div class="profitability-empty">Impossible de charger la rentabilite des moniteurs.</div>';
+                });
 
             // Debug inscriptions
-            console.log('Inscriptions récupérées:', signups.length);
+            console.log('Inscriptions recuperees:', signups.length);
             console.log('Exemple inscription:', signups[0]);
             console.log('Packs des inscriptions:', signups.map(s => s.pack));
             
             // Filtrer les inscriptions par type de forfait
-            const manualSignups = signups.filter(s => ['zen', 'aac', 'supervisee', 'accelere', '20h', 'heures-conduite', 'heure-conduite-manual', 'second-chance'].includes(s.pack));
-            const autoSignups = signups.filter(s => s.pack === 'boite-auto' || s.pack === 'heure-conduite-auto');
+            const manualPackIds = ['chill', 'zen', 'tarif-chill-5', 'tarif-chill-10', 'tarif-chill-20', 'tarif-chill-30', 'tarif-zen-5', 'tarif-zen-10', 'tarif-zen-20', 'tarif-zen-30', 'aac', 'supervisee', 'accelere', '20h', 'heures-conduite', 'heure-conduite-manual', 'second-chance'];
+            const autoPackIds = ['chill-auto', 'zen-auto', 'tarif-chill-auto-5', 'tarif-chill-auto-13', 'tarif-zen-auto-5', 'tarif-zen-auto-13', 'boite-auto', 'heure-conduite-auto'];
+            const manualSignups = signups.filter(s => manualPackIds.includes(s.pack));
+            const autoSignups = signups.filter(s => autoPackIds.includes(s.pack));
             const amSignups = signups.filter(s => s.pack === 'am');
             const codeSignups = signups.filter(s => s.pack === 'code');
             
-            console.log('Inscriptions filtrées:', {
+            console.log('Inscriptions filtrees:', {
                 manual: manualSignups.length,
                 auto: autoSignups.length,
                 am: amSignups.length,
@@ -353,37 +654,37 @@ function createOrUpdateChart(existing, canvas, config) {
             const signupsAmSeries = bucketByMonth(amSignups, (it) => new Date(it.created_at), months);
             const signupsCodeSeries = bucketByMonth(codeSignups, (it) => new Date(it.created_at), months);
             
-            console.log('Séries inscriptions:', {
+            console.log('Series inscriptions:', {
                 manual: signupsManualSeries,
                 auto: signupsAutoSeries,
                 am: signupsAmSeries,
                 code: signupsCodeSeries
             });
             
-            // Total pour le KPI - INCLUT MAINTENANT LE CODE
-            const signupsSeries = months.map((m, i) => signupsManualSeries[i] + signupsAutoSeries[i] + signupsAmSeries[i] + signupsCodeSeries[i]);
+            // Total reel : inclut aussi les anciens libelles de packs et les dossiers admin/cash.
+            const signupsSeries = bucketByMonth(signups, (it) => new Date(it.created_at), months);
             
             // Debug paiements
-            console.log('Paiements récupérés:', payments.length);
+            console.log('Paiements recuperes:', payments.length);
             console.log('Exemple paiement:', payments[0]);
             console.log('Packs des paiements:', payments.map(p => ({ pack: p.pack, amount: p.amount_eur, method: p.payment_method })));
             
-            // Séparer les paiements en ligne (card) et admin (cash)
+            // Separer les paiements en ligne (card) et admin (cash)
             const onlinePayments = payments.filter(p => p.payment_method === 'card');
             const adminPayments = payments.filter(p => p.payment_method === 'cash');
             
-            console.log('Paiements par méthode:', {
+            console.log('Paiements par methode:', {
                 online: onlinePayments.length,
                 admin: adminPayments.length,
                 total: payments.length
             });
             
             // Filtrer les paiements par type de forfait
-            const manualPayments = payments.filter(p => ['zen', 'aac', 'supervisee', 'accelere', '20h', 'heures-conduite', 'heure-conduite-manual', 'second-chance'].includes(p.pack));
-            const autoPayments = payments.filter(p => p.pack === 'boite-auto' || p.pack === 'heure-conduite-auto');
+            const manualPayments = payments.filter(p => manualPackIds.includes(p.pack));
+            const autoPayments = payments.filter(p => autoPackIds.includes(p.pack));
             const amPayments = payments.filter(p => p.pack === 'am');
             
-            console.log('Paiements filtrés:', {
+            console.log('Paiements filtres:', {
                 manual: manualPayments.length,
                 auto: autoPayments.length,
                 am: amPayments.length,
@@ -394,7 +695,7 @@ function createOrUpdateChart(existing, canvas, config) {
             const revenueAutoSeries = bucketSumByMonth(autoPayments, (it) => new Date(it.created_at), (it) => Number(it.amount_eur || 0), months);
             const revenueAmSeries = bucketSumByMonth(amPayments, (it) => new Date(it.created_at), (it) => Number(it.amount_eur || 0), months);
             
-            console.log('Séries revenus:', {
+            console.log('Series revenus:', {
                 manual: revenueManualSeries,
                 auto: revenueAutoSeries,
                 am: revenueAmSeries
@@ -403,7 +704,7 @@ function createOrUpdateChart(existing, canvas, config) {
             // Code Rousseau revenue
             const revenueCodeRousseauSeries = bucketSumByMonth(codeRousseauPayments, (it) => new Date(it.created_at), (it) => Number(it.montant || 0), months);
             
-            console.log('Séries revenus Code Rousseau:', revenueCodeRousseauSeries);
+            console.log('Series revenus Code Rousseau:', revenueCodeRousseauSeries);
             
             // CA en ligne (paiements card)
             const revenueOnlineSeries = bucketSumByMonth(onlinePayments, (it) => new Date(it.created_at), (it) => Number(it.amount_eur || 0), months);
@@ -411,10 +712,10 @@ function createOrUpdateChart(existing, canvas, config) {
             // CA admin (paiements cash)
             const revenueAdminSeries = bucketSumByMonth(adminPayments, (it) => new Date(it.created_at), (it) => Number(it.amount_eur || 0), months);
             
-            // Total pour le KPI (inclut maintenant Code Rousseau)
-            const revenueSeries = months.map((m, i) => revenueManualSeries[i] + revenueAutoSeries[i] + revenueAmSeries[i] + revenueCodeRousseauSeries[i]);
+            // Total reel : inclut aussi les anciens libelles de packs et les paiements admin/cash.
+            const revenueSeries = bucketSumByMonth(payments, (it) => new Date(it.created_at), (it) => Number(it.amount_eur || 0), months);
             
-            // Fonction pour calculer la durée d'un slot en heures
+            // Fonction pour calculer la duree d'un slot en heures
             const calculateHours = (slot) => {
                 const start = new Date(slot.start_at);
                 const end = new Date(slot.end_at);
@@ -426,14 +727,14 @@ function createOrUpdateChart(existing, canvas, config) {
             console.log('Done slots avec pack:', doneSlots.map(s => ({ email: s.user_email, pack: s.pack, start: s.start_at })));
             
             // Filtrer les slots par type de forfait
-            // Boîte manuelle: permis B, AAC, supervisée, conduite accélérée, 20h
-            const manualSlots = doneSlots.filter(s => ['zen', 'aac', 'supervisee', 'accelere', '20h', 'heures-conduite', 'heure-conduite-manual', 'second-chance'].includes(s.pack));
-            // Boîte auto
-            const autoSlots = doneSlots.filter(s => s.pack === 'boite-auto' || s.pack === 'heure-conduite-auto');
+            // Boite manuelle: permis B, AAC, supervisee, conduite acceleree, 20h
+            const manualSlots = doneSlots.filter(s => manualPackIds.includes(s.pack));
+            // Boite auto
+            const autoSlots = doneSlots.filter(s => autoPackIds.includes(s.pack));
             // Sans permis (AM)
             const amSlots = doneSlots.filter(s => s.pack === 'am');
             
-            console.log('Slots filtrés:', {
+            console.log('Slots filtres:', {
                 manual: manualSlots.length,
                 auto: autoSlots.length,
                 am: amSlots.length,
@@ -444,14 +745,14 @@ function createOrUpdateChart(existing, canvas, config) {
             const hoursAutoSeries = bucketSumByMonth(autoSlots, (it) => new Date(it.start_at), calculateHours, months);
             const hoursAmSeries = bucketSumByMonth(amSlots, (it) => new Date(it.start_at), calculateHours, months);
             
-            console.log('Séries heures:', {
+            console.log('Series heures:', {
                 manual: hoursManualSeries,
                 auto: hoursAutoSeries,
                 am: hoursAmSeries
             });
             
-            // Total pour le KPI
-            const hoursSeries = months.map((m, i) => hoursManualSeries[i] + hoursAutoSeries[i] + hoursAmSeries[i]);
+            // Total reel : inclut aussi les anciens eleves ou packs non categorises.
+            const hoursSeries = bucketSumByMonth(doneSlots, (it) => new Date(it.start_at), calculateHours, months);
 
             // Calculer le total annuel au lieu du dernier mois
             const signupsTotal = signupsSeries.reduce((sum, val) => sum + val, 0);
@@ -459,231 +760,58 @@ function createOrUpdateChart(existing, canvas, config) {
             const hoursTotal = hoursSeries.reduce((sum, val) => sum + val, 0);
 
             if (kpiSignups) kpiSignups.textContent = String(signupsTotal);
-            if (kpiRevenue) kpiRevenue.textContent = `${Math.round(revenueTotal)}€`;
+            if (kpiRevenue) kpiRevenue.textContent = `${Math.round(revenueTotal)}\u20ac`;
             if (kpiHours) kpiHours.textContent = `${Math.round(hoursTotal)}h`;
 
-            const signupsChartOptions = {
-                responsive: true,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true } }
-            };
-
             charts.signupsTotal = createOrUpdateChart(charts.signupsTotal, chartSignupsTotalCanvas, {
-                type: 'bar',
+                type: 'line',
                 data: {
                     labels,
-                    datasets: [{
-                        label: 'Inscriptions (total)',
-                        data: signupsSeries,
-                        backgroundColor: 'rgba(233, 30, 99, 0.35)',
-                        borderColor: 'rgba(233, 30, 99, 0.8)',
-                        borderWidth: 1,
-                        borderRadius: 10
-                    }]
+                    datasets: [
+                        lineDataset('Total', signupsSeries, 'rgba(0, 113, 227, 0.9)'),
+                        lineDataset('Boite manuelle', signupsManualSeries, 'rgba(34, 197, 94, 0.9)'),
+                        lineDataset('Boite auto', signupsAutoSeries, 'rgba(251, 146, 60, 0.9)'),
+                        lineDataset('Sans permis', signupsAmSeries, 'rgba(168, 85, 247, 0.9)')
+                    ]
                 },
-                options: signupsChartOptions
+                options: lineOptions()
             });
-
-            charts.signupsManual = createOrUpdateChart(charts.signupsManual, chartSignupsManualCanvas, {
-                type: 'bar',
-                data: {
-                    labels,
-                    datasets: [{
-                        label: 'Inscriptions - Boîte manuelle',
-                        data: signupsManualSeries,
-                        backgroundColor: 'rgba(34, 197, 94, 0.28)',
-                        borderColor: 'rgba(34, 197, 94, 0.75)',
-                        borderWidth: 1,
-                        borderRadius: 10
-                    }]
-                },
-                options: signupsChartOptions
-            });
-
-            charts.signupsAuto = createOrUpdateChart(charts.signupsAuto, chartSignupsAutoCanvas, {
-                type: 'bar',
-                data: {
-                    labels,
-                    datasets: [{
-                        label: 'Inscriptions - Boîte auto',
-                        data: signupsAutoSeries,
-                        backgroundColor: 'rgba(251, 146, 60, 0.28)',
-                        borderColor: 'rgba(251, 146, 60, 0.75)',
-                        borderWidth: 1,
-                        borderRadius: 10
-                    }]
-                },
-                options: signupsChartOptions
-            });
-
-            charts.signupsAm = createOrUpdateChart(charts.signupsAm, chartSignupsAmCanvas, {
-                type: 'bar',
-                data: {
-                    labels,
-                    datasets: [{
-                        label: 'Inscriptions - Sans permis (AM)',
-                        data: signupsAmSeries,
-                        backgroundColor: 'rgba(168, 85, 247, 0.28)',
-                        borderColor: 'rgba(168, 85, 247, 0.75)',
-                        borderWidth: 1,
-                        borderRadius: 10
-                    }]
-                },
-                options: signupsChartOptions
-            });
-
-            const revenueChartOptions = {
-                responsive: true,
-                plugins: { legend: { display: false } },
-                scales: { 
-                    y: { 
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return value + '€';
-                            }
-                        }
-                    }
-                }
-            };
 
             charts.revenueTotal = createOrUpdateChart(charts.revenueTotal, chartRevenueTotalCanvas, {
                 type: 'line',
                 data: {
                     labels,
-                    datasets: [{
-                        label: 'CA Total (€)',
-                        data: revenueSeries,
-                        tension: 0.35,
-                        borderColor: 'rgba(59, 130, 246, 0.85)',
-                        backgroundColor: 'rgba(59, 130, 246, 0.15)',
-                        fill: true,
-                        pointRadius: 4
-                    }]
+                    datasets: [
+                        lineDataset('CA total', revenueSeries, 'rgba(0, 113, 227, 0.9)', true),
+                        lineDataset('CA en ligne', revenueOnlineSeries, 'rgba(34, 197, 94, 0.9)', true),
+                        lineDataset('CA cash', revenueAdminSeries, 'rgba(255, 149, 0, 0.9)', true)
+                    ]
                 },
-                options: revenueChartOptions
-            });
-
-            charts.revenueOnline = createOrUpdateChart(charts.revenueOnline, chartRevenueOnlineCanvas, {
-                type: 'line',
-                data: {
-                    labels,
-                    datasets: [{
-                        label: 'CA en ligne - Stripe (€)',
-                        data: revenueOnlineSeries,
-                        tension: 0.35,
-                        borderColor: 'rgba(76, 175, 80, 0.85)',
-                        backgroundColor: 'rgba(76, 175, 80, 0.15)',
-                        fill: true,
-                        pointRadius: 4
-                    }]
-                },
-                options: revenueChartOptions
-            });
-
-            charts.revenueAdmin = createOrUpdateChart(charts.revenueAdmin, chartRevenueAdminCanvas, {
-                type: 'line',
-                data: {
-                    labels,
-                    datasets: [{
-                        label: 'CA admin - Cash (€)',
-                        data: revenueAdminSeries,
-                        tension: 0.35,
-                        borderColor: 'rgba(255, 152, 0, 0.85)',
-                        backgroundColor: 'rgba(255, 152, 0, 0.15)',
-                        fill: true,
-                        pointRadius: 4
-                    }]
-                },
-                options: revenueChartOptions
+                options: lineOptions({ euro: true })
             });
 
             charts.hoursTotal = createOrUpdateChart(charts.hoursTotal, chartHoursTotalCanvas, {
-                type: 'bar',
+                type: 'line',
                 data: {
                     labels,
-                    datasets: [{
-                        label: 'Heures réalisées (total)',
-                        data: hoursSeries,
-                        backgroundColor: 'rgba(34, 197, 94, 0.28)',
-                        borderColor: 'rgba(34, 197, 94, 0.75)',
-                        borderWidth: 1,
-                        borderRadius: 10
-                    }]
+                    datasets: [
+                        lineDataset('Total', hoursSeries, 'rgba(0, 113, 227, 0.9)'),
+                        lineDataset('Boite manuelle', hoursManualSeries, 'rgba(34, 197, 94, 0.9)'),
+                        lineDataset('Boite auto', hoursAutoSeries, 'rgba(251, 146, 60, 0.9)'),
+                        lineDataset('Sans permis', hoursAmSeries, 'rgba(168, 85, 247, 0.9)')
+                    ]
                 },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true } }
-                }
-            });
-
-            charts.hoursManual = createOrUpdateChart(charts.hoursManual, chartHoursManualCanvas, {
-                type: 'bar',
-                data: {
-                    labels,
-                    datasets: [{
-                        label: 'Heures - Boîte manuelle',
-                        data: hoursManualSeries,
-                        backgroundColor: 'rgba(34, 197, 94, 0.28)',
-                        borderColor: 'rgba(34, 197, 94, 0.75)',
-                        borderWidth: 1,
-                        borderRadius: 10
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true } }
-                }
-            });
-
-            charts.hoursAuto = createOrUpdateChart(charts.hoursAuto, chartHoursAutoCanvas, {
-                type: 'bar',
-                data: {
-                    labels,
-                    datasets: [{
-                        label: 'Heures - Boîte auto',
-                        data: hoursAutoSeries,
-                        backgroundColor: 'rgba(251, 146, 60, 0.28)',
-                        borderColor: 'rgba(251, 146, 60, 0.75)',
-                        borderWidth: 1,
-                        borderRadius: 10
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true } }
-                }
-            });
-
-            charts.hoursAm = createOrUpdateChart(charts.hoursAm, chartHoursAmCanvas, {
-                type: 'bar',
-                data: {
-                    labels,
-                    datasets: [{
-                        label: 'Heures - Sans permis (AM)',
-                        data: hoursAmSeries,
-                        backgroundColor: 'rgba(168, 85, 247, 0.28)',
-                        borderColor: 'rgba(168, 85, 247, 0.75)',
-                        borderWidth: 1,
-                        borderRadius: 10
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true } }
-                }
+                options: lineOptions()
             });
 
             setFeedback(analyticsFeedback, '', '');
         } catch (err) {
             console.error(err);
-            setFeedback(analyticsFeedback, 'Impossible de charger les analytics. Vérifie les tables/policies Supabase.', 'error');
+            setFeedback(analyticsFeedback, 'Impossible de charger les analytics. Verifie les tables/policies Supabase.', 'error');
         }
     }
+
+    window.refreshAnalytics = refresh;
 
     if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {
@@ -705,6 +833,19 @@ function createOrUpdateChart(existing, canvas, config) {
             const d = new Date(state.rangeStart);
             d.setFullYear(d.getFullYear() + 1);
             state.rangeStart = startOfYear(d);
+            await refresh();
+        });
+    }
+
+    if (profitabilityHourlyRate) {
+        profitabilityHourlyRate.addEventListener('change', async () => {
+            await refresh();
+        });
+    }
+
+    if (profitabilityMonth) {
+        setDefaultProfitabilityMonth();
+        profitabilityMonth.addEventListener('change', async () => {
             await refresh();
         });
     }

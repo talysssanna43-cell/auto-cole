@@ -194,8 +194,8 @@
         .story-image img {
             width: 100%;
             height: auto;
-            object-fit: contain;
-            border-radius: 0;
+            object-fit: cover;
+            border-radius: 16px;
             box-shadow: none;
         }
 
@@ -273,6 +273,19 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 32px;
+            position: relative;
+        }
+
+        .method-grid::before {
+            content: "";
+            position: absolute;
+            left: 15%;
+            right: 15%;
+            top: 68px;
+            height: 3px;
+            background: linear-gradient(90deg, #ec4899, #3b82f6, #22c55e);
+            border-radius: 999px;
+            opacity: 0.35;
         }
 
         .method-card {
@@ -283,6 +296,8 @@
             box-shadow: 0 4px 24px rgba(0,0,0,0.04);
             border: 1px solid var(--apple-border);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
         .method-card:hover {
@@ -315,6 +330,153 @@
             font-size: 1rem;
             color: var(--apple-text2);
             line-height: 1.6;
+        }
+
+        .method-tag {
+            color: var(--primary-dark);
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 10px;
+        }
+
+        .method-list {
+            list-style: none;
+            display: grid;
+            gap: 10px;
+            margin-top: 18px;
+            padding: 0;
+        }
+
+        .method-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            color: #4b5563;
+            font-size: 0.95rem;
+            line-height: 1.45;
+        }
+
+        .method-list i {
+            color: var(--primary-color);
+            margin-top: 3px;
+        }
+
+        .method-cta {
+            max-width: 1100px;
+            margin: 28px auto 0;
+            padding: 24px 28px;
+            border-radius: 18px;
+            background: #fff;
+            border: 1px solid rgba(233, 30, 99, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .method-cta strong {
+            color: var(--apple-text);
+            font-size: 1.08rem;
+            font-weight: 650;
+        }
+
+        .method-cta span {
+            display: block;
+            color: var(--apple-text2);
+            margin-top: 4px;
+            line-height: 1.45;
+        }
+
+        .method-cta a {
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 46px;
+            padding: 0 1.35rem;
+            border-radius: 999px;
+            background: var(--primary-gradient);
+            color: #fff;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .method-visual {
+            width: 74px;
+            height: 74px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .method-card:not(:last-child)::after {
+            content: "\f061";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            top: 54px;
+            right: -24px;
+            width: 34px;
+            height: 34px;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            color: var(--primary-color);
+            border: 1px solid rgba(233, 30, 99, 0.16);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+            z-index: 3;
+        }
+
+        .method-card.start .method-visual {
+            color: #be185d;
+            background: linear-gradient(135deg, rgba(255, 105, 180, 0.18), rgba(255, 255, 255, 0.9));
+            border: 1px solid rgba(236, 72, 153, 0.18);
+        }
+
+        .method-card.drive .method-visual {
+            color: #2563eb;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.16), rgba(255, 255, 255, 0.9));
+            border: 1px solid rgba(59, 130, 246, 0.18);
+        }
+
+        .method-card.exam .method-visual {
+            color: #16a34a;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.16), rgba(255, 255, 255, 0.9));
+            border: 1px solid rgba(34, 197, 94, 0.18);
+        }
+
+        .method-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            opacity: 0.75;
+            pointer-events: none;
+        }
+
+        .method-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .method-card.start::before {
+            background: linear-gradient(180deg, rgba(255, 105, 180, 0.08), transparent 48%);
+        }
+
+        .method-card.drive::before {
+            background: linear-gradient(180deg, rgba(59, 130, 246, 0.08), transparent 48%);
+        }
+
+        .method-card.exam::before {
+            background: linear-gradient(180deg, rgba(34, 197, 94, 0.08), transparent 48%);
         }
 
         /* Values Section */
@@ -363,9 +525,18 @@
             transform: translateY(-4px);
         }
 
-        .value-card .emoji {
-            font-size: 3rem;
-            margin-bottom: 16px;
+        .value-icon {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 22px;
+            border-radius: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            background: rgba(255, 105, 180, 0.09);
+            border: 1px solid rgba(255, 105, 180, 0.16);
+            font-size: 1.35rem;
         }
 
         .value-card h3 {
@@ -379,6 +550,17 @@
             font-size: 0.9rem;
             color: var(--apple-text2);
             line-height: 1.5;
+        }
+
+        .value-illustration {
+            width: min(100%, 170px);
+            height: 170px;
+            object-fit: contain;
+            object-position: center;
+            border-radius: 0;
+            display: block;
+            margin: 0 auto 22px;
+            box-shadow: none;
         }
 
         /* Location Section */
@@ -558,6 +740,286 @@
                 flex-direction: column;
             }
         }
+
+        /* Refonte lisible et sobre */
+        .about-hero {
+            padding: 150px 24px 42px;
+            background: linear-gradient(180deg, #eef3ff 0%, #fff 100%);
+        }
+
+        .about-hero-grid {
+            max-width: 1180px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+            gap: 56px;
+            align-items: center;
+        }
+
+        .about-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary-dark);
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .about-hero h1 {
+            font-size: clamp(2.4rem, 5vw, 4.2rem);
+            line-height: 1.08;
+            font-weight: 800;
+            color: var(--apple-text);
+            margin-bottom: 1.25rem;
+            letter-spacing: 0;
+        }
+
+        .about-hero h1 span {
+            color: var(--primary-color);
+        }
+
+        .about-lead {
+            color: #5f6472;
+            font-size: 1.14rem;
+            line-height: 1.75;
+            max-width: 660px;
+            margin-bottom: 2rem;
+        }
+
+        .about-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .about-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 52px;
+            padding: 0 1.45rem;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .about-btn.primary {
+            background: var(--primary-gradient);
+            color: #fff;
+            box-shadow: 0 14px 30px rgba(233, 30, 99, 0.2);
+        }
+
+        .about-btn.secondary {
+            color: var(--primary-dark);
+            background: #fff;
+            border: 1px solid rgba(233, 30, 99, 0.18);
+        }
+
+        .about-proof {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .proof-item {
+            background: rgba(255, 255, 255, 0.86);
+            border: 1px solid rgba(233, 30, 99, 0.09);
+            border-radius: 18px;
+            padding: 22px;
+        }
+
+        .proof-value {
+            color: var(--primary-color);
+            font-size: 2rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 0.45rem;
+        }
+
+        .proof-label {
+            color: #4b5563;
+            font-weight: 600;
+            line-height: 1.35;
+        }
+
+        .story-section,
+        .method-section,
+        .values-section,
+        .location-section,
+        .cta-section {
+            padding: 86px 24px;
+        }
+
+        .story-section {
+            padding-top: 44px;
+        }
+
+        .story-grid,
+        .location-grid {
+            gap: 56px;
+        }
+
+        .story-content h2,
+        .method-header h2,
+        .values-header h2,
+        .location-content h2,
+        .cta-section h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            letter-spacing: 0;
+        }
+
+        .method-header,
+        .values-header {
+            margin-bottom: 48px;
+        }
+
+        .method-card,
+        .value-card {
+            text-align: left;
+            border-radius: 18px;
+            padding: 28px;
+        }
+
+        .method-number,
+        .value-icon {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .values-grid {
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .value-card {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.035);
+            overflow: hidden;
+            border: 0;
+        }
+
+        .value-card:nth-child(1) {
+            background: #dcebff;
+        }
+
+        .value-card:nth-child(2) {
+            background: #e4f4cd;
+        }
+
+        .value-card:nth-child(3) {
+            background: #ffd9d3;
+        }
+
+        .value-card:nth-child(4) {
+            background: #ddd1f6;
+        }
+
+        .value-card:nth-child(5) {
+            background: #cfe9ff;
+        }
+
+        .value-card p {
+            font-size: 0.94rem;
+        }
+
+        @media (max-width: 1100px) {
+            .about-hero-grid,
+            .story-grid,
+            .location-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .values-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .method-grid::before,
+            .method-card::after {
+                display: none;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .about-hero {
+                padding-top: 118px;
+            }
+
+            .about-proof,
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .about-hero h1 {
+            font-size: clamp(2rem, 3.8vw, 3.35rem);
+            font-weight: 650;
+            line-height: 1.14;
+        }
+
+        .story-content h2,
+        .method-header h2,
+        .values-header h2,
+        .location-content h2,
+        .cta-section h2 {
+            font-size: clamp(1.75rem, 2.8vw, 2.35rem);
+            font-weight: 650;
+            line-height: 1.18;
+        }
+
+        .about-lead,
+        .story-content p,
+        .method-header p,
+        .values-header p,
+        .location-content p,
+        .cta-section p {
+            font-size: 1.02rem;
+        }
+
+        .proof-value,
+        .method-number,
+        .hero-stat-value {
+            font-weight: 650;
+        }
+
+        .value-card h3,
+        .method-card h3 {
+            font-weight: 650;
+        }
+
+        .method-header {
+            text-align: left;
+            max-width: 1100px;
+            margin-bottom: 42px;
+        }
+
+        .method-header p {
+            max-width: 760px;
+            line-height: 1.65;
+        }
+
+        .method-card {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+            min-height: 100%;
+            border-radius: 18px;
+            padding: 28px;
+            overflow: visible;
+        }
+
+        .method-number {
+            display: none;
+        }
+
+        .method-card h3 {
+            margin-bottom: 0;
+        }
+
+        @media (min-width: 901px) {
+            .story-content h2 span {
+                display: block;
+            }
+        }
     </style>
 </head>
 <body>
@@ -592,16 +1054,50 @@
         </div>
     </nav>
 
+    <section class="about-hero">
+        <div class="about-hero-grid">
+            <div>
+                <div class="about-kicker"><i class="fas fa-map-marker-alt"></i> Auto-école Breteuil à Marseille 6e</div>
+                <h1>Une auto-école locale, <span>simple et sérieuse</span></h1>
+                <p class="about-lead">
+                    Depuis plus de 30 ans, nous accompagnons les élèves avec une pédagogie claire, un suivi humain et des outils concrets pour progresser séance après séance.
+                </p>
+                <div class="about-actions">
+                    <a href="inscription.html" class="about-btn primary">Démarrer mon inscription</a>
+                    <a href="contact.html" class="about-btn secondary">Parler à l'équipe</a>
+                </div>
+            </div>
+            <div class="about-proof">
+                <div class="proof-item">
+                    <div class="proof-value">1994</div>
+                    <div class="proof-label">Une présence historique au cœur de Marseille</div>
+                </div>
+                <div class="proof-item">
+                    <div class="proof-value">94%</div>
+                    <div class="proof-label">Taux de réussite affiché sur nos supports</div>
+                </div>
+                <div class="proof-item">
+                    <div class="proof-value">+ de 5 000</div>
+                    <div class="proof-label">Élèves accompagnés vers le permis</div>
+                </div>
+                <div class="proof-item">
+                    <div class="proof-value">1</div>
+                    <div class="proof-label">une seule et meme agence</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Story Section -->
     <section class="story-section">
         <div class="story-grid">
             <div class="story-content">
-                <h2>Plus de <span>30 ans</span> d'expérience au cœur de Marseille</h2>
+                <h2>Une équipe qui connaît <span>ses élèves</span></h2>
                 <p>
-                    <strong>Depuis 1994</strong>, l'Auto-École Breteuil forme des conducteurs responsables avec une pédagogie adaptée, bienveillante et efficace.
+                    À Breteuil, tu n'es pas un dossier qui circule d'un écran à l'autre. L'équipe suit ton parcours, tes disponibilités, tes difficultés et ton rythme.
                 </p>
                 <p>
-                    Nous croyons que la conduite est une liberté qui se mérite et se respecte. C'est pourquoi nous accompagnons chaque élève vers l'autonomie sur la route.
+                    Notre rôle est simple : rendre la formation compréhensible, t'aider à progresser régulièrement et te préparer à conduire avec confiance, pas seulement à passer un examen.
                 </p>
                 <div class="story-badges">
                     <div class="story-badge green">
@@ -628,25 +1124,53 @@
     <!-- Method Section -->
     <section class="method-section">
         <div class="method-header">
-            <h2>Notre méthode en 3 étapes</h2>
-            <p>Un parcours clair et efficace pour t'accompagner vers la réussite.</p>
+            <h2>Un accompagnement clair, avec une équipe derrière toi</h2>
+            <p>À l'Auto-école Breteuil, tu avances avec une agence identifiable, des échanges simples et un suivi concret. L'objectif : savoir quoi travailler, pourquoi, et quand tu es prêt.</p>
         </div>
         <div class="method-grid">
-            <div class="method-card">
+            <div class="method-card start">
+                <div class="method-visual" aria-hidden="true"><i class="fas fa-clipboard-list"></i></div>
                 <div class="method-number">1</div>
-                <h3>Code de la route</h3>
-                <p>En ligne ou en présentiel, à ton rythme avec un suivi personnalisé et des tests illimités.</p>
+                <div class="method-tag">Avant de commencer</div>
+                <h3>On part de ton niveau</h3>
+                <p>On t'aide à choisir une formule cohérente avec ton expérience, ton budget et tes disponibilités.</p>
+                <ul class="method-list">
+                    <li><i class="fas fa-check"></i><span>Un point simple sur ton besoin réel</span></li>
+                    <li><i class="fas fa-check"></i><span>Des informations claires sur les démarches</span></li>
+                    <li><i class="fas fa-check"></i><span>Une agence unique pour poser tes questions</span></li>
+                </ul>
             </div>
-            <div class="method-card">
+            <div class="method-card drive">
+                <div class="method-visual" aria-hidden="true"><i class="fas fa-car-side"></i></div>
                 <div class="method-number">2</div>
-                <h3>Conduite + fiche récap</h3>
-                <p>Après chaque séance, une fiche détaillant tes points forts et axes d'amélioration.</p>
+                <div class="method-tag">Pendant la formation</div>
+                <h3>On suit tes progrès</h3>
+                <p>Les séances ne s'enchaînent pas au hasard : tu comprends ce qui est acquis et ce qui doit encore être consolidé.</p>
+                <ul class="method-list">
+                    <li><i class="fas fa-check"></i><span>Des objectifs de conduite plus lisibles</span></li>
+                    <li><i class="fas fa-check"></i><span>Des retours utiles après les leçons</span></li>
+                    <li><i class="fas fa-check"></i><span>Un rythme adapté à ta progression</span></li>
+                </ul>
             </div>
-            <div class="method-card">
+            <div class="method-card exam">
+                <div class="method-visual" aria-hidden="true"><i class="fas fa-flag-checkered"></i></div>
                 <div class="method-number">3</div>
-                <h3>Jusqu'à l'examen</h3>
-                <p>Le jour J, ton moniteur est avec toi dans le véhicule pour te mettre en confiance.</p>
+                <div class="method-tag">Objectif permis</div>
+                <h3>Le test du permis</h3>
+                <p>On prépare le passage avec sérieux, sans te pousser trop tôt ni te laisser avancer sans repères.</p>
+                <ul class="method-list">
+                    <li><i class="fas fa-check"></i><span>Une préparation centrée sur les points fragiles</span></li>
+                    <li><i class="fas fa-check"></i><span>Des conseils concrets pour le jour J</span></li>
+                    <li><i class="fas fa-check"></i><span>Une mise en confiance progressive</span></li>
+                </ul>
             </div>
+        </div>
+        <div class="method-cta">
+            <div>
+                <strong>Tu ne sais pas par où commencer ?</strong>
+                <span>On fait le point avec toi et on te guide vers ce qui t'es le plus adapté.</span>
+            </div>
+            <a href="contact.html">Parler à l'équipe</a>
         </div>
     </section>
 
@@ -654,33 +1178,33 @@
     <section class="values-section">
         <div class="values-header">
             <h2>Nos valeurs</h2>
-            <p>Plus qu'une simple formation à la conduite</p>
+            <p>Des principes simples, visibles dans la façon dont on travaille au quotidien.</p>
         </div>
         <div class="values-grid">
             <div class="value-card">
-                <div class="emoji">🔍</div>
+                <img class="value-illustration" src="assets/valeur-transparence-mascotte.png?v=1" alt="Mascotte officielle Auto-École Breteuil illustrant la transparence">
                 <h3>Transparence</h3>
-                <p>Nos démarches sont claires, nos actions limpides.</p>
+                <p>Des démarches expliquées, des tarifs lisibles et un suivi sans mauvaise surprise.</p>
             </div>
             <div class="value-card">
-                <div class="emoji">✅</div>
+                <img class="value-illustration" src="assets/valeur-facilite-mascotte.png?v=1" alt="Mascotte officielle Auto-École Breteuil illustrant la facilité">
                 <h3>Facilité</h3>
-                <p>Où que tu sois, on se rapproche de toi.</p>
+                <p>Un parcours plus simple à organiser, avec des informations faciles à retrouver.</p>
             </div>
             <div class="value-card">
-                <div class="emoji">⭐</div>
+                <img class="value-illustration" src="assets/valeur-bienveillance-mascotte.png?v=1" alt="Mascotte officielle Auto-École Breteuil illustrant la bienveillance">
                 <h3>Bienveillance</h3>
-                <p>Progresse à ton rythme, sans stress ni jugement.</p>
+                <p>Un apprentissage exigeant, mais jamais humiliant. On corrige pour faire progresser.</p>
             </div>
             <div class="value-card">
-                <div class="emoji">📊</div>
+                <img class="value-illustration" src="assets/valeur-regularite-mascotte.png?v=1" alt="Mascotte officielle Auto-École Breteuil illustrant la régularité">
                 <h3>Régularité</h3>
-                <p>Un suivi constant pour progresser efficacement.</p>
+                <p>Des séances utiles, des objectifs concrets et une progression suivie dans le temps.</p>
             </div>
             <div class="value-card">
-                <div class="emoji">🚗</div>
+                <img class="value-illustration" src="assets/valeur-liberte-mascotte.png?v=1" alt="Mascotte officielle Auto-École Breteuil illustrant la liberté">
                 <h3>Liberté</h3>
-                <p>Pour aller où tu veux, quand tu veux.</p>
+                <p>Le permis comme vraie autonomie : conduire seul, sereinement, dans la vraie vie.</p>
             </div>
         </div>
     </section>
@@ -690,7 +1214,7 @@
         <div class="location-grid">
             <div class="location-content">
                 <h2>Où nous trouver ?</h2>
-                <p>Située au cœur de Marseille 6ème, notre auto-école est facilement accessible en transports en commun. Nous t'accueillons dans un cadre moderne et chaleureux.</p>
+                <p>Nous sommes installés dans le 6e arrondissement de Marseille, dans un secteur pratique pour venir au bureau, déposer un dossier ou faire le point avec l'équipe.</p>
                 <div class="location-info">
                     <div class="location-item">
                         <div class="icon"><i class="fas fa-map-marker-alt"></i></div>
@@ -736,8 +1260,8 @@
     <!-- CTA Section -->
     <section class="cta-section">
         <div class="cta-inner">
-            <h2>Prêt à démarrer ?</h2>
-            <p>Rejoins les milliers d'élèves qui ont obtenu leur permis avec nous.</p>
+            <h2>Tu veux faire le point sur ton permis ?</h2>
+            <p>On t'aide à choisir la formule adaptée à ton niveau, ton budget et tes disponibilités.</p>
             <div class="cta-buttons">
                 <a href="inscription.html" class="cta-btn primary">S'inscrire maintenant</a>
                 <a href="contact.html" class="cta-btn secondary">Nous contacter</a>
@@ -756,9 +1280,9 @@
                 <div class="footer-col">
                     <h4>Formations</h4>
                     <ul>
-                        <li><a href="permis-b.html">Permis B</a></li>
+                        <li><a href="tarifs.html#permis-b">Permis B</a></li>
                         <li><a href="qui-sommes-nous.html">Qui sommes-nous</a></li>
-                        <li><a href="conduite-accompagnee.html">Conduite accompagnée</a></li>
+                        <li><a href="tarifs.html#conduite-accompagnee">Conduite accompagnée</a></li>
                     </ul>
                 </div>
 
@@ -772,7 +1296,7 @@
 
                 <div class="footer-col">
                     <h4>Notre localisation</h4>
-                    <p style="margin-bottom: 1rem;">1 Rue Édouard Delanglade<br>13006 Marseille</p>
+                    <p style="margin-bottom: 1rem;">1A Rue Édouard Delanglade, 13006 Marseille</p>
                     <h4 style="margin-top: 1.5rem;">Contact</h4>
                     <ul>
                         <li style="white-space: normal; overflow: visible;"><i class="fas fa-phone"></i> <span style="white-space: nowrap;">04 91 53 36 98</span></li>
@@ -796,7 +1320,9 @@
     <script src="assets/js/supabaseClient.js"></script>
     <script src="assets/js/navbar.js"></script>
     <script src="assets/js/mobile-menu.js"></script>
-    <script src="assets/js/april-notice.js"></script>
+    <script src="assets/js/april-notice.js?v=2"></script>
     <script src="assets/js/support-ticket.js?v=6"></script>
+    <script src="assets/js/site-footer.js"></script>
+    <script src="assets/js/text-encoding-fix.js?v=2"></script>
 </body>
 </html>

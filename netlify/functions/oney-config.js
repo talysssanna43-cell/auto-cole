@@ -6,7 +6,7 @@ const corsHeaders = {
     'Access-Control-Allow-Methods': 'GET,OPTIONS'
 };
 
-exports.handler = async function handler(event) {
+exports.legacyHandler = async function handler(event) {
     if (event.httpMethod === 'OPTIONS') {
         return {
             statusCode: 200,
@@ -41,7 +41,7 @@ exports.handler = async function handler(event) {
                 'accelere',
                 'second-chance',
                 'boite-auto',
-                'zen',
+                'chill',
                 'am'
             ],
             excluded_packs: [
@@ -49,5 +49,14 @@ exports.handler = async function handler(event) {
                 '20h'   // Achat à l'unité
             ]
         })
+    };
+};
+
+// Stripe is the only supported payment workflow.
+exports.handler = async function retiredOneyConfig() {
+    return {
+        statusCode: 410,
+        headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
+        body: JSON.stringify({ error: 'PAYMENT_METHOD_RETIRED' })
     };
 };

@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comptabilit&eacute; - Auto-Ecole Breteuil</title>
+    <meta name="robots" content="noindex,nofollow">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/admin-mobile.css?v=3">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg: #f5f5f7;
+            --card: #fff;
+            --border: rgba(0,0,0,0.08);
+            --text: #1d1d1f;
+            --text2: #6e6e73;
+            --blue: #0071e3;
+            --green: #34c759;
+            --orange: #ff9500;
+            --red: #ff3b30;
+            --pink: #f52b86;
+            --shadow: 0 12px 32px rgba(15,23,42,0.08);
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+        .topbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            height: 52px; background: rgba(255,255,255,0.78);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; padding: 0 24px;
+        }
+        .topbar-inner {
+            max-width: 1440px; width: 100%; margin: 0 auto;
+            display: flex; align-items: center; justify-content: space-between; gap: 16px;
+        }
+        .topbar-brand { font-size: 1.05rem; font-weight: 700; color: var(--text); text-decoration: none; white-space: nowrap; }
+        .topbar-tabs { display: flex; gap: 4px; background: rgba(0,0,0,0.04); border-radius: 8px; padding: 3px; overflow-x: auto; }
+        .topbar-tabs a { padding: 6px 12px; border-radius: 6px; font-size: 0.78rem; font-weight: 500; color: var(--text2); text-decoration: none; white-space: nowrap; }
+        .topbar-tabs a.active { background: var(--card); color: var(--text); font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .notif-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; padding: 0 5px; background: var(--red); color: #fff; border-radius: 9px; font-size: 0.7rem; font-weight: 700; margin-left: 6px; }
+        .topbar-right { display: flex; align-items: center; gap: 12px; }
+        .btn-inscription { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 8px; background: var(--green); color: #fff; font-size: 0.82rem; font-weight: 600; text-decoration: none; white-space: nowrap; }
+        .btn-logout { display: inline-flex; align-items: center; gap: 5px; border: none; background: transparent; color: var(--text2); font-size: 0.82rem; font-weight: 600; cursor: pointer; padding: 6px 10px; border-radius: 999px; white-space: nowrap; }
+        .btn-logout:hover { color: var(--red); background: rgba(255,59,48,0.08); }
+        .admin-menu-toggle { display: none; flex-direction: column; gap: 4px; background: none; border: none; cursor: pointer; padding: 8px; }
+        .admin-menu-toggle span { width: 20px; height: 2px; background: var(--text); border-radius: 2px; }
+
+        .main { max-width: 1440px; margin: 0 auto; padding: 78px 24px 48px; }
+        .page-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; flex-wrap: wrap; margin-bottom: 24px; }
+        .page-header h1 { font-size: clamp(2rem, 4vw, 3.2rem); letter-spacing: -0.04em; margin-bottom: 6px; }
+        .page-header p { color: var(--text2); font-size: 1.05rem; }
+        .month-tools { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .month-tools button, .month-tools input {
+            height: 40px; border: 1px solid var(--border); background: var(--card);
+            border-radius: 10px; padding: 0 12px; font-weight: 700; color: var(--text);
+        }
+        .month-tools button { cursor: pointer; min-width: 42px; }
+        #monthLabel { min-width: 150px; text-align: center; text-transform: capitalize; font-weight: 800; }
+
+        .kpi-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-bottom: 20px; }
+        .kpi { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 22px; box-shadow: var(--shadow); min-height: 360px; position: relative; overflow: hidden; cursor: pointer; transition: transform 0.16s ease, box-shadow 0.16s ease; }
+        .kpi:hover { transform: translateY(-2px); box-shadow: 0 16px 38px rgba(15,23,42,0.12); }
+        .kpi::before { content: ''; position: absolute; inset: 0 0 auto; height: 4px; background: var(--pink); }
+        .kpi.blue::before { background: var(--blue); }
+        .kpi.green::before { background: var(--green); }
+        .kpi.orange::before { background: var(--orange); }
+        .kpi.red::before { background: var(--red); }
+        .kpi .icon { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; background: rgba(245,43,134,0.1); color: var(--pink); font-size: 1.1rem; margin-bottom: 14px; }
+        .kpi.blue .icon { background: rgba(0,113,227,0.1); color: var(--blue); }
+        .kpi.green .icon { background: rgba(52,199,89,0.1); color: var(--green); }
+        .kpi.orange .icon { background: rgba(255,149,0,0.12); color: var(--orange); }
+        .kpi.red .icon { background: rgba(255,59,48,0.1); color: var(--red); }
+        .kpi .label { color: var(--text2); text-transform: uppercase; font-size: 0.78rem; font-weight: 800; letter-spacing: 0.04em; }
+        .kpi .value { margin-top: 8px; font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 900; letter-spacing: -0.04em; }
+        .kpi .value small { display: block; margin-top: 5px; color: var(--text2); font-size: 0.9rem; font-weight: 800; letter-spacing: 0; }
+        .kpi-chart { margin-top: 16px; height: 190px; }
+        .kpi-chart canvas { width: 100% !important; height: 190px !important; display: block; }
+        .kpi-hint { margin-top: 8px; color: var(--text2); font-size: 0.78rem; font-weight: 700; }
+        .detail-toggle { margin-top: 12px; border: none; border-radius: 999px; padding: 10px 16px; background: #eef5ff; color: var(--blue); font-weight: 900; cursor: pointer; }
+        .detail-toggle:hover { background: #dfeeff; }
+        .charge-toggle { margin-top: 12px; margin-left: 8px; border: none; border-radius: 999px; padding: 10px 16px; background: var(--green); color: #fff; font-weight: 900; cursor: pointer; }
+        .charge-toggle:hover { filter: brightness(0.96); }
+        .kpi-detail-inline { display: none; margin-top: 14px; border: 1px solid var(--border); border-radius: 14px; background: #fbfcff; overflow: hidden; }
+        .kpi-detail-inline.active { display: block; }
+        .kpi-detail-head { padding: 14px 16px; border-bottom: 1px solid var(--border); }
+        .kpi-detail-head strong { display: block; color: var(--text); }
+        .kpi-detail-head span { display: block; margin-top: 4px; color: var(--text2); font-size: 0.86rem; line-height: 1.35; }
+        .kpi-detail-formula { margin-top: 8px; padding: 8px 10px; border-radius: 10px; background: #f1f7ff; color: #0f4f94; font-weight: 800; font-size: 0.84rem; }
+        .kpi-detail-table { max-height: 280px; overflow: auto; }
+        .kpi-detail-table table { width: 100%; min-width: 620px; border-collapse: collapse; font-size: 0.84rem; }
+        .kpi-detail-table th, .kpi-detail-table td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; }
+        .kpi-detail-table th { color: var(--text2); text-transform: uppercase; font-size: 0.72rem; }
+        .is-negative { color: var(--red); }
+        .is-positive { color: var(--green); }
+
+        .section-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 18px; margin-top: 18px; }
+        .panel { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 24px; box-shadow: var(--shadow); }
+        .panel-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; margin-bottom: 18px; }
+        .panel h2 { font-size: 1.25rem; letter-spacing: -0.02em; }
+        .panel p { color: var(--text2); line-height: 1.45; }
+        .breakdown-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
+        .breakdown-row:last-child { border-bottom: 0; }
+        .breakdown-row span { color: var(--text2); }
+        .breakdown-row strong { font-size: 1.04rem; }
+        .indicator-grid { display: grid; gap: 12px; }
+        .performance-rules { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+        .performance-box { border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+        .performance-box.bad { background: #fff4f3; border-color: rgba(255,59,48,0.22); }
+        .performance-box.good { background: #f0fff4; border-color: rgba(52,199,89,0.24); }
+        .performance-box h3 { font-size: 0.94rem; margin-bottom: 10px; }
+        .performance-box.bad h3 { color: var(--red); }
+        .performance-box.good h3 { color: var(--green); }
+        .performance-box ul { list-style: none; display: grid; gap: 8px; }
+        .performance-box li { font-size: 0.84rem; font-weight: 850; color: var(--text); line-height: 1.35; }
+        .indicator-card { display: flex; align-items: center; justify-content: space-between; gap: 14px; border: 1px solid var(--border); border-left-width: 5px; border-radius: 14px; padding: 14px; }
+        .indicator-card.ok { border-left-color: var(--green); }
+        .indicator-card.warning { border-left-color: var(--orange); }
+        .indicator-card.danger { border-left-color: var(--red); }
+        .indicator-card h3 { font-size: 0.98rem; margin-bottom: 4px; }
+        .indicator-card span { font-weight: 900; color: var(--text); white-space: nowrap; }
+        .indicator-card small { display: block; margin-top: 6px; color: var(--text2); font-weight: 800; }
+
+        .sig-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 14px; }
+        .sig-item { background: #f5f7fb; border-radius: 12px; padding: 12px; }
+        .sig-item span { display: block; color: var(--text2); font-size: 0.75rem; font-weight: 800; text-transform: uppercase; }
+        .sig-item strong { display: block; margin-top: 5px; font-size: 1rem; }
+
+        .table-panel { margin-top: 18px; }
+        .table-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .action-btn { border: none; border-radius: 999px; background: var(--green); color: #fff; font-weight: 900; padding: 10px 16px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        .action-btn.secondary { background: #e8eef8; color: #123766; }
+        .invoice-count { color: var(--text2); font-weight: 800; }
+        .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 14px; }
+        table { width: 100%; border-collapse: collapse; min-width: 920px; }
+        th, td { padding: 14px 16px; border-bottom: 1px solid rgba(0,0,0,0.06); text-align: left; vertical-align: top; }
+        th { background: #f7f8fb; color: var(--text2); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; }
+        .invoice-select-cell { width: 86px; text-align: center; }
+        .invoice-select { width: 20px; height: 20px; accent-color: var(--pink); cursor: pointer; }
+        td small { display: block; color: var(--text2); margin-top: 4px; }
+        td.num { text-align: right; font-weight: 900; }
+        .empty-cell { text-align: center; color: var(--text2); padding: 40px; }
+        .feedback { margin-top: 16px; color: var(--text2); font-weight: 700; }
+        .feedback.error { color: var(--red); }
+        .expense-form { display: grid; gap: 14px; }
+        .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+        .form-field { display: grid; gap: 7px; }
+        .form-field.full { grid-column: 1 / -1; }
+        .form-field label { color: var(--text2); font-size: 0.78rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.04em; }
+        .form-field input, .form-field select, .form-field textarea {
+            width: 100%; border: 1px solid var(--border); border-radius: 12px;
+            padding: 12px 13px; font: inherit; background: #fff; color: var(--text);
+        }
+        .form-field textarea { min-height: 86px; resize: vertical; }
+        .file-note { color: var(--text2); font-size: 0.82rem; line-height: 1.35; }
+        .expense-feedback { min-height: 22px; font-weight: 800; color: var(--text2); }
+        .expense-feedback.success { color: var(--green); }
+        .expense-feedback.error { color: var(--red); }
+        .expense-panel { display: none; margin: 16px 0 0; border-color: rgba(52,199,89,0.22); box-shadow: none; }
+        .expense-panel.active { display: block; }
+        .detail-panel { margin: 0 0 20px; display: none; border: 2px solid rgba(0,113,227,0.16); }
+        .detail-panel.active { display: block; }
+        .detail-close { border: none; background: #eef5ff; color: var(--blue); width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-weight: 900; }
+        .detail-table { margin-top: 16px; max-height: 420px; overflow: auto; border: 1px solid var(--border); border-radius: 14px; }
+        .detail-table table { min-width: 760px; }
+        .detail-total { display: inline-flex; align-items: center; gap: 8px; background: #f3f6fb; border-radius: 999px; padding: 8px 12px; font-weight: 900; color: var(--text); }
+
+        @media (max-width: 1100px) {
+            .kpi-grid { grid-template-columns: 1fr; }
+            .section-grid { grid-template-columns: 1fr; }
+            .sig-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 760px) {
+            .main { padding: 76px 14px 36px; }
+            .kpi-grid { grid-template-columns: 1fr; }
+            .form-grid { grid-template-columns: 1fr; }
+            .panel { padding: 18px; }
+            .month-tools { width: 100%; }
+            .month-tools input { flex: 1; }
+            .performance-rules { grid-template-columns: 1fr; }
+        }
+        @media print {
+            .topbar, .month-tools, .table-actions { display: none !important; }
+            .main { padding: 0; }
+            .panel, .kpi { box-shadow: none; break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="topbar">
+        <div class="topbar-inner">
+            <a href="index.html" class="topbar-brand">Auto-Ecole Breteuil</a>
+            <button class="admin-menu-toggle" id="adminMenuToggle" type="button" aria-label="Menu admin">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="topbar-tabs" id="adminTabs">
+                <a href="admin-planning.html">Planning</a>
+                <a href="admin-candidatures.html">Candidatures <span class="notif-badge" id="candidaturesBadge" style="display: none;">0</span></a>
+                <a href="admin-analytics.html">Analytics</a>
+                <a href="admin-comptabilite.html" class="active">Comptabilit&eacute;</a>
+                <a href="admin-moniteurs.html">Moniteurs</a>
+                <a href="admin-support.html">Support <span class="notif-badge" id="supportBadge" style="display: none;">0</span></a>
+                <a href="admin-contact.html">Contact <span class="notif-badge" id="contactBadge" style="display: none;">0</span></a>
+                <a href="admin-code-rousseau.html">Code Rousseau <span class="notif-badge" id="codeRousseuBadge" style="display: none;">0</span></a>
+                <a href="admin-reviews.html">Avis <span class="notif-badge" id="reviewsBadge" style="display: none;">0</span></a>
+            </div>
+            <div class="topbar-right">
+                <a href="inscription.html?admin=true" class="btn-inscription"><i class="fas fa-user-plus"></i> Nouvelle inscription</a>
+                <button class="btn-logout" id="logoutBtn" type="button"><i class="fas fa-right-from-bracket"></i> Quitter</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main">
+        <header class="page-header">
+            <div>
+                <h1>Comptabilit&eacute;</h1>
+                <p>Lecture mensuelle de la tr&eacute;sorerie, du SIG et des factures &agrave; transmettre au comptable.</p>
+            </div>
+            <div class="month-tools">
+                <button type="button" id="prevMonthBtn"><i class="fas fa-chevron-left"></i></button>
+                <strong id="monthLabel">Mois</strong>
+                <button type="button" id="nextMonthBtn"><i class="fas fa-chevron-right"></i></button>
+                <input type="month" id="monthPicker">
+            </div>
+        </header>
+
+        <section class="kpi-grid">
+            <article class="kpi blue" data-detail="encaissements"><div class="icon"><i class="fas fa-arrow-trend-up"></i></div><div class="label">Encaissements</div><div class="value" id="kpiEncaissements">0 &euro;</div><div class="kpi-chart"><canvas id="chartEncaissements"></canvas></div><div class="kpi-hint">Cliquer pour voir les encaissements</div></article>
+            <article class="kpi red" data-detail="decaissements"><div class="icon"><i class="fas fa-arrow-trend-down"></i></div><div class="label">D&eacute;caissements</div><div class="value" id="kpiDecaissements">0 &euro;</div><div class="kpi-chart"><canvas id="chartDecaissements"></canvas></div><div class="kpi-hint">Cliquer pour voir les sorties</div></article>
+            <article class="kpi green" data-detail="soldeTresorerieDisponible"><div class="icon"><i class="fas fa-wallet"></i></div><div class="label">Solde tr&eacute;so disponible</div><div class="value" id="kpiSolde" data-money-status="soldeTresorerieDisponible">0 &euro;</div><div class="kpi-chart"><canvas id="chartSolde"></canvas></div><div class="kpi-hint">Cliquer pour comprendre le solde</div></article>
+            <article class="kpi orange" data-detail="variationTresorerie"><div class="icon"><i class="fas fa-right-left"></i></div><div class="label">Variation tr&eacute;so / mois</div><div class="value" id="kpiVariation" data-money-status="variationTresorerie">0 &euro;</div><div class="kpi-chart"><canvas id="chartVariation"></canvas></div><div class="kpi-hint">Cliquer pour comparer au mois pr&eacute;c&eacute;dent</div></article>
+            <article class="kpi" data-detail="creditTvaEstime"><div class="icon"><i class="fas fa-file-invoice-dollar"></i></div><div class="label">Cr&eacute;dit TVA estim&eacute;</div><div class="value" id="kpiVat">0 &euro;</div><div class="kpi-chart"><canvas id="chartVat"></canvas></div><div class="kpi-hint">Cliquer pour voir la base</div></article>
+            <article class="kpi blue" data-detail="valeurAjoutee"><div class="icon"><i class="fas fa-layer-group"></i></div><div class="label">Valeur ajout&eacute;e</div><div class="value" id="kpiVa" data-money-status="valeurAjoutee">0 &euro;</div><div class="kpi-chart"><canvas id="chartVa"></canvas></div><div class="kpi-hint">Cliquer pour le calcul</div></article>
+            <article class="kpi green" data-detail="ebe"><div class="icon"><i class="fas fa-seedling"></i></div><div class="label">EBE (Excedent brut d'exploitation)</div><div class="value" id="kpiEbe" data-money-status="ebe">0 &euro;</div><div class="kpi-chart"><canvas id="chartEbe"></canvas></div><div class="kpi-hint">Cliquer pour le calcul</div></article>
+            <article class="kpi orange" data-detail="dettePedagogique"><div class="icon"><i class="fas fa-gauge-high"></i></div><div class="label">Dette p&eacute;dagogique</div><div class="value" id="kpiDebt">0 &euro;<small>0h anciennes / 0 cours de 43 min</small></div><div class="kpi-chart"><canvas id="chartDebt"></canvas></div><div class="kpi-hint">Cliquer pour voir les &eacute;l&egrave;ves concern&eacute;s</div></article>
+        </section>
+
+        <section class="panel detail-panel" id="accountingDetailPanel">
+            <div class="panel-header">
+                <div>
+                    <h2 id="detailTitle">D&eacute;tail</h2>
+                    <p id="detailSubtitle">Toutes les lignes li&eacute;es au montant s&eacute;lectionn&eacute;.</p>
+                </div>
+                <div class="table-actions">
+                    <span class="detail-total" id="detailTotal">0 &euro;</span>
+                    <button class="detail-close" id="detailCloseBtn" type="button"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+            <div class="detail-table">
+                <table>
+                    <thead id="detailHead"></thead>
+                    <tbody id="detailRows"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="panel expense-panel" id="accountingExpensePanel">
+            <div class="panel-header">
+                <div>
+                    <h2>Saisir une charge du mois</h2>
+                    <p>Ajoute une charge comptable avec une facture ou un ticket en pi&egrave;ce jointe si besoin.</p>
+                </div>
+            </div>
+            <form class="expense-form" id="accountingExpenseForm">
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="expenseCategory">Cat&eacute;gorie</label>
+                        <select id="expenseCategory" required>
+                            <option value="">Choisir une cat&eacute;gorie</option>
+                            <option>Personnel</option>
+                            <option>Vehicules</option>
+                            <option>Local</option>
+                            <option>Informatique &amp; logiciels</option>
+                            <option>Comptabilite &amp; administratif</option>
+                            <option>Marketing &amp; commercial</option>
+                            <option>Banque &amp; paiements</option>
+                            <option>Fiscalite &amp; taxes</option>
+                            <option>Pedagogie &amp; reglementation</option>
+                            <option>Entretien general &amp; fournitures</option>
+                            <option>Assurances</option>
+                            <option>Telecommunications</option>
+                            <option>Imprevus &amp; pertes</option>
+                            <option>Amortissements hors vehicules</option>
+                            <option>Dirigeant</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label for="expenseDate">Date</label>
+                        <input type="date" id="expenseDate" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="expenseLabel">Charge &agrave; mettre</label>
+                        <input type="text" id="expenseLabel" placeholder="Ex : carburant, loyer, logiciel..." required>
+                    </div>
+                    <div class="form-field">
+                        <label for="expenseAmount">Montant TTC</label>
+                        <input type="number" id="expenseAmount" min="0.01" step="0.01" placeholder="0,00" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="expenseVendor">Fournisseur</label>
+                        <input type="text" id="expenseVendor" placeholder="Optionnel">
+                    </div>
+                    <div class="form-field">
+                        <label for="expenseReference">R&eacute;f&eacute;rence</label>
+                        <input type="text" id="expenseReference" placeholder="N facture, ticket, contrat...">
+                    </div>
+                    <div class="form-field full">
+                        <label for="expenseNotes">Note</label>
+                        <textarea id="expenseNotes" placeholder="D&eacute;tail utile pour le comptable"></textarea>
+                    </div>
+                    <div class="form-field full">
+                        <label for="expenseAttachment">Pi&egrave;ce jointe</label>
+                        <input type="file" id="expenseAttachment" accept="image/jpeg,image/jpg,application/pdf,.jpg,.jpeg,.pdf">
+                        <span class="file-note">Optionnel : JPG ou PDF uniquement. La pi&egrave;ce sera visible dans le d&eacute;tail des d&eacute;caissements.</span>
+                    </div>
+                </div>
+                <div class="table-actions">
+                    <button class="action-btn" type="submit"><i class="fas fa-paper-plane"></i> Enregistrer la charge</button>
+                    <span class="expense-feedback" id="expenseFormFeedback"></span>
+                </div>
+            </form>
+        </section>
+
+        <section class="section-grid">
+            <article class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h2>D&eacute;tail du mois</h2>
+                        <p>Encaissements, charges estim&eacute;es et frais saisis dans le site.</p>
+                    </div>
+                </div>
+                <div id="accountingBreakdown"></div>
+            </article>
+            <article class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h2>Indicateurs de performance</h2>
+                        <p>Rep&egrave;res de lecture rapide du mois, &agrave; valider avec le comptable.</p>
+                    </div>
+                </div>
+                <div class="performance-rules">
+                    <div class="performance-box bad">
+                        <h3>Indicateurs rouges</h3>
+                        <ul>
+                            <li>VA &lt; 30% : mauvais signe</li>
+                            <li>EBE =&lt; 8% : mauvais signe</li>
+                        </ul>
+                    </div>
+                    <div class="performance-box good">
+                        <h3>Indicateurs verts</h3>
+                        <ul>
+                            <li>VA &gt; 40% : bon signe</li>
+                            <li>EBE &gt; 8% : bon signe</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="indicator-grid" id="indicatorGrid"></div>
+                <div class="sig-grid">
+                    <div class="sig-item"><span>CA 2025</span><strong id="sigCa">-</strong></div>
+                    <div class="sig-item"><span>VA 2025</span><strong id="sigVa">-</strong></div>
+                    <div class="sig-item"><span>EBE 2025</span><strong id="sigEbe">-</strong></div>
+                </div>
+            </article>
+        </section>
+
+        <section class="panel table-panel">
+            <div class="panel-header">
+                <div>
+                    <h2>Factures et forfaits vendus du mois</h2>
+                    <p>Liste exportable pour transmettre rapidement les ventes au comptable.</p>
+                </div>
+                <div class="table-actions">
+                    <span class="invoice-count" id="invoiceCount">0 facture</span>
+                    <button class="action-btn" id="downloadInvoicesBtn" type="button"><i class="fas fa-download"></i> T&eacute;l&eacute;charger</button>
+                    <button class="action-btn secondary" id="transferInvoicesBtn" type="button"><i class="fas fa-paper-plane"></i> Transf&eacute;rer</button>
+                </div>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>S&eacute;lection</th>
+                            <th>Date</th>
+                            <th>Facture</th>
+                            <th>Client</th>
+                            <th>Forfait</th>
+                            <th>Paiement</th>
+                            <th>Montant</th>
+                            <th>Cours / heures</th>
+                        </tr>
+                    </thead>
+                    <tbody id="invoiceRows">
+                        <tr><td colspan="8" class="empty-cell">Chargement...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <p class="feedback" id="accountingFeedback"></p>
+    </main>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="assets/js/supabaseClient.js?v=8"></script>
+    <script src="assets/js/page-auth-guard.js?v=2" data-roles="admin"></script>
+    <script src="assets/js/admin-comptabilite.js?v=13"></script>
+    <script src="assets/js/admin-notif-badge.js"></script>
+    <script src="assets/js/admin-mobile-menu.js?v=3"></script>
+    <script src="assets/js/text-encoding-fix.js?v=2"></script>
+</body>
+</html>

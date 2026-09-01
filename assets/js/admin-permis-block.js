@@ -1,4 +1,74 @@
 // Gestion du blocage de créneaux pour les examens de permis
+const PERMIS_BLOCK_NOTES_PREFIX = 'PERMIS_JSON::';
+
+function permisCleanText(value, max = 200) {
+    return String(value || '').replace(/[<>]/g, '').trim().slice(0, max);
+}
+
+function parsePermisBlockNotes(notes) {
+    const raw = String(notes || '').trim();
+    if (raw.startsWith(PERMIS_BLOCK_NOTES_PREFIX)) {
+        try {
+            const data = JSON.parse(raw.slice(PERMIS_BLOCK_NOTES_PREFIX.length));
+            return {
+                location: permisCleanText(data.location, 60),
+                examDate: permisCleanText(data.examDate, 10),
+                candidates: Array.isArray(data.candidates) ? data.candidates.map((candidate) => ({
+                    name: permisCleanText(candidate.name, 180),
+                    phone: permisCleanText(candidate.phone, 30),
+                    email: permisCleanText(candidate.email, 180).toLowerCase(),
+                    transmission: permisCleanText(candidate.transmission, 10)
+                })).filter((candidate) => candidate.name || candidate.email) : []
+            };
+        } catch (_) {}
+    }
+
+    const parts = raw.split('|').map((part) => part.trim()).filter(Boolean);
+    const location = permisCleanText((parts[0] || '').replace(/^PERMIS\s*-\s*/i, ''), 60);
+    const candidates = [];
+    parts.slice(1).forEach((part) => {
+        if (/^Eleve\s*:/i.test(part) || /^Candidats?\s*:/i.test(part)) {
+            part.replace(/^Eleve\s*:\s*/i, '').replace(/^Candidats?\s*:\s*/i, '').split(',').forEach((name) => {
+                const cleanName = permisCleanText(name.replace(/\s+-\s+Tel.*$/i, '').replace(/\s+-\s+(BM|BA)$/i, ''), 180);
+                if (cleanName) candidates.push({ name: cleanName, phone: '', email: '', transmission: '' });
+            });
+        }
+    });
+    return { location, examDate: '', candidates };
+}
+
+function encodePermisBlockNotes(data) {
+    return `${PERMIS_BLOCK_NOTES_PREFIX}${JSON.stringify({
+        location: permisCleanText(data.location, 60),
+        examDate: permisCleanText(data.examDate, 10),
+        candidates: (data.candidates || []).map((candidate) => ({
+            name: permisCleanText(candidate.name, 180),
+            phone: permisCleanText(candidate.phone, 30),
+            email: permisCleanText(candidate.email, 180).toLowerCase(),
+            transmission: permisCleanText(candidate.transmission, 10)
+        })).filter((candidate) => candidate.name || candidate.email)
+    })}`;
+}
+
+function mergePermisBlockCandidates(existingNotes, nextCandidates, meta) {
+    const parsed = parsePermisBlockNotes(existingNotes);
+    const candidates = [...parsed.candidates];
+    nextCandidates.forEach((candidate) => {
+        const email = permisCleanText(candidate.email, 180).toLowerCase();
+        const name = permisCleanText(candidate.name, 180).toLowerCase();
+        const exists = candidates.some((current) => {
+            const currentEmail = permisCleanText(current.email, 180).toLowerCase();
+            const currentName = permisCleanText(current.name, 180).toLowerCase();
+            return (email && currentEmail === email) || (!email && name && currentName === name);
+        });
+        if (!exists) candidates.push(candidate);
+    });
+    return encodePermisBlockNotes({
+        location: meta.location || parsed.location,
+        examDate: meta.examDate || parsed.examDate,
+        candidates
+    });
+}
 
 window.openDeletePermisModal = async function() {
     // Récupérer tous les créneaux permis depuis la base de données
@@ -40,7 +110,9 @@ window.openDeletePermisModal = async function() {
             });
             const startTime = `${String(startDate.getHours()).padStart(2, '0')}h${String(startDate.getMinutes()).padStart(2, '0')}`;
             const endTime = `${String(endDate.getHours()).padStart(2, '0')}h${String(endDate.getMinutes()).padStart(2, '0')}`;
-            const location = slot.notes ? slot.notes.replace('PERMIS - ', '') : 'Non renseigné';
+            const details = parsePermisBlockNotes(slot.notes);
+            const location = details.location || 'Non renseigné';
+            const candidateCount = details.candidates.length;
             
             return `
                 <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; background: rgba(156, 39, 176, 0.08);">
@@ -49,7 +121,7 @@ window.openDeletePermisModal = async function() {
                             <i class="fas fa-id-card"></i> ${dateStr}
                         </div>
                         <div style="font-size: 0.85rem; color: var(--text2); margin-top: 4px;">
-                            ${startTime} - ${endTime} · ${slot.instructor} · ${location}
+                            ${startTime} - ${endTime} · ${slot.instructor} · ${location}${candidateCount ? ` · ${candidateCount} élève${candidateCount > 1 ? 's' : ''}` : ''}
                         </div>
                     </div>
                     <button onclick="deletePermisSlot('${slot.id}')"
@@ -175,7 +247,7 @@ window.searchCandidate = async function(input) {
         try {
             const { data: users, error } = await window.supabaseClient
                 .from('users')
-                .select('email, prenom, nom, telephone')
+                .select('email, prenom, nom, telephone, transmission_type, forfait')
                 .or(`prenom.ilike.%${searchTerm}%,nom.ilike.%${searchTerm}%,email.ilike.%${searchTerm}%`)
                 .limit(10);
             
@@ -191,7 +263,7 @@ window.searchCandidate = async function(input) {
             }
             
             suggestionsContainer.innerHTML = users.map(user => `
-                <div class="candidate-suggestion" onclick="selectCandidate('${user.email}', '${user.prenom}', '${user.nom}')" 
+                <div class="candidate-suggestion" onclick="selectCandidate('${user.email}', '${user.prenom}', '${user.nom}', '${user.telephone || ''}', '${user.transmission_type || ''}', '${user.forfait || ''}')" 
                     style="padding: 0.75rem; cursor: pointer; border-bottom: 1px solid #eee; transition: background 0.2s;"
                     onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">
                     <div style="font-weight: 600;">${user.prenom} ${user.nom}</div>
@@ -207,14 +279,27 @@ window.searchCandidate = async function(input) {
     }, 300);
 };
 
-window.selectCandidate = function(email, prenom, nom) {
+function permisTransmissionLabel(value, forfait) {
+    const raw = String(value || forfait || '').toLowerCase();
+    if (raw.includes('auto') || raw.includes('ba')) return 'BA';
+    if (raw.includes('manual') || raw.includes('manuelle') || raw.includes('bm')) return 'BM';
+    return '';
+}
+
+window.selectCandidate = function(email, prenom, nom, telephone = '', transmissionType = '', forfait = '') {
     // Vérifier si déjà ajouté
     if (selectedCandidates.find(c => c.email === email)) {
         alert('Ce candidat est déjà dans la liste');
         return;
     }
     
-    selectedCandidates.push({ email, prenom, nom });
+    selectedCandidates.push({
+        email,
+        prenom,
+        nom,
+        telephone,
+        transmission: permisTransmissionLabel(transmissionType, forfait)
+    });
     window.updateCandidatesList();
     
     // Réinitialiser le champ de recherche
@@ -276,9 +361,17 @@ window.submitPermisBlock = async function(event) {
         return;
     }
     
-    // Créer la liste des candidats pour les notes
-    const candidatesNames = selectedCandidates.map(c => `${c.prenom} ${c.nom}`).join(', ');
-    const notesText = `PERMIS - ${location} | Candidats: ${candidatesNames}`;
+    const permisCandidates = selectedCandidates.map((candidate) => ({
+        name: `${candidate.prenom || ''} ${candidate.nom || ''}`.trim(),
+        phone: candidate.telephone || '',
+        email: candidate.email || '',
+        transmission: candidate.transmission || ''
+    }));
+    const notesText = encodePermisBlockNotes({
+        location,
+        examDate: date,
+        candidates: permisCandidates
+    });
     
     try {
         // Créer les créneaux à bloquer (toutes les 2 heures entre start et end)
@@ -322,7 +415,7 @@ window.submitPermisBlock = async function(event) {
             // Vérifier si un créneau existe déjà
             const { data: existingSlot, error: checkError } = await window.supabaseClient
                 .from('slots')
-                .select('id, status')
+                .select('id, status, notes')
                 .eq('start_at', startAt)
                 .eq('instructor', slot.instructor)
                 .maybeSingle();
@@ -333,13 +426,16 @@ window.submitPermisBlock = async function(event) {
             }
             
             if (existingSlot) {
+                const mergedNotes = existingSlot.status === 'permis'
+                    ? mergePermisBlockCandidates(existingSlot.notes, permisCandidates, { location, examDate: date })
+                    : notesText;
                 // Mettre à jour le créneau existant
                 const { error: updateError } = await window.supabaseClient
                     .from('slots')
                     .update({
                         status: 'permis',
                         end_at: endAt,
-                        notes: notesText
+                        notes: mergedNotes
                     })
                     .eq('id', existingSlot.id);
                 

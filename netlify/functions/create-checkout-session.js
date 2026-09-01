@@ -1,104 +1,71 @@
 const Stripe = require('stripe');
+const { assertSessionActive, getBearerToken, getEnv, getSupabaseAdmin, verifySession } = require('./_lib/auth');
+const { getHourlyPriceCents, normalizeTransmission } = require('./_lib/catalog');
+const { handleOptions, parseJsonBody, response } = require('./_lib/http');
 
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
-const stripe = stripeSecretKey ? new Stripe(stripeSecretKey) : null;
+function normalizeEmail(value) {
+    return String(value || '').trim().toLowerCase();
+}
 
-const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'POST,OPTIONS'
-};
+exports.handler = async (event) => {
+    const options = handleOptions(event);
+    if (options) return options;
+    if (event.httpMethod !== 'POST') return response(405, { message: 'Méthode non autorisée.' });
 
-exports.handler = async function handler(event) {
-    if (event.httpMethod === 'OPTIONS') {
-        return {
-            statusCode: 200,
-            headers: corsHeaders,
-            body: JSON.stringify({ ok: true })
-        };
+    const secret = getEnv('STRIPE_SECRET_KEY');
+    if (!secret) return response(503, { message: 'Stripe n’est pas configuré côté serveur.' });
+
+    const payload = parseJsonBody(event);
+    const quantity = Number(payload?.quantity);
+    const transmission = normalizeTransmission(payload?.gearboxType);
+    if (!Number.isInteger(quantity) || quantity < 1 || quantity > 40) {
+        return response(400, { message: 'Le nombre d’heures doit être compris entre 1 et 40.' });
     }
-
-    if (event.httpMethod !== 'POST') {
-        return {
-            statusCode: 405,
-            headers: corsHeaders,
-            body: JSON.stringify({ message: 'Méthode non autorisée' })
-        };
-    }
-
-    if (!stripe) {
-        return {
-            statusCode: 500,
-            headers: corsHeaders,
-            body: JSON.stringify({ message: 'Clé Stripe manquante côté serveur.' })
-        };
-    }
-
-    let payload;
-    try {
-        payload = JSON.parse(event.body || '{}');
-    } catch (error) {
-        return {
-            statusCode: 400,
-            headers: corsHeaders,
-            body: JSON.stringify({ message: 'Corps de requête invalide.' })
-        };
-    }
-
-    const { quantity, pricePerHour, gearboxType, customerEmail } = payload;
-
-    if (!quantity || !pricePerHour || !gearboxType) {
-        return {
-            statusCode: 400,
-            headers: corsHeaders,
-            body: JSON.stringify({ message: 'Paramètres manquants (quantity, pricePerHour, gearboxType)' })
-        };
-    }
-
-    const totalAmount = quantity * pricePerHour;
-    const amountInCents = Math.round(totalAmount * 100);
 
     try {
-        // Créer une Checkout Session Stripe
-        const session = await stripe.checkout.sessions.create({
+        const sessionUser = verifySession(getBearerToken(event), ['student']);
+        await assertSessionActive(sessionUser, getSupabaseAdmin());
+        const customerEmail = normalizeEmail(sessionUser.email);
+        if (payload.customerEmail && normalizeEmail(payload.customerEmail) !== customerEmail) {
+            return response(403, { message: 'Compte de paiement incorrect.' });
+        }
+
+        const unitAmount = getHourlyPriceCents(transmission);
+        const stripe = new Stripe(secret);
+        const origin = /^https?:\/\//i.test(event.headers.origin || '')
+            ? event.headers.origin
+            : (getEnv('URL', ['SITE_URL']) || 'https://autoecolebreteuil.com');
+        const checkout = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
-            line_items: [
-                {
-                    price_data: {
-                        currency: 'eur',
-                        product_data: {
-                            name: `Heures de conduite - Boîte ${gearboxType === 'manual' ? 'Manuelle' : 'Automatique'}`,
-                            description: `${quantity} heure(s) de conduite à ${pricePerHour}€/h`
-                        },
-                        unit_amount: Math.round(pricePerHour * 100)
+            line_items: [{
+                price_data: {
+                    currency: 'eur',
+                    product_data: {
+                        name: `Heures de conduite - Boîte ${transmission === 'auto' ? 'automatique' : 'manuelle'}`,
+                        description: `${quantity} heure(s) de conduite`
                     },
-                    quantity: quantity
-                }
-            ],
+                    unit_amount: unitAmount
+                },
+                quantity
+            }],
             mode: 'payment',
-            success_url: `${event.headers.origin || 'https://autoecolebreteuil.com'}/espace-eleve.html?payment_success=true`,
-            cancel_url: `${event.headers.origin || 'https://autoecolebreteuil.com'}/espace-eleve.html?payment_success=false`,
-            customer_email: customerEmail || undefined,
-            client_reference_id: `${customerEmail}_${quantity}h_${gearboxType}`,
+            success_url: `${origin}/espace-eleve.html?payment_success=true&session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${origin}/espace-eleve.html?payment_success=false`,
+            customer_email: customerEmail,
+            client_reference_id: customerEmail,
             metadata: {
-                quantity: String(quantity),
-                gearboxType: gearboxType,
-                customerEmail: customerEmail || 'non_renseigne',
-                pricePerHour: String(pricePerHour)
+                source: 'additional_hours',
+                customer_email: customerEmail,
+                hours: String(quantity),
+                transmission,
+                pack_id: 'heures-conduite',
+                pack_label: `${quantity} heure(s) de conduite`
             }
         });
-
-        return {
-            statusCode: 200,
-            headers: corsHeaders,
-            body: JSON.stringify({ url: session.url })
-        };
+        return response(200, { url: checkout.url });
     } catch (error) {
-        console.error('Stripe Checkout Session error:', error);
-        return {
-            statusCode: 500,
-            headers: corsHeaders,
-            body: JSON.stringify({ message: 'Création de la session impossible.', details: error.message })
-        };
+        const status = ['AUTH_REQUIRED', 'INVALID_SESSION', 'SESSION_EXPIRED'].includes(error.message) ? 401 : 500;
+        console.error('create-checkout-session:', error.message);
+        return response(status, { message: status === 401 ? 'Reconnecte-toi avant de payer.' : 'Création de la session impossible.' });
     }
 };

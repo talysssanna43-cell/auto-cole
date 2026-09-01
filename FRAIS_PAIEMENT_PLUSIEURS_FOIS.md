@@ -39,7 +39,7 @@ Les **frais de paiement en plusieurs fois** ont été modifiés à **3% fixe** p
 | AM | 350€ | 361€ | +11€ |
 | Boîte Auto | 859€ | 885€ | +26€ |
 | 20h | 900€ | 927€ | +27€ |
-| Zen | 995€ | 1,025€ | +30€ |
+| Chill | 995€ | 1,025€ | +30€ |
 | Accéléré | 999€ | 1,029€ | +30€ |
 | AAC | 1,190€ | 1,226€ | +36€ |
 | Supervisée | 1,190€ | 1,226€ | +36€ |
@@ -57,7 +57,7 @@ Pour tester les nouveaux frais :
 4. Vérifie que le prix affiché = prix de base × 1.03
 
 **Exemple :**
-- Forfait Zen : 995€
+- Forfait Chill : 995€
 - Avec paiement en plusieurs fois : **1,025€** (995 × 1.03)
 
 ---

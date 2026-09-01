@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Auto-Ecole Breteuil - Connexion</title>
     <meta name="description" content="Connecte-toi à ton espace élève Auto-Ecole Breteuil pour réserver tes heures de conduite et suivre ta progression.">
+    <script>
+        if (window.location.protocol === 'file:') {
+            const params = new URLSearchParams(window.location.search);
+            const requested = params.get('redirect');
+            const safeRedirect = requested && !/^file:/i.test(requested) ? requested : 'admin-planning.html';
+            window.location.replace(`http://localhost:8892/connexion.html?redirect=${encodeURIComponent(safeRedirect)}`);
+        }
+    </script>
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -86,48 +94,6 @@
             font-size: 0.95rem;
             text-decoration: none;
         }
-        .divider {
-            text-align: center;
-            margin: 1.5rem 0;
-            color: var(--text-light);
-            font-size: 0.9rem;
-            position: relative;
-        }
-        .divider::before,
-        .divider::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            width: 40%;
-            height: 1px;
-            background: rgba(0,0,0,0.1);
-        }
-        .divider::before { left: 0; }
-        .divider::after { right: 0; }
-        .social-buttons {
-            display: flex;
-            gap: 1rem;
-        }
-        .social-buttons button {
-            flex: 1;
-            border: none;
-            border-radius: var(--radius-lg);
-            padding: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-        .btn-google {
-            background: #fff3f7;
-            color: #DB4437;
-        }
-        .btn-facebook {
-            background: #EEF2FF;
-            color: #1877F2;
-        }
         .login-footer {
             text-align: center;
             margin-top: 2rem;
@@ -152,7 +118,7 @@
         <form class="login-form" id="loginForm">
             <div class="form-group">
                 <label for="email">Adresse e-mail</label>
-                <input type="email" id="email" placeholder="talysssanna43@gmail.com" required>
+                <input type="email" id="email" placeholder="nail30@hotmail.fr" required>
             </div>
             <div class="form-group">
                 <label for="password">Mot de passe</label>
@@ -160,148 +126,105 @@
             </div>
             <div class="login-actions">
                 <label style="display: flex; gap: 0.35rem; align-items: center; font-size: 0.95rem;">
-                    <input type="checkbox" style="accent-color: #FF69B4;"> Rester connecté(e)
+                    <input type="checkbox" id="remember" style="accent-color: #FF69B4;"> Rester connecté(e)
                 </label>
                 <a href="reset-password.html">Mot de passe oublié ?</a>
             </div>
             <button type="submit" class="btn-primary btn-block" style="font-size: 1.05rem;">Se connecter</button>
-            <div class="divider">ou</div>
-            <div class="social-buttons">
-                <button type="button" class="btn-google"><i class="fab fa-google"></i> Google</button>
-                <button type="button" class="btn-facebook"><i class="fab fa-facebook"></i> Facebook</button>
-            </div>
+            <p id="loginMessage" role="alert" aria-live="polite" style="display: none; margin: 0.85rem 0 0; color: #c82362; font-weight: 600;"></p>
             <div class="login-footer">
                 Pas encore de compte ? <a href="inscription.html">Créer un espace élève</a>
             </div>
         </form>
     </div>
     <script src="https://unpkg.com/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
-    <script src="assets/js/supabaseClient.js"></script>
+    <script src="assets/js/supabaseClient.js?v=8"></script>
     <script>
-        // Comptes moniteurs et admin (codés en dur)
-        const COMPTES_SPECIAUX = {
-            'mylene@breteuil-autoecole.fr': {
-                password: 'mylene123',
-                prenom: 'Mylène',
-                is_admin: false,
-                is_moniteur: true,
-                instructor_name: 'Mylène'
-            },
-            'sammy@breteuil-autoecole.fr': {
-                password: 'sammy123',
-                prenom: 'Sammy',
-                is_admin: false,
-                is_moniteur: true,
-                instructor_name: 'Sammy'
-            },
-            'breteuilautoecole@gmail.com': {
-                password: 'admin123',
-                prenom: 'Admin',
-                is_admin: true,
-                is_moniteur: false,
-                instructor_name: null
-            }
-        };
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginForm = document.getElementById('loginForm');
+            const loginMessage = document.getElementById('loginMessage');
+            const submitButton = loginForm?.querySelector('button[type="submit"]');
+            let loginInProgress = false;
 
-        const loginForm = document.getElementById('loginForm');
-        loginForm.addEventListener('submit', async (event) => {
-            event.preventDefault();
+            if (!loginForm || !submitButton || !loginMessage) return;
 
-            const email = document.getElementById('email').value.trim().toLowerCase();
-            const password = document.getElementById('password').value;
+            const messages = {
+                INVALID_CREDENTIALS: 'Adresse e-mail ou mot de passe incorrect.',
+                INSCRIPTION_PENDING: 'Ton inscription est en cours de traitement. Tu pourras te connecter après sa validation.',
+                INSCRIPTION_REJECTED: 'Ton inscription a été refusée. Consulte ton e-mail ou contacte l\'Auto-Ecole Breteuil.',
+                SUPABASE_SERVER_NOT_CONFIGURED: 'La connexion au serveur est temporairement indisponible.',
+                SESSION_SECRET_NOT_CONFIGURED: 'La connexion sécurisée doit encore être configurée sur le serveur.'
+            };
 
-            // Vérifier si c'est un compte spécial (moniteur ou admin)
-            const compteSpecial = COMPTES_SPECIAUX[email];
-            if (compteSpecial) {
-                if (password === compteSpecial.password) {
-                    localStorage.setItem('ae_user', JSON.stringify({
-                        id: 999,
-                        prenom: compteSpecial.prenom,
-                        email: email,
-                        is_admin: compteSpecial.is_admin,
-                        is_moniteur: compteSpecial.is_moniteur,
-                        instructor_name: compteSpecial.instructor_name
-                    }));
-
-                    if (compteSpecial.is_admin) {
-                        window.location.href = 'admin-planning.html';
-                    } else {
-                        window.location.href = 'espace-moniteur.html';
-                    }
-                    return;
-                } else {
-                    alert('Mot de passe incorrect.');
-                    return;
-                }
+            function showLoginMessage(message) {
+                loginMessage.textContent = message;
+                loginMessage.style.display = 'block';
             }
 
-            // Sinon, connexion élève via Supabase
-            if (!window.supabaseClient || !window.hashPassword) {
-                alert("Chargement en cours, réessaie dans un instant.");
-                return;
-            }
-
-            try {
-                const hashedPassword = await window.hashPassword(password);
-
-                const { data, error } = await window.supabaseClient
-                    .from('users')
-                    .select('id, prenom, nom, email, telephone, password_hash, is_admin')
-                    .ilike('email', email)
-                    .limit(1)
-                    .maybeSingle();
-
-                if (error || !data) {
-                    alert('Compte introuvable. Vérifie ton email ou inscris-toi.');
-                    return;
-                }
-
-                if (data.password_hash !== hashedPassword) {
-                    alert('Mot de passe incorrect.');
-                    return;
-                }
-
-                // Tenter de sauvegarder dans localStorage avec gestion d'erreur
+            function safeRedirect(value, fallback, role) {
+                if (!value) return fallback;
                 try {
-                    localStorage.setItem('ae_user', JSON.stringify({
-                        id: data.id,
-                        prenom: data.prenom,
-                        nom: data.nom,
-                        email: data.email,
-                        telephone: data.telephone,
-                        is_admin: false,
-                        is_moniteur: false,
-                        instructor_name: null
-                    }));
-                } catch (storageError) {
-                    console.error('Erreur localStorage:', storageError);
-                    // Si localStorage est bloqué, utiliser sessionStorage comme fallback
-                    try {
-                        sessionStorage.setItem('ae_user', JSON.stringify({
-                            id: data.id,
-                            prenom: data.prenom,
-                            nom: data.nom,
-                            email: data.email,
-                            telephone: data.telephone,
-                            is_admin: false,
-                            is_moniteur: false,
-                            instructor_name: null
-                        }));
-                        alert('⚠️ Pour des raisons de sécurité du navigateur, tu devras te reconnecter à chaque session. Active les cookies pour éviter cela.');
-                    } catch (sessionError) {
-                        console.error('Erreur sessionStorage:', sessionError);
-                        alert('❌ Ton navigateur bloque le stockage des données. Vérifie les paramètres de confidentialité et réessaie.');
-                        return;
-                    }
-                }
+                    if (/^file:/i.test(value)) return fallback;
+                    const destination = new URL(value, window.location.origin);
+                    if (destination.protocol === 'file:') return fallback;
+                    if (!['http:', 'https:'].includes(destination.protocol) && window.location.protocol !== 'file:') return fallback;
+                    if (window.location.protocol === 'file:') return fallback;
+                    if (destination.origin !== window.location.origin) return fallback;
 
-                const redirectUrl = new URLSearchParams(window.location.search).get('redirect');
-                window.location.href = redirectUrl || 'espace-eleve.html';
-            } catch (error) {
-                console.error('Erreur connexion:', error);
-                alert('Serveur indisponible. Réessaie dans un instant.');
+                    const path = destination.pathname.toLowerCase();
+                    const roleTargets = {
+                        admin: ['admin-'],
+                        instructor: ['espace-moniteur.html'],
+                        student: ['espace-eleve.html', 'parrainage.html']
+                    };
+                    const allowed = roleTargets[role] || [];
+                    const target = `${destination.pathname}${destination.search}${destination.hash}`;
+                    return allowed.some((pattern) => path.includes(pattern)) ? target : fallback;
+                } catch (error) {
+                    return fallback;
+                }
             }
+
+            loginForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                if (loginInProgress) return;
+
+                loginInProgress = true;
+                submitButton.disabled = true;
+                submitButton.textContent = 'Connexion...';
+                loginMessage.style.display = 'none';
+
+                try {
+                    if (!window.authSession) throw new Error('AUTH_NOT_LOADED');
+                    const email = document.getElementById('email').value.trim().toLowerCase();
+                    const password = document.getElementById('password').value;
+                    const remember = document.getElementById('remember')?.checked === true;
+                    const user = await window.authSession.login(email, password, remember);
+
+                    const defaults = {
+                        admin: 'admin-planning.html',
+                        instructor: 'espace-moniteur.html',
+                        student: 'espace-eleve.html'
+                    };
+                    const fallback = defaults[user.role] || 'index.html';
+                    const requested = new URLSearchParams(window.location.search).get('redirect');
+                    window.location.replace(safeRedirect(requested, fallback, user.role));
+                } catch (error) {
+                    const isStaticLocalhost = ['localhost', '127.0.0.1'].includes(window.location.hostname)
+                        && error.status === 404;
+                    showLoginMessage(isStaticLocalhost
+                        ? 'Ce serveur local ne lance pas les fonctions sécurisées. Ouvre le site avec Netlify Dev.'
+                        : (messages[error.message] || 'Connexion impossible pour le moment. Réessaie dans un instant.'));
+                } finally {
+                    loginInProgress = false;
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Se connecter';
+                }
+            });
         });
     </script>
+    <script src="assets/js/text-encoding-fix.js?v=2"></script>
 </body>
 </html>
+
+

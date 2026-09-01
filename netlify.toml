@@ -5,9 +5,211 @@
 [functions]
   directory = "netlify/functions"
 
+[functions."process-installments"]
+  schedule = "15 5 * * *"
+
+[functions."process-payment-emails"]
+  schedule = "*/15 * * * *"
+
+[functions."process-decision-emails"]
+  schedule = "7,22,37,52 * * * *"
+
+[functions."process-exam-result-requests"]
+  schedule = "17 9 * * *"
+
+[functions."process-driving-prep-reminders"]
+  schedule = "*/15 * * * *"
+
 [dev]
-  command = ""
   port = 8888
-  targetPort = 8888
   publish = "."
   autoLaunch = false
+
+# Technical source files must never be served by the public site.
+[[redirects]]
+  from = "/api/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/sql/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/tests/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/*.md"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/package.json"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/package-lock.json"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/deno.lock"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/connexion-moniteur.html"
+  to = "/connexion.html?redirect=espace-moniteur.html"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/connexion-moniteur-simple.html"
+  to = "/connexion.html?redirect=espace-moniteur.html"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/instructor-login.html"
+  to = "/connexion.html?redirect=espace-moniteur.html"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/instructor-dashboard.html"
+  to = "/espace-moniteur.html"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/moniteur-primes.html"
+  to = "/espace-moniteur.html"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/admin-planning-v2.html"
+  to = "/admin-planning.html"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/admin-instructors.html"
+  to = "/admin-moniteurs.html"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/admin-inscription.html"
+  to = "/inscription.html?admin=true"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/tarifs-new.html"
+  to = "/tarifs.html"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/migrate-*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/test-*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/debug-*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/check-*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/fix-*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/auto-*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/sync-*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/generate-*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/setup-*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/verify-*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/force-*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/clean-*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/add-missing-*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Cross-Origin-Opener-Policy = "same-origin"
+
+[[headers]]
+  for = "/assets/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"

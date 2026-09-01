@@ -1,235 +1,476 @@
-// Gestion des demandes de contact côté admin
 let allContactRequests = [];
+let contactPageInitialized = false;
+let selectedAgendaDate = '';
+
+const ADVISOR_CALLBACK_SLOTS = [
+    'entre 09h00 et 10h00',
+    'entre 10h00 et 11h00',
+    'entre 11h00 et 12h00',
+    'entre 14h00 et 15h00',
+    'entre 15h00 et 16h00',
+    'entre 16h00 et 17h00',
+    'entre 17h00 et 18h00'
+];
+
+function escapeHtml(value) {
+    return String(value || '').replace(/[&<>"']/g, (character) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    })[character]);
+}
+
+function safeRequestId(value) {
+    const id = String(value || '');
+    return /^[a-z0-9-]{8,}$/i.test(id) ? id : '';
+}
+
+function safeTelephone(value) {
+    return String(value || '').replace(/[^0-9+(). -]/g, '').trim();
+}
+
+function telHref(value) {
+    const cleaned = safeTelephone(value).replace(/[^\d+]/g, '');
+    return cleaned ? `tel:${cleaned}` : '';
+}
+
+function mailHref(value) {
+    const address = String(value || '').trim().replace(/[^\w.+@-]/g, '');
+    return address ? `mailto:${address}` : '';
+}
+
+function formatDateTime(value) {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return '';
+    return date.toLocaleDateString('fr-FR', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
+function formatDay(value) {
+    const date = new Date(`${value}T12:00:00`);
+    if (Number.isNaN(date.getTime())) return 'Date non précisée';
+    return date.toLocaleDateString('fr-FR', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+    });
+}
+
+function formatAgendaDate(value) {
+    const date = new Date(`${value}T12:00:00`);
+    if (Number.isNaN(date.getTime())) return 'Jour non précisé';
+    return date.toLocaleDateString('fr-FR', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long'
+    });
+}
+
+function toLocalIso(date) {
+    const localDate = new Date(date);
+    localDate.setMinutes(localDate.getMinutes() - localDate.getTimezoneOffset());
+    return localDate.toISOString().slice(0, 10);
+}
+
+function todayIso() {
+    return toLocalIso(new Date());
+}
+
+function createdDayIso(request) {
+    const date = new Date(request.created_at || Date.now());
+    if (Number.isNaN(date.getTime())) return todayIso();
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+    return date.toISOString().slice(0, 10);
+}
+
+function prefixedLine(message, labels) {
+    const lines = String(message || '').split(/\r?\n/);
+    for (const line of lines) {
+        const lower = line.toLowerCase();
+        for (const label of labels) {
+            const prefix = `${label.toLowerCase()}:`;
+            if (lower.startsWith(prefix)) {
+                return line.slice(line.indexOf(':') + 1).trim();
+            }
+        }
+    }
+    return '';
+}
+
+function slotSortKey(slot) {
+    const normalized = String(slot || '').toLowerCase();
+    const knownIndex = ADVISOR_CALLBACK_SLOTS.findIndex((knownSlot) => knownSlot.toLowerCase() === normalized);
+    if (knownIndex >= 0) return knownIndex * 100;
+
+    const match = normalized.match(/(\d{1,2})\s*h\s*(\d{2})?/);
+    if (!match) return 9999;
+    return Number(match[1]) * 60 + Number(match[2] || 0);
+}
+
+function knownAgendaSlotsFor(items) {
+    const unknownSlots = Array.from(new Set(items
+        .map((item) => item.details.callbackSlot)
+        .filter((slot) => slot && !ADVISOR_CALLBACK_SLOTS.includes(slot))));
+
+    return [...ADVISOR_CALLBACK_SLOTS, ...unknownSlots.sort((a, b) => slotSortKey(a) - slotSortKey(b))];
+}
+
+function setSelectedAgendaDate(value) {
+    selectedAgendaDate = value || todayIso();
+}
+
+function moveAgendaDate(days) {
+    const date = new Date(`${selectedAgendaDate || todayIso()}T12:00:00`);
+    date.setDate(date.getDate() + days);
+    selectedAgendaDate = toLocalIso(date);
+    displayAdvisorAgenda(allContactRequests);
+}
+
+function setAgendaToday() {
+    selectedAgendaDate = todayIso();
+    displayAdvisorAgenda(allContactRequests);
+}
+
+function requestDetails(request) {
+    const message = String(request.message || '');
+    const isAdvisorRequest = /demande de rappel conseiller|créneau souhaité|creneau souhaite|créneau de rappel souhaité|creneau de rappel souhaite|rappel souhaité|rappel souhaite/i.test(message);
+    const callbackDate = prefixedLine(message, ['Date souhaitée', 'Date souhaitee', 'Date de rappel souhaitée', 'Date de rappel souhaitee']);
+    const callbackSlot = prefixedLine(message, ['Créneau souhaité', 'Creneau souhaite', 'Créneau de rappel souhaité', 'Creneau de rappel souhaite']);
+    const subject = prefixedLine(message, ['Sujet']) || request.sujet || 'Autre';
+    const clientMessage = prefixedLine(message, ['Message', 'Motif', 'Commentaire']) || (isAdvisorRequest ? '' : message);
+    const cleanCallbackDate = /^\d{4}-\d{2}-\d{2}$/.test(callbackDate) ? callbackDate : '';
+
+    return {
+        isAdvisorRequest,
+        callbackDate: cleanCallbackDate,
+        agendaDate: cleanCallbackDate || createdDayIso(request),
+        callbackSlot: callbackSlot || 'Créneau non précisé',
+        subject,
+        clientMessage,
+        createdAtLabel: formatDateTime(request.created_at)
+    };
+}
+
+async function adminContactRequest(options = {}) {
+    const token = window.authSession?.getToken?.();
+    const headers = {
+        'Content-Type': 'application/json',
+        ...(options.headers || {})
+    };
+    if (token) headers.Authorization = `Bearer ${token}`;
+
+    const response = await fetch('/.netlify/functions/admin-page-data?resource=contact', {
+        ...options,
+        headers
+    });
+    const payload = await response.json().catch(() => ({ ok: false }));
+    if (!response.ok || !payload.ok) {
+        if (response.status === 401) {
+            window.location.href = `connexion.html?redirect=${encodeURIComponent('admin-contact.html')}`;
+            return payload;
+        }
+        throw new Error(payload.error || 'CONTACT_ADMIN_REQUEST_FAILED');
+    }
+    return payload;
+}
 
 async function loadContactRequests() {
     const container = document.getElementById('contactRequestsContainer');
+    const agendaContainer = document.getElementById('advisorAgendaContainer');
     const statusFilter = document.getElementById('statusFilter');
-    
+
     if (!container) return;
-    
+
     try {
-        // Afficher le loader
         container.innerHTML = `
-            <div style="text-align: center; padding: 3rem; color: #86868b;">
-                <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+            <div class="loading-state">
+                <i class="fas fa-spinner fa-spin"></i>
                 <p>Chargement des demandes...</p>
             </div>
         `;
-        
-        // Charger toutes les demandes
-        const { data: requests, error } = await window.supabaseClient
-            .from('contact_requests')
-            .select('*')
-            .order('created_at', { ascending: false });
-        
-        if (error) {
-            console.error('Error loading contact requests:', error);
-            container.innerHTML = `
-                <div style="text-align: center; padding: 3rem; color: #ff3b30;">
-                    <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
-                    <p>Erreur lors du chargement des demandes</p>
+        if (agendaContainer) {
+            agendaContainer.innerHTML = `
+                <div class="agenda-empty">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>Chargement de l'agenda...</span>
                 </div>
             `;
-            return;
         }
-        
-        allContactRequests = requests || [];
-        
-        // Mettre à jour les stats
+
+        const payload = await adminContactRequest({ method: 'GET' });
+        allContactRequests = payload.items || [];
+
         updateStats(allContactRequests);
-        
-        // Mettre à jour le badge de notification
         updateContactBadge(allContactRequests);
-        
-        // Filtrer selon le statut sélectionné
+        displayAdvisorAgenda(allContactRequests);
+
         const selectedStatus = statusFilter ? statusFilter.value : 'tous';
-        const filteredRequests = selectedStatus === 'tous' 
-            ? allContactRequests 
-            : allContactRequests.filter(r => r.status === selectedStatus);
-        
-        // Afficher les demandes
+        const filteredRequests = selectedStatus === 'tous'
+            ? allContactRequests
+            : allContactRequests.filter((request) => request.status === selectedStatus);
+
         displayContactRequests(filteredRequests);
-        
-    } catch (err) {
-        console.error('Error:', err);
+    } catch (error) {
+        console.error('Contact admin:', error);
         container.innerHTML = `
-            <div style="text-align: center; padding: 3rem; color: #ff3b30;">
-                <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+            <div class="loading-state" style="color:#ff3b30;">
+                <i class="fas fa-exclamation-triangle"></i>
                 <p>Erreur lors du chargement des demandes</p>
             </div>
         `;
+        if (agendaContainer) {
+            agendaContainer.innerHTML = `
+                <div class="agenda-empty danger">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Impossible de charger l'agenda.</span>
+                </div>
+            `;
+        }
     }
 }
 
 function updateStats(requests) {
+    const advisorRequests = requests.filter((request) => requestDetails(request).isAdvisorRequest);
+    const pendingAdvisor = advisorRequests.filter((request) => request.status !== 'resolu');
+    const today = todayIso();
+    const todayAdvisor = pendingAdvisor.filter((request) => requestDetails(request).agendaDate === today);
+
     const statTotal = document.getElementById('statTotal');
     const statNew = document.getElementById('statNew');
     const statResolved = document.getElementById('statResolved');
-    
+
     if (statTotal) statTotal.textContent = requests.length;
-    if (statNew) statNew.textContent = requests.filter(r => r.status === 'nouveau').length;
-    if (statResolved) statResolved.textContent = requests.filter(r => r.status === 'resolu').length;
+    if (statNew) statNew.textContent = todayAdvisor.length;
+    if (statResolved) statResolved.textContent = requests.filter((request) => request.status === 'resolu').length;
+}
+
+function statusMeta(status) {
+    const metas = {
+        nouveau: { label: 'Nouveau', color: '#ff9500', bg: 'rgba(255,149,0,0.15)' },
+        en_cours: { label: 'En cours', color: '#0071e3', bg: 'rgba(0,113,227,0.15)' },
+        resolu: { label: 'Contacté', color: '#34c759', bg: 'rgba(52,199,89,0.15)' }
+    };
+    return metas[status] || { label: status || 'Sans statut', color: '#86868b', bg: 'rgba(134,134,139,0.15)' };
+}
+
+function displayAdvisorAgenda(requests) {
+    const container = document.getElementById('advisorAgendaContainer');
+    if (!container) return;
+    if (!selectedAgendaDate) setSelectedAgendaDate(todayIso());
+
+    const agendaItems = requests
+        .map((request) => ({ request, details: requestDetails(request) }))
+        .filter((item) => item.details.isAdvisorRequest)
+        .sort((a, b) => {
+            const byDate = a.details.agendaDate.localeCompare(b.details.agendaDate);
+            if (byDate !== 0) return byDate;
+            return a.details.callbackSlot.localeCompare(b.details.callbackSlot, 'fr');
+        });
+
+    const dayItems = agendaItems.filter((item) => item.details.agendaDate === selectedAgendaDate);
+    const pendingCount = dayItems.filter((item) => item.request.status !== 'resolu').length;
+    const contactedCount = dayItems.length - pendingCount;
+
+    updateAgendaHeader(dayItems.length, pendingCount, contactedCount);
+
+    const slots = knownAgendaSlotsFor(dayItems);
+    container.innerHTML = `
+        <div class="agenda-board">
+            ${slots.map((slot) => advisorAgendaSlotHtml(slot, dayItems)).join('')}
+        </div>
+    `;
+}
+
+function updateAgendaHeader(totalCount, pendingCount, contactedCount) {
+    const title = document.getElementById('agendaDayTitle');
+    const subtitle = document.getElementById('agendaDaySubtitle');
+    const count = document.getElementById('agendaDayCount');
+    const today = todayIso();
+
+    if (title) title.textContent = selectedAgendaDate === today ? "Aujourd'hui" : formatAgendaDate(selectedAgendaDate);
+    if (subtitle) {
+        const doneText = contactedCount > 0 ? `, ${contactedCount} déjà contacté${contactedCount > 1 ? 's' : ''}` : '';
+        subtitle.textContent = `${escapePlain(formatDay(selectedAgendaDate))}${doneText}`;
+    }
+    if (count) {
+        count.textContent = `${pendingCount} rappel${pendingCount > 1 ? 's' : ''} à faire`;
+        if (!totalCount) count.textContent = 'Aucun rappel prévu';
+    }
+}
+
+function escapePlain(value) {
+    const parser = document.createElement('textarea');
+    parser.innerHTML = String(value || '');
+    return parser.value;
+}
+
+function advisorAgendaSlotHtml(slot, items) {
+    const slotItems = items
+        .filter((item) => item.details.callbackSlot === slot)
+        .sort((a, b) => String(a.request.created_at || '').localeCompare(String(b.request.created_at || '')));
+
+    return `
+        <section class="agenda-slot-row">
+            <div class="agenda-slot-time">
+                <strong>${escapeHtml(slot)}</strong>
+                <span>${slotItems.length ? `${slotItems.length} demande${slotItems.length > 1 ? 's' : ''}` : 'Libre'}</span>
+            </div>
+            <div class="agenda-slot-body">
+                ${slotItems.length
+                    ? slotItems.map(({ request, details }) => advisorAgendaCardHtml(request, details)).join('')
+                    : '<div class="agenda-slot-empty">Aucun appel prévu sur ce créneau.</div>'}
+            </div>
+        </section>
+    `;
+}
+
+function advisorAgendaCardHtml(request, details) {
+    const id = safeRequestId(request.id);
+    const telephone = safeTelephone(request.telephone);
+    const phoneLink = telHref(telephone);
+    const emailLink = mailHref(request.email);
+    const isDone = request.status === 'resolu';
+    const meta = statusMeta(request.status);
+    const message = details.clientMessage || 'Aucun commentaire laissé.';
+
+    return `
+        <article class="agenda-call-card ${isDone ? 'is-done' : ''}">
+            <div class="agenda-card-head">
+                <div>
+                    <h4>${escapeHtml(request.prenom)} ${escapeHtml(request.nom)}</h4>
+                    <p>${escapeHtml(details.subject || 'Demande conseiller')}</p>
+                </div>
+                <span class="agenda-status">${escapeHtml(meta.label)}</span>
+            </div>
+            <p class="agenda-card-message"><strong>Commentaire :</strong> ${escapeHtml(message)}</p>
+            <div class="agenda-card-contact">
+                ${telephone ? `<a href="${escapeHtml(phoneLink)}"><i class="fas fa-phone"></i> ${escapeHtml(telephone)}</a>` : ''}
+                ${request.email ? `<a href="${escapeHtml(emailLink)}"><i class="fas fa-envelope"></i> ${escapeHtml(request.email)}</a>` : ''}
+            </div>
+            <div class="agenda-card-actions">
+                ${telephone ? `<a class="agenda-call-link" href="${escapeHtml(phoneLink)}"><i class="fas fa-phone-volume"></i> Appeler</a>` : ''}
+                ${request.email ? `<a class="agenda-mail-link" href="${escapeHtml(emailLink)}"><i class="fas fa-envelope"></i> Email</a>` : ''}
+                ${!isDone ? `
+                    <button class="btn-contacted" type="button" onclick="markContacted('${id}')">
+                        <i class="fas fa-check"></i> OK appelé
+                    </button>
+                ` : ''}
+            </div>
+        </article>
+    `;
 }
 
 function displayContactRequests(requests) {
     const container = document.getElementById('contactRequestsContainer');
-    
+
     if (!requests || requests.length === 0) {
         container.innerHTML = `
-            <div style="text-align: center; padding: 3rem; color: #86868b;">
-                <i class="fas fa-inbox" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+            <div class="loading-state">
+                <i class="fas fa-inbox"></i>
                 <p>Aucune demande de contact</p>
             </div>
         `;
         return;
     }
-    
-    const statusColors = {
-        'nouveau': '#ff9500',
-        'en_cours': '#0071e3',
-        'resolu': '#34c759'
-    };
-    
-    const statusLabels = {
-        'nouveau': 'Nouveau',
-        'en_cours': 'En cours',
-        'resolu': 'Résolu'
-    };
-    
-    const sujetLabels = {
-        'inscription': 'Inscription',
-        'tarifs': 'Tarifs et paiement',
-        'planning': 'Planning et réservation',
-        'cpf': 'Financement CPF',
-        'reclamation': 'Réclamation',
-        'autre': 'Autre'
-    };
-    
-    const requestsHTML = requests.map(request => {
-        const statusColor = statusColors[request.status] || '#86868b';
-        const statusLabel = statusLabels[request.status] || request.status;
-        const sujetLabel = sujetLabels[request.sujet] || request.sujet;
-        const createdDate = new Date(request.created_at).toLocaleDateString('fr-FR', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-        
-        return `
-            <div style="background: white; border-radius: 14px; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 4px 24px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.06);">
-                <!-- Header: Name + Status -->
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
-                    <h3 style="margin: 0; font-size: 1rem; color: #1d1d1f; font-weight: 600;">
-                        <i class="fas fa-user" style="color: #86868b; margin-right: 0.5rem;"></i>${request.prenom} ${request.nom}
-                    </h3>
-                    <span style="padding: 0.35rem 0.75rem; background: ${statusColor === '#ff9500' ? 'rgba(255,149,0,0.15)' : statusColor === '#0071e3' ? 'rgba(0,113,227,0.15)' : 'rgba(52,199,89,0.15)'}; color: ${statusColor}; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">
-                        ${statusLabel}
-                    </span>
+
+    container.innerHTML = requests.map((request) => contactRequestHtml(request)).join('');
+}
+
+function contactRequestHtml(request) {
+    const details = requestDetails(request);
+    const meta = statusMeta(request.status);
+    const requestId = safeRequestId(request.id);
+    const telephone = safeTelephone(request.telephone);
+    const phoneLink = telHref(telephone);
+    const emailLink = mailHref(request.email);
+    const sujetLabel = details.isAdvisorRequest ? 'Rappel conseiller' : details.subject;
+
+    return `
+        <article class="request-card">
+            <div class="request-head">
+                <div>
+                    <h3><i class="fas fa-user"></i>${escapeHtml(request.prenom)} ${escapeHtml(request.nom)}</h3>
+                    <p>${escapeHtml(details.createdAtLabel)}</p>
                 </div>
-                
-                <!-- Contact Info -->
-                <div style="display: flex; flex-direction: column; gap: 0.25rem; margin-bottom: 0.75rem; padding-left: 1.5rem;">
-                    <p style="margin: 0; color: #86868b; font-size: 0.85rem; word-break: break-all;">
-                        ${request.email}
-                    </p>
-                    ${request.telephone ? `<p style="margin: 0; color: #86868b; font-size: 0.85rem;">${request.telephone}</p>` : ''}
-                    <p style="margin: 0; color: #86868b; font-size: 0.8rem;">
-                        ${createdDate}
-                    </p>
+                <span class="status-pill" style="background:${meta.bg};color:${meta.color};">${escapeHtml(meta.label)}</span>
+            </div>
+
+            <div class="request-grid">
+                <div class="request-info">
+                    <span>Contact</span>
+                    ${request.email ? `<a href="${escapeHtml(emailLink)}">${escapeHtml(request.email)}</a>` : ''}
+                    ${telephone ? `<a href="${escapeHtml(phoneLink)}">${escapeHtml(telephone)}</a>` : ''}
                 </div>
-                
-                <!-- Actions: Status + Delete -->
-                <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.875rem; flex-wrap: wrap;">
-                    <select onchange="updateRequestStatus('${request.id}', this.value)" style="flex: 1; min-width: 120px; padding: 0.5rem; border-radius: 8px; border: 1px solid rgba(0,0,0,0.1); font-size: 0.85rem; background: white;">
-                        <option value="nouveau" ${request.status === 'nouveau' ? 'selected' : ''}>Nouveau</option>
-                        <option value="en_cours" ${request.status === 'en_cours' ? 'selected' : ''}>En cours</option>
-                        <option value="resolu" ${request.status === 'resolu' ? 'selected' : ''}>Résolu</option>
-                    </select>
-                    <button onclick="deleteContactRequest('${request.id}')" style="width: 36px; height: 36px; border-radius: 8px; border: none; background: #ff3b30; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" onmouseover="this.style.background='#ff1f13'" onmouseout="this.style.background='#ff3b30'" title="Supprimer">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                
-                <div style="background: #f5f5f7; padding: 1rem; border-radius: 10px; margin-bottom: 1rem;">
-                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                        <i class="fas fa-tag" style="color: #0071e3;"></i>
-                        <strong style="color: #1d1d1f;">Sujet:</strong>
-                        <span style="color: #0071e3;">${sujetLabel}</span>
+                ${details.isAdvisorRequest ? `
+                    <div class="request-info">
+                        <span>Rappel souhaité</span>
+                        <strong>${escapeHtml(formatDay(details.agendaDate))}</strong>
+                        <p>${escapeHtml(details.callbackSlot)}</p>
                     </div>
-                    <div style="margin-top: 0.75rem;">
-                        <strong style="color: #1d1d1f; display: block; margin-bottom: 0.5rem;">
-                            <i class="fas fa-comment"></i> Message:
-                        </strong>
-                        <p style="margin: 0; color: #1d1d1f; white-space: pre-wrap; line-height: 1.6;">
-                            ${request.message}
-                        </p>
-                    </div>
-                </div>
-                
-                <div style="display: flex; gap: 0.75rem; align-items: center;">
-                    ${request.telephone ? `
-                        <a href="tel:${request.telephone}" style="padding: 0.5rem 1rem; border-radius: 8px; background: #34c759; color: white; text-decoration: none; font-size: 0.9rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem;">
-                            <i class="fas fa-phone"></i> Appeler
-                        </a>
-                    ` : ''}
-                    <a href="mailto:${request.email}" style="padding: 0.5rem 1rem; border-radius: 8px; background: #0071e3; color: white; text-decoration: none; font-size: 0.9rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem;">
-                        <i class="fas fa-envelope"></i> Répondre par email
-                    </a>
-                    ${request.newsletter ? '<span style="color: #86868b; font-size: 0.85rem;"><i class="fas fa-bell"></i> Inscrit à la newsletter</span>' : ''}
+                ` : ''}
+                <div class="request-info">
+                    <span>Sujet</span>
+                    <strong>${escapeHtml(sujetLabel)}</strong>
                 </div>
             </div>
-        `;
-    }).join('');
-    
-    container.innerHTML = requestsHTML;
+
+            <div class="request-message">
+                <strong><i class="fas fa-comment"></i> Message</strong>
+                <p>${escapeHtml(details.clientMessage || request.message || 'Aucun message précisé')}</p>
+            </div>
+
+            <div class="request-actions">
+                <select onchange="updateRequestStatus('${requestId}', this.value)" aria-label="Statut de la demande">
+                    <option value="nouveau" ${request.status === 'nouveau' ? 'selected' : ''}>Nouveau</option>
+                    <option value="en_cours" ${request.status === 'en_cours' ? 'selected' : ''}>En cours</option>
+                    <option value="resolu" ${request.status === 'resolu' ? 'selected' : ''}>Contacté</option>
+                </select>
+                ${telephone ? `<a class="action-call" href="${escapeHtml(phoneLink)}"><i class="fas fa-phone"></i> Rappeler</a>` : ''}
+                ${request.email ? `<a class="action-mail" href="${escapeHtml(emailLink)}"><i class="fas fa-envelope"></i> Email</a>` : ''}
+                ${request.status !== 'resolu' ? `<button class="action-ok" type="button" onclick="markContacted('${requestId}')"><i class="fas fa-check"></i> OK contacté</button>` : ''}
+                <button class="action-delete" type="button" onclick="deleteContactRequest('${requestId}')" title="Supprimer">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </article>
+    `;
 }
 
 async function updateRequestStatus(requestId, newStatus) {
+    if (!requestId) return;
     try {
-        const { error } = await window.supabaseClient
-            .from('contact_requests')
-            .update({ status: newStatus, updated_at: new Date().toISOString() })
-            .eq('id', requestId);
-        
-        if (error) {
-            console.error('Error updating status:', error);
-            alert('Erreur lors de la mise à jour du statut');
-            return;
-        }
-        
-        // Recharger les demandes
-        loadContactRequests();
-        
-    } catch (err) {
-        console.error('Error:', err);
+        await adminContactRequest({
+            method: 'POST',
+            body: JSON.stringify({ action: 'update', id: requestId, status: newStatus })
+        });
+        await loadContactRequests();
+    } catch (error) {
+        console.error('Contact status:', error);
         alert('Erreur lors de la mise à jour du statut');
     }
 }
 
+function markContacted(requestId) {
+    return updateRequestStatus(requestId, 'resolu');
+}
+
 async function deleteContactRequest(requestId) {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer cette demande de contact ?')) {
+    if (!requestId || !confirm('Êtes-vous sûr de vouloir supprimer cette demande de contact ?')) {
         return;
     }
-    
+
     try {
-        const { error } = await window.supabaseClient
-            .from('contact_requests')
-            .delete()
-            .eq('id', requestId);
-        
-        if (error) {
-            console.error('Error deleting contact request:', error);
-            alert('Erreur lors de la suppression de la demande');
-            return;
-        }
-        
-        // Recharger les demandes
-        loadContactRequests();
-        
-    } catch (err) {
-        console.error('Error:', err);
+        await adminContactRequest({
+            method: 'POST',
+            body: JSON.stringify({ action: 'delete', id: requestId })
+        });
+        await loadContactRequests();
+    } catch (error) {
+        console.error('Contact delete:', error);
         alert('Erreur lors de la suppression de la demande');
     }
 }
@@ -237,9 +478,8 @@ async function deleteContactRequest(requestId) {
 function updateContactBadge(requests) {
     const badge = document.getElementById('contactBadge');
     if (!badge) return;
-    
-    const newCount = requests.filter(r => r.status === 'nouveau').length;
-    
+
+    const newCount = requests.filter((request) => request.status === 'nouveau').length;
     if (newCount > 0) {
         badge.textContent = newCount;
         badge.style.display = 'inline-flex';
@@ -248,22 +488,36 @@ function updateContactBadge(requests) {
     }
 }
 
-window.updateRequestStatus = updateRequestStatus;
-window.deleteContactRequest = deleteContactRequest;
+function initContactPage() {
+    if (contactPageInitialized) return;
+    contactPageInitialized = true;
+    setSelectedAgendaDate(todayIso());
 
-// Charger les demandes au chargement de la page
-document.addEventListener('DOMContentLoaded', () => {
-    loadContactRequests();
-    
-    // Ajouter l'event listener pour le filtre de statut
     const statusFilter = document.getElementById('statusFilter');
     if (statusFilter) {
         statusFilter.addEventListener('change', () => {
             const selectedStatus = statusFilter.value;
-            const filteredRequests = selectedStatus === 'tous' 
-                ? allContactRequests 
-                : allContactRequests.filter(r => r.status === selectedStatus);
+            const filteredRequests = selectedStatus === 'tous'
+                ? allContactRequests
+                : allContactRequests.filter((request) => request.status === selectedStatus);
             displayContactRequests(filteredRequests);
         });
     }
-});
+
+    const prevDay = document.getElementById('agendaPrevDay');
+    const nextDay = document.getElementById('agendaNextDay');
+    const todayBtn = document.getElementById('agendaTodayBtn');
+    if (prevDay) prevDay.addEventListener('click', () => moveAgendaDate(-1));
+    if (nextDay) nextDay.addEventListener('click', () => moveAgendaDate(1));
+    if (todayBtn) todayBtn.addEventListener('click', setAgendaToday);
+
+    loadContactRequests();
+}
+
+window.loadContactRequests = loadContactRequests;
+window.updateRequestStatus = updateRequestStatus;
+window.deleteContactRequest = deleteContactRequest;
+window.markContacted = markContacted;
+
+document.addEventListener('auth-session-ready', initContactPage);
+document.addEventListener('DOMContentLoaded', initContactPage);

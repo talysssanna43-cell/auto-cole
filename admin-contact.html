@@ -7,7 +7,7 @@
     <meta name="robots" content="noindex,nofollow">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/admin-inscriptions.css">
-    <link rel="stylesheet" href="assets/css/admin-mobile.css">
+    <link rel="stylesheet" href="assets/css/admin-mobile.css?v=3">
     <style>
         :root {
             --bg: #f5f5f7;
@@ -20,7 +20,7 @@
             --orange: #ff9500;
             --red: #ff3b30;
         }
-        
+
         body {
             background: var(--bg);
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
@@ -29,7 +29,7 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ── Topbar ── */
+        /* Topbar */
         .topbar {
             position: fixed; top: 0; left: 0; right: 0; z-index: 100;
             height: 52px;
@@ -90,17 +90,17 @@
             font-size: 0.82rem; font-weight: 500; color: var(--text2); cursor: pointer;
         }
         .btn-logout:hover { color: var(--red); background: rgba(255,59,48,0.06); }
-        
+
         .main {
             max-width: 1400px;
             margin: 0 auto;
             padding: 72px 24px 48px;
         }
-        
+
         .header-section {
             margin-bottom: 2.5rem;
         }
-        
+
         .header-section h1 {
             font-size: 2.5rem;
             font-weight: 700;
@@ -108,13 +108,13 @@
             margin: 0 0 0.5rem 0;
             letter-spacing: -0.03em;
         }
-        
+
         .header-section p {
             color: var(--text2);
             font-size: 1.1rem;
             margin: 0;
         }
-        
+
         .controls-bar {
             display: flex;
             gap: 1rem;
@@ -122,13 +122,13 @@
             margin-top: 1.5rem;
             flex-wrap: wrap;
         }
-        
+
         .filter-select {
             padding: 0.75rem 1.25rem;
             border-radius: 12px;
             border: 1px solid #d2d2d7;
             background: white;
-            color: var(--apple-text);
+            color: var(--text);
             font-size: 0.95rem;
             font-weight: 500;
             cursor: pointer;
@@ -139,11 +139,11 @@
             background-position: right 1rem center;
             padding-right: 3rem;
         }
-        
+
         .filter-select:hover {
             border-color: var(--blue);
         }
-        
+
         .btn-refresh {
             padding: 0.75rem 1.5rem;
             border-radius: 12px;
@@ -158,19 +158,19 @@
             align-items: center;
             gap: 0.5rem;
         }
-        
+
         .btn-refresh:hover {
             background: #0077ed;
             transform: translateY(-1px);
         }
-        
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2.5rem;
         }
-        
+
         .stat-card {
             background: var(--card);
             border-radius: 18px;
@@ -178,19 +178,19 @@
             box-shadow: 0 4px 24px rgba(0,0,0,0.08);
             transition: all 0.3s;
         }
-        
+
         .stat-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 8px 32px rgba(0,0,0,0.12);
         }
-        
+
         .stat-card-header {
             display: flex;
             align-items: center;
             gap: 1rem;
             margin-bottom: 1rem;
         }
-        
+
         .stat-icon {
             width: 56px;
             height: 56px;
@@ -200,30 +200,30 @@
             justify-content: center;
             font-size: 1.5rem;
         }
-        
+
         .stat-icon.orange { background: linear-gradient(135deg, #ff9500 0%, #ff6b00 100%); color: white; }
         .stat-icon.blue { background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%); color: white; }
         .stat-icon.green { background: linear-gradient(135deg, #30d158 0%, #28a745 100%); color: white; }
-        
+
         .stat-value {
             font-size: 2.5rem;
             font-weight: 700;
             color: var(--text);
             line-height: 1;
         }
-        
+
         .stat-label {
             font-size: 1rem;
             color: var(--text2);
             margin-top: 0.5rem;
         }
-        
+
         .requests-container {
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
         }
-        
+
         .loading-state {
             text-align: center;
             padding: 4rem 2rem;
@@ -231,16 +231,612 @@
             border-radius: 18px;
             box-shadow: 0 4px 24px rgba(0,0,0,0.08);
         }
-        
+
         .loading-state i {
             font-size: 3rem;
             color: var(--blue);
             margin-bottom: 1.5rem;
         }
-        
+
         .loading-state p {
             color: var(--text2);
             font-size: 1.1rem;
+        }
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-heading h2 {
+            margin: 0;
+            font-size: 1.45rem;
+            color: var(--text);
+        }
+
+        .section-heading p {
+            margin: 0.25rem 0 0;
+            color: var(--text2);
+        }
+
+        .agenda-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .advisor-agenda {
+            display: block;
+        }
+
+        .advisor-planning-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: #fff;
+            border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+        }
+
+        .agenda-date-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+        }
+
+        .agenda-nav-btn,
+        .agenda-today-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #e5e7eb;
+            background: #f8fafc;
+            color: #1d1d1f;
+            border-radius: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+
+        .agenda-nav-btn {
+            width: 42px;
+            height: 42px;
+            font-size: 1rem;
+        }
+
+        .agenda-today-btn {
+            min-height: 42px;
+            padding: 0 1rem;
+            color: var(--blue);
+        }
+
+        .agenda-nav-btn:hover,
+        .agenda-today-btn:hover {
+            border-color: var(--blue);
+            box-shadow: 0 8px 20px rgba(0,113,227,0.12);
+            transform: translateY(-1px);
+        }
+
+        .agenda-date-title {
+            min-width: 0;
+            flex: 1 1 auto;
+        }
+
+        .agenda-date-title strong {
+            display: block;
+            color: var(--text);
+            font-size: 1.18rem;
+            text-transform: capitalize;
+        }
+
+        .agenda-date-title span {
+            display: block;
+            color: var(--text2);
+            font-size: 0.86rem;
+            margin-top: 0.15rem;
+        }
+
+        .agenda-summary-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 0 0 auto;
+            padding: 0.75rem 1rem;
+            border-radius: 999px;
+            background: #fdf2f8;
+            color: #db2777;
+            font-weight: 900;
+        }
+
+        .agenda-board {
+            overflow: hidden;
+            background: white;
+            border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 22px;
+            box-shadow: 0 12px 36px rgba(15,23,42,0.08);
+        }
+
+        .agenda-slot-row {
+            display: grid;
+            grid-template-columns: 150px minmax(0, 1fr);
+            min-height: 132px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .agenda-slot-row:last-child {
+            border-bottom: none;
+        }
+
+        .agenda-slot-time {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 0.2rem;
+            padding: 1rem 1.1rem;
+            background: #f8fafc;
+            border-right: 1px solid #e5e7eb;
+            color: #64748b;
+            font-weight: 800;
+        }
+
+        .agenda-slot-time strong {
+            color: #1d1d1f;
+            font-size: 1rem;
+        }
+
+        .agenda-slot-time span {
+            font-size: 0.76rem;
+            text-transform: uppercase;
+        }
+
+        .agenda-slot-body {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 0.9rem;
+            align-items: stretch;
+            padding: 0.9rem;
+            background: #fff;
+        }
+
+        .agenda-slot-empty {
+            display: flex;
+            align-items: center;
+            min-height: 96px;
+            padding: 1rem 1.2rem;
+            color: #a1a1aa;
+            font-weight: 800;
+            background: #f9fafb;
+            border: 1px dashed #d4d4d8;
+            border-radius: 16px;
+        }
+
+        .agenda-call-card {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            min-width: 0;
+            padding: 1rem;
+            border-left: 5px solid #ec4899;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #fff 0%, #fff7fb 100%);
+            box-shadow: 0 8px 22px rgba(236,72,153,0.10);
+        }
+
+        .agenda-call-card.is-done {
+            border-left-color: #34c759;
+            background: #f0fdf4;
+            box-shadow: none;
+            opacity: 0.82;
+        }
+
+        .agenda-card-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.75rem;
+            align-items: flex-start;
+        }
+
+        .agenda-card-head h4 {
+            margin: 0;
+            color: var(--text);
+            font-size: 1.04rem;
+            overflow-wrap: anywhere;
+        }
+
+        .agenda-card-head p {
+            margin: 0.22rem 0 0;
+            color: #64748b;
+            font-weight: 700;
+            overflow-wrap: anywhere;
+        }
+
+        .agenda-status {
+            flex: 0 0 auto;
+            padding: 0.35rem 0.65rem;
+            border-radius: 999px;
+            background: #fdf2f8;
+            color: #db2777;
+            font-size: 0.72rem;
+            font-weight: 900;
+            white-space: nowrap;
+        }
+
+        .agenda-call-card.is-done .agenda-status {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .agenda-card-message {
+            margin: 0;
+            padding: 0.78rem 0.85rem;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.78);
+            color: #334155;
+            line-height: 1.45;
+            overflow-wrap: anywhere;
+            white-space: pre-wrap;
+        }
+
+        .agenda-card-contact {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.55rem;
+        }
+
+        .agenda-card-contact a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.38rem;
+            color: #0071e3;
+            text-decoration: none;
+            font-weight: 800;
+            overflow-wrap: anywhere;
+        }
+
+        .agenda-card-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.55rem;
+            margin-top: auto;
+        }
+
+        .agenda-card-actions a,
+        .agenda-card-actions button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.45rem;
+            min-height: 38px;
+            padding: 0.55rem 0.85rem;
+            border-radius: 999px;
+            border: none;
+            font-weight: 900;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .agenda-call-link { background: #0071e3; color: white; }
+        .agenda-mail-link { background: #eef2ff; color: #2563eb; }
+
+        .agenda-day-card,
+        .request-card {
+            background: white;
+            border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+        }
+
+        .agenda-day-card {
+            overflow: hidden;
+        }
+
+        .agenda-day-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            align-items: center;
+            padding: 1.15rem 1.25rem;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            background: linear-gradient(135deg, #fff 0%, #fdf2f8 100%);
+        }
+
+        .agenda-day-kicker {
+            display: block;
+            color: #ec4899;
+            font-size: 0.76rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 0.25rem;
+        }
+
+        .agenda-day-header h3 {
+            margin: 0;
+            font-size: 1.05rem;
+            color: var(--text);
+            text-transform: capitalize;
+        }
+
+        .agenda-day-header strong {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            border-radius: 999px;
+            background: #ec4899;
+            color: white;
+            font-size: 0.95rem;
+        }
+
+        .agenda-items {
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+            padding: 1rem;
+        }
+
+        .agenda-item {
+            display: grid;
+            grid-template-columns: 132px minmax(0, 1fr) auto;
+            gap: 1rem;
+            align-items: start;
+            padding: 0.95rem;
+            border-radius: 14px;
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+        }
+
+        .agenda-time {
+            color: #ec4899;
+            font-weight: 800;
+            font-size: 0.92rem;
+        }
+
+        .agenda-person h4 {
+            margin: 0 0 0.2rem;
+            font-size: 1rem;
+        }
+
+        .agenda-person p,
+        .agenda-message {
+            margin: 0;
+            color: #64748b;
+            line-height: 1.45;
+            overflow-wrap: anywhere;
+        }
+
+        .agenda-message {
+            margin-top: 0.45rem;
+            color: #334155;
+        }
+
+        .agenda-contact-line {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.7rem;
+        }
+
+        .agenda-contact-line a,
+        .request-info a {
+            color: #0071e3;
+            text-decoration: none;
+            overflow-wrap: anywhere;
+        }
+
+        .btn-contacted,
+        .action-ok {
+            border: none;
+            background: #34c759;
+            color: white;
+            border-radius: 999px;
+            padding: 0.65rem 0.95rem;
+            font-weight: 800;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .agenda-empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.65rem;
+            min-height: 118px;
+            padding: 2rem;
+            background: white;
+            border-radius: 18px;
+            color: var(--text2);
+            box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+        }
+
+        .agenda-empty.danger {
+            color: var(--red);
+        }
+
+        .request-card {
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .request-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .request-head h3 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0 0 0.25rem;
+            font-size: 1rem;
+            color: var(--text);
+        }
+
+        .request-head p {
+            margin: 0;
+            color: var(--text2);
+            font-size: 0.84rem;
+        }
+
+        .status-pill {
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .request-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 0.85rem;
+            margin-bottom: 1rem;
+        }
+
+        .request-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+            padding: 0.85rem;
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            min-width: 0;
+        }
+
+        .request-info span {
+            color: var(--text2);
+            font-size: 0.74rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .request-info strong,
+        .request-info p {
+            margin: 0;
+            color: var(--text);
+        }
+
+        .request-message {
+            background: #f5f5f7;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .request-message strong {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .request-message p {
+            margin: 0;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        .request-actions {
+            display: flex;
+            gap: 0.65rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .request-actions select {
+            min-width: 140px;
+            padding: 0.6rem 0.75rem;
+            border-radius: 10px;
+            border: 1px solid #d2d2d7;
+            background: white;
+        }
+
+        .request-actions a,
+        .request-actions button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.45rem;
+            padding: 0.6rem 0.9rem;
+            border-radius: 10px;
+            font-weight: 800;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .action-call { background: #34c759; color: white; }
+        .action-mail { background: #0071e3; color: white; }
+        .action-delete { background: #ff3b30; color: white; width: 38px; }
+
+        @media (max-width: 760px) {
+            .main { padding: 76px 14px 36px; }
+            .section-heading { align-items: flex-start; flex-direction: column; }
+            .advisor-planning-toolbar {
+                align-items: stretch;
+                flex-direction: column;
+            }
+            .agenda-date-controls {
+                justify-content: space-between;
+            }
+            .agenda-summary-pill {
+                justify-content: center;
+            }
+            .agenda-slot-row {
+                grid-template-columns: 1fr;
+            }
+            .agenda-slot-time {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                border-right: none;
+                border-bottom: 1px solid #e5e7eb;
+            }
+            .agenda-slot-body {
+                grid-template-columns: 1fr;
+            }
+            .agenda-item { grid-template-columns: 1fr; }
+            .btn-contacted,
+            .agenda-card-actions a,
+            .agenda-card-actions button,
+            .request-actions a,
+            .request-actions button,
+            .request-actions select {
+                width: 100%;
+            }
+            .request-head {
+                flex-direction: column;
+            }
+        }
+
+        /* En-tete admin unifie */
+        .topbar { height: 52px !important; background: rgba(255,255,255,0.78) !important; display: flex !important; align-items: center !important; padding: 0 24px !important; }
+        .topbar-inner { max-width: 1440px !important; width: 100% !important; margin: 0 auto !important; display: flex !important; align-items: center !important; justify-content: space-between !important; gap: 16px !important; padding: 0 !important; height: auto !important; }
+        .topbar-brand { font-size: 1.05rem !important; font-weight: 700 !important; color: var(--text) !important; text-decoration: none !important; white-space: nowrap !important; }
+        .topbar-tabs { display: flex !important; flex: 1 1 auto !important; min-width: 0 !important; gap: 4px !important; background: rgba(0,0,0,0.04) !important; border-radius: 8px !important; padding: 3px !important; overflow-x: auto !important; flex-wrap: nowrap !important; scrollbar-width: thin !important; }
+        .topbar-tabs a { padding: 6px 12px !important; border-radius: 6px !important; font-size: 0.78rem !important; font-weight: 500 !important; color: var(--text2) !important; text-decoration: none !important; white-space: nowrap !important; }
+        .topbar-tabs a.active { background: var(--card) !important; color: var(--text) !important; font-weight: 700 !important; box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important; }
+        .topbar-right { display: flex !important; align-items: center !important; gap: 12px !important; flex: 0 0 auto !important; white-space: nowrap !important; }
+        .btn-inscription { display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 8px 16px !important; border-radius: 8px !important; background: var(--green) !important; color: #fff !important; font-size: 0.82rem !important; font-weight: 800 !important; text-decoration: none !important; border: none !important; }
+        .btn-logout { display: inline-flex !important; align-items: center !important; gap: 6px !important; border: none !important; background: rgba(0,0,0,0.04) !important; color: var(--text2) !important; font-size: 0.82rem !important; font-weight: 800 !important; cursor: pointer !important; padding: 8px 14px !important; border-radius: 999px !important; white-space: nowrap !important; }
+        .btn-logout:hover { color: var(--red) !important; background: rgba(255,59,48,0.08) !important; }
+        .admin-menu-toggle { display: none; flex-direction: column; gap: 4px; background: none; border: none; cursor: pointer; padding: 8px; }
+        .admin-menu-toggle span { width: 20px; height: 2px; background: var(--text); border-radius: 2px; }
+        @media (max-width: 900px) {
+            .topbar { padding: 0 12px !important; }
+            .admin-menu-toggle { display: flex !important; }
+            .topbar-tabs { display: none !important; }
+            .topbar-right { gap: 8px !important; }
+            .btn-inscription { padding: 8px 10px !important; font-size: 0.74rem !important; }
+            .btn-logout { padding: 8px 10px !important; font-size: 0.74rem !important; }
         }
     </style>
 </head>
@@ -249,7 +845,7 @@
     <nav class="topbar">
         <div class="topbar-inner">
             <a href="index.html" class="topbar-brand">Auto-Ecole Breteuil</a>
-            <button class="admin-menu-toggle" id="adminMenuToggle">
+            <button class="admin-menu-toggle" id="adminMenuToggle" type="button" aria-label="Menu admin">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -258,16 +854,18 @@
                 <a href="admin-planning.html">Planning</a>
                 <a href="admin-candidatures.html">Candidatures <span class="notif-badge" id="candidaturesBadge" style="display: none;">0</span></a>
                 <a href="admin-analytics.html">Analytics</a>
+                <a href="admin-comptabilite.html">Comptabilit&eacute;</a>
+                <a href="admin-moniteurs.html">Moniteurs</a>
                 <a href="admin-support.html">Support <span class="notif-badge" id="supportBadge" style="display: none;">0</span></a>
                 <a href="admin-contact.html" class="active">Contact <span class="notif-badge" id="contactBadge" style="display: none;">0</span></a>
                 <a href="admin-code-rousseau.html">Code Rousseau <span class="notif-badge" id="codeRousseuBadge" style="display: none;">0</span></a>
+                <a href="admin-reviews.html">Avis <span class="notif-badge" id="reviewsBadge" style="display: none;">0</span></a>
             </div>
             <div class="topbar-right">
                 <a href="inscription.html?admin=true" class="btn-inscription">
                     <i class="fas fa-user-plus"></i> Nouvelle inscription
                 </a>
-                <a href="index.html" style="color: #86868b; text-decoration: none; font-size: 14px;"><i class="fas fa-arrow-left"></i> Retour au site</a>
-                <button class="btn-logout" id="logoutBtn" style="background: none; border: none; color: #86868b; cursor: pointer; font-size: 14px;"><i class="fas fa-right-from-bracket"></i> Quitter</button>
+                <button class="btn-logout" id="logoutBtn" type="button"><i class="fas fa-right-from-bracket"></i> Quitter</button>
             </div>
         </div>
     </nav>
@@ -276,7 +874,7 @@
     <main class="main">
         <div class="header-section">
             <h1>Demandes de Contact</h1>
-            <p>Gérez les demandes de contact de vos clients</p>
+            <p>Gérez les demandes de contact et les rappels conseiller.</p>
             <div class="controls-bar">
                 <select id="statusFilter" class="filter-select">
                     <option value="tous">Tous les statuts</option>
@@ -304,18 +902,58 @@
                     <div class="stat-icon blue"><i class="fas fa-clock"></i></div>
                 </div>
                 <div class="stat-value" id="statNew">0</div>
-                <div class="stat-label">Nouveaux</div>
+                <div class="stat-label">Rappels aujourd'hui</div>
             </div>
             <div class="stat-card">
                 <div class="stat-card-header">
                     <div class="stat-icon green"><i class="fas fa-check"></i></div>
                 </div>
                 <div class="stat-value" id="statResolved">0</div>
-                <div class="stat-label">Résolus</div>
+                <div class="stat-label">Contactés</div>
             </div>
         </div>
 
-        <!-- Contact Requests List -->
+        <section class="agenda-section">
+            <div class="section-heading">
+                <div>
+                    <h2>Agenda des rappels conseiller</h2>
+                    <p>Planning journalier des personnes à rappeler, avec leurs coordonnées et leur commentaire.</p>
+                </div>
+            </div>
+            <div class="advisor-planning-toolbar">
+                <div class="agenda-date-controls">
+                    <button class="agenda-nav-btn" id="agendaPrevDay" type="button" aria-label="Jour précédent">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="agenda-today-btn" id="agendaTodayBtn" type="button">Aujourd'hui</button>
+                    <button class="agenda-nav-btn" id="agendaNextDay" type="button" aria-label="Jour suivant">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                <div class="agenda-date-title">
+                    <strong id="agendaDayTitle">Aujourd'hui</strong>
+                    <span id="agendaDaySubtitle">Rappels conseiller</span>
+                </div>
+                <div class="agenda-summary-pill">
+                    <i class="fas fa-phone-volume"></i>
+                    <span id="agendaDayCount">0 rappel</span>
+                </div>
+            </div>
+            <div id="advisorAgendaContainer" class="advisor-agenda">
+                <div class="agenda-empty">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>Chargement de l'agenda...</span>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-heading">
+            <div>
+                <h2>Toutes les demandes</h2>
+                <p>Historique complet des messages reçus depuis le site.</p>
+            </div>
+        </div>
+
         <div id="contactRequestsContainer" class="requests-container">
             <div class="loading-state">
                 <i class="fas fa-spinner fa-spin"></i>
@@ -326,8 +964,10 @@
 
     <script src="https://unpkg.com/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
     <script src="assets/js/supabaseClient.js?v=3"></script>
-    <script src="assets/js/admin-contact.js"></script>
+    <script src="assets/js/page-auth-guard.js" data-roles="admin"></script>
+    <script src="assets/js/admin-contact.js?v=3"></script>
     <script src="assets/js/admin-notif-badge.js"></script>
-    <script src="assets/js/admin-mobile-menu.js"></script>
+    <script src="assets/js/admin-mobile-menu.js?v=3"></script>
+    <script src="assets/js/text-encoding-fix.js?v=2"></script>
 </body>
 </html>

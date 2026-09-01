@@ -1,6 +1,6 @@
 const https = require('https');
 
-exports.handler = async function(event, context) {
+exports.legacyHandler = async function(event, context) {
     // Handle CORS preflight
     if (event.httpMethod === 'OPTIONS') {
         return {
@@ -131,3 +131,12 @@ function makeAlmaRequest(path, method, apiKey, data) {
         req.end();
     });
 }
+
+// Stripe is the only supported payment workflow.
+exports.handler = async function retiredAlmaPayment() {
+    return {
+        statusCode: 410,
+        headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
+        body: JSON.stringify({ error: 'PAYMENT_METHOD_RETIRED' })
+    };
+};

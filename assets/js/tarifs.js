@@ -8,15 +8,34 @@ let cardCvcElementTarifs = null;
 
 function getStoredUser() {
     try {
-        return JSON.parse(localStorage.getItem('ae_user'));
+        return window.authSession?.getCachedUser() || JSON.parse(localStorage.getItem('ae_user'));
     } catch {
         return null;
     }
 }
 
-function selectPack(packId, packName, price, hours) {
-    selectedPack = { id: packId, name: packName, price: price, hours: hours || 0 };
-    const user = getStoredUser();
+function getTransmissionForPack(packId) {
+    if (selectedPack?.transmission) return selectedPack.transmission;
+    return /(?:^|-)auto(?:-|$)/.test(String(packId || '')) || packId === 'am' || packId === 'boite-auto'
+        ? 'auto'
+        : 'manual';
+}
+
+async function requireStudentPaymentSession() {
+    const user = await window.authSession?.requireRole(['student']);
+    const token = window.authSession?.getToken();
+    if (user?.email && token) return { user, token };
+
+    alert('Reconnecte-toi avant de payer.');
+    window.location.href = `connexion.html?redirect=${encodeURIComponent('tarifs.html')}`;
+    return null;
+}
+
+async function selectPack(packId, packName, price, hours, transmission) {
+    selectedPack = { id: packId, name: packName, price: price, hours: hours || 0, transmission: transmission || null };
+    const session = await requireStudentPaymentSession();
+    if (!session) return;
+    const { user, token } = session;
     
     const modal = document.getElementById('packModal');
     const modalNotLogged = document.getElementById('modalNotLogged');
@@ -61,7 +80,7 @@ async function initStripeForTarifs() {
     const user = getStoredUser();
     if (!user || !selectedPack) return;
 
-    const isLocalTest = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
+    const isLocalTest = false;
     
     try {
         if (isLocalTest) {
@@ -142,13 +161,15 @@ async function initStripeForTarifs() {
 async function processPayment() {
     if (!selectedPack) return;
     
-    const user = getStoredUser();
+    const session = await requireStudentPaymentSession();
+    if (!session) return;
+    const { user, token } = session;
     if (!user) {
         alert('Tu dois être connecté pour effectuer un paiement.');
         return;
     }
 
-    const isLocalTest = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
+    const isLocalTest = false;
     if (isLocalTest) {
         alert('Le paiement Stripe est disponible uniquement sur le site en ligne.');
         return;
@@ -181,14 +202,19 @@ async function processPayment() {
 
         const response = await fetch('/.netlify/functions/create-payment-intent', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            },
             body: JSON.stringify({
                 amount: amountInCents,
                 currency: 'eur',
                 packId: selectedPack.id,
                 packLabel: selectedPack.name,
+                hours: Number(selectedPack.hours || 0),
+                transmission: getTransmissionForPack(selectedPack.id),
                 customerEmail: email || undefined,
-                description: `Achat pack ${selectedPack.name} - Auto-École Breteuil`
+                description: `Achat ${selectedPack.name} - Auto-École Breteuil`
             })
         });
         const { clientSecret, message } = await response.json();
@@ -211,6 +237,25 @@ async function processPayment() {
         }
         
         if (paymentIntent && paymentIntent.status === 'succeeded') {
+            const confirmationResponse = await fetch('/.netlify/functions/confirm-payment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({ paymentIntentId: paymentIntent.id })
+            });
+            const confirmation = await confirmationResponse.json().catch(() => ({}));
+            if (!confirmationResponse.ok || !confirmation.ok) {
+                throw new Error('Le paiement est validé, mais sa confirmation est encore en cours. Recharge ton espace élève dans quelques instants.');
+            }
+
+            localStorage.removeItem('pendingPack');
+            alert('Paiement réussi. Ton achat est bien confirmé.');
+            closeModal();
+            window.location.href = 'espace-eleve.html';
+            return;
+
             // Payment successful
             localStorage.removeItem('pendingPack');
             
@@ -779,3 +824,4 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+

@@ -4,6 +4,12 @@
 
 window.cancelSlotReservation = async function(slotId, studentEmail, studentFirstName, studentLastName, slotDate, slotStart) {
     try {
+        const token = window.authSession?.getToken?.();
+        if (!token) {
+            alert('Session administrateur expirée. Reconnecte-toi puis réessaie.');
+            return;
+        }
+
         // Confirmer la suppression
         const slotDateObj = new Date(slotDate);
         const confirmMsg = `⚠️ Confirmer la suppression de ce créneau ?\n\n` +
@@ -20,43 +26,18 @@ window.cancelSlotReservation = async function(slotId, studentEmail, studentFirst
         
         console.log('🗑️ Suppression du créneau:', slotId);
         
-        // 1. Récupérer les informations de la réservation
-        const { data: reservations, error: resError } = await window.supabaseClient
-            .from('reservations')
-            .select('*')
-            .eq('slot_id', slotId);
-        
-        if (resError) {
-            console.error('Erreur récupération réservation:', resError);
-            alert('Erreur lors de la récupération de la réservation.');
-            return;
-        }
-        
-        console.log('📋 Réservations trouvées:', reservations);
-        
-        // 2. Supprimer la réservation
-        const { error: deleteResError } = await window.supabaseClient
-            .from('reservations')
-            .delete()
-            .eq('slot_id', slotId);
-        
-        if (deleteResError) {
-            console.error('Erreur suppression réservation:', deleteResError);
-            alert('Erreur lors de la suppression de la réservation.');
-            return;
-        }
-        
-        console.log('✅ Réservation supprimée');
-        
-        // 3. Remettre le slot en statut "available"
-        const { error: updateSlotError } = await window.supabaseClient
-            .from('slots')
-            .update({ status: 'available' })
-            .eq('id', slotId);
-        
-        if (updateSlotError) {
-            console.error('Erreur mise à jour slot:', updateSlotError);
-            alert('Erreur lors de la libération du créneau.');
+        const response = await fetch('/.netlify/functions/admin-cancel-slot', {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ slot_id: slotId })
+        });
+        const result = await response.json().catch(() => null);
+        if (!response.ok || !result?.ok) {
+            console.error('Erreur suppression serveur:', result);
+            alert('Erreur lors de la suppression du créneau.');
             return;
         }
         

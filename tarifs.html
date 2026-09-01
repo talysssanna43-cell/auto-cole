@@ -4,28 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Nos tarifs pour le permis de conduire à Marseille 13006. Packs adaptés à tous les besoins.">
-    
+
     <link rel="icon" type="image/png" href="assets/logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <title>Nos Tarifs - Auto-Ecole Breteuil</title>
-    
+
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Poppins', sans-serif;
             background: #f8f9fa;
             color: #1a1a1a;
         }
-        
+
         /* Navigation */
         nav {
             background: white;
@@ -35,7 +35,7 @@
             top: 0;
             z-index: 9999;
         }
-        
+
         .nav-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -44,7 +44,7 @@
             justify-content: space-between;
             align-items: center;
         }
-        
+
         .logo {
             display: flex;
             align-items: center;
@@ -54,37 +54,37 @@
             font-size: 1.25rem;
             font-weight: 700;
         }
-        
+
         .logo img {
             height: 40px;
         }
-        
+
         .logo strong {
             color: #ec4899;
         }
-        
+
         .nav-links {
             display: flex;
             gap: 2rem;
             list-style: none;
         }
-        
+
         .nav-links a {
             text-decoration: none;
             color: #1a1a1a;
             font-weight: 500;
             transition: color 0.3s;
         }
-        
+
         .nav-links a:hover {
             color: #ec4899;
         }
-        
+
         .nav-cta {
             display: flex;
             gap: 1rem;
         }
-        
+
         .btn {
             padding: 0.75rem 1.5rem;
             border-radius: 50px;
@@ -95,29 +95,29 @@
             cursor: pointer;
             font-size: 0.95rem;
         }
-        
+
         .btn-outline {
             border: 2px solid #ec4899;
             color: #ec4899;
             background: white;
         }
-        
+
         .btn-outline:hover {
             background: #ec4899;
             color: white;
         }
-        
+
         .btn-primary {
             background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
             color: white;
         }
-        
+
         .btn-primary:hover {
             background: linear-gradient(135deg, #db2777 0%, #be185d 100%);
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(236,72,153,0.4);
         }
-        
+
         /* Hero Section */
         .hero {
             background: linear-gradient(135deg, #5a5a5a 0%, #4a4a4a 100%);
@@ -127,7 +127,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .hero::before {
             content: '';
             position: absolute;
@@ -138,7 +138,7 @@
             background: radial-gradient(circle at 20% 50%, rgba(236,72,153,0.15) 0%, transparent 50%),
                         radial-gradient(circle at 80% 50%, rgba(236,72,153,0.15) 0%, transparent 50%);
         }
-        
+
         .hero h1 {
             font-size: 3rem;
             margin-bottom: 1rem;
@@ -146,14 +146,14 @@
             position: relative;
             z-index: 1;
         }
-        
+
         .hero .highlight {
             background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        
+
         .hero p {
             font-size: 1.25rem;
             opacity: 0.95;
@@ -163,14 +163,14 @@
             z-index: 1;
             color: #d1d5db;
         }
-        
+
         /* Tabs */
         .tabs-container {
             max-width: 1200px;
             margin: 2rem auto 3rem;
             padding: 0 2rem;
         }
-        
+
         .tabs {
             background: white;
             border-radius: 50px;
@@ -178,7 +178,7 @@
             display: inline-flex;
             box-shadow: 0 10px 40px rgba(0,0,0,0.1);
         }
-        
+
         .tab-btn {
             padding: 0.9rem 2rem;
             border: none;
@@ -191,38 +191,45 @@
             color: #64748b;
             white-space: nowrap;
         }
-        
+
         .tab-btn.active {
             background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
             color: white;
             box-shadow: 0 4px 15px rgba(236,72,153,0.3);
         }
-        
+
         /* Pricing Cards */
         .pricing-section {
             max-width: 1400px;
             margin: 0 auto 4rem;
             padding: 0 2rem;
         }
-        
+
         .pricing-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2rem;
+            gap: 1.5rem;
             margin-top: 2rem;
+            max-width: 1080px;
+            margin-left: auto;
+            margin-right: auto;
+            align-items: stretch;
         }
-        
+
         .pricing-card {
-            background: linear-gradient(to bottom, #ffffff 0%, #fafafa 100%);
-            border-radius: 20px;
-            padding: 1.75rem;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 2px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background: #ffffff;
+            border-radius: 22px;
+            padding: 1.45rem;
+            box-shadow: 0 18px 42px rgba(236, 72, 153, 0.08), 0 2px 10px rgba(15, 23, 42, 0.04);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+            border: 2px solid #fbcfe8;
             position: relative;
-            overflow: hidden;
+            overflow: visible;
         }
-        
+
         .pricing-card::before {
             content: '';
             position: absolute;
@@ -232,31 +239,36 @@
             height: 4px;
             background: linear-gradient(90deg, #ec4899, #db2777, #f472b6);
             opacity: 0;
-            transition: opacity 0.4s;
+            transition: opacity 0.25s ease;
         }
-        
+
         .pricing-card:hover::before {
             opacity: 1;
         }
-        
+
         .pricing-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 20px 48px rgba(0,0,0,0.12), 0 8px 16px rgba(236,72,153,0.1);
+            z-index: 20;
+            transform: translateY(-5px);
+            box-shadow: 0 22px 52px rgba(236, 72, 153, 0.14), 0 10px 20px rgba(15, 23, 42, 0.06);
             border: 2px solid #ec4899;
         }
-        
+
+        .pricing-card:focus-within {
+            z-index: 20;
+        }
+
         .pricing-card.popular {
-            background: linear-gradient(135deg, #fdf2f8 0%, #ffffff 100%);
-            border: 2px solid #e5e7eb;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04);
-            transform: scale(1.05);
+            background: linear-gradient(180deg, #ffffff 0%, #fff7fb 100%);
+            border: 2px solid #ec4899;
+            box-shadow: 0 18px 42px rgba(236, 72, 153, 0.1), 0 2px 10px rgba(15, 23, 42, 0.04);
+            transform: none;
         }
-        
+
         .pricing-card.popular:hover {
-            transform: translateY(-8px) scale(1.07);
+            transform: translateY(-5px);
             border: 2px solid #ec4899;
         }
-        
+
         .popular-badge {
             position: absolute;
             top: 20px;
@@ -271,22 +283,23 @@
             letter-spacing: 0.5px;
             box-shadow: 0 4px 20px rgba(236,72,153,0.5);
         }
-        
+
         .card-header h3 {
-            font-size: 1.5rem;
+            font-size: 1.42rem;
             margin-bottom: 0.5rem;
             color: #0f172a;
-            font-weight: 700;
-            letter-spacing: -0.5px;
+            font-weight: 800;
+            letter-spacing: 0;
+            line-height: 1.08;
         }
-        
+
         .card-subtitle {
             color: #64748b;
             font-size: 0.9rem;
             margin-bottom: 0.25rem;
             font-weight: 500;
         }
-        
+
         .card-highlight {
             display: inline-block;
             background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);
@@ -298,63 +311,132 @@
             margin-bottom: 1rem;
             border: 1px solid #f9a8d4;
         }
-        
-        .hours-selector {
+
+        .pricing-vehicle {
+            height: 120px;
+            margin: 0.25rem 0 1rem;
+            border-radius: 16px;
+            background: #f8f8f9;
+            overflow: hidden;
             display: flex;
-            gap: 0.5rem;
-            margin: 1rem 0;
-            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ececef;
         }
-        
+
+        .pricing-vehicle img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 0.45rem;
+            display: block;
+        }
+
+        .hours-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(58px, 1fr));
+            gap: 0.46rem;
+            margin: 1rem 0;
+            padding: 0.54rem;
+            border-radius: 16px;
+            background: #f2f3f5;
+            border: 1px solid #ececef;
+        }
+
+        .hours-selector.is-static {
+            grid-template-columns: minmax(84px, 118px);
+            justify-content: start;
+        }
+
         .hour-option {
-            flex: 1;
-            min-width: 60px;
-            padding: 0.75rem;
-            border: 2px solid #e2e8f0;
+            min-height: 54px;
+            padding: 0.5rem 0.4rem;
+            border: 1px solid #f3d2e3;
             border-radius: 12px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
             background: white;
+            color: #ec4899;
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.08rem;
+            box-shadow: 0 6px 14px rgba(15, 23, 42, 0.08);
         }
-        
+
         .hour-option:hover {
             border-color: #ec4899;
-            background: #fdf2f8;
+            background: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 9px 18px rgba(236, 72, 153, 0.16);
         }
-        
+
         .hour-option.selected {
             border-color: #ec4899;
-            background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+            background: linear-gradient(135deg, #f64ca4 0%, #ed1675 100%);
             color: white;
+            box-shadow: 0 10px 20px rgba(237, 22, 117, 0.24);
         }
-        
+
         .hour-number {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
+            line-height: 1;
             font-weight: 700;
             display: block;
         }
-        
+
         .hour-label {
-            font-size: 0.75rem;
+            font-size: 0.72rem;
+            line-height: 1;
+            font-weight: 600;
             display: block;
-            margin-top: 0.25rem;
-            color: #64748b;
+            margin-top: 0.08rem;
+            color: #ec4899;
         }
-        
+
         .hour-option.selected .hour-label {
             color: white;
         }
-        
+
         .price-display {
-            margin: 1rem 0;
-            text-align: center;
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            padding: 0.75rem 1.25rem;
-            border-radius: 14px;
-            border: 1px solid #e2e8f0;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 0.9rem;
+            align-items: start;
+            margin: 1.15rem 0 1.05rem;
+            text-align: left;
+            background: #f7f7f8;
+            padding: 1rem 1.15rem;
+            border-radius: 16px;
+            border: 1px solid #ececef;
         }
-        
+
+        .price-display:not(:has(.price-top-row)) {
+            grid-template-columns: 1fr;
+            text-align: left;
+        }
+
+        .price-display:not(:has(.price-top-row)) .price {
+            grid-column: 1;
+            grid-row: auto;
+        }
+
+        .price-display:not(:has(.price-top-row)) .price-note {
+            margin-top: 0.25rem;
+        }
+
+        .price-top-row {
+            grid-column: 2;
+            grid-row: 1;
+            min-width: 0;
+        }
+
+        .price-right {
+            text-align: right;
+        }
+
         .price-label {
             font-size: 0.75rem;
             color: #64748b;
@@ -363,41 +445,51 @@
             text-transform: uppercase;
             letter-spacing: 1px;
         }
-        
+
+        .price-label:empty {
+            display: none;
+        }
+
         .old-price {
-            font-size: 1.1rem;
+            display: inline-block;
+            font-size: 0.98rem;
             color: #1a1a1a;
             text-decoration: line-through;
-            text-decoration-color: #10b981;
+            text-decoration-color: #ec4899;
+            text-decoration-thickness: 1px;
             margin-bottom: 0.25rem;
             font-weight: 600;
         }
-        
+
         .price {
-            font-size: 3.2rem;
+            grid-column: 1;
+            grid-row: 1;
+            align-self: end;
+            font-size: 3.45rem;
             font-weight: 700;
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #ec4899;
+            background: none;
+            -webkit-background-clip: initial;
+            -webkit-text-fill-color: currentColor;
+            background-clip: initial;
             line-height: 1;
-            letter-spacing: -1px;
-            text-align: center;
+            letter-spacing: 0;
+            text-align: left;
         }
-        
+
         .price-asterisk {
             font-size: 1.5rem;
             vertical-align: super;
         }
-        
+
         .price-note {
             font-size: 0.85rem;
             color: #64748b;
             margin-top: 0.5rem;
             font-weight: 500;
         }
-        
+
         .price-badge {
             display: inline-block;
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
@@ -409,70 +501,172 @@
             margin-top: 0.4rem;
             text-transform: uppercase;
         }
-        
+
+        .hourly-rate-section {
+            padding: 3.25rem 2rem 1rem;
+            background: #ffffff;
+        }
+
+        .hourly-rate-card {
+            max-width: 965px;
+            margin: 0 auto;
+            background: transparent;
+            border: 0;
+            border-radius: 0;
+            padding: 0;
+            box-shadow: none;
+        }
+
+        .hourly-rate-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .hourly-rate-header h2 {
+            font-size: clamp(2.25rem, 4vw, 3.75rem);
+            color: #0f172a;
+            margin: 0 0 0.45rem;
+            font-weight: 900;
+            line-height: 1.05;
+        }
+
+        .hourly-rate-header p {
+            color: #475569;
+            margin: 0;
+            font-weight: 700;
+            font-size: clamp(1.05rem, 2vw, 1.45rem);
+        }
+
+        .hourly-rate-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.45rem;
+        }
+
+        .hourly-rate-item {
+            border: 3px solid #fbcfe8;
+            border-radius: 20px;
+            min-height: 118px;
+            padding: 1.15rem 2.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            background: #ffffff;
+            box-shadow: 0 16px 30px rgba(236, 72, 153, 0.06);
+        }
+
+        .hourly-rate-name {
+            display: block;
+            flex: 1;
+            font-weight: 600;
+            color: #0f172a;
+            font-size: clamp(1.15rem, 2vw, 1.75rem);
+            line-height: 1.25;
+        }
+
+        .hourly-rate-price {
+            color: #ec4899;
+            font-size: clamp(1.25rem, 2vw, 1.55rem);
+            font-weight: 700;
+            white-space: nowrap;
+            min-width: 135px;
+            text-align: right;
+        }
+
+        .hourly-rate-action {
+            min-width: 180px;
+            border: 0;
+            border-radius: 999px;
+            background: #22c55e;
+            color: #ffffff;
+            padding: 1rem 1.7rem;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 1.05rem;
+            box-shadow: none;
+            cursor: pointer;
+            transition: transform 0.2s ease, filter 0.2s ease;
+        }
+
+        .hourly-rate-action:hover {
+            transform: translateY(-2px);
+            filter: brightness(0.94);
+        }
+
         .features-title {
             font-size: 1.1rem;
             font-weight: 800;
             color: #0f172a;
             margin-bottom: 1rem;
         }
-        
+
         .features-list {
             list-style: none;
             margin: 0 0 1.5rem 0;
+            overflow: visible;
+            flex: 1;
         }
-        
+
         .features-list li {
             padding: 0.3rem 0;
             display: flex;
             align-items: flex-start;
             gap: 0.75rem;
             color: #1e293b;
-            font-size: 1rem;
-            font-weight: 600;
+            font-size: 0.96rem;
+            font-weight: 500;
+            line-height: 1.28;
+            overflow: visible;
         }
-        
+
         .features-list i {
             color: #10b981;
-            font-size: 1.2rem;
-            margin-top: 2px;
+            font-size: 0.9rem;
+            margin-top: 3px;
         }
-        
+
         .feature-disabled {
             color: #cbd5e1 !important;
             font-weight: 400 !important;
         }
-        
+
         .feature-x {
             color: #cbd5e1;
             font-size: 1.2rem;
             font-weight: 400;
             margin-top: 2px;
         }
-        
-        .card-cta {
+
+        .pricing-card .card-cta {
             display: block;
             width: 100%;
-            padding: 1.1rem 1.5rem;
-            font-size: 1.1rem;
-            font-weight: 700;
-            border-radius: 50px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 16px rgba(236,72,153,0.3);
+            margin-top: auto;
+            padding: 1rem 1.5rem;
+            font-size: 1.05rem;
+            font-weight: 800;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #f64ca4 0%, #ed1675 100%);
+            color: #ffffff;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+            box-shadow: 0 14px 28px rgba(237, 22, 117, 0.24);
             text-transform: none;
-            letter-spacing: 0.3px;
+            letter-spacing: 0;
             text-align: center;
+            text-decoration: none;
         }
-        
-        .card-cta:hover {
+
+        .pricing-card .card-cta:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(236,72,153,0.4);
+            background: linear-gradient(135deg, #ed1675 0%, #c91463 100%);
+            box-shadow: 0 18px 34px rgba(237, 22, 117, 0.32);
         }
-        
-        .card-cta:active {
+
+        .pricing-card .card-cta:active {
             transform: translateY(0);
         }
-        
+
         .info-tooltip {
             position: relative;
             display: inline-flex;
@@ -481,7 +675,8 @@
             width: 18px;
             height: 18px;
             border-radius: 50%;
-            background: #e2e8f0;
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
             color: #64748b;
             font-size: 0.7rem;
             font-weight: 700;
@@ -489,43 +684,68 @@
             margin-left: 4px;
             font-style: normal;
         }
-        .info-tooltip:hover {
-            background: #ec4899;
-            color: white;
+        .info-tooltip:hover,
+        .info-tooltip:focus-visible {
+            background: #e5e7eb;
+            color: #334155;
+            outline: none;
         }
         .info-tooltip .tooltip-text {
             visibility: hidden;
             opacity: 0;
             position: absolute;
-            bottom: 130%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #1e293b, #334155);
-            color: white;
-            padding: 0.75rem 1rem;
+            top: calc(100% + 8px);
+            left: auto;
+            right: 0;
+            transform: translateY(4px);
+            background: #f8fafc;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+            padding: 0.7rem 0.85rem;
             border-radius: 10px;
-            font-size: 0.8rem;
+            font-size: 0.76rem;
             font-weight: 500;
             line-height: 1.4;
-            width: 260px;
+            width: min(230px, calc(100vw - 70px));
             text-align: center;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
             transition: all 0.2s;
             z-index: 100;
             pointer-events: none;
+            white-space: normal;
+            overflow-wrap: break-word;
         }
         .info-tooltip .tooltip-text::after {
             content: '';
             position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
+            bottom: 100%;
+            right: 5px;
             border: 6px solid transparent;
-            border-top-color: #334155;
+            border-bottom-color: #f8fafc;
         }
-        .info-tooltip:hover .tooltip-text {
+        .info-tooltip:hover .tooltip-text,
+        .info-tooltip:focus-visible .tooltip-text {
             visibility: visible;
             opacity: 1;
+            transform: translateY(0);
+        }
+
+        .info-tooltip.exam-condition-tooltip {
+            flex: 0 0 auto;
+        }
+
+        .info-tooltip.exam-condition-tooltip .tooltip-text {
+            right: 0;
+            transform: translateY(4px);
+        }
+
+        .info-tooltip.exam-condition-tooltip .tooltip-text::after {
+            right: 5px;
+        }
+
+        .info-tooltip.exam-condition-tooltip:hover .tooltip-text,
+        .info-tooltip.exam-condition-tooltip:focus-visible .tooltip-text {
+            transform: translateY(0);
         }
 
         /* Footer */
@@ -535,7 +755,7 @@
             padding: 3rem 2rem 2rem;
             margin-top: 4rem;
         }
-        
+
         .footer-content {
             max-width: 1200px;
             margin: 0 auto;
@@ -543,16 +763,16 @@
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 2rem;
         }
-        
+
         .footer-section h4 {
             margin-bottom: 1rem;
             color: #ec4899;
         }
-        
+
         .footer-section ul {
             list-style: none;
         }
-        
+
         .footer-section a {
             color: #cbd5e1;
             text-decoration: none;
@@ -560,11 +780,11 @@
             padding: 0.5rem 0;
             transition: color 0.3s;
         }
-        
+
         .footer-section a:hover {
             color: white;
         }
-        
+
         .footer-bottom {
             max-width: 1200px;
             margin: 2rem auto 0;
@@ -573,59 +793,499 @@
             text-align: center;
             color: #d1d5db;
         }
-        
+
+        /* FAQ */
+        .faq-section {
+            max-width: 1100px;
+            margin: 0 auto 4rem;
+            padding: 0 2rem;
+            scroll-margin-top: 110px;
+        }
+
+        .faq-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .faq-header h2 {
+            font-size: 2.4rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .faq-header p {
+            color: #64748b;
+            font-size: 1.05rem;
+        }
+
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
+        }
+
+        .faq-item {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 18px;
+            padding: 1.35rem;
+            box-shadow: 0 8px 28px rgba(15, 23, 42, 0.05);
+        }
+
+        .faq-item h3 {
+            font-size: 1rem;
+            margin-bottom: 0.55rem;
+            color: #1a1a1a;
+        }
+
+        .faq-item p {
+            color: #64748b;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .faq-item a {
+            color: #ec4899;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .faq-item a:hover {
+            text-decoration: underline;
+        }
+
         /* Category Tabs */
+
+        .category-tabs-section {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0;
+            position: relative;
+            z-index: 50;
+            overflow: hidden;
+        }
+
+        .category-tabs-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        .category-tabs-row {
+            display: inline-flex;
+            gap: 2rem;
+            max-width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .category-tabs-row::-webkit-scrollbar {
+            display: none;
+        }
         .category-tab:hover {
             color: #ec4899 !important;
             border-bottom-color: #ec4899 !important;
         }
-        
+
         @media (max-width: 768px) {
+
+            .category-tabs-section {
+                width: 100%;
+            }
+
+            .category-tabs-container {
+                width: 100%;
+                padding: 0;
+                text-align: left;
+                overflow: hidden;
+            }
+
+            .category-tabs-row {
+                display: flex;
+                width: 100%;
+                max-width: 100vw;
+                gap: 1.35rem;
+                padding: 0 1.25rem;
+                overflow-x: auto;
+                overscroll-behavior-x: contain;
+                scroll-snap-type: x proximity;
+            }
+
+            .category-tab {
+                flex: 0 0 auto;
+                scroll-snap-align: start;
+            }
             .nav-links {
                 display: none;
             }
-            
+
             .hero h1 {
                 font-size: 2rem;
             }
-            
+
             .pricing-grid {
                 grid-template-columns: 1fr;
             }
-            
+
+            #aac-manual,
+            #aac-auto,
+            #code-section .pricing-grid {
+                grid-template-columns: 1fr !important;
+                max-width: min(360px, 100%) !important;
+            }
+
+            .info-tooltip .tooltip-text {
+                width: min(210px, calc(100vw - 84px));
+                padding: 0.62rem 0.72rem;
+                font-size: 0.7rem;
+                line-height: 1.35;
+            }
+
+            .info-tooltip.exam-condition-tooltip .tooltip-text {
+                top: calc(100% + 8px);
+                left: auto;
+                right: 0;
+                transform: translateY(4px);
+            }
+
+            .info-tooltip.exam-condition-tooltip .tooltip-text::after {
+                left: auto;
+                right: 5px;
+                transform: none;
+            }
+
+            .info-tooltip.exam-condition-tooltip:hover .tooltip-text,
+            .info-tooltip.exam-condition-tooltip:focus-visible .tooltip-text {
+                transform: translateY(0);
+            }
+
+            .hourly-rate-section {
+                padding: 2rem 1rem 0;
+            }
+
+            .hourly-rate-card {
+                padding: 0;
+            }
+
+            .hourly-rate-header {
+                display: block;
+                text-align: center;
+                margin-bottom: 1.7rem;
+            }
+
+            .hourly-rate-grid {
+                gap: 1rem;
+            }
+
+            .hourly-rate-item {
+                align-items: center;
+                flex-direction: column;
+                text-align: center;
+                min-height: 0;
+                padding: 1.25rem 1rem;
+                gap: 0.8rem;
+            }
+
+            .hourly-rate-price {
+                min-width: 0;
+                text-align: center;
+            }
+
+            .hourly-rate-action {
+                min-width: 150px;
+            }
+
+            .faq-section {
+                padding: 0 1.25rem;
+            }
+
+            .faq-header h2 {
+                font-size: 2rem;
+            }
+
+            .faq-grid {
+                grid-template-columns: 1fr;
+            }
+
             .tabs {
                 width: 100%;
                 justify-content: center;
             }
-            
+
             .tab-btn {
                 flex: 1;
                 padding: 0.9rem 1rem;
                 font-size: 0.85rem;
             }
         }
+
+        /* Header harmonise avec la page d'accueil */
+        :root {
+            --primary-color: #FF69B4;
+            --text-dark: #1A1A2E;
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 1.5rem;
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --transition-fast: 150ms ease-in-out;
+            --transition-base: 300ms ease-in-out;
+        }
+
+        body {
+            padding-top: 64px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 0;
+            background: white;
+            box-shadow: var(--shadow-md);
+            z-index: 1000;
+            transition: all var(--transition-base);
+        }
+
+        .nav-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-sm) 0;
+            gap: var(--spacing-md);
+            flex-wrap: nowrap;
+        }
+
+        .navbar .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-decoration: none;
+        }
+
+        .navbar .logo img {
+            height: 28px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .navbar .logo strong {
+            color: var(--primary-color);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: var(--spacing-md);
+            align-items: center;
+            flex: 1 1 auto;
+            justify-content: center;
+            flex-wrap: nowrap;
+            min-width: 0;
+        }
+
+        .nav-menu li {
+            flex-shrink: 0;
+        }
+
+        .nav-menu a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            white-space: nowrap;
+        }
+
+        .nav-menu a:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+            align-items: center;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-xs);
+            padding: 0.75rem 1.5rem;
+            border-radius: 999px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all var(--transition-base);
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #FF69B4 0%, #E91E63 100%);
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(233, 30, 99, 0.24);
+        }
+
+        .btn-secondary {
+            background: #fff;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 0.25rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: var(--text-dark);
+            border-radius: 2px;
+            transition: all var(--transition-base);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-top: 67px;
+            }
+
+            .mobile-menu-toggle {
+                display: flex;
+            }
+
+            .nav-menu {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background: #ffffff;
+                flex-direction: column;
+                padding: 2rem;
+                transition: left var(--transition-base);
+                box-shadow: var(--shadow-lg);
+                overflow-y: auto;
+                z-index: 999;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .nav-menu li {
+                border-bottom: 2px solid #e0e0e0;
+                padding: 0;
+                margin-bottom: 0.5rem;
+                width: 100%;
+            }
+
+            .nav-menu li:last-child {
+                border-bottom: none;
+                margin-bottom: 0;
+            }
+
+            .nav-menu a {
+                display: block;
+                padding: 1rem 1.25rem;
+                background: #f8f9fa;
+                border-radius: 12px;
+                font-weight: 600;
+                font-size: 1.1rem;
+                color: #333;
+                transition: all 0.2s ease;
+            }
+
+            .nav-menu a:hover {
+                background: var(--primary-color);
+                color: white;
+                transform: translateX(8px);
+            }
+
+            .nav-actions {
+                display: none !important;
+            }
+
+            .nav-menu.active ~ .nav-actions {
+                display: flex !important;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                flex-direction: column;
+                padding: 1rem 1.5rem;
+                padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+                background: white;
+                border-top: 1px solid #e5e5e5;
+                box-shadow: 0 -4px 12px rgba(0,0,0,0.08);
+                z-index: 1001;
+                gap: 0.75rem;
+            }
+
+            .nav-menu.active ~ .nav-actions .btn-primary,
+            .nav-menu.active ~ .nav-actions .btn-secondary {
+                width: 100%;
+                justify-content: center;
+                text-align: center;
+                padding: 0.875rem;
+                font-size: 1rem;
+            }
+        }
     </style>
 </head>
 <body>
     <!-- Navigation -->
-    <nav>
-        <div class="nav-container">
-            <a href="index.html" class="logo">
-                <img src="assets/logo.png" alt="Auto-Ecole Breteuil">
-                <span>Auto-Ecole <strong>Breteuil</strong></span>
-            </a>
-            
-            <ul class="nav-links">
-                <li><a href="index.html">Accueil</a></li>
-                <li><a href="recrutement.html">Recrutement</a></li>
-                <li><a href="qui-sommes-nous.html">Qui sommes-nous</a></li>
-                <li><a href="tarifs.html">Tarifs</a></li>
-                <li><a href="contact.html">Contact</a></li>
-            </ul>
-            
-            <div class="nav-cta">
-                <a href="connexion.html" class="btn btn-outline">Se connecter</a>
-                <a href="inscription.html" class="btn btn-primary">S'inscrire</a>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <a href="index.html" class="logo">
+                    <img src="assets/logo.png" alt="Auto-Ecole Breteuil">
+                    <span>Auto-Ecole <strong>Breteuil</strong></span>
+                </a>
+
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="recrutement.html">Recrutement</a></li>
+                    <li><a href="qui-sommes-nous.html">Qui sommes-nous</a></li>
+                    <li><a href="tarifs.html">Tarifs</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+
+                <div class="nav-actions">
+                    <a href="connexion.html" class="btn-secondary">Se connecter</a>
+                    <a href="inscription.html" class="btn-primary">S'inscrire</a>
+                </div>
             </div>
         </div>
     </nav>
@@ -637,9 +1297,9 @@
     </section>
 
     <!-- Category Tabs -->
-    <section style="background: white; border-bottom: 1px solid #e2e8f0; padding: 0; position: relative; z-index: 50;">
-        <div style="max-width: 1200px; margin: 0 auto; padding: 0 2rem; text-align: center;">
-            <div style="display: inline-flex; gap: 2rem; overflow-x: auto;">
+    <section class="category-tabs-section">
+        <div class="category-tabs-container">
+            <div class="category-tabs-row">
                 <a href="#permis-conduire" class="category-tab active" onclick="showSection('permis'); return false;" style="padding: 1.25rem 0; border-bottom: 3px solid #ec4899; color: #ec4899; text-decoration: none; font-weight: 600; white-space: nowrap; transition: all 0.3s;">
                     Permis de conduire
                 </a>
@@ -670,55 +1330,60 @@
 
     <!-- Pricing Section - Manual -->
     <section class="pricing-section" id="manual-pricing">
+        <span id="permis-b" aria-hidden="true"></span>
         <div class="pricing-grid">
-            <!-- Permis Zen -->
+            <!-- Permis Chill -->
             <div class="pricing-card">
                 <div class="card-header">
-                    <h3>Permis Zen</h3>
+                    <h3>Permis Chill</h3>
+                    <div class="pricing-vehicle">
+                        <img src="assets/acceuil.png" alt="Vehicule boite manuelle Auto-Ecole Breteuil">
+                    </div>
                     <p class="card-subtitle">Code + 20 cours de conduite</p>
                     <p class="card-highlight">Offre la plus économique</p>
                 </div>
-                
+
                 <div class="hours-selector">
-                    <div class="hour-option" onclick="selectHours(this, 'zen', 5)">
+                    <div class="hour-option" onclick="selectHours(this, 'chill', 5)">
                         <span class="hour-number">5</span>
                         <span class="hour-label">cours</span>
                     </div>
-                    <div class="hour-option" onclick="selectHours(this, 'zen', 10)">
+                    <div class="hour-option" onclick="selectHours(this, 'chill', 10)">
                         <span class="hour-number">10</span>
                         <span class="hour-label">cours</span>
                     </div>
-                    <div class="hour-option selected" onclick="selectHours(this, 'zen', 20)">
+                    <div class="hour-option selected" onclick="selectHours(this, 'chill', 20)">
                         <span class="hour-number">20</span>
                         <span class="hour-label">cours</span>
                     </div>
-                    <div class="hour-option" onclick="selectHours(this, 'zen', 30)">
+                    <div class="hour-option" onclick="selectHours(this, 'chill', 30)">
                         <span class="hour-number">30</span>
                         <span class="hour-label">cours</span>
                     </div>
                 </div>
-                
+
                 <div class="price-display">
                     <div class="price-top-row">
                         <span class="price-label"></span>
                         <div class="price-right">
-                            <span class="old-price" id="zen-old-price">899€</span>
+                            <span class="old-price" id="chill-old-price">849€</span>
                             <p class="price-note">prix public</p>
                         </div>
                     </div>
-                    <div class="price" id="zen-price">749<span class="price-asterisk">€</span></div>
+                    <div class="price" id="chill-price">649<span class="price-asterisk">€</span></div>
                 </div>
-                
+
                 <p class="features-title">Contenu du pack :</p>
                 <ul class="features-list">
-                    <li id="cours-zen"><i class="fas fa-check-circle"></i> <span class="cours-count">20</span> cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours d'une heure se décompose en 15 mn de préparation en ligne et en 45 mn de cours en circulation</span></i></li>
+                    <li id="cours-chill"><i class="fas fa-check-circle"></i> <span class="cours-count">20</span> cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours comprend 15 mn de préparation en ligne et 45 mn de conduite effective.</span></i></li>
                     <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
                     <li><i class="fas fa-check-circle"></i> Formation au Code</li>
+                    <li><i class="fas fa-check-circle"></i> Accompagnement le jour J compris</li>
                     <li><span class="feature-x">✕</span> <span class="feature-disabled">Formation en 30 jours</span></li>
                     <li><span class="feature-x">✕</span> <span class="feature-disabled">Date de convocation à l'examen sous 30 jours</span></li>
                 </ul>
-                
-                <a href="inscription.html?pack=zen" class="btn btn-primary card-cta">
+
+                <a href="inscription.html?pack=tarif-chill-20" class="btn btn-primary card-cta">
                     Inscris-toi
                 </a>
             </div>
@@ -727,10 +1392,13 @@
             <div class="pricing-card popular">
                 <div class="card-header">
                     <h3>Permis Premium</h3>
+                    <div class="pricing-vehicle">
+                        <img src="assets/acceuil.png" alt="Vehicule boite manuelle Auto-Ecole Breteuil">
+                    </div>
                     <p class="card-subtitle">Code + 20 cours de conduite</p>
                     <p class="card-highlight">Date d'examen pratique sous 30 jours</p>
                 </div>
-                
+
                 <div class="hours-selector">
                     <div class="hour-option" onclick="selectHours(this, 'premium', 5)">
                         <span class="hour-number">5</span>
@@ -749,28 +1417,29 @@
                         <span class="hour-label">cours</span>
                     </div>
                 </div>
-                
+
                 <div class="price-display">
                     <div class="price-top-row">
                         <span class="price-label"></span>
                         <div class="price-right">
-                            <span class="old-price" id="premium-old-price">999€</span>
+                            <span class="old-price" id="premium-old-price">1049€</span>
                             <p class="price-note">prix public</p>
                         </div>
                     </div>
-                    <div class="price" id="premium-price">849<span class="price-asterisk">€</span></div>
+                    <div class="price" id="premium-price">749<span class="price-asterisk">€</span></div>
                 </div>
-                
+
                 <p class="features-title">Contenu du pack :</p>
                 <ul class="features-list">
-                    <li id="cours-premium"><i class="fas fa-check-circle"></i> <span class="cours-count">20</span> cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours d'une heure se décompose en 15 mn de préparation en ligne et en 45 mn de cours en circulation</span></i></li>
+                    <li id="cours-premium"><i class="fas fa-check-circle"></i> <span class="cours-count">20</span> cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours comprend 15 mn de préparation en ligne et 45 mn de conduite effective.</span></i></li>
                     <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
                     <li><i class="fas fa-check-circle"></i> Formation au Code</li>
-                    <li><i class="fas fa-check-circle"></i> Date de convocation à l'examen sous 30 jours</li>
+                    <li><i class="fas fa-check-circle"></i> Accompagnement le jour J compris</li>
+                    <li><i class="fas fa-check-circle"></i> Date de convocation à l'examen sous 30 jours <i class="info-tooltip exam-condition-tooltip" tabindex="0" aria-label="Condition de convocation à l'examen">ℹ<span class="tooltip-text">Sous réserve de validation du niveau par le moniteur, pour présenter l'élève au bon moment.</span></i></li>
                     <li><span class="feature-x">✕</span> <span class="feature-disabled">Formation en 30 jours</span></li>
                 </ul>
-                
-                <a href="inscription.html?pack=premium" class="btn btn-primary card-cta">
+
+                <a href="inscription.html?pack=tarif-premium-20" class="btn btn-primary card-cta">
                     Inscris-toi
                 </a>
             </div>
@@ -779,10 +1448,13 @@
             <div class="pricing-card">
                 <div class="card-header">
                     <h3>Permis Accéléré</h3>
+                    <div class="pricing-vehicle">
+                        <img src="assets/acceuil.png" alt="Vehicule boite manuelle Auto-Ecole Breteuil">
+                    </div>
                     <p class="card-subtitle">Code + 20 cours de conduite</p>
                     <p class="card-highlight">Formation en 30 jours</p>
                 </div>
-                
+
                 <div class="hours-selector">
                     <div class="hour-option" onclick="selectHours(this, 'accelere', 5)">
                         <span class="hour-number">5</span>
@@ -801,7 +1473,7 @@
                         <span class="hour-label">cours</span>
                     </div>
                 </div>
-                
+
                 <div class="price-display">
                     <div class="price-top-row">
                         <span class="price-label"></span>
@@ -810,20 +1482,21 @@
                             <p class="price-note">prix public</p>
                         </div>
                     </div>
-                    <div class="price" id="accelere-price">1049<span class="price-asterisk">€</span></div>
+                    <div class="price" id="accelere-price">899<span class="price-asterisk">€</span></div>
                 </div>
-                
+
                 <p class="features-title">Contenu du pack :</p>
                 <ul class="features-list">
-                    <li id="cours-accelere"><i class="fas fa-check-circle"></i> <span class="cours-count">20</span> cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours d'une heure se décompose en 15 mn de préparation en ligne et en 45 mn de cours en circulation</span></i></li>
+                    <li id="cours-accelere"><i class="fas fa-check-circle"></i> <span class="cours-count">20</span> cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours comprend 15 mn de préparation en ligne et 45 mn de conduite effective.</span></i></li>
                     <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
                     <li><i class="fas fa-check-circle"></i> Formation au Code</li>
+                    <li><i class="fas fa-check-circle"></i> Accompagnement le jour J compris</li>
                     <li><i class="fas fa-check-circle"></i> Formation en 30 jours</li>
-                    <li><i class="fas fa-check-circle"></i> Date de convocation à l'examen sous 30 jours</li>
+                    <li><i class="fas fa-check-circle"></i> Date de convocation à l'examen sous 30 jours <i class="info-tooltip exam-condition-tooltip" tabindex="0" aria-label="Condition de convocation à l'examen">ℹ<span class="tooltip-text">Sous réserve de validation du niveau par le moniteur, pour présenter l'élève au bon moment.</span></i></li>
                     <li><i class="fas fa-check-circle"></i> Cours de conduite disponibles le samedi</li>
                 </ul>
-                
-                <a href="inscription.html?pack=accelere" class="btn btn-primary card-cta">
+
+                <a href="inscription.html?pack=tarif-accelere-20" class="btn btn-primary card-cta">
                     Inscris-toi
                 </a>
             </div>
@@ -833,46 +1506,50 @@
     <!-- Pricing Section - Auto (hidden by default) -->
     <section class="pricing-section" id="auto-pricing" style="display: none;">
         <div class="pricing-grid">
-            <!-- Permis Zen BA -->
+            <!-- Permis Chill BA -->
             <div class="pricing-card">
                 <div class="card-header">
-                    <h3>Permis Zen<br>boîte automatique</h3>
+                    <h3>Permis Chill<br>boîte automatique</h3>
+                    <div class="pricing-vehicle">
+                        <img src="assets/vehicule-boite-auto.png" alt="Vehicule boite automatique Auto-Ecole Breteuil">
+                    </div>
                     <p class="card-subtitle">Code + 13 cours de conduite</p>
                     <p class="card-highlight">Offre la plus économique</p>
                 </div>
-                
+
                 <div class="hours-selector">
-                    <div class="hour-option" onclick="selectHours(this, 'zen-auto', 5)">
+                    <div class="hour-option" onclick="selectHours(this, 'chill-auto', 5)">
                         <span class="hour-number">5</span>
                         <span class="hour-label">cours</span>
                     </div>
-                    <div class="hour-option selected" onclick="selectHours(this, 'zen-auto', 13)">
+                    <div class="hour-option selected" onclick="selectHours(this, 'chill-auto', 13)">
                         <span class="hour-number">13</span>
                         <span class="hour-label">cours</span>
                     </div>
                 </div>
-                
+
                 <div class="price-display">
                     <div class="price-top-row">
                         <span class="price-label"></span>
                         <div class="price-right">
-                            <span class="old-price" id="zen-auto-old-price">749€</span>
+                            <span class="old-price" id="chill-auto-old-price">699€</span>
                             <p class="price-note">prix public</p>
                         </div>
                     </div>
-                    <div class="price" id="zen-auto-price">599<span class="price-asterisk">€</span></div>
+                    <div class="price" id="chill-auto-price">499<span class="price-asterisk">€</span></div>
                 </div>
-                
+
                 <p class="features-title">Contenu du pack :</p>
                 <ul class="features-list">
-                    <li id="cours-zen-auto"><i class="fas fa-check-circle"></i> <span class="cours-count">13</span> cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours d'une heure se décompose en 15 mn de préparation en ligne et en 45 mn de cours en circulation</span></i></li>
+                    <li id="cours-chill-auto"><i class="fas fa-check-circle"></i> <span class="cours-count">13</span> cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours comprend 15 mn de préparation en ligne et 45 mn de conduite effective.</span></i></li>
                     <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
                     <li><i class="fas fa-check-circle"></i> Formation au Code</li>
+                    <li><i class="fas fa-check-circle"></i> Accompagnement le jour J compris</li>
                     <li><span class="feature-x">✕</span> <span class="feature-disabled">Date de convocation à l'examen sous 30 jours</span></li>
                     <li><span class="feature-x">✕</span> <span class="feature-disabled">Formation en 30 jours</span></li>
                 </ul>
-                
-                <a href="inscription.html?pack=boite-auto" class="btn btn-primary card-cta">
+
+                <a href="inscription.html?pack=tarif-chill-auto-13" class="btn btn-primary card-cta">
                     Inscris-toi
                 </a>
             </div>
@@ -881,10 +1558,13 @@
             <div class="pricing-card popular">
                 <div class="card-header">
                     <h3>Permis Premium<br>boîte automatique</h3>
+                    <div class="pricing-vehicle">
+                        <img src="assets/vehicule-boite-auto.png" alt="Vehicule boite automatique Auto-Ecole Breteuil">
+                    </div>
                     <p class="card-subtitle">Code + 13 cours de conduite</p>
                     <p class="card-highlight">Date d'examen pratique sous 30 jours</p>
                 </div>
-                
+
                 <div class="hours-selector">
                     <div class="hour-option" onclick="selectHours(this, 'premium-auto', 5)">
                         <span class="hour-number">5</span>
@@ -895,28 +1575,29 @@
                         <span class="hour-label">cours</span>
                     </div>
                 </div>
-                
+
                 <div class="price-display">
                     <div class="price-top-row">
                         <span class="price-label"></span>
                         <div class="price-right">
-                            <span class="old-price" id="premium-auto-old-price">849€</span>
+                            <span class="old-price" id="premium-auto-old-price">899€</span>
                             <p class="price-note">prix public</p>
                         </div>
                     </div>
-                    <div class="price" id="premium-auto-price">699<span class="price-asterisk">€</span></div>
+                    <div class="price" id="premium-auto-price">599<span class="price-asterisk">€</span></div>
                 </div>
-                
+
                 <p class="features-title">Contenu du pack :</p>
                 <ul class="features-list">
-                    <li id="cours-premium-auto"><i class="fas fa-check-circle"></i> <span class="cours-count">13</span> cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours d'une heure se décompose en 15 mn de préparation en ligne et en 45 mn de cours en circulation</span></i></li>
+                    <li id="cours-premium-auto"><i class="fas fa-check-circle"></i> <span class="cours-count">13</span> cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours comprend 15 mn de préparation en ligne et 45 mn de conduite effective.</span></i></li>
                     <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
                     <li><i class="fas fa-check-circle"></i> Formation au Code</li>
-                    <li><i class="fas fa-check-circle"></i> Date de convocation à l'examen sous 30 jours</li>
+                    <li><i class="fas fa-check-circle"></i> Accompagnement le jour J compris</li>
+                    <li><i class="fas fa-check-circle"></i> Date de convocation à l'examen sous 30 jours <i class="info-tooltip exam-condition-tooltip" tabindex="0" aria-label="Condition de convocation à l'examen">ℹ<span class="tooltip-text">Sous réserve de validation du niveau par le moniteur, pour présenter l'élève au bon moment.</span></i></li>
                     <li><span class="feature-x">✕</span> <span class="feature-disabled">Formation en 30 jours</span></li>
                 </ul>
-                
-                <a href="inscription.html?pack=boite-auto" class="btn btn-primary card-cta">
+
+                <a href="inscription.html?pack=tarif-premium-auto-13" class="btn btn-primary card-cta">
                     Inscris-toi
                 </a>
             </div>
@@ -925,10 +1606,13 @@
             <div class="pricing-card">
                 <div class="card-header">
                     <h3>Permis Accéléré<br>boîte automatique</h3>
+                    <div class="pricing-vehicle">
+                        <img src="assets/vehicule-boite-auto.png" alt="Vehicule boite automatique Auto-Ecole Breteuil">
+                    </div>
                     <p class="card-subtitle">Code + 13 cours de conduite</p>
                     <p class="card-highlight">Formation en 30 jours</p>
                 </div>
-                
+
                 <div class="hours-selector">
                     <div class="hour-option" onclick="selectHours(this, 'accelere-auto', 5)">
                         <span class="hour-number">5</span>
@@ -939,29 +1623,30 @@
                         <span class="hour-label">cours</span>
                     </div>
                 </div>
-                
+
                 <div class="price-display">
                     <div class="price-top-row">
                         <span class="price-label"></span>
                         <div class="price-right">
-                            <span class="old-price" id="accelere-auto-old-price">999€</span>
+                            <span class="old-price" id="accelere-auto-old-price">1049€</span>
                             <p class="price-note">prix public</p>
                         </div>
                     </div>
-                    <div class="price" id="accelere-auto-price">849<span class="price-asterisk">€</span></div>
+                    <div class="price" id="accelere-auto-price">749<span class="price-asterisk">€</span></div>
                 </div>
-                
+
                 <p class="features-title">Contenu du pack :</p>
                 <ul class="features-list">
-                    <li id="cours-accelere-auto"><i class="fas fa-check-circle"></i> <span class="cours-count">13</span> cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours d'une heure se décompose en 15 mn de préparation en ligne et en 45 mn de cours en circulation</span></i></li>
+                    <li id="cours-accelere-auto"><i class="fas fa-check-circle"></i> <span class="cours-count">13</span> cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours comprend 15 mn de préparation en ligne et 45 mn de conduite effective.</span></i></li>
                     <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
                     <li><i class="fas fa-check-circle"></i> Formation au Code</li>
-                    <li><i class="fas fa-check-circle"></i> Date de convocation à l'examen sous 30 jours</li>
+                    <li><i class="fas fa-check-circle"></i> Accompagnement le jour J compris</li>
+                    <li><i class="fas fa-check-circle"></i> Date de convocation à l'examen sous 30 jours <i class="info-tooltip exam-condition-tooltip" tabindex="0" aria-label="Condition de convocation à l'examen">ℹ<span class="tooltip-text">Sous réserve de validation du niveau par le moniteur, pour présenter l'élève au bon moment.</span></i></li>
                     <li><i class="fas fa-check-circle"></i> Formation en 30 jours</li>
                     <li><i class="fas fa-check-circle"></i> Cours de conduite disponibles le samedi</li>
                 </ul>
-                
-                <a href="inscription.html?pack=boite-auto" class="btn btn-primary card-cta">
+
+                <a href="inscription.html?pack=tarif-accelere-auto-13" class="btn btn-primary card-cta">
                     Inscris-toi
                 </a>
             </div>
@@ -970,10 +1655,11 @@
 
     <!-- Conduite Accompagnée Section (hidden by default) -->
     <section class="pricing-section" id="aac-section" style="display: none;">
+        <span id="conduite-accompagnee" aria-hidden="true"></span>
         <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 3rem;">
             Notre pack <span style="color: #ec4899;">conduite accompagnée</span>
         </h2>
-        
+
         <!-- AAC Tabs -->
         <div style="text-align: center; margin-bottom: 3rem;">
             <div class="tabs">
@@ -987,31 +1673,42 @@
         </div>
 
         <!-- AAC Manual -->
-        <div id="aac-manual" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; max-width: 900px; margin: 0 auto;">
+        <div id="aac-manual" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; max-width: 720px; margin: 0 auto;">
             <div class="pricing-card">
                 <div class="card-header">
                     <h3>Conduite Accompagnée</h3>
+                    <div class="pricing-vehicle">
+                        <img src="assets/acceuil.png" alt="Vehicule boite manuelle Auto-Ecole Breteuil">
+                    </div>
                     <p class="card-subtitle">Code + 20 cours de conduite</p>
                     <p class="card-highlight">Dès 15 ans</p>
                 </div>
-                
+
+                <div class="hours-selector is-static" aria-label="Nombre de cours inclus">
+                    <div class="hour-option selected">
+                        <span class="hour-number">20</span>
+                        <span class="hour-label">cours</span>
+                    </div>
+                </div>
+
                 <div class="price-display">
                     <p class="price-label"></p>
-                    <div class="price">880<span class="price-asterisk">€</span></div>
+                    <div class="price">889<span class="price-asterisk">€</span></div>
                     <p class="price-note">prix public</p>
                 </div>
-                
+
                 <p class="features-title">Contenu du pack :</p>
                 <ul class="features-list">
-                    <li><i class="fas fa-check-circle"></i> 20 cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours d'une heure se décompose en 15 mn de préparation en ligne et en 45 mn de cours en circulation</span></i></li>
+                    <li><i class="fas fa-check-circle"></i> 20 cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours comprend 15 mn de préparation en ligne et 45 mn de conduite effective.</span></i></li>
                     <li><i class="fas fa-check-circle"></i> Âge : Dès 15 ans</li>
                     <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
                     <li><i class="fas fa-check-circle"></i> Formation au Code</li>
+                    <li><i class="fas fa-check-circle"></i> Accompagnement le jour J compris</li>
                     <li><i class="fas fa-check-circle"></i> Suivi de formation par un coach</li>
                     <li><i class="fas fa-check-circle"></i> Livret d'apprentissage (en ligne)</li>
                     <li><i class="fas fa-check-circle"></i> Rendez-vous préalable conduite accompagnée</li>
                 </ul>
-                
+
                 <a href="inscription.html?pack=aac" class="btn btn-primary card-cta">
                     Inscris-toi
                 </a>
@@ -1020,27 +1717,38 @@
             <div class="pricing-card">
                 <div class="card-header">
                     <h3>Conduite Supervisée</h3>
+                    <div class="pricing-vehicle">
+                        <img src="assets/acceuil.png" alt="Vehicule boite manuelle Auto-Ecole Breteuil">
+                    </div>
                     <p class="card-subtitle">Code + 20 cours de conduite</p>
                     <p class="card-highlight">Dès 18 ans</p>
                 </div>
-                
+
+                <div class="hours-selector is-static" aria-label="Nombre de cours inclus">
+                    <div class="hour-option selected">
+                        <span class="hour-number">20</span>
+                        <span class="hour-label">cours</span>
+                    </div>
+                </div>
+
                 <div class="price-display">
                     <p class="price-label"></p>
-                    <div class="price">880<span class="price-asterisk">€</span></div>
+                    <div class="price">889<span class="price-asterisk">€</span></div>
                     <p class="price-note">prix public</p>
                 </div>
-                
+
                 <p class="features-title">Contenu du pack :</p>
                 <ul class="features-list">
-                    <li><i class="fas fa-check-circle"></i> 20 cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours d'une heure se décompose en 15 mn de préparation en ligne et en 45 mn de cours en circulation</span></i></li>
+                    <li><i class="fas fa-check-circle"></i> 20 cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours comprend 15 mn de préparation en ligne et 45 mn de conduite effective.</span></i></li>
                     <li><i class="fas fa-check-circle"></i> Âge : Dès 18 ans</li>
                     <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
                     <li><i class="fas fa-check-circle"></i> Formation au Code</li>
+                    <li><i class="fas fa-check-circle"></i> Accompagnement le jour J compris</li>
                     <li><i class="fas fa-check-circle"></i> Suivi de formation par un coach</li>
                     <li><i class="fas fa-check-circle"></i> Livret d'apprentissage (en ligne)</li>
                     <li><i class="fas fa-check-circle"></i> Rendez-vous préalable conduite supervisée</li>
                 </ul>
-                
+
                 <a href="inscription.html?pack=supervisee" class="btn btn-primary card-cta">
                     Inscris-toi
                 </a>
@@ -1048,31 +1756,42 @@
         </div>
 
         <!-- AAC Auto -->
-        <div id="aac-auto" style="display: none; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; max-width: 900px; margin: 0 auto;">
+        <div id="aac-auto" style="display: none; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; max-width: 720px; margin: 0 auto;">
             <div class="pricing-card">
                 <div class="card-header">
                     <h3>Conduite Accompagnée boîte automatique</h3>
+                    <div class="pricing-vehicle">
+                        <img src="assets/vehicule-boite-auto.png" alt="Vehicule boite automatique Auto-Ecole Breteuil">
+                    </div>
                     <p class="card-subtitle">Code + 13 cours de conduite</p>
                     <p class="card-highlight">Dès 15 ans</p>
                 </div>
-                
+
+                <div class="hours-selector is-static" aria-label="Nombre de cours inclus">
+                    <div class="hour-option selected">
+                        <span class="hour-number">13</span>
+                        <span class="hour-label">cours</span>
+                    </div>
+                </div>
+
                 <div class="price-display">
                     <p class="price-label"></p>
-                    <div class="price">650<span class="price-asterisk">€</span></div>
+                    <div class="price">639<span class="price-asterisk">€</span></div>
                     <p class="price-note">prix public</p>
                 </div>
-                
+
                 <p class="features-title">Contenu du pack :</p>
                 <ul class="features-list">
-                    <li><i class="fas fa-check-circle"></i> 13 cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours d'une heure se décompose en 15 mn de préparation en ligne et en 45 mn de cours en circulation</span></i></li>
+                    <li><i class="fas fa-check-circle"></i> 13 cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours comprend 15 mn de préparation en ligne et 45 mn de conduite effective.</span></i></li>
                     <li><i class="fas fa-check-circle"></i> Âge : Dès 15 ans</li>
                     <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
                     <li><i class="fas fa-check-circle"></i> Formation au Code</li>
+                    <li><i class="fas fa-check-circle"></i> Accompagnement le jour J compris</li>
                     <li><i class="fas fa-check-circle"></i> Suivi de formation par un coach</li>
                     <li><i class="fas fa-check-circle"></i> Livret d'apprentissage (en ligne)</li>
                     <li><i class="fas fa-check-circle"></i> Rendez-vous préalable conduite accompagnée</li>
                 </ul>
-                
+
                 <a href="inscription.html?pack=aac" class="btn btn-primary card-cta">
                     Inscris-toi
                 </a>
@@ -1081,27 +1800,38 @@
             <div class="pricing-card">
                 <div class="card-header">
                     <h3>Conduite Supervisée boîte automatique</h3>
+                    <div class="pricing-vehicle">
+                        <img src="assets/vehicule-boite-auto.png" alt="Vehicule boite automatique Auto-Ecole Breteuil">
+                    </div>
                     <p class="card-subtitle">Code + 13 cours de conduite</p>
                     <p class="card-highlight">Dès 18 ans</p>
                 </div>
-                
+
+                <div class="hours-selector is-static" aria-label="Nombre de cours inclus">
+                    <div class="hour-option selected">
+                        <span class="hour-number">13</span>
+                        <span class="hour-label">cours</span>
+                    </div>
+                </div>
+
                 <div class="price-display">
                     <p class="price-label"></p>
-                    <div class="price">650<span class="price-asterisk">€</span></div>
+                    <div class="price">639<span class="price-asterisk">€</span></div>
                     <p class="price-note">prix public</p>
                 </div>
-                
+
                 <p class="features-title">Contenu du pack :</p>
                 <ul class="features-list">
-                    <li><i class="fas fa-check-circle"></i> 13 cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours d'une heure se décompose en 15 mn de préparation en ligne et en 45 mn de cours en circulation</span></i></li>
+                    <li><i class="fas fa-check-circle"></i> 13 cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours comprend 15 mn de préparation en ligne et 45 mn de conduite effective.</span></i></li>
                     <li><i class="fas fa-check-circle"></i> Âge : Dès 18 ans</li>
                     <li><i class="fas fa-check-circle"></i> Évaluation initiale</li>
                     <li><i class="fas fa-check-circle"></i> Formation au Code</li>
+                    <li><i class="fas fa-check-circle"></i> Accompagnement le jour J compris</li>
                     <li><i class="fas fa-check-circle"></i> Suivi de formation par un coach</li>
                     <li><i class="fas fa-check-circle"></i> Livret d'apprentissage (en ligne)</li>
                     <li><i class="fas fa-check-circle"></i> Rendez-vous préalable conduite supervisée</li>
                 </ul>
-                
+
                 <a href="inscription.html?pack=supervisee" class="btn btn-primary card-cta">
                     Inscris-toi
                 </a>
@@ -1114,29 +1844,40 @@
         <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 1rem;">
             Voiture sans permis <span style="color: #64748b; font-size: 1.5rem;">(Permis AM)</span>
         </h2>
-        
-        <div style="max-width: 400px; margin: 0 auto;">
+
+        <div style="max-width: 360px; margin: 0 auto;">
             <div class="pricing-card">
                 <div class="card-header">
                     <h3>Permis Young</h3>
+                    <div class="pricing-vehicle">
+                        <img src="assets/vehicule-boite-auto.png" alt="Vehicule boite automatique Auto-Ecole Breteuil">
+                    </div>
                     <p class="card-subtitle">Code + 8 cours de conduite</p>
                     <p class="card-highlight">Voiture sans permis</p>
                 </div>
-                
+
+                <div class="hours-selector is-static" aria-label="Nombre de cours inclus">
+                    <div class="hour-option selected">
+                        <span class="hour-number">8</span>
+                        <span class="hour-label">cours</span>
+                    </div>
+                </div>
+
                 <div class="price-display">
                     <p class="price-label"></p>
                     <div class="price">350<span class="price-asterisk">€</span></div>
                     <p class="price-note">prix public</p>
                 </div>
-                
+
                 <p class="features-title">Contenu du pack :</p>
                 <ul class="features-list">
                     <li><i class="fas fa-check-circle"></i> Formation au Code</li>
-                    <li><i class="fas fa-check-circle"></i> 8 cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours d'une heure se décompose en 15 mn de préparation en ligne et en 45 mn de cours en circulation</span></i></li>
+                    <li><i class="fas fa-check-circle"></i> 8 cours de conduite <i class="info-tooltip">ℹ<span class="tooltip-text">Chaque cours comprend 15 mn de préparation en ligne et 45 mn de conduite effective.</span></i></li>
                     <li><i class="fas fa-check-circle"></i> Cours de conduite disponibles le samedi</li>
+                    <li><i class="fas fa-check-circle"></i> Accompagnement le jour J compris</li>
                     <li><i class="fas fa-check-circle"></i> Permis blanc compris</li>
                 </ul>
-                
+
                 <a href="inscription.html?pack=am" class="btn btn-primary card-cta">
                     Inscris-toi
                 </a>
@@ -1149,27 +1890,27 @@
         <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 3rem;">
             Nos packs <span style="color: #ec4899;">Code</span>
         </h2>
-        
-        <div class="pricing-grid" style="max-width: 900px; margin: 0 auto; grid-template-columns: repeat(2, 1fr);">
+
+        <div class="pricing-grid" style="max-width: 720px; margin: 0 auto; grid-template-columns: repeat(2, 1fr);">
             <!-- Pack Étudiant -->
             <div class="pricing-card">
                 <div class="card-header">
                     <h3>Pack Étudiant</h3>
                     <p class="card-subtitle">Idéal pour réviser à ton rythme</p>
                 </div>
-                
+
                 <div class="price-display">
                     <div class="price">15<span class="price-asterisk">€</span></div>
                     <p class="price-note">/ mois</p>
                 </div>
-                
+
                 <p class="features-title">Contenu du pack :</p>
                 <ul class="features-list">
                     <li><i class="fas fa-check-circle"></i> Accès à l'app de code</li>
                     <li><i class="fas fa-check-circle"></i> Cours en vidéos et manuel en ligne</li>
                     <li><i class="fas fa-check-circle"></i> 5000 questions et 30 examens blancs</li>
                 </ul>
-                
+
                 <a href="inscription.html?pack=code-etudiant" class="btn btn-primary card-cta">
                     Inscris-toi
                 </a>
@@ -1182,23 +1923,150 @@
                     <h3>Pack Classique</h3>
                     <p class="card-subtitle">Le meilleur choix pour être prêt le jour J</p>
                 </div>
-                
+
                 <div class="price-display">
                     <div class="price">20<span class="price-asterisk">€</span></div>
                     <p class="price-note">/ mois</p>
                 </div>
-                
+
                 <p class="features-title">Contenu du pack :</p>
                 <ul class="features-list">
                     <li><i class="fas fa-check-circle"></i> Accès à l'app de code</li>
                     <li><i class="fas fa-check-circle"></i> Cours en vidéos et manuel en ligne</li>
                     <li><i class="fas fa-check-circle"></i> 5000 questions et 30 examens blancs</li>
                 </ul>
-                
+
                 <a href="inscription.html?pack=code-classique" class="btn btn-primary card-cta">
                     Inscris-toi
                 </a>
                 <p style="color: #64748b; font-size: 0.85rem; margin-top: 0.75rem; text-align: center;">Sans engagement — tu arrêtes quand tu veux.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="hourly-rate-section" aria-label="Offres à la carte">
+        <div class="hourly-rate-card">
+            <div class="hourly-rate-header">
+                <h2>Découvre nos offres <span style="color: #ec4899;">à la carte</span></h2>
+                <p>Il est possible de compléter ta formation selon tes besoins</p>
+            </div>
+            <div class="hourly-rate-grid">
+                <div class="hourly-rate-item">
+                    <span class="hourly-rate-name">Cours de conduite boîte manuelle</span>
+                    <strong class="hourly-rate-price">50&euro;/cours</strong>
+                    <button type="button" class="hourly-rate-action" onclick="selectPack('heures-conduite', 'Cours de conduite boîte manuelle', 50, 1, 'manual')">Ajouter</button>
+                </div>
+                <div class="hourly-rate-item">
+                    <span class="hourly-rate-name">Cours de conduite boîte automatique</span>
+                    <strong class="hourly-rate-price">60&euro;/cours</strong>
+                    <button type="button" class="hourly-rate-action" onclick="selectPack('heures-conduite', 'Cours de conduite boîte automatique', 60, 1, 'auto')">Ajouter</button>
+                </div>
+                <div class="hourly-rate-item">
+                    <span class="hourly-rate-name">Rendez-vous préalable ou pédagogique</span>
+                    <strong class="hourly-rate-price">80&euro;</strong>
+                    <button type="button" class="hourly-rate-action" onclick="selectPack('carte-rdv', 'Rendez-vous préalable ou pédagogique', 80, 0, 'manual')">Ajouter</button>
+                </div>
+                <div class="hourly-rate-item">
+                    <span class="hourly-rate-name">Accompagnement à l'épreuve pratique boîte manuelle</span>
+                    <strong class="hourly-rate-price">90&euro;</strong>
+                    <button type="button" class="hourly-rate-action" onclick="selectPack('carte-accompagnement-manual', 'Accompagnement à l\u0027épreuve pratique boîte manuelle', 90, 0, 'manual')">Ajouter</button>
+                </div>
+                <div class="hourly-rate-item">
+                    <span class="hourly-rate-name">Accompagnement à l'épreuve pratique boîte automatique</span>
+                    <strong class="hourly-rate-price">100&euro;</strong>
+                    <button type="button" class="hourly-rate-action" onclick="selectPack('carte-accompagnement-auto', 'Accompagnement à l\u0027épreuve pratique boîte automatique', 100, 0, 'auto')">Ajouter</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="terms-access-section" aria-label="Conditions générales de vente" style="padding: 0 1.5rem 3rem;">
+        <div style="max-width: 980px; margin: 0 auto; padding: 1.2rem 1.4rem; border-radius: 18px; background: #f8fbff; border: 1px solid #dbeafe; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
+            <p style="margin: 0; color: #334155; font-weight: 600;">
+                Avant validation d'un pack, les conditions générales de vente sont accessibles et doivent être acceptées lors de l'inscription.
+            </p>
+            <a href="cgv.html" target="_blank" style="display: inline-flex; align-items: center; gap: .5rem; min-height: 42px; padding: 0 1rem; border-radius: 999px; background: #ec4899; color: #fff; text-decoration: none; font-weight: 800;">
+                <i class="fas fa-file-contract"></i> Lire les CGV
+            </a>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" id="faq">
+        <div class="faq-header">
+            <h2>Questions fréquentes</h2>
+            <p>Les réponses aux questions que les élèves nous posent le plus souvent avant de s'inscrire.</p>
+        </div>
+
+        <div class="faq-grid">
+            <div class="faq-item">
+                <h3>Quel forfait choisir pour commencer ?</h3>
+                <p>Le forfait dépend de ton niveau, de ton expérience et de ton objectif. Si tu hésites, commence par demander un devis ou une évaluation : on t'oriente vers la formule la plus adaptée.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Est-ce que le code est compris dans les packs ?</h3>
+                <p>Oui, les packs permis incluent une formation au code. Tu peux aussi choisir un pack code seul si tu veux d'abord préparer l'examen théorique.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Combien de cours de conduite faut-il prévoir ?</h3>
+                <p>Le minimum légal correspond à 20 cours en boîte manuelle et 13 cours en boîte automatique. En pratique, la moyenne française est d'environ 26h de conduite en boîte manuelle. Le volume final dépend de ton niveau, de ta régularité et de ta progression.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Comment fonctionne la conduite accompagnée ?</h3>
+                <p>La conduite accompagnée peut être délivrée uniquement après le rendez-vous préalable. Ce rendez-vous est placé après les 20 cours de conduite. Une fois cette étape validée, tu peux conduire de ton côté avec un accompagnateur qui possède le permis depuis plus de 5 ans. Le fonctionnement est le même pour la conduite supervisée.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Dans quel délai dois-je réaliser mes cours de conduite ou mon code ?</h3>
+                <p>Tu as un an pour réaliser tes cours de conduite à partir du moment où tu as acheté ton pack. Pour le code, c'est la même chose : tu as un an pour t'entraîner à partir de l'achat de ton accès.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Puis-je conduire le samedi ?</h3>
+                <p>Oui, mais les leçons du samedi sont réservées en priorité aux élèves en forfait accéléré. En cas de désistement, les élèves en accéléré sont aussi contactés en priorité pour récupérer le créneau.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Comment réserver mes leçons ?</h3>
+                <p>Une fois inscrit, tu as accès à ton espace élève depuis le site. Tu peux y voir les plannings des moniteurs, leurs disponibilités et organiser tes leçons. Tu peux aussi passer directement à l'agence si tu préfères.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Y a-t-il des conditions pour annuler un cours de conduite ?</h3>
+                <p>Les cours de conduite peuvent être annulés sans frais si l'annulation est faite plus de 48h avant la leçon. En dessous de ce délai, un justificatif recevable est demandé pour permettre le remboursement automatique.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Peut-on payer en plusieurs fois ?</h3>
+                <p>Oui, il est possible de payer jusqu'en 3 fois, directement depuis le site ou bien au bureau.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Quand suis-je présenté à l'examen ?</h3>
+                <p>C'est ton moniteur qui détermine d'ici combien de cours tu seras prêt. Il demandera une date d'examen avant que tu arrives à la fin de ton forfait, afin que tu puisses passer ton examen dans la continuité de ta formation.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Où sont les rendez-vous pour la conduite ?</h3>
+                <p>Les rendez-vous de conduite se font au métro Saint-Barnabé. L'emplacement précis sera indiqué dans ton espace élève, avec le nom du moniteur, ses coordonnées et les informations utiles pour ton rendez-vous.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Où trouver mon numéro NEPH ?</h3>
+                <p>Le numéro NEPH est souvent visible dans ton espace ANTS, sur ton attestation d'inscription au permis de conduire, sur ton livret numérique, sur le mail reçu lors de l'obtention du code ou sur ton permis si tu en as déjà un. En cas de perte, tu peux faire une demande officielle sur <a href="https://www.service-public.fr/particuliers/vosdroits/R70625" target="_blank" rel="noopener">Service-Public.fr</a>.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Quels sont les critères le jour de l'examen de conduite ?</h3>
+                <p>Le jour de l'examen pratique, l'inspecteur vérifie ta compréhension du code de la route, ta maîtrise du véhicule et ta capacité à conduire en sécurité dans des conditions réelles. Il observe aussi ton anticipation, ton adaptation aux situations, ton calme et ta confiance au volant.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Quels documents faut-il pour s'inscrire ?</h3>
+                <p>Il faut généralement une pièce d'identité, un justificatif de domicile, une photo-signature numérique et, selon ta situation, des documents complémentaires.</p>
             </div>
         </div>
     </section>
@@ -1240,7 +2108,7 @@
             const vspSection = document.getElementById('vsp-section');
             const codeSection = document.getElementById('code-section');
             const tabsContainer = document.querySelector('.tabs-container');
-            
+
             // Update active tab
             categoryTabs.forEach(tab => {
                 tab.classList.remove('active');
@@ -1252,7 +2120,7 @@
             event.target.style.borderBottomColor = '#ec4899';
             event.target.style.color = '#ec4899';
             event.target.style.fontWeight = '600';
-            
+
             // Hide all
             permisSection.style.display = 'none';
             autoSection.style.display = 'none';
@@ -1260,7 +2128,7 @@
             vspSection.style.display = 'none';
             codeSection.style.display = 'none';
             tabsContainer.style.display = 'none';
-            
+
             if (section === 'permis') {
                 permisSection.style.display = 'block';
                 tabsContainer.style.display = 'block';
@@ -1272,15 +2140,15 @@
                 codeSection.style.display = 'block';
             }
         }
-        
+
         function switchTab(type) {
             const tabs = document.querySelectorAll('.tab-btn');
             const manualSection = document.getElementById('manual-pricing');
             const autoSection = document.getElementById('auto-pricing');
-            
+
             tabs.forEach(tab => tab.classList.remove('active'));
             event.target.classList.add('active');
-            
+
             if (type === 'manual') {
                 manualSection.style.display = 'block';
                 autoSection.style.display = 'none';
@@ -1289,15 +2157,15 @@
                 autoSection.style.display = 'block';
             }
         }
-        
+
         function switchAACTab(type) {
             const aacManual = document.getElementById('aac-manual');
             const aacAuto = document.getElementById('aac-auto');
             const aacBtns = document.querySelectorAll('#aac-section .tab-btn');
-            
+
             aacBtns.forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
-            
+
             if (type === 'manual') {
                 aacManual.style.display = 'grid';
                 aacAuto.style.display = 'none';
@@ -1306,46 +2174,109 @@
                 aacAuto.style.display = 'grid';
             }
         }
-        
+
+        const tariffPrices = {
+            'chill': { 5: 249, 10: 499, 20: 649, 30: 1149 },
+            'premium': { 5: 395, 10: 599, 20: 749, 30: 1249 },
+            'accelere': { 5: 499, 10: 749, 20: 899, 30: 1399 },
+            'chill-auto': { 5: 269, 13: 499 },
+            'premium-auto': { 5: 379, 13: 599 },
+            'accelere-auto': { 5: 499, 13: 749 }
+        };
+
+        const tariffOldPrices = {
+            'chill': { 5: 274, 10: 549, 20: 849, 30: 1349 },
+            'premium': { 5: 495, 10: 769, 20: 1049, 30: 1549 },
+            'accelere': { 5: 649, 10: 899, 20: 1249, 30: 1749 },
+            'chill-auto': { 5: 299, 13: 699 },
+            'premium-auto': { 5: 529, 13: 899 },
+            'accelere-auto': { 5: 649, 13: 1049 }
+        };
+
+        function buildInscriptionUrl(pack, hours, price, card) {
+            const urlPack = `tarif-${pack}-${hours}`;
+            const title = card.querySelector('.card-header h3')?.innerText.replace(/\s+/g, ' ').trim() || pack;
+            const transmission = pack.includes('-auto') ? 'auto' : 'manual';
+            const params = new URLSearchParams({
+                pack: urlPack,
+                price: String(price),
+                hours: String(hours),
+                transmission: transmission,
+                label: title + ' - ' + hours + ' cours'
+            });
+
+            return 'inscription.html?' + params.toString();
+        }
+
+        function updateCardInscriptionLink(card, pack, hours, price) {
+            const cta = card.querySelector('.card-cta');
+            if (!cta || !price) return;
+            cta.href = buildInscriptionUrl(pack, hours, price, card);
+        }
+
         function selectHours(element, pack, hours) {
             const parent = element.parentElement;
+            const card = element.closest('.pricing-card');
             parent.querySelectorAll('.hour-option').forEach(opt => opt.classList.remove('selected'));
             element.classList.add('selected');
-            
-            // Update price based on hours
-            const prices = {
-                'zen': { 5: 249, 10: 499, 20: 749, 30: 1249 },
-                'premium': { 5: 395, 10: 549, 20: 849, 30: 1349 },
-                'accelere': { 5: 499, 10: 699, 20: 1049, 30: 1549 },
-                'zen-auto': { 5: 269, 13: 599 },
-                'premium-auto': { 5: 379, 13: 699 },
-                'accelere-auto': { 5: 499, 13: 849 }
-            };
-            
-            const oldPrices = {
-                'zen': { 5: 349, 10: 599, 20: 899, 30: 1499 },
-                'premium': { 5: 495, 10: 699, 20: 999, 30: 1599 },
-                'accelere': { 5: 599, 10: 849, 20: 1249, 30: 1799 },
-                'zen-auto': { 5: 369, 13: 749 },
-                'premium-auto': { 5: 479, 13: 849 },
-                'accelere-auto': { 5: 599, 13: 999 }
-            };
-            
+
             const oldPriceElement = document.getElementById(pack + '-old-price');
-            if (oldPriceElement && oldPrices[pack] && oldPrices[pack][hours]) {
-                oldPriceElement.textContent = oldPrices[pack][hours] + '€';
+            if (oldPriceElement && tariffOldPrices[pack] && tariffOldPrices[pack][hours]) {
+                oldPriceElement.textContent = tariffOldPrices[pack][hours] + '€';
             }
-            
+
             const priceElement = document.getElementById(pack + '-price');
-            if (priceElement && prices[pack] && prices[pack][hours]) {
-                priceElement.innerHTML = prices[pack][hours] + '<span class="price-asterisk">€</span>';
+            if (priceElement && tariffPrices[pack] && tariffPrices[pack][hours]) {
+                priceElement.innerHTML = tariffPrices[pack][hours] + '<span class="price-asterisk">€</span>';
             }
-            
+
             const coursElement = document.querySelector('#cours-' + pack + ' .cours-count');
             if (coursElement) {
                 coursElement.textContent = hours;
             }
+
+            if (card && tariffPrices[pack] && tariffPrices[pack][hours]) {
+                updateCardInscriptionLink(card, pack, hours, tariffPrices[pack][hours]);
+            }
         }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.hours-selector .hour-option.selected').forEach(function (option) {
+                const onclick = option.getAttribute('onclick') || '';
+                const match = onclick.match(/selectHours\(this,\s*'([^']+)',\s*(\d+)\)/);
+                if (!match) return;
+                selectHours(option, match[1], parseInt(match[2], 10));
+            });
+
+            const fixedPacks = [
+                { selector: '#aac-manual a[href="inscription.html?pack=aac"]', pack: 'tarif-aac-20', hours: 20, price: 889, transmission: 'manual' },
+                { selector: '#aac-manual a[href="inscription.html?pack=supervisee"]', pack: 'tarif-supervisee-20', hours: 20, price: 889, transmission: 'manual' },
+                { selector: '#aac-auto a[href="inscription.html?pack=aac"]', pack: 'tarif-aac-auto-13', hours: 13, price: 639, transmission: 'auto' },
+                { selector: '#aac-auto a[href="inscription.html?pack=supervisee"]', pack: 'tarif-supervisee-auto-13', hours: 13, price: 639, transmission: 'auto' },
+                { selector: 'a[href="inscription.html?pack=am"]', pack: 'am', hours: 8, price: 350, transmission: 'auto' },
+                { selector: 'a[href="inscription.html?pack=code-etudiant"]', pack: 'code-etudiant', hours: 0, price: 15, transmission: 'none' },
+                { selector: 'a[href="inscription.html?pack=code-classique"]', pack: 'code-classique', hours: 0, price: 20, transmission: 'none' }
+            ];
+
+            fixedPacks.forEach(function (item) {
+                document.querySelectorAll(item.selector).forEach(function (cta) {
+                    const card = cta.closest('.pricing-card');
+                    const title = card?.querySelector('.card-header h3')?.innerText.replace(/\s+/g, ' ').trim() || item.pack;
+                    const params = new URLSearchParams({
+                        pack: item.pack,
+                        price: String(item.price),
+                        hours: String(item.hours),
+                        transmission: item.transmission,
+                        label: title
+                    });
+                    cta.href = 'inscription.html?' + params.toString();
+                });
+            });
+        });
     </script>
+    <script src="assets/js/navbar.js"></script>
+    <script src="assets/js/mobile-menu.js"></script>
+    <script src="assets/js/site-footer.js"></script>
+    <script src="assets/js/text-encoding-fix.js?v=2"></script>
 </body>
 </html>

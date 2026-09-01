@@ -204,7 +204,7 @@
         .ev.available { background: rgba(0,0,0,0.015); }
         .ev.available::before { background: #d1d1d6; }
         
-        .ev.permis { background: rgba(156, 39, 176, 0.15); cursor: not-allowed; }
+        .ev.permis { background: rgba(156, 39, 176, 0.15); cursor: pointer; }
         .ev.permis::before { background: #9c27b0; }
         .ev.permis .ev-status { color: #7b1fa2; font-weight: 700; }
         
@@ -278,6 +278,100 @@
         .list-item .item-badge.new { background: rgba(255,59,48,0.1); color: var(--red); }
         .list-item .item-badge.read { background: rgba(0,0,0,0.04); color: var(--text2); }
 
+        .expense-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .expense-field {
+            display: grid;
+            gap: 6px;
+        }
+
+        .expense-field.full { grid-column: 1 / -1; }
+
+        .expense-field label {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text2);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .expense-field input,
+        .expense-field select,
+        .expense-field textarea {
+            width: 100%;
+            min-height: 42px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 12px;
+            font: inherit;
+            color: var(--text);
+            background: white;
+        }
+
+        .expense-field textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        .expense-submit {
+            border: none;
+            border-radius: 10px;
+            min-height: 46px;
+            padding: 0 18px;
+            background: var(--blue);
+            color: white;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 8px 18px rgba(0,113,227,0.18);
+        }
+
+        .expense-feedback {
+            min-height: 20px;
+            font-size: 0.88rem;
+            color: var(--text2);
+            margin-top: 10px;
+        }
+
+        .expense-feedback.success { color: var(--green); }
+        .expense-feedback.error { color: var(--red); }
+
+        .expense-history {
+            display: grid;
+            gap: 10px;
+        }
+
+        .expense-history-item {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+            background: #fafafa;
+        }
+
+        .expense-history-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .expense-history-meta {
+            font-size: 0.76rem;
+            color: var(--text2);
+            margin-top: 3px;
+            line-height: 1.35;
+        }
+
+        .expense-history-amount {
+            font-weight: 900;
+            white-space: nowrap;
+        }
+
         /* ── Modal ── */
         .modal-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
@@ -334,6 +428,7 @@
             <a href="index.html" class="topbar-brand">Auto-Ecole Breteuil</a>
             <div class="topbar-tabs">
                 <button class="active" data-tab="planning">Mon Planning</button>
+                <button data-tab="frais">Frais v&eacute;hicule</button>
                 <button data-tab="messages">Messages</button>
                 <button data-tab="annulations">Annulations</button>
             </div>
@@ -470,6 +565,9 @@
                 <div class="section-header">
                     <h2><i class="fas fa-calendar-alt" style="margin-right:8px;color:var(--blue);"></i> Mon Planning</h2>
                     <div style="display:flex;align-items:center;gap:8px;">
+                        <button class="btn-exam-request" type="button" onclick="openExamRequestModal()">
+                            <i class="fas fa-flag-checkered"></i> Demande permis
+                        </button>
                         <button class="btn-today" id="todayBtn">Aujourd'hui</button>
                         <div class="week-nav">
                             <button id="prevWeekBtn"><i class="fas fa-chevron-left"></i></button>
@@ -480,6 +578,76 @@
                 </div>
                 <div class="section-body" style="padding:0;">
                     <div class="cal-grid" id="planningGrid"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Frais vehicule -->
+        <div class="tab-content" id="tab-frais">
+            <div class="section-card">
+                <div class="section-header">
+                    <h2><i class="fas fa-receipt" style="margin-right:8px;color:var(--orange);"></i> Frais v&eacute;hicule</h2>
+                </div>
+                <div class="section-body">
+                    <form id="expenseForm" class="expense-grid">
+                        <div class="expense-field">
+                            <label for="expenseKind">Type de frais</label>
+                            <select id="expenseKind" required>
+                                <option value="fuel">Ticket d'essence</option>
+                                <option value="incident">Incident impr&eacute;visible</option>
+                            </select>
+                        </div>
+                        <div class="expense-field">
+                            <label for="expensePlate">Plaque d'immatriculation</label>
+                            <input id="expensePlate" type="text" list="expenseVehicles" placeholder="Choisir le véhicule" required>
+                            <datalist id="expenseVehicles">
+                                <option value="C3 N°1 EW-426-SR"></option>
+                                <option value="C3 N°2 permis"></option>
+                                <option value="C4"></option>
+                            </datalist>
+                        </div>
+                        <div class="expense-field">
+                            <label for="expenseDate">Date</label>
+                            <input id="expenseDate" type="date" required>
+                        </div>
+                        <div class="expense-field">
+                            <label for="expenseTime">Heure</label>
+                            <input id="expenseTime" type="time">
+                        </div>
+                        <div class="expense-field">
+                            <label for="expenseAmount">Montant</label>
+                            <input id="expenseAmount" type="number" min="0.01" step="0.01" placeholder="0,00" required>
+                        </div>
+                        <div class="expense-field" id="incidentTypeWrap" style="display:none;">
+                            <label for="incidentType">Type d'incident</label>
+                            <input id="incidentType" type="text" placeholder="Pneu, carrosserie, voyant, panne...">
+                        </div>
+                        <div class="expense-field full">
+                            <label for="expensePhoto">Lien photo du ticket ou devis</label>
+                            <input id="expensePhoto" type="url" placeholder="https://...">
+                        </div>
+                        <div class="expense-field full">
+                            <label for="expenseComment">Commentaire</label>
+                            <textarea id="expenseComment" placeholder="Ajoute les informations utiles pour l'administration."></textarea>
+                        </div>
+                        <div class="expense-field full">
+                            <button class="expense-submit" type="submit"><i class="fas fa-paper-plane"></i> Envoyer le frais</button>
+                            <p class="expense-feedback" id="expenseFeedback"></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="section-card">
+                <div class="section-header">
+                    <h2><i class="fas fa-clock-rotate-left" style="margin-right:8px;color:var(--blue);"></i> Mes derniers frais saisis</h2>
+                </div>
+                <div class="section-body">
+                    <div class="expense-history" id="expenseHistory">
+                        <div class="empty-state">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <p>Chargement des frais...</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -529,8 +697,26 @@
     </div>
 
     <script src="https://unpkg.com/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
-    <script src="assets/js/supabaseClient.js"></script>
-    <script src="assets/js/espace-moniteur-bonus.js"></script>
-    <script src="assets/js/espace-moniteur.js?v=8"></script>
+    <script src="assets/js/supabaseClient.js?v=8"></script>
+    <script src="assets/js/page-auth-guard.js" data-roles="instructor"></script>
+    <script>
+        // Vérifier la session avant de charger les autres scripts
+        (function() {
+            const instructorSession = sessionStorage.getItem('instructorSession');
+            const oldSession = localStorage.getItem('ae_user') || sessionStorage.getItem('ae_user');
+            
+            // Si aucune session valide, rediriger vers l'accueil
+            if (!instructorSession && !oldSession) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            console.log('✅ Session moniteur détectée');
+        })();
+    </script>
+    <script src="assets/js/espace-moniteur-bonus.js?v=17"></script>
+    <script src="assets/js/espace-moniteur.js?v=27"></script>
+    <script src="assets/js/exam-request.js?v=4"></script>
+    <script src="assets/js/text-encoding-fix.js?v=2"></script>
 </body>
 </html>

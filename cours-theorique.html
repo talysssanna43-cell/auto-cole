@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cours Théorique - Auto-Ecole Breteuil</title>
+    <title>Preparation permis - Auto-Ecole Breteuil</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -73,7 +73,7 @@
         }
         .session-card.completed { border-color: #10b981; }
         .session-card.completed::after {
-            content: '✓'; position: absolute; top: 1rem; right: 1rem;
+            content: '?'; position: absolute; top: 1rem; right: 1rem;
             background: #10b981; color: white; width: 28px; height: 28px;
             border-radius: 50%; display: flex; align-items: center;
             justify-content: center; font-weight: 700; font-size: 0.85rem;
@@ -110,16 +110,9 @@
             margin-bottom: 1.5rem;
         }
         .question-illustration {
-            width: 100%; max-width: 520px; height: 260px; border-radius: 16px;
-            margin: 0 auto 1.5rem; overflow: hidden; position: relative;
-            background: #1e293b;
-        }
-        .question-illustration img {
-            width: 100%; height: 100%; object-fit: contain; display: block;
-        }
-        .question-illustration .img-fallback {
-            width: 100%; height: 100%; display: flex; align-items: center;
-            justify-content: center; font-size: 3rem; color: white;
+            width: 80px; height: 80px; border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; color: white; margin: 0 auto 1.5rem;
         }
         .question-text {
             font-size: 1.15rem; font-weight: 600; color: #0f172a;
@@ -230,16 +223,16 @@
 </head>
 <body>
     <div class="quiz-header">
-        <a href="espace-eleve.html" class="back-link"><i class="fas fa-arrow-left"></i> Retour à l'espace élève</a>
-        <h1><i class="fas fa-graduation-cap"></i> Cours Théoriques</h1>
-        <p>20 séances de 15 minutes • 400 questions QCM • Correction vocale</p>
+        <a href="espace-eleve.html" class="back-link"><i class="fas fa-arrow-left"></i> Retour a l'espace eleve</a>
+        <h1><i class="fas fa-graduation-cap"></i> Preparation permis</h1>
+        <p>7 seances de 15 minutes pour preparer tes cours de conduite et ton examen.</p>
     </div>
 
     <div class="container">
         <!-- Sessions list -->
         <div id="sessionsView">
-            <h2 style="font-size: 1.3rem; color: #0f172a; margin-bottom: 0.5rem;">Choisis ta séance</h2>
-            <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1.5rem;">Chaque séance dure environ 15 minutes. Les questions sont lues à voix haute et la correction est expliquée oralement.</p>
+            <h2 style="font-size: 1.3rem; color: #0f172a; margin-bottom: 0.5rem;">Choisis ta seance</h2>
+            <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1.5rem;">Chaque seance dure environ 15 minutes. Les questions sont lues a voix haute et la correction est expliquee oralement.</p>
             <div class="sessions-grid" id="sessionsGrid"></div>
         </div>
 
@@ -256,7 +249,7 @@
                 <div class="question-illustration" id="questionIllustration"></div>
                 <div style="text-align: center;">
                     <button class="speaker-btn" id="speakQuestionBtn" onclick="speakQuestion()">
-                        <i class="fas fa-volume-up"></i> Écouter la question
+                        <i class="fas fa-volume-up"></i> Ecouter la question
                     </button>
                 </div>
                 <p class="question-text" id="questionText"></p>
@@ -265,7 +258,7 @@
                     <div class="correction-title" id="correctionTitle"></div>
                     <p id="correctionText"></p>
                     <button class="speaker-btn" id="speakCorrectionBtn" onclick="speakCorrection()" style="margin-top: 0.75rem;">
-                        <i class="fas fa-volume-up"></i> Écouter la correction
+                        <i class="fas fa-volume-up"></i> Ecouter la correction
                     </button>
                 </div>
             </div>
@@ -280,22 +273,179 @@
                 <p id="resultsText"></p>
                 <div class="results-actions">
                     <button class="btn-retry" onclick="retrySession()"><i class="fas fa-redo"></i> Recommencer</button>
-                    <button class="btn-back" onclick="backToSessions()"><i class="fas fa-th-large"></i> Toutes les séances</button>
+                    <button class="btn-back" onclick="backToSessions()"><i class="fas fa-th-large"></i> Toutes les seances</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="assets/js/quiz-data.js"></script>
     <script>
-        function getQuestionImage(sessionId, qIndex) {
-            const session = quizSessions.find(s => s.id === sessionId);
-            if (session && session.questions[qIndex] && session.questions[qIndex].img) {
-                return session.questions[qIndex].img;
-            }
-            return '';
-        }
-
+    const quizSessions = [
+  {
+    id: 1,
+    title: "Documents & Installation",
+    icon: "fas fa-id-card",
+    color: "#3b82f6",
+    description: "Carte grise, assurance, ?thylotest, r?glages du si?ge et du volant",
+    questions: [
+      {q:"Quels sont les 2 documents obligatoires ? pr?senter en plus du certificat d'immatriculation lors d'un contr?le ?",choices:["Le carnet d'entretien et le contr?le technique","L'attestation d'assurance et le permis de conduire","Le constat amiable et la vignette Crit'Air","Le permis de conduire et le carnet de sant?"],correct:1,explanation:"En cas de contr?le, vous devez pr?senter : l'attestation d'assurance, le permis de conduire et le certificat d'immatriculation (carte grise)."},
+      {q:"En cas de panne ou d'accident, quel accessoire de s?curit? est obligatoire en plus du gilet haute visibilit? ?",choices:["Un extincteur","Le triangle de pr?signalisation","Une trousse de secours","Des fus?es ?clairantes"],correct:1,explanation:"Le triangle de pr?signalisation est obligatoire. Il doit ?tre plac? ? environ 30 m en amont du danger pour pr?venir les autres usagers."},
+      {q:"? partir de quel taux d'alcool?mie un conducteur en p?riode probatoire est-il en infraction ?",choices:["0.50 g/l de sang","0.20 g/l de sang","0.30 g/l de sang","0.10 g/l de sang"],correct:1,explanation:"En p?riode probatoire, le taux est de 0.20 g/l de sang, ce qui ?quivaut ? 0 verre d'alcool car un seul verre d?passe d?j? ce seuil."},
+      {q:"En cas d'accident, dans quel délai le constat amiable doit-il être transmis à l'assureur ?",choices:["48 heures","5 jours","10 jours","30 jours"],correct:1,explanation:"Le constat amiable doit être envoyé à l'assureur dans un délai de 5 jours ouvrés après l'accident."},
+      {q:"Pourquoi est-il important de bien r?gler son volant ? Citez 2 raisons.",choices:["Pour aller plus vite et moins consommer","Pour le confort de conduite et l'accessibilit? aux commandes","Pour ?viter les radars et mieux se garer","Pour prot?ger le moteur et les pneus"],correct:1,explanation:"Un bon r?glage du volant assure le confort de conduite, l'accessibilit? aux commandes, la visibilit? du tableau de bord et l'efficacit? des airbags."},
+      {q:"Dans quelle situation doit-on d?sactiver l'airbag passager avant ?",choices:["Quand le passager est tr?s grand","Lors du transport d'un enfant ? l'avant dans un si?ge dos ? la route","Quand on roule sur autoroute","Jamais, il ne faut pas le d?sactiver"],correct:1,explanation:"L'airbag passager doit ?tre d?sactiv? lorsqu'un enfant est install? ? l'avant dans un si?ge dos ? la route, car le d?clenchement pourrait ?tre fatal."},
+      {q:"En r?gle g?n?rale, ? partir de quel ?ge un enfant peut-il ?tre install? sur le si?ge passager avant ?",choices:["8 ans","10 ans","12 ans","6 ans"],correct:1,explanation:"Un enfant peut ?tre install? ? l'avant ? partir de 10 ans. Avant cet ?ge, il doit voyager ? l'arri?re avec un dispositif adapt?."},
+      {q:"Quelle est l'utilit? de l'appui-t?te ?",choices:["Am?liorer le confort uniquement","Retenir le mouvement de la t?te en cas de choc et limiter les blessures","Maintenir la t?te droite pour ne pas s'endormir","Prot?ger du soleil"],correct:1,explanation:"L'appui-t?te retient le mouvement de la t?te en cas de choc arri?re, limitant ainsi les blessures cervicales (coup du lapin)."},
+      {q:"Peut-on fixer tout type de si?ge enfant sur des attaches Isofix ?",choices:["Oui, tous sont compatibles","Non, uniquement ceux compatibles avec ce syst?me d'attache","Oui, mais seulement ? l'arri?re","Non, Isofix n'existe plus"],correct:1,explanation:"Seuls les si?ges enfants compatibles avec le syst?me Isofix peuvent y ?tre fix?s. V?rifiez la compatibilit? lors de l'achat."},
+      {q:"Quelle pr?caution prendre pour que les enfants ? l'arri?re ne puissent pas ouvrir leur porti?re ?",choices:["Fermer les vitres","Actionner la s?curit? enfant sur les deux porti?res arri?re","Verrouiller centralement","Attacher avec deux ceintures"],correct:1,explanation:"La s?curit? enfant, situ?e sur la tranche des porti?res arri?re, emp?che l'ouverture depuis l'int?rieur du v?hicule."},
+      {q:"Quels sont les 2 documents obligatoires en plus du permis de conduire lors d'un contr?le ?",choices:["Le constat amiable et la carte verte","Le certificat d'immatriculation et l'attestation d'assurance","Le carnet d'entretien et le contr?le technique","La carte d'identit? et la carte vitale"],correct:1,explanation:"Lors d'un contr?le, il faut pr?senter le certificat d'immatriculation (carte grise) et l'attestation d'assurance, en plus du permis."},
+      {q:"Quel est l'int?r?t de la position nuit du r?troviseur int?rieur ?",choices:["Mieux voir la route la nuit","Ne pas ?tre ?bloui par les feux du v?hicule qui suit","?largir le champ de vision","Voir les panneaux plus facilement"],correct:1,explanation:"La position nuit att?nue la r?flexion des phares du v?hicule qui vous suit, ?vitant ainsi l'?blouissement."},
+      {q:"Que signifie le voyant de ceinture de s?curit? qui s'allume ?",choices:["La ceinture est us?e","Le conducteur ou un passager n'a pas boucl? sa ceinture","L'airbag est d?sactiv?","Le si?ge est mal r?gl?"],correct:1,explanation:"Le voyant de ceinture s'allume, accompagn? d'un signal sonore, lorsque le conducteur ou un passager n'a pas attach? sa ceinture."},
+      {q:"En roulant, quel est le risque d'une mauvaise fermeture du capot ?",choices:["Le moteur surchauffe","Un risque d'ouverture pouvant provoquer un accident","La batterie se d?charge","Le liquide de refroidissement fuit"],correct:1,explanation:"Un capot mal ferm? peut s'ouvrir brusquement en roulant, bloquant totalement la visibilit? et provoquant un accident grave."}
+    ]
+  },
+  {
+    id: 2,
+    title: "Voyants du tableau de bord",
+    icon: "fas fa-tachometer-alt",
+    color: "#ef4444",
+    description: "Carburant, huile, batterie, freins, temp?rature, pneus",
+    questions: [
+      {q:"Quelles pr?cautions prendre lors du remplissage du r?servoir de carburant ?",choices:["Laisser le moteur tourner","Arr?ter le moteur, ne pas fumer, ne pas t?l?phoner","Remplir ? ras bord","Garder les phares allum?s"],correct:1,explanation:"Lors du remplissage, il faut arr?ter le moteur, ne pas fumer et ne pas t?l?phoner pour ?viter tout risque d'incendie ou d'explosion."},
+      {q:"Quelle peut ?tre la cons?quence d'une panne de d?givrage de la lunette arri?re ?",choices:["Une panne de chauffage","Une insuffisance ou une absence de visibilit? vers l'arri?re","Un dysfonctionnement des essuie-glaces","Une surconsommation"],correct:1,explanation:"Sans d?givrage, la lunette arri?re reste embu?e ou givr?e, r?duisant fortement la visibilit? vers l'arri?re."},
+      {q:"Quelles sont les conditions pour contr?ler ou compl?ter le niveau d'huile ?",choices:["Moteur chaud et en pente","Moteur froid et terrain plat","Moteur en marche","Peu importe les conditions"],correct:1,explanation:"Le contr?le d'huile se fait moteur froid (huile redescendue dans le carter) et sur terrain plat (mesure fiable sur la jauge)."},
+      {q:"Qu'est-ce qui peut provoquer la d?charge de la batterie, moteur ?teint ?",choices:["Le frein ? main serr?","Les feux ou accessoires ?lectriques en fonctionnement","Les pneus sous-gonfl?s","Le liquide de refroidissement"],correct:1,explanation:"Les feux, la radio ou tout accessoire ?lectrique laiss? en fonctionnement moteur ?teint consomment et d?chargent la batterie."},
+      {q:"De quelle couleur est le voyant qui indique une d?faillance du syst?me de freinage ?",choices:["Orange","Vert","Rouge","Bleu"],correct:2,explanation:"Le voyant de freinage est rouge car il signale un danger critique. Un voyant rouge impose un arr?t imm?diat du v?hicule."},
+      {q:"Quel est le risque de circuler avec un frein de parking mal desserr? ?",choices:["Aucun risque","Une d?gradation du syst?me de freinage","Une panne de direction","Un probl?me de climatisation"],correct:1,explanation:"Rouler avec le frein de parking serr? provoque surchauffe et usure pr?matur?e des freins, r?duisant leur efficacit?."},
+      {q:"Quelle est la cons?quence d'une temp?rature trop ?lev?e du liquide de refroidissement ?",choices:["Les vitres se couvrent de bu?e","Une surchauffe ou une casse moteur","Les freins sont plus efficaces","La batterie se charge plus vite"],correct:1,explanation:"Un liquide surchauff? ne refroidit plus le moteur correctement, ce qui peut entra?ner une surchauffe ou une casse du moteur."},
+      {q:"Quelle est la diff?rence entre un voyant orange et un voyant rouge ?",choices:["Orange = danger, Rouge = info","Orange = ?l?ment important, Rouge = anomalie ou danger","Aucune diff?rence","Orange = position, Rouge = stop"],correct:1,explanation:"Un voyant rouge signale une anomalie grave ou un danger (arr?t imp?ratif). Un voyant orange signale un ?l?ment important n?cessitant attention."},
+      {q:"Quel est le risque de maintenir les feux de route lors d'un croisement ?",choices:["Aucun risque","Risque d'?blouissement des autres usagers","Risque de panne de batterie","Risque de surchauffe des phares"],correct:1,explanation:"Les feux de route ?blouissent les conducteurs en face, pouvant provoquer un accident. Il faut passer en feux de croisement."},
+      {q:"? quelle fr?quence est-il pr?conis? de v?rifier la pression des pneus ?",choices:["Tous les 6 mois","Une fois par mois","Une fois par an","Seulement avant un long trajet"],correct:1,explanation:"V?rifiez la pression une fois par mois et avant chaque long trajet, ? froid de pr?f?rence."},
+      {q:"Peut-on utiliser le feu de brouillard arri?re par forte pluie ?",choices:["Oui, toujours","Non","Oui, sur autoroute seulement","Oui, si visibilit? r?duite"],correct:1,explanation:"Le feu de brouillard arri?re ne s'utilise qu'en cas de brouillard ou de neige, jamais par forte pluie car il ?blouit les conducteurs suivants."},
+      {q:"Pourquoi doit-on r?gler la hauteur des feux ?",choices:["Pour mieux ?clairer la route","Pour ne pas ?blouir les autres usagers","Pour ?conomiser la batterie","Pour ?viter les PV"],correct:1,explanation:"Le r?glage de hauteur des feux ?vite d'?blouir les conducteurs en face tout en gardant un ?clairage suffisant de la route."},
+      {q:"Que signifie le voyant en forme de batterie qui s'allume ?",choices:["La batterie est pleine","Un d?faut de charge de la batterie","Le moteur est froid","Les phares sont allum?s"],correct:1,explanation:"Le voyant batterie signale un probl?me dans le circuit de charge. L'alternateur ne recharge peut-?tre plus la batterie."},
+      {q:"Que signifie le voyant d'huile moteur qui s'allume en rouge ?",choices:["Niveau d'huile correct","Pression d'huile insuffisante, arr?t imm?diat","Vidange prochaine","Temp?rature d'huile id?ale"],correct:1,explanation:"Le voyant d'huile rouge indique une pression insuffisante. Arr?tez-vous imm?diatement pour ?viter la casse du moteur."}
+    ]
+  },
+  {
+    id: 3,
+    title: "Commandes du v?hicule",
+    icon: "fas fa-sliders-h",
+    color: "#8b5cf6",
+    description: "Essuie-glaces, d?sembuage, r?gulateur, avertisseur, feux de d?tresse",
+    questions: [
+      {q:"Comment d?tecter l'usure des essuie-glaces en circulation ?",choices:["Par le bruit","Lorsqu'ils laissent des traces sur le pare-brise","En les inspectant chaque mois","Quand le lave-glace ne marche plus"],correct:1,explanation:"Des essuie-glaces us?s laissent des traces ou des zones non essuy?es sur le pare-brise, r?duisant la visibilit?."},
+      {q:"Citez 2 ?l?ments permettant un d?sembuage efficace du pare-brise.",choices:["Klaxon et clignotants","Ventilateur et commande air chaud ou climatisation","Essuie-glaces et lave-glace","Feux de route et feux de brouillard"],correct:1,explanation:"Pour d?sembuer : utiliser la commande de vitesse du ventilateur avec l'air chaud ou la climatisation, en dirigeant l'air vers le pare-brise."},
+      {q:"Dans quel cas utilise-t-on les feux de d?tresse ?",choices:["Pour stationner en double file","En cas de panne, accident ou fort ralentissement","Quand il pleut fort","Pour remercier un conducteur"],correct:1,explanation:"Les feux de d?tresse (warnings) s'utilisent en cas de panne, accident ou fort ralentissement pour pr?venir les autres usagers."},
+      {q:"Comment d?sactiver rapidement le r?gulateur de vitesse sans toucher la commande ?",choices:["En tournant le volant","En appuyant sur le frein ou l'embrayage","En ?teignant les phares","En changeant de vitesse"],correct:1,explanation:"Le r?gulateur se d?sactive imm?diatement en appuyant sur la p?dale de frein ou d'embrayage."},
+      {q:"Dans quel cas peut-on utiliser l'avertisseur sonore en agglom?ration ?",choices:["Pour saluer quelqu'un","En cas de danger imm?diat","Pour signaler un embouteillage","? tout moment"],correct:1,explanation:"En agglom?ration, le klaxon ne doit ?tre utilis? qu'en cas de danger imm?diat, jamais par convenance ou impatience."},
+      {q:"Quel est le risque de maintenir le recyclage de l'air de mani?re prolong?e ?",choices:["Surconsommation de carburant","Apparition de bu?e sur les surfaces vitr?es, mauvaise visibilit?","Panne de climatisation","Aucun risque"],correct:1,explanation:"Le recyclage prolong? emp?che le renouvellement d'air frais, provoquant de la bu?e sur les vitres et r?duisant la visibilit?."},
+      {q:"Quelle est l'utilit? d'un limiteur de vitesse ?",choices:["Maintenir une vitesse constante","Ne pas d?passer la vitesse programm?e par le conducteur","Freiner dans les virages","Adapter la vitesse au trafic"],correct:1,explanation:"Le limiteur emp?che de d?passer la vitesse maximale programm?e, contrairement au r?gulateur qui maintient une vitesse constante."},
+      {q:"En plus de l'essuie-glace arri?re, quelle commande am?liore la visibilit? arri?re ?",choices:["Les feux de brouillard","La commande de d?sembuage ou d?givrage arri?re","Les feux de recul","Le lave-glace avant"],correct:1,explanation:"Le d?sembuage (ou d?givrage) arri?re ?limine la bu?e ou le givre sur la lunette arri?re pour une meilleure visibilit?."},
+      {q:"Quelle est la diff?rence entre le r?gulateur et le limiteur de vitesse ?",choices:["Aucune diff?rence","Le r?gulateur maintient la vitesse, le limiteur emp?che de la d?passer","Le limiteur maintient la vitesse","Les deux maintiennent la vitesse"],correct:1,explanation:"Le r?gulateur maintient automatiquement une vitesse constante. Le limiteur fixe une vitesse maximale ? ne pas d?passer."},
+      {q:"Pourquoi diriger l'air vers le pare-brise pour le d?sembuer ?",choices:["Pour refroidir l'habitacle","L'air chaud ou climatis? ?limine la bu?e sur le pare-brise","Pour nettoyer le pare-brise","Pour r?chauffer les passagers"],correct:1,explanation:"Diriger l'air (chaud ou climatis?) vers le pare-brise permet d'?liminer la condensation (bu?e) qui r?duit la visibilit?."},
+      {q:"Quelle est la signification d'un clignotement plus rapide que la normale ?",choices:["Le clignotant est activ? des deux c?t?s","Non fonctionnement de l'une des ampoules","La batterie est faible","Le fusible est grill?"],correct:1,explanation:"Un clignotement plus rapide signale qu'une des ampoules de clignotant ne fonctionne plus. Il faut la remplacer."},
+      {q:"Quels feux utiliser dans un tunnel, m?me ?clair? ?",choices:["Feux de route","Feux de croisement","Feux de position seulement","Aucun feu"],correct:1,explanation:"Dans un tunnel, m?me ?clair?, il faut allumer les feux de croisement pour ?tre vu et voir correctement."},
+      {q:"Quand utiliser les feux de croisement ?",choices:["Uniquement la nuit","La nuit et quand la visibilit? est insuffisante (pluie, brouillard, tunnel)","Seulement en agglom?ration","Uniquement sur autoroute"],correct:1,explanation:"Les feux de croisement s'utilisent la nuit mais aussi de jour quand la visibilit? est r?duite : pluie, brouillard, neige, tunnel."},
+      {q:"Citez un cas d'utilisation d'un appel lumineux.",choices:["Pour remercier un autre conducteur","Pour avertir de son approche ou en cas de danger","Pour signaler un radar","Pour demander la priorit?"],correct:1,explanation:"L'appel lumineux (commodo) sert ? avertir de son approche, en cas de danger, ou ? la place de l'avertisseur sonore la nuit."}
+    ]
+  },
+  {
+    id: 4,
+    title: "Sous le capot",
+    icon: "fas fa-car-battery",
+    color: "#f59e0b",
+    description: "Huile, liquide de refroidissement, frein, lave-glace, batterie",
+    questions: [
+      {q:"Pourquoi utiliser un liquide lave-glace sp?cial en hiver ?",choices:["Pour un meilleur nettoyage","Pour ?viter le gel du liquide","Pour prot?ger les essuie-glaces","Pour parfumer l'habitacle"],correct:1,explanation:"En hiver, un liquide classique peut geler dans le r?servoir ou les canalisations. Le liquide sp?cial contient un antigel."},
+      {q:"Quelle est la cons?quence d'un niveau insuffisant du liquide de frein ?",choices:["Les freins sont plus r?actifs","Perte d'efficacit? du freinage","Le moteur cale","Les essuie-glaces ralentissent"],correct:1,explanation:"Un manque de liquide de frein entra?ne une perte d'efficacit? du freinage, ce qui est extr?mement dangereux."},
+      {q:"Quel est le danger si l'on compl?te le liquide de refroidissement moteur chaud ?",choices:["Le liquide d?borde","Un risque de br?lure","Le moteur cale","Le liquide ne sera pas efficace"],correct:1,explanation:"Ouvrir le bouchon moteur chaud lib?re de la vapeur sous pression pouvant causer des br?lures graves."},
+      {q:"Quel est le principal risque d'un manque d'huile moteur ?",choices:["Surconsommation de carburant","Risque de d?t?rioration ou casse du moteur","Le moteur fait plus de bruit","Freins moins efficaces"],correct:1,explanation:"L'huile lubrifie les pi?ces m?caniques. Un manque d'huile provoque des frottements excessifs pouvant d?truire le moteur."},
+      {q:"Comment d?marrer un v?hicule en panne de batterie sans le d?placer ?",choices:["Attendre la recharge spontan?e","Brancher une 2?me batterie en parall?le ou la remplacer","Pousser le v?hicule","Appuyer plusieurs fois sur le d?marreur"],correct:1,explanation:"On branche des c?bles de d?marrage (les + ensemble et les - ensemble) entre la batterie ? plat et une batterie charg?e, ou on remplace la batterie."},
+      {q:"Quel est le principal risque d'une absence de liquide lave-glace ?",choices:["Usure des essuie-glaces","Une mauvaise visibilit?","Probl?me de freinage","Surchauffe du moteur"],correct:1,explanation:"Sans liquide lave-glace, impossible de nettoyer le pare-brise en cas de projection de boue ou d'insectes, r?duisant dangereusement la visibilit?."},
+      {q:"Quelles sont les cons?quences d'une panne d'un feu de croisement ?",choices:["Rien de grave","Mauvaise visibilit? et risque d'?tre confondu avec un deux-roues","Le moteur s'arr?te","Les essuie-glaces s'arr?tent"],correct:1,explanation:"Avec un seul phare, la visibilit? est r?duite et les autres usagers peuvent confondre le v?hicule avec un deux-roues."},
+      {q:"Pour un capot s'ouvrant depuis l'avant, quelle est l'utilit? du dispositif de s?curit? ?",choices:["Faciliter l'ouverture","Emp?cher l'ouverture en circulation en cas de mauvais verrouillage","Prot?ger le moteur de la pluie","R?duire le bruit"],correct:1,explanation:"Le dispositif de s?curit? (double verrou) emp?che le capot de s'ouvrir accidentellement en roulant si le verrouillage principal est d?faillant."},
+      {q:"Quel est le r?le du liquide de refroidissement ?",choices:["Lubrifier le moteur","Maintenir le moteur ? bonne temp?rature","Alimenter les essuie-glaces","Freiner le v?hicule"],correct:1,explanation:"Le liquide de refroidissement circule dans le moteur pour absorber la chaleur et la dissiper via le radiateur, ?vitant la surchauffe."},
+      {q:"Comment v?rifier le niveau du liquide de frein ?",choices:["En appuyant sur la p?dale","En regardant entre les rep?res min et max sur le bocal transparent","En ?coutant les freins","En v?rifiant les plaquettes"],correct:1,explanation:"Le bocal de liquide de frein est transparent avec des rep?res MIN et MAX. Le niveau doit se situer entre ces deux marques."},
+      {q:"O? doit-on v?rifier le niveau d'huile moteur ?",choices:["Sur le tableau de bord","Sur la jauge d'huile sous le capot","Dans le filtre ? huile","Au niveau des roues"],correct:1,explanation:"On retire la jauge sous le capot. Le niveau doit se situer entre les rep?res MIN et MAX de la jauge."},
+      {q:"Que faire si le voyant de temp?rature moteur s'allume en rouge ?",choices:["Continuer normalement","S'arr?ter d?s que possible et laisser refroidir","Acc?l?rer pour ventiler","Ajouter de l'eau froide imm?diatement"],correct:1,explanation:"Arr?tez-vous rapidement et coupez le moteur. Ne jamais ouvrir le bouchon du radiateur tant que le moteur est chaud (risque de br?lure)."},
+      {q:"Quel est le risque d'un manque de liquide de refroidissement ?",choices:["Le chauffage ne marche plus","La surchauffe et la casse du moteur","Freins moins efficaces","Direction dure"],correct:1,explanation:"Sans liquide de refroidissement suffisant, le moteur surchauffe rapidement et peut subir des dommages irr?versibles."},
+      {q:"Pourquoi v?rifier les niveaux avant un long trajet ?",choices:["Pour gagner du temps au p?age","Pour s'assurer du bon fonctionnement et ?viter les pannes","Par obligation l?gale","Pour ?conomiser du carburant"],correct:1,explanation:"Un long trajet sollicite davantage le v?hicule. V?rifier les niveaux (huile, refroidissement, frein, lave-glace) pr?vient les pannes."}
+    ]
+  },
+  {
+    id: 5,
+    title: "Pneumatiques & Ext?rieur",
+    icon: "fas fa-circle-dot",
+    color: "#10b981",
+    description: "Pneus, ?clairage, plaques, feux, triangle, gilet",
+    questions: [
+      {q:"O? peut-on trouver les pressions pr?conis?es pour les pneumatiques ?",choices:["Sur le tableau de bord","Sur la plaque c?t? porti?re conducteur, la notice ou la trappe ? carburant","Sur les pneus eux-m?mes","Au centre de contr?le technique"],correct:1,explanation:"Les pressions recommand?es sont indiqu?es sur la plaque dans l'encadrement de la porti?re conducteur, dans la notice ou dans la trappe ? carburant."},
+      {q:"Qu'est-ce que l'aquaplanage et quelle peut ?tre sa cons?quence ?",choices:["Un freinage d'urgence sur route s?che","Un film d'eau entre le pneu et la chauss?e pouvant entra?ner une perte de contr?le","Un ph?nom?ne de surchauffe des pneus","Un bruit de roulement anormal"],correct:1,explanation:"L'aquaplanage se produit quand un film d'eau s'interpose entre le pneu et la route. Le v?hicule perd toute adh?rence et peut devenir incontr?lable."},
+      {q:"? quelle fr?quence faut-il v?rifier la pression des pneus pour une utilisation normale ?",choices:["Chaque semaine","Chaque mois et avant chaque long trajet","Tous les 6 mois","Au contr?le technique uniquement"],correct:1,explanation:"V?rifiez la pression chaque mois pour une utilisation normale et avant chaque long trajet, toujours ? froid."},
+      {q:"Quelle est la signification d'un clignotement plus rapide que la normale ?",choices:["Le clignotant est cass?","Non fonctionnement de l'une des ampoules","La batterie est faible","Le relais est d?fectueux"],correct:1,explanation:"Un clignotement plus rapide signale qu'une des ampoules de clignotant ne fonctionne plus et doit ?tre remplac?e."},
+      {q:"Dans quels cas utilise-t-on les feux de brouillard arri?re ?",choices:["Par forte pluie","Par temps de brouillard et chute de neige","La nuit sur autoroute","En agglom?ration"],correct:1,explanation:"Les feux de brouillard arri?re ne s'utilisent qu'en cas de brouillard et de chute de neige, jamais par simple pluie."},
+      {q:"Dans quels cas doit-on utiliser les feux de d?tresse ?",choices:["Pour se garer en double file","En cas de panne, ralentissement important et accident","Quand on est press?","Pour indiquer un changement de direction"],correct:1,explanation:"Les feux de d?tresse (warnings) pr?viennent les autres usagers en cas de panne, de fort ralentissement ou d'accident."},
+      {q:"Quelles sont les cons?quences d'un mauvais r?glage des feux de croisement ?",choices:["Consommation accrue","Mauvaise vision vers l'avant et risque d'?blouissement des autres usagers","Usure des ampoules","Bruit de fonctionnement"],correct:1,explanation:"Des feux mal r?gl?s ?clairent mal la route (trop bas) ou ?blouissent les conducteurs en face (trop hauts)."},
+      {q:"Quelle est l'utilit? des dispositifs r?fl?chissants (catadioptres) ?",choices:["?clairer la route","Rendre visible le v?hicule la nuit en r?fl?chissant la lumi?re","Indiquer un changement de direction","Mesurer la distance"],correct:1,explanation:"Les catadioptres refl?tent la lumi?re des phares des autres v?hicules, rendant votre v?hicule visible m?me phares ?teints."},
+      {q:"Par temps clair, ? quelle distance les feux de position doivent-ils ?tre visibles ?",choices:["50 m","100 m","150 m","200 m"],correct:2,explanation:"Les feux de position doivent ?tre visibles ? 150 m?tres par temps clair, conform?ment ? la r?glementation."},
+      {q:"Quelles sont les deux utilit?s des feux de recul ?",choices:["?clairer la route et consommer moins","?clairer la zone de recul et avertir les autres usagers de la man?uvre","Signaler un danger et freiner","Voir de nuit et ?tre vu"],correct:1,explanation:"Les feux de recul blancs ?clairent la zone derri?re le v?hicule et informent les autres usagers que le v?hicule recule."},
+      {q:"Quelle est la cons?quence d'une panne des feux stop ?",choices:["Le moteur cale","Manque d'information pour les usagers suiveurs et risque de collision","La direction se bloque","Les clignotants ne marchent plus"],correct:1,explanation:"Sans feux stop, les conducteurs derri?re ne sont pas inform?s du freinage, ce qui augmente fortement le risque de collision arri?re."},
+      {q:"Quelle est l'utilit? des feux diurnes ?",choices:["?clairer la route le jour","Rendre le v?hicule plus visible le jour","Remplacer les feux de croisement","Signaler un danger"],correct:1,explanation:"Les feux diurnes rendent le v?hicule plus visible pour les autres usagers pendant la journ?e, r?duisant le risque d'accident."},
+      {q:"Quelles sont les cons?quences d'une panne d'un feu de position arri?re ?",choices:["Rien de grave","?tre mal vu et risque de collision","Le moteur s'arr?te","Les freins l?chent"],correct:1,explanation:"Un feu de position arri?re en panne rend le v?hicule moins visible, surtout la nuit, augmentant le risque d'?tre percut? par l'arri?re."},
+      {q:"Que doit-on v?rifier sur les plaques d'immatriculation ?",choices:["Le num?ro de d?partement","Qu'elles sont lisibles, propres, non d?t?rior?es et bien fix?es","La couleur du fond","La date de mise en circulation"],correct:1,explanation:"Les plaques doivent ?tre lisibles, propres et correctement fix?es. Une plaque illisible ou d?t?rior?e est passible d'une amende."}
+    ]
+  },
+  {
+    id: 6,
+    title: "Premiers secours : Prot?ger & Alerter",
+    icon: "fas fa-phone-alt",
+    color: "#ec4899",
+    description: "Protection de la zone, alerte des secours, num?ros d'urgence, SAIP",
+    questions: [
+      {q:"Comment v?rifier la respiration d'une victime ?",choices:["En lui prenant le pouls","En regardant si le ventre et la poitrine se soul?vent et en sentant l'air ? l'expiration","En lui parlant fort","En lui mettant un miroir devant la bouche"],correct:1,explanation:"On v?rifie en regardant si le ventre/poitrine se soul?vent, en ?coutant les bruits respiratoires et en sentant l'air expir? sur sa joue."},
+      {q:"Si un d?gagement d'urgence est n?cessaire, o? placer la victime ?",choices:["Sur le bord de la route","Dans un endroit suffisamment ?loign? du danger","Dans le v?hicule accident?","N'importe o? au sec"],correct:1,explanation:"La victime doit ?tre d?plac?e dans un endroit s?r, ?loign? du danger (incendie, explosion, trafic) en respectant l'axe t?te-cou-tronc."},
+      {q:"En cas de panne ou d'accident, quel ?quipement porter avant de quitter le v?hicule ?",choices:["Un casque","Le gilet haute visibilit?","Des gants","Un brassard"],correct:1,explanation:"Le gilet haute visibilit? doit ?tre enfil? AVANT de sortir du v?hicule pour ?tre visible des autres conducteurs."},
+      {q:"O? doit ?tre plac? le triangle de pr?signalisation en g?n?ral ?",choices:["10 m?tres du danger","? environ 30 m de la panne ou de l'accident","50 m?tres derri?re","100 m?tres devant"],correct:1,explanation:"Le triangle doit ?tre plac? ? environ 30 m?tres, ou avant un virage/sommet de c?te, pour ?tre visible des usagers qui arrivent."},
+      {q:"Quels comportements adopter en pr?sence d'une victime inconsciente qui respire ?",choices:["La secouer pour la r?veiller","La placer en PLS, alerter les secours, surveiller sa respiration","Lui donner de l'eau","Attendre qu'elle se r?veille"],correct:1,explanation:"Position Lat?rale de S?curit?, alerter les secours (15 ou 112), puis surveiller sa respiration jusqu'? l'arriv?e des secours."},
+      {q:"Quel comportement adopter en pr?sence d'une victime en arr?t cardiaque ?",choices:["Attendre les secours","Alerter imm?diatement, masser, d?fibriller si possible","Lui donner un m?dicament","La placer en PLS"],correct:1,explanation:"ALERTER imm?diatement les secours, MASSER (massage cardiaque), D?FIBRILLER avec un d?fibrillateur automatique si disponible."},
+      {q:"Quelles sont les conditions pour r?aliser un d?gagement d'urgence ?",choices:["Quand la victime le demande","Victime visible, facile ? atteindre, rien ne g?ne, et on est s?r de pouvoir le faire","Quand les secours tardent","Toujours, par pr?caution"],correct:1,explanation:"Le d?gagement n'est r?alis? qu'en danger r?el, imm?diat et incontr?lable. La victime doit ?tre visible, accessible, et rien ne doit g?ner."},
+      {q:"Dans quelle situation peut-on d?placer une victime ?",choices:["Quand elle le demande","En pr?sence d'un danger r?el, imm?diat et incontr?lable","Quand les secours tardent","Toujours pour la mettre ? l'aise"],correct:1,explanation:"On ne d?place une victime qu'en pr?sence d'un danger r?el, imm?diat et incontr?lable (incendie, explosion). Ce geste doit rester exceptionnel."},
+      {q:"Citez trois mani?res d'?valuer l'?tat de conscience d'une victime.",choices:["V?rifier pouls, temp?rature, tension","Poser des questions simples, secouer doucement les ?paules, demander de serrer la main","Regarder ses pupilles, prendre le pouls, ?couter","L'asperger d'eau, la gifler, crier"],correct:1,explanation:"Pour ?valuer la conscience : poser des questions simples, secouer doucement les ?paules, demander de serrer la main."},
+      {q:"Sur autoroute, comment indiquer avec pr?cision les lieux de l'accident depuis un portable ?",choices:["En d?crivant le paysage","En indiquant le num?ro de l'autoroute, le sens de circulation et le point kilom?trique","En donnant la ville la plus proche","En activant le GPS"],correct:1,explanation:"Les bornes kilom?triques permettent de localiser pr?cis?ment. Donnez le num?ro d'autoroute, le sens et le point kilom?trique."},
+      {q:"Pourquoi l'alerte aux secours doit-elle ?tre rapide et pr?cise ?",choices:["Pour ?viter une amende","Pour permettre aux secours d'apporter les moyens adapt?s dans le d?lai le plus court","Pour informer la police","Pour avoir un num?ro de dossier"],correct:1,explanation:"Une alerte rapide et pr?cise permet aux secours d'intervenir avec les moyens adapt?s le plus vite possible."},
+      {q:"Quelles sont les trois informations ? transmettre aux secours ?",choices:["Nom, pr?nom, adresse","Num?ro de t?l?phone, nature du probl?me, localisation pr?cise","Plaque, couleur, marque du v?hicule","Heure, lieu, nombre de v?hicules"],correct:1,explanation:"Il faut donner : votre num?ro de t?l?phone, la nature du probl?me (accident, malaise...) et la localisation la plus pr?cise possible."},
+      {q:"Quels sont les num?ros d'urgence ? composer ?",choices:["15 et 17 uniquement","18 (pompiers), 15 (Samu), 112 (urgence europ?en)","112 uniquement","17 et 119"],correct:1,explanation:"Les 3 num?ros principaux : 18 (pompiers), 15 (Samu) et 112 (num?ro d'urgence europ?en valide dans toute l'Union Europ?enne)."},
+      {q:"Pourquoi attendre que le correspondant des secours vous autorise ? raccrocher ?",choices:["Par politesse","Il peut vous conseiller ou guider dans les gestes ? faire jusqu'? l'arriv?e des secours","Pour confirmer votre identit?","Pour enregistrer l'appel"],correct:1,explanation:"Le correspondant peut avoir besoin d'informations compl?mentaires ou vous guider pour porter assistance en attendant les secours."}
+    ]
+  },
+  {
+    id: 7,
+    title: "Premiers secours : Secourir & SAIP",
+    icon: "fas fa-first-aid",
+    color: "#dc2626",
+    description: "PLS, arr?t cardiaque, h?morragie, d?fibrillateur, signal d'alerte",
+    questions: [
+      {q:"Qu'est-ce qu'un d?fibrillateur automatis? externe (DAE) ?",choices:["Un appareil pour mesurer la tension","Un appareil qui peut r?tablir une activit? cardiaque normale","Un outil pour arr?ter une h?morragie","Un masque de respiration"],correct:1,explanation:"Le DAE analyse le rythme cardiaque et, si n?cessaire, d?livre un choc ?lectrique pour r?tablir un rythme cardiaque normal."},
+      {q:"Qu'est-ce qu'une perte de connaissance ?",choices:["La victime dort profond?ment","La victime ne r?pond pas et ne r?agit pas mais respire","La victime a les yeux ferm?s","La victime ne se souvient plus"],correct:1,explanation:"Perte de connaissance = la victime ne r?pond pas aux questions, ne r?agit pas aux stimulations, mais respire normalement."},
+      {q:"Comment arr?ter une h?morragie ?",choices:["Mettre un garrot imm?diatement","Appuyer fortement sur l'endroit qui saigne avec un tissu propre","Sur?lever le membre bless?","Mettre de l'eau froide"],correct:1,explanation:"Appuyez fortement sur l'endroit qui saigne avec les doigts ou la paume de la main, en interposant un tissu propre."},
+      {q:"Dans quel cas positionner une victime en PLS (Position Lat?rale de S?curit?) ?",choices:["Quand elle a mal au dos","Si elle ne r?pond pas, ne r?agit pas et respire","Quand elle saigne","Quand elle est consciente mais fatigu?e"],correct:1,explanation:"La PLS s'applique uniquement si la victime est inconsciente (ne r?pond pas, ne r?agit pas) mais respire. Cela ?vite l'?touffement."},
+      {q:"? partir de quel ?ge peut-on suivre une formation aux premiers secours ?",choices:["14 ans","10 ans","12 ans","16 ans"],correct:1,explanation:"D?s 10 ans, on peut suivre une formation aux premiers secours (PSC1). C'est un geste citoyen accessible ? tous."},
+      {q:"Pourquoi pratiquer imm?diatement une r?animation cardio-pulmonaire en cas d'arr?t cardiaque ?",choices:["Pour r?chauffer la victime","Les l?sions du cerveau surviennent d?s les premi?res minutes par manque d'oxyg?ne","Pour attendre les secours","Pour v?rifier la respiration"],correct:1,explanation:"Le cerveau ne supporte pas plus de 3 ? 5 minutes sans oxyg?ne. Le massage cardiaque imm?diat maintient un flux sanguin minimal vers le cerveau."},
+      {q:"Quels sont les risques pour une personne inconsciente allong?e sur le dos ?",choices:["Elle va se r?veiller","L'arr?t respiratoire et l'arr?t cardiaque","Elle va avoir froid","Aucun risque"],correct:1,explanation:"Sur le dos, la langue ou les vomissements peuvent obstruer les voies a?riennes, provoquant un arr?t respiratoire puis cardiaque."},
+      {q:"L'utilisation d'un DAE sur une personne qui n'est pas en arr?t cardiaque est-elle risqu?e ?",choices:["Oui, cela peut provoquer un arr?t","Non, le DAE est automatis? et ne se d?clenche que si n?cessaire","Oui, risque de br?lures","On ne sait pas"],correct:1,explanation:"Le DAE analyse automatiquement le rythme cardiaque et ne d?livre un choc que si c'est n?cessaire. Aucun risque pour une personne non en arr?t."},
+      {q:"Qu'est-ce qu'une h?morragie ?",choices:["Un saignement de nez","Une perte de sang prolong?e qui ne s'arr?te pas, imbibant un mouchoir en quelques secondes","Un h?matome","Une coupure superficielle"],correct:1,explanation:"Une h?morragie est un saignement abondant qui ne s'arr?te pas spontan?ment et imbibe un mouchoir en quelques secondes."},
+      {q:"Quels sont les signes d'un arr?t cardiaque ?",choices:["La victime a mal ? la poitrine","Elle ne r?pond pas, ne r?agit pas, ne respire pas ou a une respiration anormale","Elle transpire beaucoup","Elle a les yeux ouverts"],correct:1,explanation:"Arr?t cardiaque = absence de r?ponse + absence de r?action + absence de respiration (ou respiration anormale/gasps)."},
+      {q:"Quels comportements adopter en cas de signal d'alerte SAIP ?",choices:["Sortir pour voir","Se mettre en s?curit?, s'informer via les m?dias, respecter les consignes des autorit?s","Appeler le 112","Prendre la voiture pour fuir"],correct:1,explanation:"En cas d'alerte SAIP : se confiner, s'informer via Radio France/France T?l?vision, et respecter les consignes des autorit?s."},
+      {q:"Comment est compos? le signal d'alerte national SAIP par les sir?nes ?",choices:["Signal continu de 2 min","Variation du signal sur 3 cycles successifs","Trois coups brefs","Signal intermittent de 5 min"],correct:1,explanation:"Le signal national d'alerte est une variation du son sur 3 cycles successifs. Le signal de fin d'alerte est un signal continu."},
+      {q:"Comment est diffus?e l'alerte SAIP ?",choices:["Par sir?nes uniquement","Par sir?nes, m?dias (Radio France, France T?l?vision) et l'application SAIP","Par SMS uniquement","Par r?seaux sociaux"],correct:1,explanation:"L'alerte SAIP est diffus?e par les sir?nes, les m?dias officiels et l'application mobile SAIP."},
+      {q:"Quel est le risque principal d'un arr?t cardiaque sans intervention ?",choices:["Un handicap l?ger","La mort de la victime en quelques minutes","La victime se r?veille seule","Un simple malaise"],correct:1,explanation:"Sans r?animation, la mort survient en quelques minutes. Chaque minute sans massage cardiaque r?duit de 10% les chances de survie."}
+    ]
+  }
+];
+    window.quizSessions = quizSessions;
+    </script>
+    <script>
         let currentSession = null;
         let currentQuestionIndex = 0;
         let score = 0;
@@ -327,11 +477,11 @@
                 const card = document.createElement('div');
                 card.className = 'session-card' + (isCompleted ? ' completed' : '');
                 card.onclick = () => startSession(session.id);
-                card.innerHTML = `
+            card.innerHTML = `
                     <div class="session-icon" style="background: ${session.color};">
                         <i class="${session.icon}"></i>
                     </div>
-                    <h3>Séance ${session.id} : ${session.title}</h3>
+                    <h3>Seance ${session.id} : ${session.title}</h3>
                     <p class="session-desc">${session.description}</p>
                     <div class="session-meta">
                         <span>${session.questions.length} questions</span>
@@ -373,45 +523,23 @@
             }, 1000);
         }
 
-        let shuffledCorrect = 0; // tracks correct answer position after shuffle
-
-        function shuffleChoices(choices, correctIndex) {
-            const indices = choices.map((_, i) => i);
-            // Fisher-Yates shuffle
-            for (let i = indices.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [indices[i], indices[j]] = [indices[j], indices[i]];
-            }
-            const shuffled = indices.map(i => choices[i]);
-            const newCorrect = indices.indexOf(correctIndex);
-            return { choices: shuffled, correct: newCorrect };
-        }
-
         function showQuestion() {
             answered = false;
             const q = currentSession.questions[currentQuestionIndex];
             const total = currentSession.questions.length;
-
-            // Shuffle choices so correct answer position is random
-            const shuffled = shuffleChoices(q.choices, q.correct);
-            shuffledCorrect = shuffled.correct;
 
             document.getElementById('quizCounter').textContent = `${currentQuestionIndex + 1} / ${total}`;
             document.getElementById('quizProgress').style.width = `${((currentQuestionIndex) / total) * 100}%`;
             document.getElementById('questionText').textContent = q.q;
 
             const illust = document.getElementById('questionIllustration');
-            const imgUrl = getQuestionImage(currentSession.id, currentQuestionIndex);
-            if (imgUrl) {
-                illust.innerHTML = `<img src="${imgUrl}" alt="Illustration" onerror="this.parentElement.innerHTML='<div class=img-fallback style=background:${currentSession.color}><i class=${currentSession.icon}></i></div>'">`;
-            } else {
-                illust.innerHTML = `<div class="img-fallback" style="background:${currentSession.color}"><i class="${currentSession.icon}"></i></div>`;
-            }
+            illust.style.background = currentSession.color;
+            illust.innerHTML = `<i class="${currentSession.icon}"></i>`;
 
             const grid = document.getElementById('choicesGrid');
             grid.innerHTML = '';
             const letters = ['A', 'B', 'C', 'D'];
-            shuffled.choices.forEach((choice, i) => {
+            q.choices.forEach((choice, i) => {
                 const btn = document.createElement('button');
                 btn.className = 'choice-btn';
                 btn.innerHTML = `<span class="choice-letter">${letters[i]}</span><span>${choice}</span>`;
@@ -432,11 +560,11 @@
             answered = true;
             const q = currentSession.questions[currentQuestionIndex];
             const buttons = document.querySelectorAll('.choice-btn');
-            const isCorrect = index === shuffledCorrect;
+            const isCorrect = index === q.correct;
 
             buttons.forEach((btn, i) => {
                 btn.classList.add('disabled');
-                if (i === shuffledCorrect) btn.classList.add('correct');
+                if (i === q.correct) btn.classList.add('correct');
                 if (i === index && !isCorrect) btn.classList.add('wrong');
             });
 
@@ -446,14 +574,14 @@
             box.style.display = 'block';
             box.className = 'correction-box ' + (isCorrect ? 'correct-box' : 'wrong-box');
             document.getElementById('correctionTitle').innerHTML = isCorrect
-                ? '<i class="fas fa-check-circle"></i> Bonne réponse !'
-                : '<i class="fas fa-times-circle"></i> Mauvaise réponse';
+                ? '<i class="fas fa-check-circle"></i> Bonne reponse !'
+                : '<i class="fas fa-times-circle"></i> Mauvaise reponse';
             document.getElementById('correctionText').textContent = q.explanation;
 
             const nextBtn = document.getElementById('nextBtn');
             nextBtn.style.display = 'block';
             nextBtn.textContent = currentQuestionIndex < currentSession.questions.length - 1
-                ? 'Question suivante →' : 'Voir les résultats →';
+                ? 'Question suivante' : 'Voir les resultats';
 
             // Auto read correction
             setTimeout(() => speakCorrection(), 500);
@@ -484,13 +612,13 @@
             scoreEl.className = 'results-score ' + (pct >= 70 ? 'good' : pct >= 50 ? 'average' : 'bad');
 
             document.getElementById('resultsTitle').textContent = pct >= 70
-                ? 'Excellent travail !' : pct >= 50 ? 'Pas mal, continue !' : 'Il faut réviser !';
-            document.getElementById('resultsText').textContent = `Tu as obtenu ${score} bonnes réponses sur ${total} questions.`;
+                ? 'Excellent travail !' : pct >= 50 ? 'Pas mal, continue !' : 'Il faut reviser !';
+            document.getElementById('resultsText').textContent = `Tu as obtenu ${score} bonnes reponses sur ${total} questions.`;
 
             saveProgress(currentSession.id, score, total);
 
             // Speak results
-            speak(`Tu as obtenu ${score} bonnes réponses sur ${total}. Soit ${pct} pourcent.`);
+            speak(`Tu as obtenu ${score} bonnes reponses sur ${total}. Soit ${pct} pourcent.`);
         }
 
         function retrySession() {
@@ -541,5 +669,12 @@
         // Start
         renderSessions();
     </script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
+    <script src="assets/js/supabaseClient.js?v=8"></script>
+    <script src="assets/js/driving-prep-page.js?v=1"></script>
+    <script src="assets/js/site-footer.js"></script>
+    <script src="assets/js/text-encoding-fix.js?v=2"></script>
 </body>
 </html>
+
+

@@ -1,5 +1,5 @@
 // Fonction Netlify pour récupérer la configuration PayPal publique
-exports.handler = async (event) => {
+exports.legacyHandler = async (event) => {
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type',
@@ -35,4 +35,13 @@ exports.handler = async (event) => {
       body: JSON.stringify({ error: error.message }),
     };
   }
+};
+
+// Stripe is the only supported payment workflow.
+exports.handler = async function retiredPayPalConfig() {
+  return {
+    statusCode: 410,
+    headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
+    body: JSON.stringify({ error: 'PAYMENT_METHOD_RETIRED' }),
+  };
 };

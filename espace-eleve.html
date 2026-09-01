@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+?<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Espace élève - Auto-Ecole Breteuil</title>
-    <meta name="description" content="Consulte tes heures de conduite, tes prochaines séances et tes statistiques personnelles.">
-    <link rel="stylesheet" href="assets/css/style.css">
+    <meta name="description" content="Consulte ton solde de conduite, tes prochaines séances et tes statistiques personnelles.">
+    <link rel="stylesheet" href="assets/css/style.css?v=2">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .student-dashboard {
@@ -223,6 +223,19 @@
             color: #e65100;
             font-weight: 600;
         }
+
+        .planning-slot.is-unavailable {
+            background: linear-gradient(135deg, #ffe4e6 0%, #fecdd3 100%);
+            border-color: #e11d48;
+            cursor: not-allowed;
+            opacity: 1;
+        }
+
+        .planning-slot.is-unavailable .slot-label,
+        .planning-slot.is-unavailable .slot-status {
+            color: #be123c;
+            font-weight: 700;
+        }
         
         .planning-slot.is-ferie {
             background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
@@ -401,6 +414,7 @@
         /* Navigation de semaine */
         .week-navigation {
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             gap: 1rem;
@@ -408,7 +422,26 @@
             padding: 1rem;
             background: #f8f9fa;
             border-radius: 8px;
-            flex-wrap: wrap;
+        }
+        
+        .week-label {
+            width: 100%;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #495057;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .week-nav-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
         }
         
         .week-nav-btn {
@@ -825,21 +858,21 @@
             <div class="dashboard-header">
                 <p class="highlight" id="studentEmail">Espace personnel</p>
                 <h1>Bienvenue, <span id="studentName">élève</span></h1>
-                <p>Retrouve tes heures de conduite passées et à venir, ainsi que ta progression.</p>
+                <p>Retrouve ton solde de conduite, tes prochaines séances et ta progression.</p>
             </div>
 
             <div class="stats-grid">
                 <div class="stat-card">
-                    <h3>Heures réalisées</h3>
+                    <h3>Solde réalisé</h3>
                     <div class="stat-value" id="hoursCompleted">0h</div>
                     <p class="stat-note">Total des séances effectuées</p>
                 </div>
                 <div class="stat-card">
-                    <h3>Heures restantes</h3>
+                    <h3>Solde restant</h3>
                     <div class="stat-value" id="hoursRemaining">0h</div>
                     <p class="stat-note">Objectif basé sur ton pack</p>
                     <button onclick="openBuyHoursModal()" style="margin-top: 0.75rem; padding: 0.5rem 1rem; background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white; border: none; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: transform 0.2s;">
-                        <i class="fas fa-plus-circle"></i> Prendre des heures
+                        <i class="fas fa-plus-circle"></i> Ajouter du solde
                     </button>
                 </div>
                 <div class="stat-card">
@@ -865,14 +898,11 @@
                 <button class="tab-btn" data-tab="driving-log" id="drivingLogTabBtn" style="display: none;">
                     <i class="fas fa-book"></i> Carnet de bord
                 </button>
-                <a href="cours-theorique.html" class="tab-btn" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; font-weight: 600; border-radius: 25px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
-                    <i class="fas fa-graduation-cap"></i> Cours Théoriques
-                </a>
                 <button class="tab-btn" onclick="openAvailabilityModal()" style="background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%); color: white; font-weight: 600; border-radius: 25px;">
                     <i class="fas fa-clock"></i> Mes disponibilités
                 </button>
                 <button class="tab-btn referral-btn" onclick="openReferralModal()" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%); color: white; font-weight: 600; position: relative; overflow: hidden; border-radius: 25px;">
-                    <i class="fas fa-gift"></i> 🎁 Parraine & Gagne <strong>1h gratuite</strong> !
+                    <i class="fas fa-gift"></i> Parraine &amp; gagne <strong>1h gratuite</strong> !
                     <span class="referral-pulse"></span>
                 </button>
             </div>
@@ -883,7 +913,7 @@
                     <div class="panel-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
                         <h2>Mes séances de conduite</h2>
                         <button class="btn-secondary" type="button" onclick="document.getElementById('bookingPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });">
-                            <i class="fas fa-calendar-plus"></i> Planifier une nouvelle heure
+                            <i class="fas fa-calendar-plus"></i> Planifier un nouveau cours
                         </button>
                     </div>
                 <div class="table-responsive">
@@ -920,40 +950,34 @@
                     
                     <!-- Navigation de semaine -->
                     <div class="week-navigation">
-                        <button type="button" id="prevWeekBtn" onclick="goToPreviousWeek()" class="week-nav-btn">
-                            <i class="fas fa-chevron-left"></i>
-                            <span class="btn-text">Semaine précédente</span>
-                        </button>
                         <div class="week-label">
                             <i class="fas fa-calendar-week"></i>
                             <span id="weekLabel">Chargement...</span>
                         </div>
-                        <button type="button" id="nextWeekBtn" onclick="goToNextWeek()" class="week-nav-btn">
-                            <span class="btn-text">Semaine suivante</span>
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
+                        <div class="week-nav-buttons">
+                            <button type="button" id="prevWeekBtn" onclick="goToPreviousWeek()" class="week-nav-btn">
+                                <i class="fas fa-chevron-left"></i>
+                                <span class="btn-text">Semaine précédente</span>
+                            </button>
+                            <button type="button" id="nextWeekBtn" onclick="goToNextWeek()" class="week-nav-btn">
+                                <span class="btn-text">Semaine suivante</span>
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
                     </div>
                     
                     <div class="instructor-toggle" id="instructorToggle">
-                        <!-- Mylène disponible jusqu'au 30 avril 2026 -->
-                        <button type="button" class="coach-card" data-instructor-key="mylene" id="myleneCard">
-                            <span class="coach-avatar female">
-                                <img src="assets/avatar-mylene.png" alt="Avatar de Mylène" loading="lazy">
-                            </span>
-                            <span class="coach-meta">
-                                <span class="coach-name">Mylène</span>
-                            </span>
-                        </button>
-                        <button type="button" class="coach-card" data-instructor-key="sammy">
+                        <!-- Daho disponible à partir de mai 2026 -->
+                        <button type="button" class="coach-card" data-instructor-key="daho" id="dahoCard">
                             <span class="coach-avatar male">
-                                <img src="assets/avatar-sammy.png" alt="Avatar de Sammy" loading="lazy">
+                                <img src="assets/Daho.png" alt="Avatar de Daho" loading="lazy">
                             </span>
                             <span class="coach-meta">
-                                <span class="coach-name">Sammy</span>
+                                <span class="coach-name">Daho</span>
                             </span>
                         </button>
                         <button type="button" class="coach-card is-active" data-instructor-key="nail" id="nailCard">
-                            <span class="coach-avatar male">
+                            <span class="coach-avatar female">
                                 <img src="assets/Nail.png" alt="Avatar de Nail" loading="lazy">
                             </span>
                             <span class="coach-meta">
@@ -989,9 +1013,7 @@
                                 </label>
                                 <select id="bookingInstructor" name="instructor" required>
                                     <option value="">Choisis un moniteur</option>
-                                    <option value="Mylène">Mylène</option>
-                                    <option value="Sammy">Sammy</option>
-                                    <option value="Nail">Nail</option>
+                                    <!-- Les moniteurs seront chargés dynamiquement depuis Supabase -->
                                 </select>
                             </div>
                             <div class="form-field">
@@ -1244,17 +1266,17 @@
                 <!-- Stats Cards -->
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-icon">🚗</div>
+                        <div class="stat-icon"><i class="fas fa-route"></i></div>
                         <div class="stat-value" id="totalTrips">0</div>
                         <div class="stat-label">Trajets</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-icon">⏱️</div>
+                        <div class="stat-icon"><i class="fas fa-stopwatch"></i></div>
                         <div class="stat-value" id="totalHours">0h</div>
-                        <div class="stat-label">Heures</div>
+                        <div class="stat-label">Cours</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-icon">📍</div>
+                        <div class="stat-icon"><i class="fas fa-road"></i></div>
                         <div class="stat-value" id="totalKm">0 km</div>
                         <div class="stat-label">Distance</div>
                     </div>
@@ -1264,7 +1286,7 @@
                 <div class="add-trip-card">
                     <div class="card-title">
                         <h3>Nouveau trajet</h3>
-                        <p>Enregistrez vos heures de conduite</p>
+                        <p>Enregistrez vos cours de conduite</p>
                     </div>
                     <form id="drivingLogForm">
                         <div class="input-group">
@@ -1284,7 +1306,7 @@
                             </div>
                             <div class="input-field full">
                                 <label for="logRoute">Itinéraire</label>
-                                <input type="text" id="logRoute" name="route" placeholder="Marseille → Aix-en-Provence" required>
+                                <input type="text" id="logRoute" name="route" placeholder="Marseille - Aix-en-Provence" required>
                             </div>
                             <div class="input-field full">
                                 <label for="logConditions">Conditions</label>
@@ -1309,9 +1331,9 @@
                     <h3 class="list-title">Historique</h3>
                     <div id="tripsContainer">
                         <div class="empty-state">
-                            <div class="empty-icon">📝</div>
+                            <div class="empty-icon"><i class="fas fa-road"></i></div>
                             <p>Aucun trajet enregistré</p>
-                            <span>Commencez à enregistrer vos heures de conduite</span>
+                            <span>Commencez à enregistrer vos cours de conduite</span>
                         </div>
                     </div>
                 </div>
@@ -1330,7 +1352,7 @@
             <div class="modal-body">
                 <div class="cancel-warning">
                     <i class="fas fa-exclamation-triangle"></i>
-                    <p><strong>Attention :</strong> Vous annulez moins de 48h ouvrées (hors week-ends) avant la séance. Un justificatif est requis pour éviter que l'heure soit déduite de votre forfait.</p>
+                    <p><strong>Attention :</strong> Vous annulez moins de 48h ouvrées (hors week-ends) avant la séance. Un justificatif est requis pour éviter que le cours soit déduit de votre forfait.</p>
                 </div>
                 <form id="cancelJustificationForm">
                     <input type="hidden" id="cancelSessionId" value="">
@@ -1356,41 +1378,41 @@
         </div>
     </div>
 
-    <!-- Modal: Achat heures supplémentaires -->
+    <!-- Modal: Achat de cours supplementaires -->
     <div class="modal-overlay" id="extraHoursModal">
         <div class="modal" style="max-width: 600px;">
             <div class="modal-header">
-                <h3><i class="fas fa-clock" style="margin-right:8px;color:var(--primary-color);"></i> Réserver des heures de conduite</h3>
+                <h3><i class="fas fa-clock" style="margin-right:8px;color:var(--primary-color);"></i> Réserver des cours de conduite</h3>
                 <button class="modal-close" onclick="closeExtraHoursModal()"><i class="fas fa-times"></i></button>
             </div>
             <div class="modal-body">
-                <p style="margin-bottom: 1.5rem; color: var(--text-light);">Choisis le nombre d'heures et le type de boîte</p>
+                <p style="margin-bottom: 1.5rem; color: var(--text-light);">Choisis le nombre de cours et le type de boîte</p>
                 
                 <form id="extraHoursForm" onsubmit="submitExtraHours(event)">
                     <div class="form-group">
-                        <label>Nombre d'heures *</label>
-                        <input type="number" id="extraHoursInput" min="2" step="2" placeholder="Ex: 2, 4, 6, 8..." required 
+                        <label>Nombre de cours *</label>
+                        <input type="number" id="extraHoursInput" min="1" step="1" placeholder="Ex: 1, 2, 5, 10..." required 
                                oninput="updateExtraHoursPrice()" 
                                style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem;">
-                        <small><i class="fas fa-info-circle"></i> Le nombre d'heures doit être pair (2, 4, 6, 8, etc.)</small>
+                        <small><i class="fas fa-info-circle"></i> Chaque cours comprend 45 minutes de conduite effective et 15 minutes de préparation en ligne.</small>
                     </div>
                     
                     <div class="form-group">
                         <label>Type de boîte *</label>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                             <label class="transmission-choice-eleve" style="display: flex; align-items: center; padding: 1rem; border: 2px solid #ddd; border-radius: 10px; cursor: pointer;">
-                                <input type="radio" name="extraTransmission" value="manual" data-price="45" required onchange="updateExtraHoursPrice()" style="margin-right: 0.75rem;">
+                                <input type="radio" name="extraTransmission" value="manual" data-price="50" required onchange="updateExtraHoursPrice()" style="margin-right: 0.75rem;">
                                 <div>
                                     <div style="font-weight: 700;"><i class="fas fa-cog" style="color: var(--primary-color); margin-right: 0.5rem;"></i>Boîte manuelle</div>
-                                    <div style="color: var(--primary-color); font-weight: 700;">45€/h</div>
+                                    <div style="color: var(--primary-color); font-weight: 700;">50€/cours</div>
                                 </div>
                             </label>
                             
                             <label class="transmission-choice-eleve" style="display: flex; align-items: center; padding: 1rem; border: 2px solid #ddd; border-radius: 10px; cursor: pointer;">
-                                <input type="radio" name="extraTransmission" value="auto" data-price="50" required onchange="updateExtraHoursPrice()" style="margin-right: 0.75rem;">
+                                <input type="radio" name="extraTransmission" value="auto" data-price="60" required onchange="updateExtraHoursPrice()" style="margin-right: 0.75rem;">
                                 <div>
                                     <div style="font-weight: 700;"><i class="fas fa-magic" style="color: var(--primary-color); margin-right: 0.5rem;"></i>Boîte automatique</div>
-                                    <div style="color: var(--primary-color); font-weight: 700;">50€/h</div>
+                                    <div style="color: var(--primary-color); font-weight: 700;">60€/cours</div>
                                 </div>
                             </label>
                         </div>
@@ -2192,24 +2214,31 @@
                 padding: 0.75rem;
             }
             
-            .week-nav-btn {
+            .week-nav-buttons {
+                display: flex;
+                gap: 0.5rem;
                 width: 100%;
+            }
+            
+            .week-nav-btn {
+                flex: 1;
                 justify-content: center;
-                padding: 0.75rem 1rem;
-                font-size: 0.85rem;
+                padding: 0.75rem 0.5rem;
+                font-size: 1.2rem;
             }
             
             .week-nav-btn .btn-text {
-                display: inline;
+                display: none;
             }
             
             .week-label {
-                order: -1;
+                order: 0;
                 width: 100%;
                 font-size: 0.9rem;
                 padding: 0.5rem;
                 background: white;
                 border-radius: 6px;
+                margin-bottom: 0;
             }
         }
     </style>
@@ -2221,7 +2250,7 @@
                 <button class="referral-close-btn" onclick="closeReferralModal()">
                     <i class="fas fa-times"></i>
                 </button>
-                <h2>🎁 Programme de Parrainage</h2>
+                <h2><i class="fas fa-gift"></i> Programme de parrainage</h2>
                 <p>Gagne <strong>1h de conduite gratuite</strong> !</p>
             </div>
             <div class="referral-modal-body">
@@ -2243,14 +2272,14 @@
                     <div class="referral-step">
                         <div class="step-number">3</div>
                         <div class="step-content">
-                            <h3>Reçois 1h gratuite</h3>
+                            <h3>Reçois 1 cours gratuit</h3>
                             <p>Dès que l'inscription de ton filleul est validée, tu reçois automatiquement <strong>1h de conduite offerte</strong> !</p>
                         </div>
                     </div>
                 </div>
                 
                 <div class="referral-qr-section">
-                    <h3>📱 Ton QR Code de Parrainage</h3>
+                    <h3><i class="fas fa-qrcode"></i> Ton QR code de parrainage</h3>
                     <div class="qr-code-box">
                         <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://autoecolebreteuil.com/inscription.html?ref=ELEVE" alt="QR Code Parrainage">
                     </div>
@@ -2267,7 +2296,7 @@
         </div>
     </div>
 
-    <!-- Modal Achat d'heures supplémentaires -->
+    <!-- Modal Achat de cours supplementaires -->
     <div id="buyHoursModal" class="modal-overlay">
         <div class="modal-content" style="max-width: 500px; max-height: 90vh; overflow-y: auto;">
             <button class="modal-close" onclick="closeBuyHoursModal()">
@@ -2276,11 +2305,11 @@
             
             <div class="modal-body">
                 <h2 style="text-align: center; color: #1976d2; margin-bottom: 1rem;">
-                    <i class="fas fa-plus-circle"></i> Prendre des heures supplémentaires
+                    <i class="fas fa-plus-circle"></i> Prendre des cours supplémentaires
                 </h2>
                 
                 <p style="text-align: center; color: #666; margin-bottom: 2rem;">
-                    Sélectionne le type de boîte et le nombre d'heures que tu souhaites ajouter à ton forfait
+                    Sélectionne le type de boîte et le nombre de cours que tu souhaites ajouter à ton forfait
                 </p>
                 
                 <div style="background: #f5f5f5; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
@@ -2290,41 +2319,41 @@
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
                         <label class="gearbox-option" style="padding: 1rem; border: 2px solid #1976d2; border-radius: 8px; cursor: pointer; text-align: center; background: white; transition: all 0.2s;">
                             <input type="radio" name="gearboxType" value="manual" checked onchange="updateBuyHoursPrice()" style="display: none;">
-                            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🚗</div>
+                            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;"><i class="fas fa-cog"></i></div>
                             <div style="font-weight: 600; color: #333;">Manuelle (BM)</div>
-                            <div style="font-size: 1.2rem; color: #1976d2; font-weight: 700; margin-top: 0.5rem;">45€/h</div>
+                            <div style="font-size: 1.2rem; color: #1976d2; font-weight: 700; margin-top: 0.5rem;">50€/cours</div>
                         </label>
                         <label class="gearbox-option" style="padding: 1rem; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; text-align: center; background: white; transition: all 0.2s;">
                             <input type="radio" name="gearboxType" value="automatic" onchange="updateBuyHoursPrice()" style="display: none;">
-                            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🚙</div>
+                            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;"><i class="fas fa-magic"></i></div>
                             <div style="font-weight: 600; color: #333;">Automatique (BA)</div>
-                            <div style="font-size: 1.2rem; color: #1976d2; font-weight: 700; margin-top: 0.5rem;">50€/h</div>
+                            <div style="font-size: 1.2rem; color: #1976d2; font-weight: 700; margin-top: 0.5rem;">60€/cours</div>
                         </label>
                     </div>
                     
                     <label style="display: block; font-weight: 600; color: #333; margin-bottom: 0.75rem;">
-                        Nombre d'heures
+                        Nombre de cours
                     </label>
                     
                     <!-- Boutons rapides -->
                     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin-bottom: 1rem;">
                         <button type="button" onclick="setHoursQuantity(1)" class="quick-hours-btn" style="padding: 0.5rem; border: 2px solid #ddd; border-radius: 6px; background: white; cursor: pointer; font-weight: 600; transition: all 0.2s;">
-                            1h
+                            1
                         </button>
                         <button type="button" onclick="setHoursQuantity(5)" class="quick-hours-btn" style="padding: 0.5rem; border: 2px solid #ddd; border-radius: 6px; background: white; cursor: pointer; font-weight: 600; transition: all 0.2s;">
-                            5h
+                            5
                         </button>
                         <button type="button" onclick="setHoursQuantity(10)" class="quick-hours-btn" style="padding: 0.5rem; border: 2px solid #ddd; border-radius: 6px; background: white; cursor: pointer; font-weight: 600; transition: all 0.2s;">
-                            10h
+                            10
                         </button>
                         <button type="button" onclick="setHoursQuantity(20)" class="quick-hours-btn" style="padding: 0.5rem; border: 2px solid #ddd; border-radius: 6px; background: white; cursor: pointer; font-weight: 600; transition: all 0.2s;">
-                            20h
+                            20
                         </button>
                     </div>
                     
                     <div style="display: flex; align-items: center; gap: 0.75rem;">
                         <button type="button" onclick="decrementHours()" style="width: 40px; height: 40px; border: 2px solid #1976d2; border-radius: 8px; background: white; cursor: pointer; font-size: 1.5rem; font-weight: 700; color: #1976d2;">
-                            −
+                            -
                         </button>
                         <input type="number" id="hoursQuantity" min="1" max="50" value="5" 
                             oninput="updateBuyHoursPrice()"
@@ -2336,10 +2365,10 @@
                     
                     <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid #ddd; text-align: center;">
                         <div style="font-size: 0.9rem; color: #666; margin-bottom: 0.5rem;">
-                            <span id="buyHoursQuantityDisplay">5</span> heure(s) × <span id="buyHoursUnitPrice">45€</span>
+                            <span id="buyHoursQuantityDisplay">5</span> cours - <span id="buyHoursUnitPrice">50€</span>
                         </div>
                         <div style="font-size: 2.5rem; font-weight: 700; color: #4CAF50; margin-top: 0.5rem;">
-                            <span id="buyHoursTotal">225€</span>
+                            <span id="buyHoursTotal">250€</span>
                         </div>
                         <div style="font-size: 0.85rem; color: #999; margin-top: 0.5rem;">Total à payer</div>
                     </div>
@@ -2405,6 +2434,7 @@
                             Date de l'examen *
                         </label>
                         <input type="date" name="examDate" required style="width: 100%; padding: 0.6rem; border: 2px solid #ddd; border-radius: 8px; font-size: 0.95rem;">
+                        <input type="hidden" name="examDateId" id="examDateId">
                     </div>
                     
                     <!-- Moniteur principal -->
@@ -2417,7 +2447,7 @@
                         </div>
                         <input type="hidden" name="instructor" id="selectedInstructor">
                         <p style="font-size: 0.8rem; color: #666; margin: 0;">
-                            <i class="fas fa-info-circle"></i> Moniteur avec qui tu as fait au moins 75% de tes heures
+                            <i class="fas fa-info-circle"></i> Moniteur avec qui tu as fait au moins 75% de tes cours
                         </p>
                     </div>
                     
@@ -2444,6 +2474,14 @@
                         <textarea name="appreciation" rows="3" placeholder="Un mot sur ta formation, ton moniteur, ton expérience..." style="width: 100%; padding: 0.6rem; border: 2px solid #ddd; border-radius: 8px; font-size: 0.9rem; font-family: inherit; resize: vertical;"></textarea>
                     </div>
                     
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; font-weight: 600; color: #333; margin-bottom: 0.5rem; font-size: 0.9rem;">
+                            Fiche resultat du permis en PDF (facultatif)
+                        </label>
+                        <input type="file" name="resultPdf" id="resultPdf" accept="application/pdf,.pdf" style="width: 100%; padding: 0.6rem; border: 2px dashed #ddd; border-radius: 8px; font-size: 0.9rem; background: #fafafa;">
+                        <p style="font-size: 0.8rem; color: #666; margin-top: 0.4rem;">Ajoute la fiche si tu l'as deja recue. Format PDF uniquement.</p>
+                    </div>
+
                     <button type="submit" class="btn-primary btn-block" style="padding: 1rem; font-size: 1.1rem;">
                         <i class="fas fa-paper-plane"></i> Envoyer mon résultat
                     </button>
@@ -2455,13 +2493,14 @@
     <script src="https://js.stripe.com/v3/"></script>
     <script src="https://unpkg.com/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="assets/js/supabaseClient.js?v=3"></script>
+    <script src="assets/js/supabaseClient.js?v=6"></script>
+    <script src="assets/js/page-auth-guard.js" data-roles="student"></script>
     <script src="assets/js/espace-eleve-exam-check.js"></script>
-    <script src="assets/js/espace-eleve.js?v=56"></script>
+    <script src="assets/js/espace-eleve.js?v=92"></script>
     <script src="assets/js/buy-hours.js?v=2"></script>
-    <script src="assets/js/exam-result.js"></script>
+    <script src="assets/js/student-profile-upgrade.js?v=10"></script>
+    <script src="assets/js/exam-result.js?v=3"></script>
     <script src="assets/js/support-ticket.js?v=7"></script>
-    <script src="assets/js/invoice-pdf-generator.js"></script>
     
     <script>
         function openReferralModal() {
@@ -2504,11 +2543,11 @@
         function updateBuyHoursPrice() {
             const quantity = parseInt(document.getElementById('hoursQuantity').value) || 0;
             const gearboxType = document.querySelector('input[name="gearboxType"]:checked')?.value || 'manual';
-            const pricePerHour = gearboxType === 'automatic' ? 50 : 45;
-            const total = quantity * pricePerHour;
+            const pricePerCourse = gearboxType === 'automatic' ? 60 : 50;
+            const total = quantity * pricePerCourse;
             
             // Mettre à jour les éléments d'affichage
-            document.getElementById('buyHoursUnitPrice').textContent = pricePerHour + '€';
+            document.getElementById('buyHoursUnitPrice').textContent = pricePerCourse + '€';
             document.getElementById('buyHoursTotal').textContent = total + '€';
             document.getElementById('buyHoursQuantityDisplay').textContent = quantity;
             
@@ -2549,39 +2588,39 @@
         }
         
         async function processBuyHours() {
-            console.log('🔵 processBuyHours appelée');
+            console.log('ï¿½Y"ï¿½ processBuyHours appelée');
             
             const quantity = parseInt(document.getElementById('hoursQuantity').value);
             const gearboxType = document.querySelector('input[name="gearboxType"]:checked')?.value || 'manual';
-            const pricePerHour = gearboxType === 'automatic' ? 50 : 45;
-            const total = quantity * pricePerHour;
+            const pricePerCourse = gearboxType === 'automatic' ? 60 : 50;
+            const total = quantity * pricePerCourse;
             const gearboxLabel = gearboxType === 'automatic' ? 'boîte automatique' : 'boîte manuelle';
             
-            console.log('📊 Données:', { quantity, gearboxType, pricePerHour, total });
+            console.log('Données achat cours:', { quantity, gearboxType, pricePerCourse, total });
             
             if (!quantity || quantity < 1) {
-                alert('⚠️ Veuillez sélectionner au moins 1 heure');
+                alert('Veuillez sélectionner au moins 1 cours.');
                 return;
             }
             
-            if (!confirm(`Confirmer l'achat de ${quantity} heure(s) en ${gearboxLabel} pour ${total}€ ?`)) {
-                console.log('❌ Achat annulé par l\'utilisateur');
+            if (!confirm(`Confirmer l'achat de ${quantity} cours en ${gearboxLabel} pour ${total}€ ?`)) {
+                console.log('ï¿½O Achat annulé par l\'utilisateur');
                 return;
             }
             
-            console.log('✅ Confirmation reçue, appel de buyAdditionalHours...');
+            console.log('ï¿½o. Confirmation reçue, appel de buyAdditionalHours...');
             
             // Appeler la fonction dans buy-hours.js
             if (window.buyAdditionalHours) {
                 try {
                     await window.buyAdditionalHours(quantity, total, gearboxType);
                 } catch (error) {
-                    console.error('❌ Erreur lors de l\'achat:', error);
-                    alert(`❌ Erreur: ${error.message}`);
+                    console.error('ï¿½O Erreur lors de l\'achat:', error);
+                    alert(`Erreur : ${error.message}`);
                 }
             } else {
-                console.error('❌ window.buyAdditionalHours non disponible');
-                alert('❌ Erreur : fonction d\'achat non disponible. Veuillez recharger la page.');
+                console.error('ï¿½O window.buyAdditionalHours non disponible');
+                alert('Erreur : fonction d\'achat non disponible. Veuillez recharger la page.');
             }
         }
         
@@ -2592,5 +2631,581 @@
             }
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggle = document.getElementById('mobileMenuToggle');
+            const sidebar = document.querySelector('.sidebar');
+
+            if (!toggle || !sidebar) return;
+
+            toggle.setAttribute('aria-expanded', 'false');
+            toggle.addEventListener('click', () => {
+                const isOpen = sidebar.classList.toggle('mobile-menu-open');
+                toggle.classList.toggle('active', isOpen);
+                toggle.setAttribute('aria-expanded', String(isOpen));
+            });
+        });
+    </script>
+    <style>
+        @media (max-width: 768px) {
+            .sidebar.mobile-menu-open {
+                transform: translateX(0) !important;
+                visibility: visible !important;
+                pointer-events: auto !important;
+            }
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            return;
+            const labels = ['mes séances', 'mes factures', 'carnet de bord', 'mes disponibilités', 'parraine & gagne'];
+            const items = [...document.querySelectorAll('button, a')].filter((item) => {
+                const text = item.textContent.replace(/\s+/g, ' ').trim().toLowerCase();
+                return labels.some((label) => text.includes(label));
+            });
+
+            if (!items.length) return;
+
+            const container = items[0].parentElement;
+            container.classList.add('student-action-nav');
+            items.forEach((item) => item.classList.add('student-action-button'));
+        });
+    </script>
+    <style>
+        .student-action-nav {
+            display: grid !important;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 12px;
+            align-items: stretch;
+            padding: 12px;
+            border-radius: 22px;
+            background: rgba(255, 255, 255, .72);
+            box-shadow: 0 12px 35px rgba(25, 49, 91, .08);
+        }
+
+        .student-action-button {
+            min-height: 104px;
+            display: flex !important;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            padding: 15px 12px !important;
+            border: 1px solid #e6eaf2 !important;
+            border-radius: 18px !important;
+            background: #fff !important;
+            color: #23314d !important;
+            font-weight: 750 !important;
+            line-height: 1.18 !important;
+            text-align: center;
+            text-decoration: none !important;
+            box-shadow: 0 5px 14px rgba(25, 49, 91, .06);
+            transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+        }
+
+        .student-action-button i {
+            font-size: 1.2rem;
+        }
+
+        .student-action-button:hover,
+        .student-action-button:focus-visible {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(25, 49, 91, .14);
+            outline: none;
+        }
+
+        .student-action-button.active,
+        .student-action-button[aria-selected="true"] {
+            color: #fff !important;
+            border-color: #116bd3 !important;
+            background: linear-gradient(135deg, #1684ef, #0758b7) !important;
+            box-shadow: 0 12px 24px rgba(7, 88, 183, .28);
+        }
+
+        .student-action-button:last-child {
+            color: #c73f68 !important;
+            border-color: #ffd5e0 !important;
+            background: linear-gradient(135deg, #fff4f7, #ffe6ed) !important;
+        }
+
+        @media (max-width: 900px) {
+            .student-action-nav {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 560px) {
+            .student-action-nav {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 9px;
+                padding: 9px;
+                border-radius: 17px;
+            }
+
+            .student-action-button {
+                min-height: 82px;
+                padding: 12px 9px !important;
+                border-radius: 14px !important;
+                font-size: .88rem !important;
+            }
+
+            .student-action-button:last-child {
+                grid-column: span 2;
+            }
+        }
+    </style>
+    <script>
+        (() => {
+            return;
+            const normalize = (value) => value
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/\s+/g, ' ')
+                .trim()
+                .toLowerCase();
+
+            const labelMatchers = ['mes seances', 'mes factures', 'carnet de bord', 'mes disponibilites', 'parraine'];
+
+            function enhanceQuickLinks() {
+                const links = [...document.querySelectorAll('button, a')].filter((item) => {
+                    const label = normalize(item.textContent || '');
+                    return labelMatchers.some((matcher) => label.includes(matcher));
+                });
+
+                if (links.length < 4) return false;
+
+                links.forEach((link, index) => {
+                    link.classList.add('premium-quick-link');
+                    link.dataset.quickLinkIndex = String(index);
+                });
+
+                let container = links[0].parentElement;
+                while (container && links.some((link) => !container.contains(link))) {
+                    container = container.parentElement;
+                }
+                if (container) container.classList.add('premium-quick-links');
+                return true;
+            }
+
+            enhanceQuickLinks();
+            setTimeout(enhanceQuickLinks, 600);
+            setTimeout(enhanceQuickLinks, 1600);
+        })();
+    </script>
+    <style>
+        .premium-quick-links {
+            display: grid !important;
+            grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+            gap: 10px !important;
+            width: 100% !important;
+            padding: 8px !important;
+            background: #ffffff !important;
+            border: 1px solid #e8edf5 !important;
+            border-radius: 18px !important;
+            box-shadow: 0 10px 28px rgba(20, 43, 81, .08) !important;
+        }
+
+        .premium-quick-link {
+            min-height: 64px !important;
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 9px !important;
+            padding: 10px 12px !important;
+            border: 1px solid transparent !important;
+            border-radius: 13px !important;
+            background: #f5f8fc !important;
+            color: #3d4c64 !important;
+            font-size: .92rem !important;
+            font-weight: 700 !important;
+            line-height: 1.15 !important;
+            text-align: left !important;
+            text-decoration: none !important;
+            box-shadow: none !important;
+            transition: background .18s ease, color .18s ease, transform .18s ease !important;
+        }
+
+        .premium-quick-link i {
+            flex: 0 0 auto !important;
+            font-size: 1.05rem !important;
+        }
+
+        .premium-quick-link:hover,
+        .premium-quick-link:focus-visible {
+            transform: translateY(-2px) !important;
+            background: #e9f3ff !important;
+            color: #0669cd !important;
+            outline: none !important;
+        }
+
+        .premium-quick-link.active,
+        .premium-quick-link[aria-selected="true"] {
+            background: #086dd5 !important;
+            color: #ffffff !important;
+            box-shadow: 0 7px 15px rgba(8, 109, 213, .22) !important;
+        }
+
+        .premium-quick-link[data-quick-link-index="4"] {
+            background: #fff1f4 !important;
+            color: #d44369 !important;
+            border-color: #ffd7e1 !important;
+        }
+
+        .premium-quick-link[data-quick-link-index="4"]:hover {
+            background: #ffe2ea !important;
+            color: #b92952 !important;
+        }
+
+        @media (max-width: 840px) {
+            .premium-quick-links {
+                grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .premium-quick-links {
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                gap: 8px !important;
+                padding: 7px !important;
+                border-radius: 14px !important;
+            }
+
+            .premium-quick-link {
+                min-height: 58px !important;
+                padding: 9px 10px !important;
+                font-size: .84rem !important;
+            }
+
+            .premium-quick-link[data-quick-link-index="4"] {
+                grid-column: span 2 !important;
+            }
+        }
+    </style>
+    <script>
+        (() => {
+            return;
+            const normalize = (value) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
+
+            function findAction(label) {
+                const candidates = [...document.querySelectorAll('button, a, [role="button"], [onclick], [data-tab], div')]
+                    .filter((element) => normalize(element.textContent || '').includes(label));
+                return candidates.sort((a, b) => a.textContent.length - b.textContent.length)[0];
+            }
+
+            function styleCompactCard(element, accent, background) {
+                if (!element) return;
+                const card = element.closest('button, a, [role="button"], [onclick], [data-tab]') || element;
+                card.style.setProperty('width', 'min(230px, 22vw)', 'important');
+                card.style.setProperty('min-width', '170px', 'important');
+                card.style.setProperty('min-height', '72px', 'important');
+                card.style.setProperty('height', '72px', 'important');
+                card.style.setProperty('padding', '12px 18px', 'important');
+                card.style.setProperty('border-radius', '18px', 'important');
+                card.style.setProperty('background', background, 'important');
+                card.style.setProperty('box-shadow', `0 9px 20px ${accent}33`, 'important');
+                card.style.setProperty('display', 'flex', 'important');
+                card.style.setProperty('align-items', 'center', 'important');
+                card.style.setProperty('justify-content', 'center', 'important');
+                card.style.setProperty('gap', '10px', 'important');
+                card.style.setProperty('font-size', '1rem', 'important');
+                card.style.setProperty('line-height', '1.15', 'important');
+                card.style.setProperty('text-align', 'center', 'important');
+            }
+
+            function applyTargetedFix() {
+                styleCompactCard(findAction('mes disponibilites'), '#0b69cd', 'linear-gradient(135deg, #147de4, #0759b5)');
+                styleCompactCard(findAction('parraine'), '#d84b68', 'linear-gradient(135deg, #ff7a88, #f3526a)');
+            }
+
+            applyTargetedFix();
+            setTimeout(applyTargetedFix, 500);
+            setTimeout(applyTargetedFix, 1500);
+        })();
+    </script>
+    <style>
+        @media (max-width: 700px) {
+            [data-compact-action="availability"], [data-compact-action="referral"] {
+                width: 100% !important;
+            }
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggle = document.getElementById('mobileMenuToggle');
+            if (!toggle) return;
+
+            const menu = document.querySelector('[data-mobile-menu]') ||
+                document.querySelector('.mobile-menu') ||
+                document.querySelector('.nav-menu') ||
+                document.querySelector('.navbar-menu') ||
+                document.querySelector('.sidebar') ||
+                toggle.parentElement?.querySelector('nav') ||
+                document.querySelector('header nav');
+
+            if (!menu) return;
+
+            const closeMenu = () => {
+                menu.classList.remove('burger-menu-open');
+                toggle.setAttribute('aria-expanded', 'false');
+            };
+
+            toggle.setAttribute('type', 'button');
+            toggle.setAttribute('aria-expanded', 'false');
+            toggle.addEventListener('click', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                const open = menu.classList.toggle('burger-menu-open');
+                toggle.setAttribute('aria-expanded', String(open));
+            });
+
+            menu.querySelectorAll('a, button').forEach((item) => item.addEventListener('click', closeMenu));
+        });
+    </script>
+    <style>
+        @media (max-width: 768px) {
+            .burger-menu-open {
+                display: flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                pointer-events: auto !important;
+                transform: translateX(0) !important;
+            }
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggle = document.getElementById('mobileMenuToggle');
+            if (!toggle) return;
+
+            const drawer = document.createElement('nav');
+            drawer.id = 'studentMobileDrawer';
+            drawer.setAttribute('aria-label', 'Navigation mobile');
+            drawer.innerHTML = `
+                <div class="student-mobile-drawer__header">
+                    <strong>Mon espace</strong>
+                    <button type="button" aria-label="Fermer le menu">&times;</button>
+                </div>
+                <a href="#tab-planning">Mes séances</a>
+                <a href="cours-theorique.html">Préparation permis</a>
+                <a href="#tab-factures">Mes factures</a>
+                <a href="#tab-carnet">Carnet de bord</a>
+                <a href="#tab-disponibilites">Mes disponibilités</a>
+                <a href="parrainage.html">Parrainage</a>
+                <button type="button" class="student-mobile-drawer__logout" data-logout>
+                    <i class="fas fa-right-from-bracket" aria-hidden="true"></i>
+                    Se deconnecter
+                </button>
+            `;
+            document.body.appendChild(drawer);
+
+            const close = () => {
+                drawer.classList.remove('is-open');
+                document.body.classList.remove('student-mobile-menu-open');
+                toggle.setAttribute('aria-expanded', 'false');
+            };
+            const open = () => {
+                drawer.classList.add('is-open');
+                document.body.classList.add('student-mobile-menu-open');
+                toggle.setAttribute('aria-expanded', 'true');
+            };
+
+            toggle.setAttribute('type', 'button');
+            toggle.setAttribute('aria-expanded', 'false');
+            toggle.addEventListener('click', (event) => {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                drawer.classList.contains('is-open') ? close() : open();
+            }, true);
+
+            drawer.querySelector('button').addEventListener('click', close);
+            drawer.querySelectorAll('a').forEach((link) => link.addEventListener('click', close));
+            const logoutButton = drawer.querySelector('[data-logout]');
+            if (logoutButton) {
+                logoutButton.addEventListener('click', () => {
+                    close();
+                    if (typeof window.logoutUser === 'function') {
+                        window.logoutUser();
+                    } else {
+                        window.location.href = 'index.html';
+                    }
+                });
+            }
+        });
+    </script>
+    <style>
+        #studentMobileDrawer { display: none; }
+        @media (max-width: 768px) {
+            #studentMobileDrawer {
+                position: fixed;
+                z-index: 99999;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                width: min(84vw, 340px);
+                padding: 22px 18px;
+                background: #fff;
+                box-shadow: -18px 0 42px rgba(15, 36, 68, .22);
+                transform: translateX(105%);
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                transition: transform .24s ease;
+            }
+            #studentMobileDrawer.is-open { transform: translateX(0); }
+            .student-mobile-menu-open::after {
+                content: '';
+                position: fixed;
+                z-index: 99998;
+                inset: 0;
+                background: rgba(15, 36, 68, .35);
+            }
+            .student-mobile-drawer__header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 12px;
+                color: #123b70;
+                font-size: 1.08rem;
+            }
+            .student-mobile-drawer__header button {
+                width: 38px;
+                height: 38px;
+                border: 0;
+                border-radius: 10px;
+                background: #edf4fc;
+                color: #123b70;
+                font-size: 1.65rem;
+                line-height: 1;
+            }
+            #studentMobileDrawer a {
+                display: block;
+                padding: 14px 13px;
+                border-radius: 12px;
+                color: #233d60;
+                text-decoration: none;
+                font-weight: 700;
+                background: #f5f8fc;
+            }
+            #studentMobileDrawer a:active { background: #e3f0ff; color: #086dd5; }
+            #studentMobileDrawer .student-mobile-drawer__logout {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 9px;
+                width: 100%;
+                margin-top: auto;
+                padding: 14px 13px;
+                border: 0;
+                border-radius: 12px;
+                background: #ed1675;
+                color: #fff;
+                font: inherit;
+                font-weight: 750;
+                cursor: pointer;
+                box-shadow: 0 10px 24px rgba(237, 22, 117, .2);
+            }
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const normalize = (value) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
+            const labels = ['mes seances', 'mes factures', 'carnet de bord', 'mes disponibilites', 'parraine'];
+
+            const items = labels.map((label) => {
+                const matches = [...document.querySelectorAll('button, a, [role="button"], [onclick], [data-tab], div')]
+                    .filter((element) => normalize(element.textContent || '').includes(label));
+                return matches.sort((a, b) => a.textContent.length - b.textContent.length)[0];
+            }).filter(Boolean);
+
+            if (items.length < 4) return;
+
+            let bar = items[0].parentElement;
+            while (bar && items.some((item) => !bar.contains(item))) bar = bar.parentElement;
+            if (bar) bar.classList.remove('student-shortcuts-hide-on-mobile');
+        });
+    </script>
+    <style>
+        @media (max-width: 768px) {
+            .student-shortcuts-hide-on-mobile {
+                display: none !important;
+            }
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const normalize = (value) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
+            const labels = ['mes seances', 'mes factures', 'carnet de bord', 'mes disponibilites', 'parraine'];
+
+            labels.forEach((label) => {
+                const leaf = [...document.querySelectorAll('body *')]
+                    .filter((element) => normalize(element.textContent || '').includes(label))
+                    .filter((element) => ![...element.children].some((child) => normalize(child.textContent || '').includes(label)))
+                    .sort((a, b) => a.textContent.length - b.textContent.length)[0];
+
+                if (!leaf) return;
+                const shortcut = leaf.closest('button, a, [role="button"], [data-tab], [onclick]') || leaf;
+                shortcut.classList.add('student-mobile-shortcut');
+            });
+        });
+    </script>
+    <style>
+        @media (max-width: 768px) {
+            .student-mobile-shortcut {
+                display: none !important;
+            }
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const drawer = document.getElementById('studentMobileDrawer');
+            if (drawer) {
+                drawer.querySelectorAll('.student-mobile-shortcut').forEach((item) => {
+                    item.classList.remove('student-mobile-shortcut');
+                });
+            }
+
+            const normalize = (value) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
+            const labels = ['mes seances', 'mes factures', 'carnet de bord', 'mes disponibilites', 'parraine'];
+
+            labels.forEach((label) => {
+                const leaf = [...document.querySelectorAll('body *')]
+                    .filter((element) => !element.closest('#studentMobileDrawer'))
+                    .filter((element) => normalize(element.textContent || '').includes(label))
+                    .filter((element) => ![...element.children].some((child) => normalize(child.textContent || '').includes(label)))
+                    .sort((a, b) => a.textContent.length - b.textContent.length)[0];
+
+                if (!leaf) return;
+                const shortcut = leaf.closest('button, a, [role="button"], [data-tab], [onclick]') || leaf;
+                shortcut.classList.add('student-page-shortcut-to-hide');
+            });
+        });
+    </script>
+    <style>
+        @media (max-width: 768px) {
+            .student-page-shortcut-to-hide { display: none !important; }
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const normalize = (value) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
+            const leaf = [...document.querySelectorAll('body *')]
+                .filter((element) => !element.closest('#studentMobileDrawer'))
+                .filter((element) => normalize(element.textContent || '').includes('mes factures'))
+                .filter((element) => ![...element.children].some((child) => normalize(child.textContent || '').includes('mes factures')))
+                .sort((a, b) => a.textContent.length - b.textContent.length)[0];
+
+            if (!leaf) return;
+            const shortcut = leaf.closest('button, a, [role="button"], [data-tab], [onclick]') || leaf;
+            shortcut.classList.add('student-invoices-hidden');
+        });
+    </script>
+    <style>
+        .student-invoices-hidden { display: none !important; }
+    </style>
+    <script src="assets/js/student-driving-prep.js?v=2"></script>
+    <script src="assets/js/text-encoding-fix.js?v=2"></script>
 </body>
 </html>
+
+

@@ -44,7 +44,7 @@ ONEY_TEST_API_KEY=votre_api_key_test (optionnel)
 - ✅ **Permis Accéléré** - 999€
 - ✅ **Forfait Seconde Chance** - 569€
 - ✅ **Boîte Automatique** - 859€
-- ✅ **Forfait Zen** - 1390€
+- ✅ **Forfait Chill** - 1390€
 - ✅ **AM (Voiture sans permis)** - 350€
 
 ### Packs exclus (paiement en 1x uniquement) :

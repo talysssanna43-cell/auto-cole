@@ -1,24 +1,58 @@
-// Générateur de PDF de facture pour les élèves
+﻿// Générateur de PDF de facture pour les élèves
+function invoicePdfText(value, fallback = '') {
+    const text = value === null || value === undefined ? fallback : String(value);
+    return text.trim() || fallback;
+}
+
+function invoicePdfAmount(value) {
+    const number = Number(value);
+    return Number.isFinite(number) ? number : 0;
+}
+
+function invoicePdfFilePart(value, fallback = 'eleve') {
+    return invoicePdfText(value, fallback)
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^A-Za-z0-9_-]+/g, '_')
+        .replace(/^_+|_+$/g, '') || fallback;
+}
+
 window.downloadInvoicePDF = async function(invoiceId) {
     try {
         console.log('📄 Génération de la facture PDF:', invoiceId);
         
-        // Récupérer les données de la facture
-        const { data: invoice, error: invoiceError } = await window.supabaseClient
-            .from('invoices')
-            .select('*')
-            .eq('id', invoiceId)
-            .single();
+        // Récupérer les données de la facture. Les anciens dossiers créés par
+        // l'admin avant la génération automatique utilisent une facture locale.
+        let invoice = null;
+        let invoiceError = null;
+        if (String(invoiceId || '').startsWith('admin-pack:')) {
+            invoice = window.adminPackInvoiceFallbacks?.[invoiceId] || null;
+            if (!invoice) invoiceError = new Error('Facture de forfait introuvable');
+        } else {
+            const result = await window.supabaseClient
+                .from('invoices')
+                .select('*')
+                .eq('id', invoiceId)
+                .single();
+            invoice = result.data;
+            invoiceError = result.error;
+        }
         
         if (invoiceError || !invoice) {
             throw new Error('Erreur lors de la récupération de la facture');
         }
+
+        const invoiceNumber = invoicePdfText(invoice.invoice_number, `INV-${invoice.id || Date.now()}`);
+        const studentName = invoicePdfText(invoice.student_name, invoice.user_email || 'Eleve');
+        const userEmail = invoicePdfText(invoice.user_email, '');
+        const invoiceAmount = invoicePdfAmount(invoice.amount);
+        const paymentDate = invoice.payment_date ? new Date(invoice.payment_date) : new Date();
         
         // Récupérer le téléphone de l'élève
         const { data: userData } = await window.supabaseClient
             .from('users')
             .select('telephone')
-            .eq('email', invoice.user_email)
+            .eq('email', userEmail)
             .single();
         
         invoice.student_phone = userData?.telephone || '';
@@ -48,7 +82,7 @@ window.downloadInvoicePDF = async function(invoiceId) {
         doc.setFontSize(9);
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(...whiteColor);
-        doc.text('1A rue Edouard Delanglade', 15, 22);
+        doc.text('1A Rue Édouard Delanglade', 15, 22);
         doc.text('13006 Marseille', 15, 27);
         doc.text('Tel: 04 91 53 36 98', 15, 32);
         
@@ -64,11 +98,11 @@ window.downloadInvoicePDF = async function(invoiceId) {
         doc.setFontSize(10);
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(...blackColor);
-        doc.text(`Facture N° ${invoice.invoice_number}`, 15, yPos);
+        doc.text(`Facture N ${invoiceNumber}`, 15, yPos);
         
-        const invoiceDate = new Date(invoice.payment_date);
+
         doc.setFont('helvetica', 'normal');
-        doc.text(`Date: ${invoiceDate.toLocaleDateString('fr-FR')}`, 195, yPos, { align: 'right' });
+        doc.text(`Date: ${paymentDate.toLocaleDateString('fr-FR')}`, 195, yPos, { align: 'right' });
         
         yPos += 15;
         
@@ -87,7 +121,7 @@ window.downloadInvoicePDF = async function(invoiceId) {
         // Nom
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(...blackColor);
-        const nameParts = (invoice.student_name || '').split(' ');
+        const nameParts = studentName.split(' ');
         const prenom = nameParts[0] || '';
         const nom = nameParts.slice(1).join(' ') || '';
         doc.text('Nom:', 20, yPos);
@@ -113,7 +147,7 @@ window.downloadInvoicePDF = async function(invoiceId) {
         doc.text('Email:', 20, yPos);
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(...darkGray);
-        doc.text(invoice.user_email, 50, yPos);
+        doc.text(userEmail || 'Non renseigne', 50, yPos);
         
         yPos += 15;
         
@@ -145,7 +179,7 @@ window.downloadInvoicePDF = async function(invoiceId) {
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(...blackColor);
         
-        let description = invoice.description;
+        let description = invoicePdfText(invoice.description, 'Paiement');
         if (invoice.forfait) {
             description = `Forfait ${invoice.forfait}`;
         } else if (invoice.hours_purchased) {
@@ -154,12 +188,12 @@ window.downloadInvoicePDF = async function(invoiceId) {
         
         doc.text(description, 20, yPos + 2);
         doc.text('1', 135, yPos + 2);
-        doc.text(`${invoice.amount.toFixed(2)} ${String.fromCharCode(8364)}`, 175, yPos + 2);
+        doc.text(`${invoiceAmount.toFixed(2)} ${String.fromCharCode(8364)}`, 175, yPos + 2);
         
         yPos += 20;
         
         // Calcul TVA 20%
-        const totalTTC = invoice.amount;
+        const totalTTC = invoiceAmount;
         const totalHT = (totalTTC / 1.20).toFixed(2);
         const montantTVA = (totalTTC - totalHT).toFixed(2);
         
@@ -221,14 +255,14 @@ window.downloadInvoicePDF = async function(invoiceId) {
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(...darkGray);
         doc.text(
-            'Auto Ecole Breteuil - 1A rue Edouard Delanglade, 13006 Marseille - Tel: 04 91 53 36 98 - Email: breteuilautoecole@gmail.com',
+            'Auto Ecole Breteuil - 1A Rue Édouard Delanglade, 13006 Marseille - Tel: 04 91 53 36 98 - Email: breteuilautoecole@gmail.com',
             105,
             285,
             { align: 'center' }
         );
         
         // Télécharger le PDF
-        const fileName = `Facture_${invoice.invoice_number}_${invoice.student_name.replace(/\s+/g, '_')}.pdf`;
+        const fileName = `Facture_${invoicePdfFilePart(invoiceNumber, 'facture')}_${invoicePdfFilePart(studentName)}.pdf`;
         doc.save(fileName);
         
         console.log('✅ Facture PDF générée avec succès:', fileName);

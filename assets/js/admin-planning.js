@@ -1,3 +1,5 @@
+﻿console.log('ADMIN-PLANNING.JS V80 CHARGE - DELEGATION ACTIVE');
+
 function startOfWeek(date) {
     const d = new Date(date);
     const day = d.getDay();
@@ -27,13 +29,31 @@ function formatHeaderDate(dateObj) {
 function formatWeekLabel(start, end) {
     const s = start.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
     const e = end.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
-    return `${s} → ${e}`;
+    return `${s} - ${e}`;
+}
+
+const INSTRUCTOR_NAME_ALIASES = new Map([
+    ['mylene', 'Mylène'],
+    ['mylène', 'Mylène'],
+    ['myl?ne', 'Mylène'],
+    ['myl?f?ne', 'Mylène'],
+    ['sammy', 'Sammy'],
+    ['nail', 'Nail'],
+    ['daho', 'Daho']
+]);
+
+function normalizeInstructorKey(value) {
+    return String(value || '')
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .trim();
 }
 
 function normalizeInstructor(value) {
-    if (value === 'Sammy') return 'Sammy';
-    if (value === 'Nail') return 'Nail';
-    return 'Mylène';
+    const raw = String(value || '').trim();
+    const key = normalizeInstructorKey(raw);
+    return INSTRUCTOR_NAME_ALIASES.get(key) || raw || 'Mylène';
 }
 
 function buildSlotId(dateStr, startTime) {
@@ -41,30 +61,387 @@ function buildSlotId(dateStr, startTime) {
 }
 
 // Variable d'état globale pour le planning
-let state = {
-    weekStart: startOfWeek(new Date()),
-    instructor: 'Nail' // Nail par défaut à partir du 1er mai 2026
+const LEGACY_INSTRUCTOR_KEYS = new Set(['mylene', 'mylène', 'myl?ne', 'sammy', 'nail', 'daho']);
+
+function isLegacyInstructorName(value) {
+    return LEGACY_INSTRUCTOR_KEYS.has(normalizeInstructorKey(value));
+}
+
+function isCourseBasedPack(value) {
+    const id = String(value || '').toLowerCase().trim();
+    return id.startsWith('tarif-');
+}
+
+function addMinutesToTime(start, minutes) {
+    const [h, m] = String(start || '00:00').split(':').map(Number);
+    const total = (h * 60) + (m || 0) + minutes;
+    return `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`;
+}
+
+function buildTimeRows(start = '07:00', end = '19:00', stepMinutes = 120) {
+    const rows = [];
+    let current = start;
+    while (current < end) {
+        rows.push(current);
+        current = addMinutesToTime(current, stepMinutes);
+    }
+    return rows;
+}
+
+function slotStartCodeStart(value) {
+    return String(value || '').split('|')[0];
+}
+
+function slotStartCodeEnd(value) {
+    const parts = String(value || '').split('|');
+    return parts[1] || '';
+}
+
+function timeToMinutes(value) {
+    const cleanValue = slotStartCodeStart(value);
+    const [hours, minutes] = String(cleanValue || '00:00').split(':').map(Number);
+    return ((hours || 0) * 60) + (minutes || 0);
+}
+
+function isCourseBasedStudent(student) {
+    if (Number(student?.lesson_unit_minutes || 0) === 45) return true;
+    return isCourseBasedPack(student?.forfait || student?.pack || student?.pack_id);
+}
+
+function isCourseBasedInstructor(instructor) {
+    return !isLegacyInstructorName(instructor);
+}
+
+function isWeekdayDateStr(dateStr) {
+    if (!dateStr) return false;
+    const date = new Date(`${dateStr}T00:00:00`);
+    if (Number.isNaN(date.getTime())) return false;
+    const day = date.getDay();
+    return day >= 1 && day <= 5;
+}
+
+function isNailNewPackSlot(slotInfo) {
+    const instructor = normalizeInstructor(slotInfo?.instructor || '');
+    const start = slotStartCodeStart(slotInfo?.start || '');
+    const end = String(slotInfo?.end || '');
+    return instructor === 'Nail'
+        && isWeekdayDateStr(slotInfo?.dateStr)
+        && ((start === '15:00' && end === '15:45') || (start === '15:45' && end === '16:30'));
+}
+
+function lessonUnitsForDuration(student, hours) {
+    const unitHours = isCourseBasedStudent(student) ? 0.75 : 1;
+    return Math.max(0, Math.round((Number(hours) || 0) / unitHours));
+}
+
+function formatStudentBalance(student, value) {
+    const numeric = Math.max(0, Number(value) || 0);
+    if (isCourseBasedStudent(student)) return `${Math.round(numeric)} cours`;
+    return `${Number.isInteger(numeric) ? numeric : numeric.toFixed(1).replace('.', ',')}h`;
+}
+
+function studentUnitLabel(student, plural = true) {
+    if (isCourseBasedStudent(student)) return 'cours';
+    return plural ? 'heures' : 'heure';
+}
+
+function escapeHtml(value) {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+const PERMIS_NOTES_PREFIX = 'PERMIS_JSON::';
+
+function parsePermisNotes(notes) {
+    const raw = String(notes || '').trim();
+    if (raw.startsWith(PERMIS_NOTES_PREFIX)) {
+        try {
+            const data = JSON.parse(raw.slice(PERMIS_NOTES_PREFIX.length));
+            const candidates = Array.isArray(data.candidates) ? data.candidates.map((candidate) => ({
+                name: String(candidate.name || '').trim(),
+                phone: String(candidate.phone || '').trim(),
+                email: String(candidate.email || '').trim(),
+                transmission: String(candidate.transmission || '').trim()
+            })).filter((candidate) => candidate.name || candidate.email) : [];
+            return {
+                location: String(data.location || '').trim(),
+                examDate: String(data.examDate || '').trim(),
+                candidates
+            };
+        } catch (error) {
+            console.warn('Notes permis illisibles:', error);
+        }
+    }
+
+    const parts = raw.split('|').map((part) => part.trim()).filter(Boolean);
+    const location = (parts[0] || '').replace(/^PERMIS\s*-\s*/i, '').trim();
+    const candidate = { name: '', phone: '', email: '', transmission: '' };
+    const candidates = [];
+
+    parts.slice(1).forEach((part) => {
+        if (/^Candidats?\s*:/i.test(part)) {
+            part.replace(/^Candidats?\s*:\s*/i, '').split(',').map((name) => name.trim()).filter(Boolean).forEach((name) => {
+                candidates.push({ name, phone: '', email: '', transmission: '' });
+            });
+        } else if (/^Eleve\s*:/i.test(part)) {
+            candidate.name = part.replace(/^Eleve\s*:\s*/i, '').trim();
+        } else if (/^Tel(?:ephone)?\s*:/i.test(part)) {
+            candidate.phone = part.replace(/^Tel(?:ephone)?\s*:\s*/i, '').trim();
+        } else if (/^Transmission\s*:/i.test(part)) {
+            candidate.transmission = part.replace(/^Transmission\s*:\s*/i, '').trim();
+        }
+    });
+
+    if (candidate.name || candidate.phone || candidate.transmission) candidates.unshift(candidate);
+    return { location, examDate: '', candidates };
+}
+
+function renderPermisLabel(notes) {
+    const { location, candidates } = parsePermisNotes(notes);
+    const names = candidates.map((candidate) => candidate.name).filter(Boolean);
+    const transmissions = [...new Set(candidates.map((candidate) => candidate.transmission).filter(Boolean))];
+    const mainName = names.length > 1 ? `${names[0]} +${names.length - 1}` : (names[0] || 'Eleve');
+    const transmissionText = transmissions.length ? transmissions.join('/') : '';
+    return `
+        <span style="display:block;font-size:0.78rem;font-weight:800;line-height:1.05;">PERMIS</span>
+        ${location ? `<span style="display:block;font-size:0.72rem;font-weight:800;line-height:1.1;">${escapeHtml(location)}</span>` : ''}
+        <span style="display:block;font-size:0.7rem;font-weight:700;line-height:1.15;margin-top:3px;">${escapeHtml(mainName)}${transmissionText ? ` · ${escapeHtml(transmissionText)}` : ''}</span>
+    `;
+}
+
+window.showPermisDetails = function(encodedSlot) {
+    let slot = {};
+    try {
+        slot = JSON.parse(decodeURIComponent(encodedSlot || ''));
+    } catch (error) {
+        console.error('Details permis invalides:', error);
+        return;
+    }
+
+    const details = parsePermisNotes(slot.notes);
+    const candidates = details.candidates.length ? details.candidates : [{ name: 'Eleve', phone: '', email: '', transmission: '' }];
+    const existing = document.getElementById('permisDetailsModal');
+    if (existing) existing.remove();
+
+    const candidateRows = candidates.map((candidate) => `
+        <div style="padding:12px 0;border-top:1px solid #f0f0f0;">
+            <div style="font-weight:800;color:#1d1d1f;font-size:0.98rem;">${escapeHtml(candidate.name || 'Eleve')}</div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:7px;color:#60646c;font-size:0.86rem;">
+                ${candidate.transmission ? `<span style="background:#f5f5f7;border-radius:999px;padding:5px 9px;font-weight:700;">${escapeHtml(candidate.transmission)}</span>` : ''}
+                ${candidate.phone ? `<a href="tel:${escapeHtml(candidate.phone)}" style="color:#ec4899;text-decoration:none;font-weight:700;">${escapeHtml(candidate.phone)}</a>` : ''}
+                ${candidate.email ? `<a href="mailto:${escapeHtml(candidate.email)}" style="color:#60646c;text-decoration:none;">${escapeHtml(candidate.email)}</a>` : ''}
+            </div>
+        </div>
+    `).join('');
+
+    const modal = document.createElement('div');
+    modal.id = 'permisDetailsModal';
+    modal.style.cssText = 'position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.42);padding:20px;';
+    modal.onclick = (event) => { if (event.target === modal) modal.remove(); };
+    modal.innerHTML = `
+        <div style="width:min(520px,94vw);max-height:88vh;overflow:auto;background:white;border-radius:18px;box-shadow:0 24px 80px rgba(0,0,0,0.22);">
+            <div style="padding:20px 22px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;gap:16px;align-items:start;">
+                <div>
+                    <div style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.04em;color:#86868b;font-weight:800;">Creneau permis</div>
+                    <h3 style="margin:4px 0 0;font-size:1.25rem;color:#1d1d1f;">${escapeHtml(details.location || 'Lieu non precise')}</h3>
+                    <div style="margin-top:6px;color:#60646c;font-weight:650;">${escapeHtml(slot.instructor || '')} · ${escapeHtml(slot.date || '')} · ${escapeHtml(slot.start || '')} - ${escapeHtml(slot.end || '')}</div>
+                </div>
+                <button type="button" onclick="var modal=document.getElementById('permisDetailsModal'); if(modal) modal.remove();" style="width:34px;height:34px;border-radius:50%;border:0;background:#f5f5f7;color:#60646c;cursor:pointer;"><i class="fas fa-times"></i></button>
+            </div>
+            <div style="padding:8px 22px 22px;">
+                ${candidateRows}
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
 };
 
+function studentPlanningMode(student) {
+    return isCourseBasedStudent(student)
+        ? {
+            key: 'course',
+            label: 'COURS 45 MIN',
+            shortLabel: '45 min',
+            description: 'A placer uniquement avec les nouveaux moniteurs',
+            color: '#047857',
+            bg: '#d1fae5',
+            border: '#10b981',
+            icon: 'fa-stopwatch'
+        }
+        : {
+            key: 'hour',
+            label: 'HEURES 2H',
+            shortLabel: '2h',
+            description: 'A placer uniquement avec les moniteurs historiques',
+            color: '#92400e',
+            bg: '#fef3c7',
+            border: '#f59e0b',
+            icon: 'fa-clock'
+        };
+}
+
+function studentPlanningModeBadge(student, compact = false) {
+    const mode = studentPlanningMode(student);
+    const padding = compact ? '0.14rem 0.45rem' : '0.28rem 0.6rem';
+    const fontSize = compact ? '0.68rem' : '0.75rem';
+    return `<span title="${escapeHtml(mode.description)}" style="display:inline-flex;align-items:center;gap:0.3rem;padding:${padding};background:${mode.bg};color:${mode.color};border:1px solid ${mode.border};border-radius:999px;font-size:${fontSize};font-weight:800;letter-spacing:0;text-transform:uppercase;white-space:nowrap;"><i class="fas ${mode.icon}"></i>${mode.label}</span>`;
+}
+
+function isStudentCompatibleWithInstructor(student, instructor, slotInfo = null) {
+    if (isNailNewPackSlot(slotInfo)) return isCourseBasedStudent(student);
+    return isCourseBasedStudent(student) === isCourseBasedInstructor(instructor);
+}
+
+function planningModeWarning(student, instructor) {
+    if (isCourseBasedStudent(student)) {
+        return `${student.prenom || 'Cet élève'} est en pack COURS 45 MIN. Normalement, il doit être placé avec un nouveau moniteur qui a des créneaux de 45 minutes.`;
+    }
+    return `${student.prenom || 'Cet élève'} est en ancien pack HEURES 2H. Normalement, il doit être placé avec un moniteur historique et des créneaux de 2h.`;
+}
+let state = {
+    weekStart: startOfWeek(new Date()),
+    instructor: 'Nail',
+    instructors: [] // Liste des moniteurs chargés depuis Supabase
+};
+
+// Charger les moniteurs depuis Supabase
+async function loadInstructors() {
+    console.log('?Y"" loadInstructors() appel?');
+    try {
+        console.log('?Y"? Requ?te serveur pour charger les moniteurs...');
+        const payload = await fetchAdminPlanningData({ type: 'instructors' });
+        const data = payload.instructors || [];
+
+        console.log('?Y"? Donn?es brutes re?ues de Supabase:', data);
+
+        // Ajouter les moniteurs de la BDD à la liste
+        state.instructors = data.map(inst => ({
+            name: `${inst.prenom} ${inst.nom}`,
+            prenom: inst.prenom,
+            id: inst.id,
+            email: inst.email
+        }));
+
+        console.log('Moniteurs chargés et mappés:', state.instructors);
+
+        // Mettre à jour l'interface
+        updateInstructorButtons();
+        updateInstructorSelects();
+    } catch (err) {
+        console.error('Exception chargement moniteurs:', err);
+    }
+}
+
+// Ajouter les boutons des nouveaux moniteurs SANS toucher aux boutons existants
+function updateInstructorButtons() {
+    const segment = document.getElementById('instructorSegment');
+    if (!segment) return;
+
+    state.instructors.forEach(inst => {
+        // Vérifier si un bouton existe déjà pour ce moniteur
+        const existing = segment.querySelector(`button[data-instructor="${inst.prenom}"]`);
+        if (existing) return;
+
+        // Créer et ajouter le bouton du nouveau moniteur.
+        // Pas de listener individuel : la délégation d'événement sur
+        // #instructorSegment (voir IIFE) gère tous les clics.
+        const btn = document.createElement('button');
+        btn.dataset.instructor = inst.prenom;
+        btn.textContent = inst.prenom;
+        segment.appendChild(btn);
+        console.log('?z. Bouton moniteur ajouté:', inst.prenom);
+    });
+}
+
+// Mettre à jour les selects de moniteurs dans les modals
+function updateInstructorSelects() {
+    const selects = ['permisInstructor', 'indisponibleInstructor', 'congesInstructor'];
+    
+    selects.forEach(selectId => {
+        const select = document.getElementById(selectId);
+        if (!select) return;
+
+        // Garder l'option vide
+        const emptyOption = select.querySelector('option[value=""]');
+        
+        // Reconstruire les options
+        select.innerHTML = emptyOption ? emptyOption.outerHTML : '<option value="">Sélectionner un moniteur</option>';
+
+        // Ajouter les anciens moniteurs
+        ['Mylène', 'Sammy', 'Nail', 'Daho'].forEach(name => {
+            select.innerHTML += `<option value="${name}">${name}</option>`;
+        });
+
+        // Ajouter les nouveaux moniteurs
+        state.instructors.forEach(inst => {
+            if (!['Mylène', 'Sammy', 'Nail', 'Daho'].includes(inst.prenom)) {
+                select.innerHTML += `<option value="${inst.prenom}">${inst.name}</option>`;
+            }
+        });
+    });
+}
+
 function getTimeRows(instructor) {
+    if (!isLegacyInstructorName(instructor)) {
+        return buildTimeRows('07:00', '19:00', 45);
+    }
+
     if (instructor === 'Sammy') {
         return ['07:00', '09:00', '11:00'];
     }
-    // Nail et Mylène ont les mêmes horaires (après-midi uniquement)
-    return ['13:00', '15:00', '17:00'];
+    if (instructor === 'Daho') {
+        // Daho: Lundi 15h-17h, Mardi-Vendredi 17h-19h, Samedi 7h-13h
+        return ['07:00', '09:00', '11:00', '15:00', '17:00'];
+    }
+    if (instructor === 'Nail') {
+        return ['07:00', '09:00', '11:00', '13:00', '15:00|15:45', '15:45|16:30', '17:00'];
+    }
+    // Anciens moniteurs: créneaux historiques de 2h.
+    return ['07:00', '09:00', '11:00', '13:00', '15:00', '17:00'];
 }
 
-function getEndForStart(instructor, start) {
+function getEndForStart(instructor, start, dateStr = '') {
+    const encodedEnd = slotStartCodeEnd(start);
+    if (encodedEnd) return encodedEnd;
+    start = slotStartCodeStart(start);
+
+    if (!isLegacyInstructorName(instructor)) {
+        return addMinutesToTime(start, 45);
+    }
+
     if (instructor === 'Sammy') {
         if (start === '07:00') return '09:00';
         if (start === '09:00') return '11:00';
         if (start === '11:00') return '13:00';
     }
+    if (instructor === 'Daho') {
+        // Daho: créneaux de 2h
+        if (start === '07:00') return '09:00';
+        if (start === '09:00') return '11:00';
+        if (start === '11:00') return '13:00';
+        if (start === '15:00') return '17:00';
+        if (start === '17:00') return '19:00';
+    }
+    if (instructor === 'Nail') {
+        if (start === '15:45') return '16:30';
+        if (start === '15:00' && isWeekdayDateStr(dateStr)) return '15:45';
+    }
+    // Pour tous les autres moniteurs historiques: créneaux de 2h
+    if (start === '07:00') return '09:00';
+    if (start === '09:00') return '11:00';
+    if (start === '11:00') return '13:00';
     if (start === '13:00') return '15:00';
     if (start === '15:00') return '17:00';
     if (start === '17:00') return '19:00';
     return '';
 }
+
+window.getTimeRows = getTimeRows;
+window.getEndForStart = getEndForStart;
 
 function setFeedback(el, text, type) {
     if (!el) return;
@@ -73,46 +450,279 @@ function setFeedback(el, text, type) {
 }
 
 function requireAdmin() {
-    const raw = localStorage.getItem('ae_user');
-    if (!raw) return { ok: false, error: new Error('NOT_AUTHENTICATED') };
-    try {
-        const user = JSON.parse(raw);
-        if (!user.is_admin) return { ok: false, error: new Error('NOT_AUTHORIZED') };
-        return { ok: true, email: user.email };
-    } catch (e) {
-        return { ok: false, error: new Error('NOT_AUTHENTICATED') };
-    }
+    const user = window.authenticatedUser;
+    if (!user || user.role !== 'admin') return { ok: false, error: new Error('NOT_AUTHORIZED') };
+    return { ok: true, email: user.email };
 }
 
 function logout() {
+    if (window.authSession?.logout) {
+        window.authSession.logout();
+    }
     localStorage.removeItem('ae_user');
-    window.location.href = 'connexion.html';
+    localStorage.removeItem('ae_access_token');
+    sessionStorage.removeItem('ae_user');
+    sessionStorage.removeItem('ae_access_token');
+    window.location.href = 'index.html';
 }
 
+function getAdminAuthHeaders() {
+    const token = window.authSession?.getToken?.();
+    if (!token) throw new Error('AUTH_REQUIRED');
+    return { Authorization: `Bearer ${token}` };
+}
+
+async function fetchAdminPlanningData(params) {
+    const query = new URLSearchParams(params);
+    const response = await fetch(`/.netlify/functions/admin-planning-data?${query.toString()}`, {
+        method: 'GET',
+        headers: getAdminAuthHeaders(),
+        cache: 'no-store'
+    });
+    const payload = await response.json().catch(() => ({ ok: false, error: 'INVALID_SERVER_RESPONSE' }));
+    if (!response.ok || !payload.ok) {
+        const error = new Error(payload.error || 'ADMIN_PLANNING_DATA_FAILED');
+        error.status = response.status;
+        throw error;
+    }
+    return payload;
+}
+
+function setQuickStatValue(id, value) {
+    const element = document.getElementById(id);
+    if (!element) return;
+    element.textContent = String(Math.max(0, Number(value) || 0));
+}
+
+async function loadAdminQuickStats() {
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+    const todayEnd = addDays(todayStart, 1);
+    const weekStart = startOfWeek(todayStart);
+    const weekEnd = addDays(weekStart, 7);
+
+    const payload = await fetchAdminPlanningData({
+        type: 'global-stats',
+        todayStart: todayStart.toISOString(),
+        todayEnd: todayEnd.toISOString(),
+        weekStart: weekStart.toISOString(),
+        weekEnd: weekEnd.toISOString()
+    });
+
+    const stats = payload.stats || {};
+    setQuickStatValue('statActive', stats.activeStudents);
+}
+
+async function postAdminAction(functionName, body) {
+    const response = await fetch(`/.netlify/functions/${functionName}`, {
+        method: 'POST',
+        headers: {
+            ...getAdminAuthHeaders(),
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body || {}),
+        cache: 'no-store'
+    });
+    const payload = await response.json().catch(() => ({ ok: false, error: 'INVALID_SERVER_RESPONSE' }));
+    if (!response.ok || !payload.ok) {
+        const error = new Error(payload.error || `${functionName.toUpperCase()}_FAILED`);
+        error.status = response.status;
+        error.payload = payload;
+        throw error;
+    }
+    return payload;
+}
+
+const PLANNING_VEHICLES = Object.freeze([
+    { id: 'c3-1', name: 'C3 N°1 EW-426-SR', label: 'BM', transmission: 'manual', owner: 'Elodie' },
+    { id: 'c3-2', name: 'C3 N°2 permis', label: 'BM', transmission: 'manual', owner: 'Eric' },
+    { id: 'c4', name: 'C4', label: 'BA', transmission: 'auto', owner: 'Elodie / Eric' }
+]);
+
+function isAutoStudent(student) {
+    const value = [
+        student?.transmission_type,
+        student?.forfait,
+        student?.pack
+    ].filter(Boolean).join(' ').toLowerCase();
+    return value.includes('auto') || value.includes('ba');
+}
+
+function defaultVehicleForInstructor(instructor, student) {
+    if (isAutoStudent(student)) return PLANNING_VEHICLES.find((vehicle) => vehicle.id === 'c4');
+    const key = normalizeInstructor(instructor).toLowerCase();
+    if (key === 'elodie' || key === 'élodie') return PLANNING_VEHICLES.find((vehicle) => vehicle.id === 'c3-1');
+    if (key === 'eric' || key === 'éric') return PLANNING_VEHICLES.find((vehicle) => vehicle.id === 'c3-2');
+    return null;
+}
+
+function vehicleFromNotes(notes) {
+    const value = String(notes || '').toLowerCase();
+    if (value.includes('vehicle:c3-1') || value.includes('ew-426-sr') || value.includes('ew 426 sr') || value.includes('c3 n°1') || value.includes('c3 n 1')) return PLANNING_VEHICLES[0];
+    if (value.includes('vehicle:c3-2') || value.includes('c3 n°2') || value.includes('c3 n 2') || value.includes('c3 2') || (value.includes('c3') && value.includes('permis'))) return PLANNING_VEHICLES[1];
+    if (value.includes('vehicle:c4') || value.includes('c4')) return PLANNING_VEHICLES[2];
+    return null;
+}
+
+function showAdminChoiceDialog({ title, message = '', options = [], multiline = false, placeholder = '', required = false }) {
+    return new Promise((resolve) => {
+        const overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;inset:0;z-index:20000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.48);padding:20px;';
+        const field = options.length
+            ? `<select data-dialog-field style="width:100%;padding:12px;border:1px solid #d1d5db;border-radius:8px;font:inherit;background:white;">${options.map((option) => `<option value="${escapeHtml(option.value)}">${escapeHtml(option.label)}</option>`).join('')}</select>`
+            : multiline
+                ? `<textarea data-dialog-field rows="4" placeholder="${escapeHtml(placeholder)}" style="width:100%;padding:12px;border:1px solid #d1d5db;border-radius:8px;font:inherit;resize:vertical;"></textarea>`
+                : `<input data-dialog-field type="text" placeholder="${escapeHtml(placeholder)}" style="width:100%;padding:12px;border:1px solid #d1d5db;border-radius:8px;font:inherit;">`;
+        overlay.innerHTML = `
+            <div role="dialog" aria-modal="true" aria-labelledby="adminChoiceTitle" style="width:min(460px,100%);background:white;border-radius:8px;box-shadow:0 24px 70px rgba(0,0,0,.25);padding:22px;">
+                <h3 id="adminChoiceTitle" style="margin:0 0 8px;font-size:1.15rem;">${escapeHtml(title)}</h3>
+                ${message ? `<p style="margin:0 0 16px;color:#60646c;line-height:1.45;">${escapeHtml(message)}</p>` : ''}
+                ${field}
+                <p data-dialog-error style="display:none;color:#b42318;margin:8px 0 0;font-size:.88rem;">Ce champ est obligatoire.</p>
+                <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:18px;">
+                    <button type="button" data-dialog-cancel style="padding:10px 16px;border:1px solid #d1d5db;border-radius:8px;background:white;cursor:pointer;">Annuler</button>
+                    <button type="button" data-dialog-submit style="padding:10px 16px;border:0;border-radius:8px;background:#0071e3;color:white;font-weight:600;cursor:pointer;">Valider</button>
+                </div>
+            </div>`;
+        const fieldElement = overlay.querySelector('[data-dialog-field]');
+        const finish = (value) => {
+            document.removeEventListener('keydown', onKeydown);
+            overlay.remove();
+            resolve(value);
+        };
+        const submit = () => {
+            const value = String(fieldElement?.value || '').trim();
+            if (required && !value) {
+                overlay.querySelector('[data-dialog-error]').style.display = 'block';
+                fieldElement?.focus();
+                return;
+            }
+            finish(value);
+        };
+        const onKeydown = (event) => {
+            if (event.key === 'Escape') finish(null);
+            if (event.key === 'Enter' && !multiline) submit();
+        };
+        overlay.querySelector('[data-dialog-cancel]').addEventListener('click', () => finish(null));
+        overlay.querySelector('[data-dialog-submit]').addEventListener('click', submit);
+        overlay.addEventListener('click', (event) => { if (event.target === overlay) finish(null); });
+        document.addEventListener('keydown', onKeydown);
+        document.body.appendChild(overlay);
+        fieldElement?.focus();
+    });
+}
+
+async function resolveVehicleForBooking(student, slotInfo) {
+    const automatic = defaultVehicleForInstructor(slotInfo.instructor, student);
+    if (automatic) return automatic;
+
+    const manualVehicles = PLANNING_VEHICLES.filter((vehicle) => vehicle.transmission === 'manual');
+    const choice = await showAdminChoiceDialog({
+        title: 'Choisir le vehicule',
+        message: 'Quel vehicule boite manuelle sera utilise pour cette seance ?',
+        options: manualVehicles.map((vehicle) => ({ value: vehicle.id, label: `${vehicle.name} (${vehicle.owner})` })),
+        required: true
+    });
+    return manualVehicles.find((vehicle) => vehicle.id === choice) || null;
+}
+
+const studentSearchCache = {
+    students: [],
+    loadedAt: 0,
+    loading: null
+};
+
+const adminBookingLocks = new Set();
+
+function normalizeAdminSearchText(value) {
+    return String(value || '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .trim();
+}
+
+function buildStudentSearchText(student) {
+    return normalizeAdminSearchText([
+        student?.prenom,
+        student?.nom,
+        student?.email,
+        student?.telephone,
+        student?.user_name
+    ].join(' '));
+}
+
+async function loadStudentSearchIndex(force = false) {
+    const cacheAge = Date.now() - studentSearchCache.loadedAt;
+    if (!force && studentSearchCache.students.length && cacheAge < 5 * 60 * 1000) {
+        return studentSearchCache.students;
+    }
+    if (studentSearchCache.loading) return studentSearchCache.loading;
+
+    studentSearchCache.loading = fetchAdminPlanningData({ type: 'student-index' })
+        .then((payload) => {
+            studentSearchCache.students = (payload.students || []).map((student) => ({
+                ...student,
+                _searchText: buildStudentSearchText(student)
+            }));
+            studentSearchCache.loadedAt = Date.now();
+            return studentSearchCache.students;
+        })
+        .finally(() => {
+            studentSearchCache.loading = null;
+        });
+
+    return studentSearchCache.loading;
+}
+
+async function getMatchingStudents(searchTerm, limit = 30) {
+    const q = normalizeAdminSearchText(searchTerm);
+    if (q.length < 2) return [];
+    const students = await loadStudentSearchIndex();
+    return students
+        .filter((student) => student._searchText?.includes(q))
+        .slice(0, limit);
+}
+
+function warmStudentSearchIndexWhenReady(attempt = 0) {
+    if (window.authSession?.getToken?.()) {
+        loadStudentSearchIndex().catch((error) => console.warn('Prechargement recherche eleves impossible:', error));
+        return;
+    }
+    if (attempt < 50) {
+        setTimeout(() => warmStudentSearchIndexWhenReady(attempt + 1), 100);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    warmStudentSearchIndexWhenReady();
+});
+
 async function fetchBookedSlots(instructor, weekStart, weekEnd) {
+    const normalizedInstructor = normalizeInstructor(instructor);
     const start = new Date(weekStart);
     const end = new Date(weekEnd);
     end.setHours(23, 59, 59, 999);
 
-    console.log('🔍 Fetching booked slots for:', instructor, 'from', start.toISOString(), 'to', end.toISOString());
+    console.log('?Y"? Fetching booked slots for:', normalizedInstructor, 'from', start.toISOString(), 'to', end.toISOString());
 
     const { data, error } = await window.supabaseClient
         .from('slots')
         .select('id, start_at, end_at, status, instructor, notes, reservations(first_name,last_name,phone,email)')
-        .eq('instructor', instructor)
+        .eq('instructor', normalizedInstructor)
         .gte('start_at', start.toISOString())
         .lte('start_at', end.toISOString())
         .order('start_at', { ascending: true });
 
     if (error) throw error;
     
-    console.log('📊 Slots récupérés:', data?.length || 0);
+    console.log('?Y"S Slots r?cup?r?s:', data?.length || 0);
     data?.forEach((slot, i) => {
         console.log(`Slot ${i+1}:`, slot.id, slot.start_at, 'Reservations:', slot.reservations);
     });
     
-    // Toujours chercher les réservations manuellement pour éviter les problèmes de relation
-    console.log('🔍 Recherche manuelle des réservations pour tous les slots...');
+    // Toujours chercher les réservations manuellement pour ?viter les probl?mes de relation
+    console.log('?Y"? Recherche manuelle des réservations pour tous les slots...');
     const slotIds = (data || []).map(s => s.id);
     
     if (slotIds.length > 0) {
@@ -122,9 +732,9 @@ async function fetchBookedSlots(instructor, weekStart, weekEnd) {
             .in('slot_id', slotIds);
         
         if (resError) {
-            console.error('❌ Erreur récupération réservations:', resError);
+            console.error('?O Erreur récupération réservations:', resError);
         } else {
-            console.log('📋 Réservations trouvées manuellement:', manualReservations?.length || 0);
+            console.log('?Y"< Réservations trouv?es manuellement:', manualReservations?.length || 0);
             manualReservations?.forEach(r => {
                 console.log('  -', r.first_name, r.last_name, 'pour slot', r.slot_id);
             });
@@ -136,19 +746,19 @@ async function fetchBookedSlots(instructor, weekStart, weekEnd) {
                     const reservation = manualReservations.find(r => r.slot_id === slot.id);
                     if (reservation) {
                         slot.reservations = [reservation];
-                        console.log('✅ Réservation associée au slot', slot.id, ':', reservation.first_name, reservation.last_name);
+                        console.log('?o. Réservation associ?e au slot', slot.id, ':', reservation.first_name, reservation.last_name);
                     } else if (slot.status === 'booked') {
-                        console.warn('⚠️ Slot orphelin détecté (marqué "booked" sans réservation):', slot.id);
+                        console.warn('?s?? Slot orphelin d?tect? (marqu? "booked" sans réservation):', slot.id);
                         orphanSlots.push(slot.id);
                         // Corriger localement le statut pour l'affichage
                         slot.status = 'available';
                     }
                 });
             } else {
-                // Aucune réservation trouvée, tous les slots 'booked' sont orphelins
+                // Aucune réservation trouv?e, tous les slots 'booked' sont orphelins
                 data.forEach(slot => {
                     if (slot.status === 'booked') {
-                        console.warn('⚠️ Slot orphelin détecté (marqué "booked" sans réservation):', slot.id);
+                        console.warn('?s?? Slot orphelin d?tect? (marqu? "booked" sans réservation):', slot.id);
                         orphanSlots.push(slot.id);
                         slot.status = 'available';
                     }
@@ -157,16 +767,16 @@ async function fetchBookedSlots(instructor, weekStart, weekEnd) {
             
             // Auto-correction en base de données des slots orphelins
             if (orphanSlots.length > 0) {
-                console.log('🔧 Auto-correction de', orphanSlots.length, 'slot(s) orphelin(s)...');
+                console.log('?Y"? Auto-correction de', orphanSlots.length, 'slot(s) orphelin(s)...');
                 const { error: updateError } = await window.supabaseClient
                     .from('slots')
                     .update({ status: 'available' })
                     .in('id', orphanSlots);
                 
                 if (updateError) {
-                    console.error('❌ Erreur lors de la correction des slots orphelins:', updateError);
+                    console.error('?O Erreur lors de la correction des slots orphelins:', updateError);
                 } else {
-                    console.log('✅ Slots orphelins corrigés automatiquement');
+                    console.log('?o. Slots orphelins corrig?s automatiquement');
                 }
             }
         }
@@ -183,6 +793,9 @@ async function fetchBookedSlots(instructor, weekStart, weekEnd) {
     let forfaitMap = new Map();
     let hoursCompletedMap = new Map();
     let hoursGoalMap = new Map();
+    let lessonUnitMap = new Map();
+    let phoneMap = new Map();
+    let nameMap = new Map(); // Map pour stocker les noms (prenom + nom) par email
     
     if (emails.length > 0) {
         const { data: inscriptions } = await window.supabaseClient
@@ -191,7 +804,7 @@ async function fetchBookedSlots(instructor, weekStart, weekEnd) {
             .in('user_email', [...new Set(emails)])
             .order('created_at', { ascending: false });
         
-        // Prendre la plus récente inscription pour chaque email
+        // Prendre la plus r?cente inscription pour chaque email
         (inscriptions || []).forEach(ins => {
             if (!packMap.has(ins.user_email)) {
                 packMap.set(ins.user_email, ins.pack);
@@ -199,18 +812,36 @@ async function fetchBookedSlots(instructor, weekStart, weekEnd) {
             }
         });
         
-        // Récupérer forfait et heures depuis users
-        const { data: users } = await window.supabaseClient
+        // Récupérer forfait, heures, téléphone et nom depuis users
+        let { data: users, error: usersError } = await window.supabaseClient
             .from('users')
-            .select('email, forfait, hours_goal')
+            .select('email, forfait, hours_goal, telephone, transmission_type, nom, prenom, lesson_unit_minutes')
             .in('email', [...new Set(emails)]);
+        if (usersError && String(usersError.message || '').includes('lesson_unit_minutes')) {
+            const fallback = await window.supabaseClient
+                .from('users')
+                .select('email, forfait, hours_goal, telephone, transmission_type, nom, prenom')
+                .in('email', [...new Set(emails)]);
+            users = fallback.data;
+        }
         
         (users || []).forEach(user => {
             forfaitMap.set(user.email, user.forfait);
             hoursGoalMap.set(user.email, user.hours_goal);
+            lessonUnitMap.set(user.email, user.lesson_unit_minutes || (isCourseBasedPack(user.forfait) ? 45 : 120));
+            phoneMap.set(user.email, user.telephone);
+            // Utiliser transmission_type de users si disponible, sinon garder celui d'inscription
+            if (user.transmission_type && !transmissionMap.has(user.email)) {
+                transmissionMap.set(user.email, user.transmission_type);
+            }
+            // Stocker le nom complet
+            const fullName = user.prenom && user.nom ? `${user.prenom} ${user.nom}` : null;
+            if (fullName) {
+                nameMap.set(user.email, fullName);
+            }
         });
         
-        // Calculer les heures effectuées en comptant les réservations passées
+        // Calculer les heures effectuées en comptant les réservations pass?es
         const { data: completedReservations } = await window.supabaseClient
             .from('reservations')
             .select('email, slots(start_at, end_at)')
@@ -223,7 +854,12 @@ async function fetchBookedSlots(instructor, weekStart, weekEnd) {
                 const startAt = new Date(res.slots.start_at);
                 const endAt = new Date(res.slots.end_at);
                 const hours = (endAt - startAt) / (1000 * 60 * 60);
-                hoursCountMap.set(res.email, (hoursCountMap.get(res.email) || 0) + hours);
+                const fakeStudent = {
+                    lesson_unit_minutes: lessonUnitMap.get(res.email) || (isCourseBasedPack(forfaitMap.get(res.email) || packMap.get(res.email)) ? 45 : 120),
+                    forfait: forfaitMap.get(res.email),
+                    pack: packMap.get(res.email)
+                };
+                hoursCountMap.set(res.email, (hoursCountMap.get(res.email) || 0) + lessonUnitsForDuration(fakeStudent, hours));
             }
         });
         
@@ -234,14 +870,15 @@ async function fetchBookedSlots(instructor, weekStart, weekEnd) {
 
     const bookedMap = new Map();
     (data || []).forEach((row) => {
-        // Inclure les slots réservés, permis, indisponible OU ceux qui ont des réservations
+        // Inclure les slots r?serv?s, permis, indisponible OU ceux qui ont des réservations
         const hasReservation = Array.isArray(row.reservations) ? row.reservations.length > 0 : !!row.reservations;
+        const isLessonSlot = ['booked', 'done', 'completed'].includes(row.status);
         const isPermis = row.status === 'permis';
         const isIndisponible = row.status === 'indisponible';
         
         // Debug: log pour voir les créneaux permis
         if (row.status === 'permis' || (row.notes && row.notes.includes('PERMIS'))) {
-            console.log('🟡 Créneau PERMIS détecté:', {
+            console.log('?YY? Créneau PERMIS d?tect?:', {
                 id: row.id,
                 start_at: row.start_at,
                 status: row.status,
@@ -250,7 +887,7 @@ async function fetchBookedSlots(instructor, weekStart, weekEnd) {
             });
         }
         
-        if (row.status !== 'booked' && !hasReservation && !isPermis && !isIndisponible) return;
+        if (!isLessonSlot && !hasReservation && !isPermis && !isIndisponible) return;
         
         const d = new Date(row.start_at);
         const dateStr = toInputDate(d);
@@ -262,9 +899,9 @@ async function fetchBookedSlots(instructor, weekStart, weekEnd) {
         const pack = packMap.get(email) || '';
         const transmissionType = transmissionMap.get(email) || null;
         
-        // Log détaillé pour déboguer les réservations sans nom (sauf pour les créneaux permis et indisponibles)
+        // Log détaillé pour d?boguer les réservations sans nom (sauf pour les créneaux permis et indisponibles)
         if (!isPermis && !isIndisponible && (!res?.first_name || !res?.last_name)) {
-            console.warn('⚠️ Réservation sans nom pour le slot:', {
+            console.warn('?s?? Réservation sans nom pour le slot:', {
                 slotId: row.id,
                 startAt: row.start_at,
                 reservation: res,
@@ -278,32 +915,58 @@ async function fetchBookedSlots(instructor, weekStart, weekEnd) {
             notes: row.notes || '',
             slot_uuid: row.id, // Stocker le vrai UUID du slot
             student: (isPermis || isIndisponible) ? null : {
-                first_name: res?.first_name || 'Réservé',
-                last_name: res?.last_name || '(sans détails)',
-                phone: res?.phone || '',
+                first_name: nameMap.get(email)?.split(' ')[0] || res?.first_name || email.split('@')[0] || 'Réservé',
+                last_name: nameMap.get(email)?.split(' ').slice(1).join(' ') || res?.last_name || '',
+                phone: phoneMap.get(email) || res?.phone || '',
                 email: email,
                 pack: pack,
-                transmission_type: transmissionType,
+                transmission_type: transmissionMap.get(email) || transmissionType,
                 forfait: forfaitMap.get(email) || '',
                 hours_completed: hoursCompletedMap.get(email) || 0,
-                hours_goal: hoursGoalMap.get(email) || 0
+                hours_goal: hoursGoalMap.get(email) || 0,
+                lesson_unit_minutes: lessonUnitMap.get(email) || (isCourseBasedPack(forfaitMap.get(email) || pack) ? 45 : 120)
             }
         });
     });
     
     // Debug: afficher tous les créneaux permis et indisponibles dans la map
-    console.log('📋 Créneaux dans bookedMap:', bookedMap.size);
+    console.log('?Y"< Créneaux dans bookedMap:', bookedMap.size);
     bookedMap.forEach((value, key) => {
         if (value.status === 'permis') {
-            console.log(`  🟡 ${key} → PERMIS (${value.notes})`);
+            console.log(`  ?YY? ${key}' PERMIS (${value.notes})`);
         }
         if (value.status === 'indisponible') {
-            console.log(`  🔴 ${key} → INDISPONIBLE (${value.notes})`);
+            console.log(`  ?Y"? ${key}' INDISPONIBLE (${value.notes})`);
         }
     });
 
     return bookedMap;
 }
+
+fetchBookedSlots = async function fetchBookedSlotsViaAdminEndpoint(instructor, weekStart, weekEnd) {
+    const normalizedInstructor = normalizeInstructor(instructor);
+    const start = new Date(weekStart);
+    const end = new Date(weekEnd);
+    end.setHours(23, 59, 59, 999);
+
+    const payload = await fetchAdminPlanningData({
+        type: 'booked-slots',
+        instructor: normalizedInstructor,
+        start: start.toISOString(),
+        end: end.toISOString()
+    });
+
+    const bookedMap = new Map();
+    (payload.items || []).forEach((item) => {
+        if (!item?.start_at || !item?.booking) return;
+        const d = new Date(item.start_at);
+        const dateStr = toInputDate(d);
+        const timeStr = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+        bookedMap.set(buildSlotId(dateStr, timeStr), item.booking);
+    });
+
+    return bookedMap;
+};
 
 function isToday(dateObj) {
     const now = new Date();
@@ -325,14 +988,14 @@ function renderPlanning(grid, instructor, weekStart, bookedSet) {
     const times = getTimeRows(instructor);
     const now = Date.now();
     
-    // Pour déterminer si un créneau est passé, on compare uniquement la date (pas l'heure)
-    // Cela permet de placer des élèves sur tous les créneaux de la semaine affichée
+    // Pour d?terminer si un créneau est pass?, on compare uniquement la date (pas l'heure)
+    // Cela permet de placer des élèves sur tous les créneaux de la semaine affich?e
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const todayTimestamp = today.getTime();
 
     // Track stats
-    let totalSlots = 0, bookedCount = 0, doneCount = 0;
+    let totalSlots = 0, bookedCount = 0, doneCount = 0, visibleTodayCount = 0, visibleWeekCount = 0;
 
     // Header row
     const headerRow = [
@@ -348,28 +1011,21 @@ function renderPlanning(grid, instructor, weekStart, bookedSet) {
 
     // Body rows
     const bodyRows = times.map((start) => {
-        const end = getEndForStart(instructor, start);
-        const timeCell = `<div class="cal-time">${start.replace(':', 'h')}</div>`;
+        const timeCellStart = slotStartCodeStart(start);
 
         const dayCells = days.map((d) => {
             const dateStr = toInputDate(d);
-            const id = buildSlotId(dateStr, start);
+            const end = getEndForStart(instructor, start, dateStr);
+            if (!end) return '<div class="cal-cell"></div>';
+            const bookingStart = slotStartCodeStart(start);
+            const id = buildSlotId(dateStr, bookingStart);
             const booking = bookedSet instanceof Map ? bookedSet.get(id) : null;
             const isBooked = !!booking;
-            const slotStart = new Date(`${dateStr}T${start}:00`).getTime();
+            const slotStart = new Date(`${dateStr}T${bookingStart}:00`).getTime();
             
             // Vérifier si c'est un créneau permis
             const isPermis = booking && booking.status === 'permis';
-            let permisLocation = '';
-            let permisCandidates = '';
-            if (isPermis && booking.notes) {
-                // Format: "PERMIS - Lieu | Candidats: Nom1, Nom2, Nom3"
-                const parts = booking.notes.split('|');
-                permisLocation = parts[0] ? parts[0].replace('PERMIS - ', '').trim() : '';
-                if (parts[1]) {
-                    permisCandidates = parts[1].replace('Candidats:', '').trim();
-                }
-            }
+            const permisLabel = isPermis ? renderPermisLabel(booking.notes) : '';
             
             // Vérifier si c'est un créneau indisponible
             const isIndisponible = booking && booking.status === 'indisponible';
@@ -378,43 +1034,99 @@ function renderPlanning(grid, instructor, weekStart, bookedSet) {
                 indisponibleReason = booking.notes.replace('INDISPONIBLE - ', '').trim();
             }
             
-            // Un créneau est passé seulement si la DATE est antérieure à aujourd'hui
-            // Cela permet de placer des élèves sur tous les créneaux de la semaine affichée
+            // Vérifier si c'est un créneau de cong?s (d?tect? via les notes)
+            const isConges = isIndisponible && booking.notes && booking.notes.includes('CONGES');
+            let congesInfo = '';
+            if (isConges && booking.notes) {
+                congesInfo = booking.notes.replace('CONGES - ', '').trim();
+            }
+            
+            // Logique sp?cifique pour Daho: filtrer selon les jours
+            let isDahoUnavailable = false;
+            if (instructor === 'Daho' && !isBooked) {
+                const dayOfWeek = d.getDay(); // 0=Dimanche, 1=Lundi, ..., 6=Samedi
+                
+                // Lundi (1): 15h-19h disponible
+                if (dayOfWeek === 1 && !['15:00', '17:00'].includes(start)) {
+                    isDahoUnavailable = true;
+                }
+                // Mardi-Vendredi (2-5): seulement 17h-19h disponible
+                else if (dayOfWeek >= 2 && dayOfWeek <= 5 && start !== '17:00') {
+                    isDahoUnavailable = true;
+                }
+                // Samedi (6): seulement 7h-13h (7h, 9h, 11h)
+                else if (dayOfWeek === 6 && !['07:00', '09:00', '11:00'].includes(start)) {
+                    isDahoUnavailable = true;
+                }
+                // Dimanche (0): ferm?
+                else if (dayOfWeek === 0) {
+                    isDahoUnavailable = true;
+                }
+            }
+
+            let isNailSpecialUnavailable = false;
+            if (instructor === 'Nail' && !isBooked) {
+                const specialSlot = isNailNewPackSlot({ instructor, dateStr, start: bookingStart, end });
+                const dayOfWeek = d.getDay();
+                if (slotStartCodeEnd(start) && !specialSlot) {
+                    isNailSpecialUnavailable = true;
+                } else if (bookingStart === '15:45' && !specialSlot) {
+                    isNailSpecialUnavailable = true;
+                } else if (bookingStart === '15:00' && dayOfWeek >= 1 && dayOfWeek <= 5 && !specialSlot) {
+                    isNailSpecialUnavailable = true;
+                }
+            }
+            
+            // Un créneau est pass? seulement si la DATE est ant?rieure ? aujourd'hui
+            // Cela permet de placer des élèves sur tous les créneaux de la semaine affich?e
             const slotDate = new Date(dateStr);
             slotDate.setHours(0, 0, 0, 0);
             const isPast = slotDate.getTime() < todayTimestamp;
             
-            // Un créneau est "done" si réservé ET l'heure est passée
-            const isDone = isBooked && !isPermis && !isIndisponible && (slotStart < now);
+            // Un créneau est "done" si r?serv? ET l'heure est pass?e,
+            // ou si l'ancien statut en base indique deja une seance terminee.
+            const isDone = isBooked && !isPermis && !isIndisponible && !isConges
+                && (slotStart < now || ['done', 'completed'].includes(booking.status));
 
             totalSlots++;
             if (isDone) doneCount++;
-            else if (isBooked && !isPermis && !isIndisponible) bookedCount++;
+            else if (isBooked && !isPermis && !isIndisponible && !isConges) bookedCount++;
+            if (isBooked && !isPermis && !isIndisponible && !isConges) {
+                visibleWeekCount++;
+                if (isToday(d)) visibleTodayCount++;
+            }
 
-            const statusClass = isIndisponible ? 'indisponible' : isPermis ? 'permis' : isDone ? 'done' : isBooked ? 'booked' : 'available';
-            const statusLabel = isIndisponible
+            const statusClass = isDahoUnavailable || isNailSpecialUnavailable ? 'indisponible' : isConges ? 'conges' : isIndisponible ? 'indisponible' : isPermis ? 'permis' : isDone ? 'done' : isBooked ? 'booked' : 'available';
+            const statusLabel = isDahoUnavailable
+                ? `INDISPONIBLE<br><small style="font-size: 0.75rem; opacity: 0.9;">Hors horaires</small>`
+                : isNailSpecialUnavailable
+                ? `INDISPONIBLE<br><small style="font-size: 0.75rem; opacity: 0.9;">Réservé nouveaux packs</small>`
+                : isConges
+                ? `CONGES<br><small style="font-size: 0.75rem; opacity: 0.9;">${congesInfo}</small>`
+                : isIndisponible
                 ? `INDISPONIBLE${indisponibleReason ? `<br><small style="font-size: 0.75rem; opacity: 0.9;">${indisponibleReason}</small>` : ''}`
                 : isPermis 
-                ? `PERMIS - ${permisLocation}${permisCandidates ? `<br><small style="font-size: 0.75rem; opacity: 0.9;">${permisCandidates}</small>` : ''}` 
-                : isDone ? 'Réalisé' : isBooked ? 'Réservé' : 'Libre';
+                ? permisLabel
+                : isDone ? 'Réalisé' : isBooked ? 'Réservé' : 'DISPO';
             const todayCol = isToday(d) ? ' today-col' : '';
 
-            const studentName = isBooked && !isPermis && !isIndisponible
+            const studentName = isBooked && !isPermis && !isIndisponible && !isConges
                 ? `${(booking.student?.first_name || '').trim()} ${(booking.student?.last_name || '').trim()}`.trim()
                 : '';
-            const studentPhone = isBooked && !isPermis && !isIndisponible ? (booking.student?.phone || '') : '';
+            const studentPhone = isBooked && !isPermis && !isIndisponible && !isConges ? (booking.student?.phone || '') : '';
 
-            const icon = isIndisponible ? 'fa-ban' : isPermis ? 'fa-id-card' : isDone ? 'fa-check' : isBooked ? 'fa-user' : 'fa-minus';
+            const icon = isConges ? 'fa-umbrella-beach' : isIndisponible ? 'fa-ban' : isPermis ? 'fa-id-card' : isDone ? 'fa-check' : isBooked ? 'fa-user' : 'fa-plus';
             
-            // Déterminer le type de véhicule depuis transmission_type
+            // Determiner le type de vehicule depuis le vehicule affecte, puis depuis la transmission.
             const transmissionType = isBooked ? (booking?.student?.transmission_type || null) : null;
-            let vehicleType = '';
+            const assignedVehicle = isBooked ? vehicleFromNotes(booking?.notes || '') : null;
+            let vehicleType = assignedVehicle?.label || '';
             let transmissionClass = '';
             
-            if (transmissionType === 'auto') {
+            if (assignedVehicle?.transmission === 'auto' || transmissionType === 'auto') {
                 vehicleType = 'BA';
                 transmissionClass = 'transmission-auto';
-            } else if (transmissionType === 'manual') {
+            } else if (assignedVehicle?.transmission === 'manual' || transmissionType === 'manual') {
                 vehicleType = 'BM';
                 transmissionClass = 'transmission-manual';
             }
@@ -429,7 +1141,7 @@ function renderPlanning(grid, instructor, weekStart, bookedSet) {
                 hours_completed: booking.student?.hours_completed,
                 hours_goal: booking.student?.hours_goal,
                 slotDate: dateStr,
-                slotStart: start,
+                slotStart: bookingStart,
                 slotEnd: end,
                 instructor: instructor,
                 slotId: id,
@@ -439,25 +1151,35 @@ function renderPlanning(grid, instructor, weekStart, bookedSet) {
             // Pour les créneaux disponibles, ajouter un bouton '+' pour placer un élève
             const slotData = JSON.stringify({
                 dateStr: dateStr,
-                start: start,
+                start: bookingStart,
                 end: end,
                 instructor: instructor
             }).replace(/"/g, '&quot;');
+            const permisData = isPermis ? encodeURIComponent(JSON.stringify({
+                notes: booking.notes || '',
+                date: d.toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' }),
+                start: bookingStart,
+                end,
+                instructor
+            })) : '';
             
             return `
                 <div class="cal-cell${todayCol}">
-                    <div class="ev ${statusClass} ${transmissionClass}" ${isPermis || isIndisponible ? '' : isBooked ? `onclick="showStudent(${studentData})" style="cursor:pointer;"` : !isPast ? `onclick="openStudentSearchModal(${slotData})" style="cursor:pointer;"` : ''}>
-                        ${!isBooked && !isPast && !isPermis && !isIndisponible ? `<button class="add-student-btn" onclick="event.stopPropagation(); openStudentSearchModal(${slotData});" title="Placer un élève"><i class="fas fa-plus"></i></button>` : ''}
+                    <div class="ev ${statusClass} ${transmissionClass}" ${isPermis ? `onclick="showPermisDetails('${permisData}')" style="cursor:pointer;"` : isIndisponible || isConges || isNailSpecialUnavailable ? '' : isBooked ? `onclick="showStudent(${studentData})" style="cursor:pointer;"` : `onclick="openStudentSearchModal(${slotData})" style="cursor:pointer;"`}>
+                        ${!isBooked && !isPermis && !isIndisponible && !isConges && !isNailSpecialUnavailable ? `<button class="add-student-btn" onclick="event.stopPropagation(); openStudentSearchModal(${slotData});" title="Placer un eleve"><i class="fas fa-plus"></i></button>` : ''}
                         <span class="ev-icon"><i class="fas ${icon}"></i></span>
-                        <div class="ev-status">${statusLabel}</div>
-                        <div class="ev-time">${start} – ${end}</div>
-                        ${isBooked && !isPermis && !isIndisponible ? `<div class="ev-name">${studentName || 'Élève'}${vehicleType ? ` <span class="vehicle-badge">[${vehicleType}]</span>` : ''}</div>` : ''}
-                        ${isBooked && !isPermis && !isIndisponible && studentPhone ? `<div class="ev-phone"><i class="fas fa-phone" style="font-size:0.55rem;margin-right:3px;"></i>${studentPhone}</div>` : ''}
+                        <div class="ev-status">${isBooked && !isPermis && !isIndisponible && !isConges ? (vehicleType || 'BM/BA') : statusLabel}</div>
+                        <div class="ev-time">${bookingStart} - ${end}</div>
+                        ${isBooked && !isPermis && !isIndisponible && !isConges ? `<div class="ev-name">${studentName || 'Eleve'}${vehicleType ? ` <span class="vehicle-badge" title="${assignedVehicle?.name || vehicleType}">[${vehicleType}]</span>` : ''}</div>` : ''}
+                        ${isBooked && !isPermis && !isIndisponible && !isConges && studentPhone ? `<div class="ev-phone"><i class="fas fa-phone" style="font-size:0.55rem;margin-right:3px;"></i>${studentPhone}</div>` : ''}
                     </div>
                 </div>
             `;
         }).join('');
 
+        const firstDay = days[0] ? toInputDate(days[0]) : '';
+        const rowEnd = getEndForStart(instructor, start, firstDay);
+        const timeCell = `<div class="cal-time">${timeCellStart.replace(':', 'h')}${rowEnd ? `<br><small>${rowEnd.replace(':', 'h')}</small>` : ''}</div>`;
         return timeCell + dayCells;
     }).join('');
 
@@ -470,13 +1192,15 @@ function renderPlanning(grid, instructor, weekStart, bookedSet) {
     if (statTotal) statTotal.textContent = totalSlots;
     if (statBooked) statBooked.textContent = bookedCount;
     if (statDone) statDone.textContent = doneCount;
+    setQuickStatValue('statToday', visibleTodayCount);
+    setQuickStatValue('statWeek', visibleWeekCount);
 
     // Update instructor name in header
     const instrName = document.getElementById('instructorName');
     if (instrName) instrName.textContent = instructor;
 }
 
-// Fonction pour sauvegarder l'état (globale pour être accessible partout)
+// Fonction pour sauvegarder l'?tat (globale pour être accessible partout)
 function saveState() {
     localStorage.setItem('admin_planning_state', JSON.stringify({
         weekStart: state.weekStart.toISOString(),
@@ -485,6 +1209,7 @@ function saveState() {
 }
 
 (function init() {
+    console.log('?YY? IIFE admin-planning v80 - Initialisation du planning');
     const loginSection = document.getElementById('loginSection');
     const planningSection = document.getElementById('planningSection');
     const adminActions = document.getElementById('adminActions');
@@ -547,6 +1272,9 @@ function saveState() {
 
             const booked = await fetchBookedSlots(state.instructor, state.weekStart, weekEnd);
             if (planningGrid) renderPlanning(planningGrid, state.instructor, state.weekStart, booked);
+            loadAdminQuickStats().catch((statsError) => {
+                console.warn('Impossible de charger les compteurs admin:', statsError);
+            });
 
             if (planningFeedback) setFeedback(planningFeedback, '', '');
         } catch (err) {
@@ -561,16 +1289,28 @@ function saveState() {
         logoutBtn.addEventListener('click', () => logout());
     }
 
-    // Segment control for instructor selection
-    segmentBtns.forEach(btn => {
-        btn.addEventListener('click', async () => {
-            segmentBtns.forEach(b => b.classList.remove('active'));
+    // Segment control for instructor selection.
+    // Un seul listener sur le conteneur gère TOUS les boutons, y compris ceux
+    // ajoutés dynamiquement (nouveaux moniteurs comme test3).
+    const instructorSegment = document.getElementById('instructorSegment');
+    if (instructorSegment) {
+        instructorSegment.addEventListener('click', async (e) => {
+            const btn = e.target.closest('button[data-instructor]');
+            if (!btn || !instructorSegment.contains(btn)) return;
+
+            instructorSegment.querySelectorAll('button').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             state.instructor = normalizeInstructor(btn.dataset.instructor);
             saveState();
+            console.log('?Y-?? Moniteur sélectionn?:', state.instructor);
             await refresh();
+
+            // Mettre à jour l'affichage des taux de r?ussite pour ce moniteur
+            if (window.refreshInstructorDisplay) {
+                window.refreshInstructorDisplay(state.instructor);
+            }
         });
-    });
+    }
 
     // Old select fallback
     if (instructorSelectEl) {
@@ -606,47 +1346,115 @@ function saveState() {
         });
     }
 
-    refresh();
+    // Exposer refresh globalement pour les boutons de moniteurs ajoutés dynamiquement
+    window.refreshPlanning = refresh;
+
+    window.addEventListener('auth-session-ready', () => refresh(), { once: true });
+    if (window.authenticatedUser?.role === 'admin') refresh();
 })();
 
-// ══════════════════════════════════════════════════════════════════════════════
+// ?.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.?
 // GESTION DES DEMANDES D'ANNULATION
-// ══════════════════════════════════════════════════════════════════════════════
+// ?.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.?
 
 let cancellationRequests = [];
+let documentReviews = [];
+let documentReviewRefreshTimer = null;
+let documentReviewVisibilityBound = false;
+
+async function loadDocumentReviewNotifications() {
+    try {
+        const payload = await fetchAdminPlanningData({ type: 'document-reviews' });
+        documentReviews = payload.reviews || [];
+        updateDocumentReviewUI();
+    } catch (error) {
+        console.error('Erreur chargement documents a verifier:', error);
+        documentReviews = [];
+        updateDocumentReviewUI();
+    }
+}
+
+function updateDocumentReviewUI() {
+    const pill = document.getElementById('documentReviewPill');
+    const countElement = document.getElementById('statDocumentReviews');
+    const list = document.getElementById('documentReviewList');
+    const pendingCount = documentReviews.reduce((total, review) => total + Number(review.pending_count || 0), 0);
+
+    if (pill) pill.style.display = pendingCount > 0 ? 'flex' : 'none';
+    if (countElement) countElement.textContent = pendingCount;
+    if (!list) return;
+
+    if (!documentReviews.length) {
+        list.innerHTML = '<p class="empty-message">Aucun document en attente de verification.</p>';
+        return;
+    }
+
+    list.innerHTML = documentReviews.map((review) => {
+        const uploadedAt = review.last_uploaded_at ? new Date(review.last_uploaded_at) : null;
+        const uploadedLabel = uploadedAt && !Number.isNaN(uploadedAt.getTime())
+            ? uploadedAt.toLocaleString('fr-FR', { dateStyle: 'medium', timeStyle: 'short' })
+            : 'En attente de verification';
+        return `
+            <div class="cancellation-card">
+                <div class="card-header">
+                    <div class="student-info">
+                        <h4>${escapeHtml(review.user_name || review.user_email)}</h4>
+                        <p><i class="fas fa-envelope"></i> ${escapeHtml(review.user_email)}</p>
+                        <p style="margin-top:4px;"><i class="fas fa-clock"></i> ${escapeHtml(uploadedLabel)}</p>
+                    </div>
+                    <div class="slot-badge" style="background:#e8f2ff;color:#0066cc;">
+                        <i class="fas fa-file-circle-check"></i>
+                        ${Number(review.pending_count || 0)} document(s) a verifier
+                    </div>
+                </div>
+                <div class="card-actions">
+                    <button type="button" class="btn-accept" data-open-document-review="${escapeHtml(review.user_email)}" style="background:#0071e3;">
+                        <i class="fas fa-folder-open"></i> Verifier les documents
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    list.querySelectorAll('[data-open-document-review]').forEach((button) => {
+        button.addEventListener('click', () => window.viewInscriptionDocuments(button.dataset.openDocumentReview));
+    });
+}
+
+window.toggleDocumentReviewPanel = function() {
+    const panel = document.getElementById('documentReviewPanel');
+    if (panel) panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+};
 
 async function loadCancellationRequests() {
     try {
-        const { data, error } = await window.supabaseClient
-            .from('cancellation_requests')
-            .select('*')
-            .eq('status', 'pending')
-            .order('created_at', { ascending: false });
-
-        if (error) {
-            console.error('Error loading cancellation requests:', error);
-            return;
-        }
-
-        cancellationRequests = data || [];
+        const payload = await fetchAdminPlanningData({ type: 'cancellation-requests' });
+        cancellationRequests = payload.requests || [];
         updateCancellationUI();
     } catch (err) {
         console.error('Exception loading cancellation requests:', err);
+        cancellationRequests = [];
+        updateCancellationUI();
     }
 }
 
 function updateCancellationUI() {
     const pill = document.getElementById('cancellationPill');
     const statEl = document.getElementById('statCancellations');
+    const actionCountEl = document.getElementById('cancellationActionCount');
     const listEl = document.getElementById('cancellationList');
 
     const count = cancellationRequests.length;
 
     if (pill) {
-        pill.style.display = count > 0 ? 'flex' : 'none';
+        pill.style.display = 'flex';
+        pill.style.opacity = count > 0 ? '1' : '0.72';
     }
     if (statEl) {
         statEl.textContent = count;
+    }
+    if (actionCountEl) {
+        actionCountEl.textContent = count;
     }
 
     if (listEl) {
@@ -654,6 +1462,11 @@ function updateCancellationUI() {
             listEl.innerHTML = '<p class="empty-message">Aucune demande d\'annulation en attente.</p>';
         } else {
             listEl.innerHTML = cancellationRequests.map(req => {
+                const safeId = escapeHtml(req.id);
+                const safeName = escapeHtml(req.user_name || 'élève inconnu');
+                const safeEmail = escapeHtml(req.user_email || '-');
+                const safeReason = escapeHtml(req.reason || 'Aucun motif fourni');
+                const safeInstructor = escapeHtml(req.instructor || 'Moniteur inconnu');
                 const createdAt = new Date(req.created_at).toLocaleDateString('fr-FR', {
                     day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
                 });
@@ -662,21 +1475,20 @@ function updateCancellationUI() {
                     weekday: 'long', day: '2-digit', month: 'long', year: 'numeric'
                 }) : 'Date inconnue';
                 
-                const slotTime = req.slot_time || 'Heure inconnue';
-                const instructor = req.instructor || 'Moniteur inconnu';
+                const slotTime = escapeHtml(req.slot_time || 'Heure inconnue');
                 
                 const justificationLink = req.justification_file 
-                    ? `<a href="${req.justification_file}" target="_blank" class="justification-link" download="${req.justification_filename || 'justificatif'}">
-                        <i class="fas fa-paperclip"></i> Voir le justificatif (${req.justification_filename || 'fichier'})
+                    ? `<a href="${escapeHtml(req.justification_file)}" target="_blank" class="justification-link" download="${escapeHtml(req.justification_filename || 'justificatif')}">
+                        <i class="fas fa-paperclip"></i> Voir le justificatif (${escapeHtml(req.justification_filename || 'fichier')})
                        </a>`
                     : '<span style="font-size:0.8rem;color:var(--text2);"><i class="fas fa-exclamation-triangle"></i> Aucun justificatif fourni</span>';
 
                 return `
-                    <div class="cancellation-card" data-request-id="${req.id}">
+                    <div class="cancellation-card" data-request-id="${safeId}">
                         <div class="card-header">
                             <div class="student-info">
-                                <h4>${req.user_name || 'Élève inconnu'}</h4>
-                                <p><i class="fas fa-envelope"></i> ${req.user_email || '-'}</p>
+                                <h4>${safeName}</h4>
+                                <p><i class="fas fa-envelope"></i> ${safeEmail}</p>
                                 <p style="margin-top:4px;"><i class="fas fa-clock"></i> Demande du ${createdAt}</p>
                             </div>
                             <div style="text-align:right;">
@@ -684,20 +1496,24 @@ function updateCancellationUI() {
                                     <i class="fas fa-calendar"></i> ${slotDate}
                                 </div>
                                 <div style="font-size:0.85rem;font-weight:600;color:var(--orange);">
-                                    <i class="fas fa-clock"></i> ${slotTime} • ${instructor}
+                                    <i class="fas fa-clock"></i> ${slotTime} - ${safeInstructor}
                                 </div>
                             </div>
                         </div>
                         <div class="reason-section">
                             <label>Motif de l'annulation</label>
-                            <p>${req.reason || 'Aucun motif fourni'}</p>
+                            <p>${safeReason}</p>
                         </div>
                         ${justificationLink}
+                        <div class="reason-section" style="margin-top:10px;">
+                            <label>Motif admin si refus</label>
+                            <textarea data-admin-reason-for="${safeId}" rows="2" placeholder="Exemple : justificatif insuffisant ou demande hors délai..." style="width:100%;margin-top:6px;padding:10px;border:1px solid var(--border);border-radius:10px;font:inherit;resize:vertical;"></textarea>
+                        </div>
                         <div class="card-actions">
-                            <button class="btn-accept" onclick="handleCancellationDecision('${req.id}', 'accepted')">
+                            <button class="btn-accept" onclick="handleCancellationDecision('${safeId}', 'accepted')">
                                 <i class="fas fa-check"></i> Accepter
                             </button>
-                            <button class="btn-refuse" onclick="handleCancellationDecision('${req.id}', 'refused')">
+                            <button class="btn-refuse" onclick="handleCancellationDecision('${safeId}', 'refused')">
                                 <i class="fas fa-times"></i> Refuser
                             </button>
                         </div>
@@ -716,77 +1532,52 @@ window.toggleCancellationPanel = function() {
 };
 
 window.handleCancellationDecision = async function(requestId, decision) {
+    const adminReasonInput = document.querySelector(`[data-admin-reason-for="${requestId}"]`);
+    const adminReason = (adminReasonInput?.value || '').trim();
+    if (decision === 'refused' && adminReason.length < 3) {
+        alert('Ajoute un motif admin avant de refuser la demande. Il sera envoyé à l’élève par email.');
+        adminReasonInput?.focus();
+        return;
+    }
+
     const confirmMsg = decision === 'accepted'
         ? 'Accepter cette demande d\'annulation ?\n\nLe créneau redeviendra disponible pour les autres élèves.'
-        : 'Refuser cette demande d\'annulation ?\n\nL\'heure restera comptée dans le forfait de l\'élève.';
+        : `Refuser cette demande d'annulation ?\n\nMotif envoyé à l'élève : ${adminReason}\n\nL'heure restera comptée dans le forfait de l'élève.`;
 
     if (!confirm(confirmMsg)) return;
 
     try {
-        // 1. Mettre à jour le statut de la demande
-        const { error: updateError } = await window.supabaseClient
-            .from('cancellation_requests')
-            .update({ status: decision, updated_at: new Date().toISOString() })
-            .eq('id', requestId);
+        const token = window.authSession?.getToken?.();
+        if (!token) throw new Error('AUTH_REQUIRED');
 
-        if (updateError) {
-            console.error('Error updating cancellation request:', updateError);
-            alert('Erreur lors de la mise à jour de la demande.');
-            return;
+        const response = await fetch('/.netlify/functions/admin-cancellation-decision', {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ request_id: requestId, decision, admin_reason: adminReason })
+        });
+        const result = await response.json().catch(() => null);
+        if (!response.ok || !result?.ok) {
+            throw new Error(result?.error || 'ADMIN_CANCELLATION_DECISION_FAILED');
         }
 
-        // 2. Mettre à jour le statut de la réservation
-        const request = cancellationRequests.find(r => r.id === requestId);
-        if (request && request.reservation_id) {
-            if (decision === 'accepted') {
-                // Accepté : libérer le créneau
-                const { data: resData } = await window.supabaseClient
-                    .from('reservations')
-                    .select('slot_id')
-                    .eq('id', request.reservation_id)
-                    .maybeSingle();
-
-                if (resData?.slot_id) {
-                    // Supprimer la réservation
-                    await window.supabaseClient
-                        .from('reservations')
-                        .delete()
-                        .eq('id', request.reservation_id);
-
-                    // Remettre le slot en disponible
-                    await window.supabaseClient
-                        .from('slots')
-                        .update({ status: 'available' })
-                        .eq('id', resData.slot_id);
-
-                    console.log('Créneau libéré avec succès');
-                    
-                    // Afficher les élèves disponibles pour ce créneau
-                    await showAvailableStudentsForSlot(resData.slot_id);
-                }
-            } else {
-                // Refusé : marquer la réservation comme annulée avec pénalité
-                await window.supabaseClient
-                    .from('reservations')
-                    .update({ 
-                        status: 'cancelled_refused',
-                        notes: 'Demande d\'annulation refusée par l\'admin'
-                    })
-                    .eq('id', request.reservation_id);
-                
-                console.log('Réservation marquée comme refusée');
-            }
-        }
-
-        // 3. Recharger les demandes et le planning
         await loadCancellationRequests();
+        await loadDesistementsPlanning();
+        if (typeof window.refreshPlanning === 'function') {
+            await window.refreshPlanning();
+        }
+
+        if (decision === 'accepted' && result.slot_id && typeof showAvailableStudentsForSlot === 'function') {
+            showAvailableStudentsForSlot(result.slot_id).catch((error) => {
+                console.warn('Impossible d afficher les eleves disponibles apres annulation:', error);
+            });
+        }
         
         alert(decision === 'accepted' 
-            ? 'Demande acceptée. Le créneau est maintenant disponible.' 
-            : 'Demande refusée. L\'heure reste comptée.');
-        
-        // Rafraîchir la page pour voir les changements
-        window.location.reload();
+            ? `Demande acceptée. Le créneau est maintenant disponible.${result.email_sent ? ' Email envoyé à l’élève.' : ' Attention : email non envoyé.'}` 
+            : `Demande refusée. L'heure reste comptée.${result.email_sent ? ' Email envoyé à l’élève.' : ' Attention : email non envoyé.'}`);
 
     } catch (err) {
         console.error('Error handling cancellation decision:', err);
@@ -794,76 +1585,123 @@ window.handleCancellationDecision = async function(requestId, decision) {
     }
 };
 
-// Charger les demandes d'annulation au démarrage
-setTimeout(() => {
+let adminSecondaryPanelsLoaded = false;
+
+function loadAdminSecondaryPanelsWhenReady(attempt = 0) {
+    if (!window.authSession?.getToken?.()) {
+        if (attempt < 60) setTimeout(() => loadAdminSecondaryPanelsWhenReady(attempt + 1), 100);
+        return;
+    }
+    if (adminSecondaryPanelsLoaded) return;
+    adminSecondaryPanelsLoaded = true;
     loadCancellationRequests();
     loadInscriptionNotifications();
+    loadDocumentReviewNotifications();
     loadDesistementsPlanning();
-}, 1000);
+    if (!documentReviewRefreshTimer) {
+        documentReviewRefreshTimer = setInterval(() => {
+            if (window.authSession?.getToken?.()) loadDocumentReviewNotifications();
+        }, 300000);
+    }
+    if (!documentReviewVisibilityBound) {
+        documentReviewVisibilityBound = true;
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && window.authSession?.getToken?.()) loadDocumentReviewNotifications();
+        });
+    }
+}
 
-// ══════════════════════════════════════════════════════════════════════════════
+window.addEventListener('auth-session-ready', () => loadAdminSecondaryPanelsWhenReady());
+setTimeout(() => loadAdminSecondaryPanelsWhenReady(), 250);
+
+// ?.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.?
 // STUDENT SEARCH FUNCTIONALITY
-// ══════════════════════════════════════════════════════════════════════════════
+// ?.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.?
 
 window.searchStudent = async function() {
-    const searchInput = document.getElementById('studentSearchInput');
+    const searchInput = document.getElementById('slotStudentSearch') || document.getElementById('studentSearchInput');
+    const resultsDiv = document.getElementById('slotAutocompleteSuggestions') || document.getElementById('autocompleteSuggestions');
     const searchTerm = searchInput?.value.trim().toLowerCase();
     
-    if (!searchTerm) {
-        alert('Veuillez entrer un nom ou prénom à rechercher.');
+    if (!searchTerm || searchTerm.length < 2) {
+        if (resultsDiv) {
+            resultsDiv.innerHTML = '';
+            resultsDiv.classList.remove('active');
+        }
         return;
     }
     
     try {
-        // Rechercher dans la table users (nom, prénom, email, téléphone)
-        const { data: users, error: userError } = await window.supabaseClient
-            .from('users')
-            .select('*')
-            .or(`nom.ilike.%${searchTerm}%,prenom.ilike.%${searchTerm}%,email.ilike.%${searchTerm}%,telephone.ilike.%${searchTerm}%`);
+        const results = await getMatchingStudents(searchTerm);
         
-        if (userError) {
-            console.error('Error searching users:', userError);
-            alert('Erreur lors de la recherche.');
+        if (!results || results.length === 0) {
+            if (resultsDiv) {
+                resultsDiv.innerHTML = `
+                    <div style="padding: 1rem; color: #86868b; text-align: center;">
+                        Aucun élève trouv?<br>
+                        <small>Voulez-vous <a href="inscription.html?admin=true" style="color: var(--primary);">inscrire un nouvel élève</a> ?</small>
+                    </div>
+                `;
+                resultsDiv.classList.add('active');
+            }
             return;
         }
         
-        if (!users || users.length === 0) {
-            alert('Aucun élève trouvé avec ce nom ou prénom.');
-            return;
+        // Afficher la liste des resultats
+        if (resultsDiv) {
+            resultsDiv.innerHTML = results.map(student => {
+                const displayName = student.nom && student.prenom 
+                    ? `${student.prenom} ${student.nom}` 
+                    : student.email;
+                const transmission = student.transmission_type === 'manual' ? 'BM' : student.transmission_type === 'auto' ? 'BA' : '';
+                const pendingBadge = student._pending ? `<span style="margin-left: 0.5rem; padding: 0.15rem 0.5rem; background: #9c27b0; color: white; border-radius: 4px; font-size: 0.7rem; font-weight: 700;">À valider</span>` : '';
+                const compatible = !window.currentSlotInfo || isStudentCompatibleWithInstructor(student, window.currentSlotInfo.instructor, window.currentSlotInfo);
+                const disabledStyle = compatible ? '' : 'border-left:4px solid #f59e0b;background:#fffbeb;';
+                const specialSlotNote = window.currentSlotInfo && isNailNewPackSlot(window.currentSlotInfo)
+                    ? 'Créneau Nail réservé aux nouveaux packs'
+                    : 'Attention : planning différent, confirmation demandée';
+                const compatibilityNote = compatible ? '' : `<div style="font-size:0.75rem;color:#92400e;font-weight:700;margin-top:0.25rem;">${specialSlotNote}</div>`;
+                
+                return `
+                    <div class="suggestion-item" data-student-email="${escapeHtml(student.email)}" style="${disabledStyle}">
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <div style="width: 40px; height: 40px; min-width: 40px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem;">
+                                ${(student.prenom?.[0] || student.email[0]).toUpperCase()}
+                            </div>
+                            <div style="flex: 1; min-width: 0;">
+                                <div style="display:flex;align-items:center;gap:0.45rem;flex-wrap:wrap;">
+                                    <span style="font-weight: 600; color: var(--dark); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${displayName}</span>
+                                    ${studentPlanningModeBadge(student, true)}
+                                </div>
+                                <div style="font-size: 0.85rem; color: #86868b; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                    ${student.telephone || student.email}
+                                    ${transmission ? `<span style="margin-left: 0.5rem; padding: 0.15rem 0.5rem; background: ${transmission === 'BM' ? '#ff9500' : '#0071e3'}; color: white; border-radius: 4px; font-size: 0.7rem; font-weight: 700;">${transmission}</span>` : ''}${pendingBadge}
+                                </div>
+                                ${compatibilityNote}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            resultsDiv.classList.add('active');
         }
-        
-        // Si plusieurs résultats, prendre le premier
-        const student = users[0];
-        await displayStudentDetails(student);
         
     } catch (err) {
         console.error('Search error:', err);
-        alert('Erreur lors de la recherche.');
+        const resultsDiv = document.getElementById('slotAutocompleteSuggestions');
+        if (resultsDiv) {
+            resultsDiv.innerHTML = '<div style="padding: 1rem; color: #dc3545; text-align: center;">Erreur lors de la recherche</div>';
+            resultsDiv.classList.add('active');
+        }
     }
 };
 
 window.displayStudentDetails = async function(student) {
     try {
-        // Récupérer toutes les réservations de l'élève
-        const { data: reservations, error: resError } = await window.supabaseClient
-            .from('reservations')
-            .select('*, slots(*)')
-            .eq('email', student.email)
-            .order('created_at', { ascending: false });
-        
-        if (resError) {
-            console.error('Error fetching reservations:', resError);
-        }
-        
-        // Récupérer les demandes d'annulation
-        const { data: cancellations, error: cancelError } = await window.supabaseClient
-            .from('cancellation_requests')
-            .select('*')
-            .eq('user_email', student.email);
-        
-        if (cancelError) {
-            console.error('Error fetching cancellations:', cancelError);
-        }
+        const detailsPayload = await fetchAdminPlanningData({ type: 'student-details', email: student.email });
+        student = detailsPayload.student || student;
+        const reservations = detailsPayload.reservations || [];
+        const cancellations = detailsPayload.cancellations || [];
         
         // Calculer les statistiques
         const now = new Date();
@@ -874,7 +1712,12 @@ window.displayStudentDetails = async function(student) {
             const isPast = slotDate && slotDate < now;
             return r.status === 'completed' || r.status === 'done' || (isPast && r.status === 'upcoming');
         });
-        const totalHours = completedSessions.length * 2;
+        const totalHours = completedSessions.reduce((sum, reservation) => {
+            const slot = reservation.slots;
+            if (!slot?.start_at || !slot?.end_at) return sum;
+            const duration = (new Date(slot.end_at) - new Date(slot.start_at)) / (1000 * 60 * 60);
+            return sum + lessonUnitsForDuration(student, duration);
+        }, 0);
         
         // Compter les annulations acceptées (status 'accepted' ou 'approved')
         const totalCancellations = (cancellations || []).filter(c => 
@@ -893,6 +1736,11 @@ window.displayStudentDetails = async function(student) {
         // Construire le HTML
         const modalBody = document.getElementById('studentDetailsBody');
         if (!modalBody) return;
+        const mode = studentPlanningMode(student);
+        const totalCompletedForChange = totalHours + Math.max(0, Number(student.hours_completed_initial || 0));
+        const completedLabel = isCourseBasedStudent(student) ? 'Cours effectués' : 'Heures effectuées';
+        const actionTitle = isCourseBasedStudent(student) ? 'Ajouter des cours (paiement cash)' : 'Ajouter des heures (paiement cash)';
+        const actionInputLabel = isCourseBasedStudent(student) ? 'Nombre de cours (1-20)' : "Nombre d'heures (1-20)";
         
         modalBody.innerHTML = `
             <!-- Informations personnelles -->
@@ -913,7 +1761,18 @@ window.displayStudentDetails = async function(student) {
                     </div>
                     <div class="info-item">
                         <label>Date de naissance</label>
-                        <span>${student.date_naissance ? new Date(student.date_naissance).toLocaleDateString('fr-FR') : '-'}</span>
+                        <span>${student.date_nais ? new Date(student.date_nais).toLocaleDateString('fr-FR') : '-'}</span>
+                    </div>
+                    <div class="info-item">
+                        <label><i class="fas fa-car"></i> Transmission</label>
+                        <span style="font-weight: 600; color: ${student.transmission_type === 'manual' ? '#FF6B6B' : '#4CAF50'};">
+                            ${student.transmission_type === 'manual' ? 'Manuelle (BM)' : student.transmission_type === 'auto' ? 'Automatique (BA)' : 'Non renseigné'}
+                        </span>
+                    </div>
+                    <div class="info-item" style="border-left: 4px solid ${mode.border}; background: ${mode.bg};">
+                        <label><i class="fas ${mode.icon}"></i> Mode planning</label>
+                        <span style="font-weight: 800; color: ${mode.color};">${mode.label}</span>
+                        <small style="display:block;margin-top:0.35rem;color:${mode.color};font-weight:600;">${mode.description}</small>
                     </div>
                     <div class="info-item">
                         <label>Adresse</label>
@@ -945,8 +1804,8 @@ window.displayStudentDetails = async function(student) {
                         <span>${student.forfait || 'Non défini'}</span>
                     </div>
                     <div class="info-item">
-                        <label>Heures effectuées</label>
-                        <span style="color: var(--green); font-weight: 700;">${totalHours}h</span>
+                        <label>${completedLabel}</label>
+                        <span style="color: var(--green); font-weight: 700;">${formatStudentBalance(student, totalCompletedForChange)}</span>
                     </div>
                     <div class="info-item">
                         <label>Séances réalisées</label>
@@ -996,7 +1855,7 @@ window.displayStudentDetails = async function(student) {
                                 const isPast = slotDate && slotDate < now;
                                 
                                 let statusClass = 'upcoming';
-                                let statusLabel = 'À venir';
+                                let statusLabel = 'à venir';
                                 
                                 if (res.status === 'completed' || res.status === 'done' || (isPast && res.status === 'upcoming')) {
                                     statusClass = 'completed';
@@ -1064,7 +1923,7 @@ window.displayStudentDetails = async function(student) {
                         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
                         <i class="fas fa-calendar-check"></i> Placer sur le planning
                     </button>
-                    <button onclick="openChangeForfaitModal('${student.email}', '${student.prenom}', '${student.nom}', '${student.forfait || ''}', ${totalHours})" 
+                    <button onclick="openChangeForfaitModal('${student.email}', '${student.prenom}', '${student.nom}', '${student.forfait || ''}', ${totalCompletedForChange})" 
                         style="background: #ffc107; color: #000; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s;"
                         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';"
                         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
@@ -1082,11 +1941,39 @@ window.displayStudentDetails = async function(student) {
                         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
                         <i class="fas fa-envelope"></i> Envoyer par email
                     </button>
+                    <button onclick="viewInscriptionDocuments('${student.email}')" 
+                        style="background: #ff6b6b; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s;"
+                        onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                        <i class="fas fa-file-alt"></i> Documents
+                    </button>
                     <button onclick="openAdminExamResultModal('${student.email}', '${student.prenom} ${student.nom}')" 
                         style="background: linear-gradient(135deg, #FF6B6B 0%, #FF5252 100%); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s;"
                         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';"
                         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
                         <i class="fas fa-trophy"></i> Saisir résultat examen
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Ajout d'heures (paiement cash) -->
+            <div class="info-section" style="background: #f0f7ff; border-left: 4px solid #0071e3;">
+                <h3 style="color: #0071e3;"><i class="fas fa-clock"></i> ${actionTitle}</h3>
+                <div style="margin-top: 1rem; display: flex; gap: 1rem; align-items: flex-end;">
+                    <div style="flex: 1;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.9rem;">
+                            ${actionInputLabel}
+                        </label>
+                        <input type="number" id="addHoursInput" min="1" max="20" placeholder="1-20"
+                            style="width: 100%; padding: 10px; border: 2px solid #0071e3; border-radius: 8px; font-size: 0.95rem;">
+                    </div>
+                    <button 
+                        onclick="addStudentHours('${student.email}')" 
+                        style="background: #0071e3; color: white; border: none; padding: 10px 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s; white-space: nowrap;"
+                        onmouseover="this.style.background='#0055b3'"
+                        onmouseout="this.style.background='#0071e3'"
+                    >
+                        <i class="fas fa-check"></i> Ajouter
                     </button>
                 </div>
             </div>
@@ -1101,6 +1988,96 @@ window.displayStudentDetails = async function(student) {
     } catch (err) {
         console.error('Error displaying student details:', err);
         alert('Erreur lors de l\'affichage des détails.');
+    }
+};
+
+// Fonction pour ajouter des heures à un élève (paiement cash)
+window.addStudentHours = async function(studentEmail) {
+    const input = document.getElementById('addHoursInput');
+    const hoursToAdd = parseInt(input?.value);
+    
+    if (!hoursToAdd || hoursToAdd < 1 || hoursToAdd > 20) {
+        alert('Veuillez entrer un nombre d\'heures valide (entre 1 et 20).');
+        return;
+    }
+    
+    try {
+        // Récupérer les infos de l'élève
+        const { data: student, error: studentError } = await window.supabaseClient
+            .from('users')
+            .select('prenom, nom, hours_goal, lesson_unit_minutes')
+            .eq('email', studentEmail)
+            .single();
+        
+        if (studentError || !student) {
+            console.error('Error fetching student:', studentError);
+            alert('Erreur lors de la récupération des informations de l\'élève.');
+            return;
+        }
+        
+        const userName = `${student.prenom || ''} ${student.nom || ''}`.trim();
+        
+        // Récupérer les heures depuis inscription_notifications (le total r?el)
+        const { data: inscriptions, error: inscError } = await window.supabaseClient
+            .from('inscription_notifications')
+            .select('hours_purchased')
+            .eq('user_email', studentEmail);
+        
+        let currentHoursGoal = student.hours_goal || 0;
+        
+        // Ajouter les nouvelles heures
+        const newHoursGoal = currentHoursGoal + hoursToAdd;
+        
+        // Ins?rer dans inscription_notifications
+        const { error: insertError } = await window.supabaseClient
+            .from('inscription_notifications')
+            .insert({
+                user_email: studentEmail,
+                user_name: userName,
+                hours_purchased: hoursToAdd,
+                lesson_unit_minutes: student.lesson_unit_minutes || 120,
+                pack: 'Paiement cash',
+                payment_method: 'cash',
+                created_at: new Date().toISOString()
+            });
+        
+        if (insertError) {
+            console.error('Error adding hours:', insertError);
+            alert('Erreur lors de l\'ajout des heures.');
+            return;
+        }
+        
+        // Mettre à jour hours_goal dans la table users
+        const { error: updateError } = await window.supabaseClient
+            .from('users')
+            .update({ hours_goal: newHoursGoal })
+            .eq('email', studentEmail);
+        
+        if (updateError) {
+            console.error('Error updating hours goal:', updateError);
+            alert('Erreur lors de la mise à jour des heures.');
+            return;
+        }
+        
+        alert(`${formatStudentBalance(student, hoursToAdd)} ajouté avec succès à l'élève.`);
+        
+        // Rafra?chir les détails de l'élève
+        const { data: updatedStudent } = await window.supabaseClient
+            .from('users')
+            .select('*')
+            .eq('email', studentEmail)
+            .single();
+        
+        if (updatedStudent) {
+            await displayStudentDetails(updatedStudent);
+        }
+        
+        // R?initialiser l'input
+        if (input) input.value = '';
+        
+    } catch (err) {
+        console.error('Error adding student hours:', err);
+        alert('Erreur lors de l\'ajout des heures.');
     }
 };
 
@@ -1124,23 +2101,14 @@ window.showSuggestions = async function(searchTerm) {
     }
     
     try {
-        const { data: users, error } = await window.supabaseClient
-            .from('users')
-            .select('*')
-            .or(`nom.ilike.%${searchTerm}%,prenom.ilike.%${searchTerm}%,email.ilike.%${searchTerm}%,telephone.ilike.%${searchTerm}%`)
-            .limit(5);
-        
-        if (error) {
-            console.error('Error fetching suggestions:', error);
-            return;
-        }
+        const users = await getMatchingStudents(searchTerm, 5);
         
         if (!users || users.length === 0) {
             suggestionsContainer.classList.remove('active');
             return;
         }
         
-        // Si un seul résultat, ouvrir directement la fiche
+        // Si un seul resultat, ouvrir directement la fiche
         if (users.length === 1) {
             await selectStudent(users[0]);
             return;
@@ -1152,18 +2120,21 @@ window.showSuggestions = async function(searchTerm) {
                 <div class="suggestion-item" data-user-index="${index}">
                     <div class="suggestion-icon">${initials}</div>
                     <div class="suggestion-info">
-                        <div class="suggestion-name">${user.prenom || ''} ${user.nom || ''}</div>
+                        <div class="suggestion-name" style="display:flex;align-items:center;gap:0.45rem;flex-wrap:wrap;">
+                            <span>${user.prenom || ''} ${user.nom || ''}</span>
+                            ${studentPlanningModeBadge(user, true)}
+                        </div>
                         <div class="suggestion-email">${user.email || ''}</div>
                     </div>
                 </div>
             `;
         }).join('');
         
-        // Add mousedown event listeners to each suggestion (mousedown se déclenche avant blur)
+        // Add mousedown event listeners to each suggestion (mousedown se d?clenche avant blur)
         const suggestionItems = suggestionsContainer.querySelectorAll('.suggestion-item');
         suggestionItems.forEach((item, index) => {
             item.addEventListener('mousedown', (e) => {
-                e.preventDefault(); // Empêcher le blur de l'input
+                e.preventDefault(); // Emp?cher le blur de l'input
                 selectStudent(users[index]);
             });
         });
@@ -1216,7 +2187,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (searchTerm.length >= 2) {
                 autocompleteTimeout = setTimeout(() => {
                     showSuggestions(searchTerm);
-                }, 300);
+                }, 40);
             } else {
                 hideSuggestions();
             }
@@ -1224,9 +2195,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// ══════════════════════════════════════════════════════════════════════════════
+// ?.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.?
 // INSCRIPTION NOTIFICATIONS FUNCTIONALITY
-// ══════════════════════════════════════════════════════════════════════════════
+// ?.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.?
 
 window.toggleInscriptionPanel = function() {
     const panel = document.getElementById('inscriptionPanel');
@@ -1417,155 +2388,206 @@ window.loadInscriptionNotifications = async function() {
     }
 };
 
+function parseAdminDocumentMap(value) {
+    if (!value) return {};
+    if (typeof value === 'string') {
+        try {
+            const parsed = JSON.parse(value);
+            return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+        } catch (error) {
+            return {};
+        }
+    }
+    return typeof value === 'object' && !Array.isArray(value) ? value : {};
+}
+
+function adminDocumentLabel(key) {
+    return {
+        pieceIdentite: 'Pi&egrave;ce d\'identit&eacute;',
+        assr: 'ASSR',
+        jdc: 'Journ&eacute;e D&eacute;fense et Citoyennet&eacute;',
+        justifDomicile: 'Justificatif de domicile',
+        ephoto: 'E-photo',
+        certifHebergement: 'Certificat d\'h&eacute;bergement',
+        pieceHebergeur: 'Pi&egrave;ce d\'identit&eacute; h&eacute;bergeur',
+        codeStudentCardFile: 'Carte &eacute;tudiant / Certificat de scolarit&eacute;'
+    }[key] || escapeHtml(key);
+}
+
+function documentStatusBadge(doc) {
+    if (doc?.status === 'accepted') {
+        return '<div style="margin-top:0.35rem;color:#15803d;font-weight:800;">Document accept&eacute;</div>';
+    }
+    if (doc?.status === 'rejected') {
+        return `
+            <div style="margin-top:0.35rem;color:#be123c;font-weight:800;">Document incorrect</div>
+            ${doc?.admin_comment ? `<small style="display:block;margin-top:0.25rem;color:#9f1239;">${escapeHtml(doc.admin_comment)}</small>` : ''}
+        `;
+    }
+    return '<div style="margin-top:0.35rem;color:#92400e;font-weight:800;">A verifier</div>';
+}
+
+function renderAdminDocumentRow(ownerEmail, key, doc) {
+    const safeEmail = escapeHtml(ownerEmail);
+    const safeKey = escapeHtml(key);
+    const fileName = escapeHtml(doc?.name || 'document');
+    const hasFile = Boolean(doc?.data);
+
+    return `
+        <div style="background:white;padding:1rem;border-radius:8px;margin-bottom:0.75rem;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+                <div>
+                    <strong>${adminDocumentLabel(key)}</strong><br>
+                    <small style="color:var(--text2);">${fileName}</small>
+                    ${documentStatusBadge(doc)}
+                </div>
+                ${hasFile ? `
+                    <a href="${doc.data}" download="${fileName}" class="btn-primary" style="padding:0.5rem 1rem;text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;">
+                        <i class="fas fa-download"></i> Telecharger
+                    </a>
+                ` : '<span style="color:var(--text2);font-weight:700;">Fichier indisponible</span>'}
+            </div>
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.8rem;">
+                <button type="button" class="btn-inscription-accept" onclick="setInscriptionDocumentStatus('${safeEmail}', '${safeKey}', 'accepted')" style="padding:0.45rem 0.8rem;">
+                    Accepter
+                </button>
+                <button type="button" class="btn-inscription-reject" onclick="showDocumentRejectionForm('${safeKey}')" style="padding:0.45rem 0.8rem;">
+                    Incorrect
+                </button>
+            </div>
+            <div id="documentRejectionForm-${safeKey}" hidden style="margin-top:0.9rem;padding:0.9rem;background:#fff1f2;border:1px solid #fecdd3;border-radius:8px;">
+                <label for="documentRejectionComment-${safeKey}" style="display:block;font-weight:800;color:#9f1239;margin-bottom:0.45rem;">Motif du refus</label>
+                <textarea id="documentRejectionComment-${safeKey}" rows="3" maxlength="800" placeholder="Explique ce que l'eleve doit corriger" style="width:100%;resize:vertical;padding:0.7rem;border:1px solid #fda4af;border-radius:6px;"></textarea>
+                <p id="documentRejectionError-${safeKey}" style="display:none;color:#be123c;font-weight:700;margin:0.35rem 0 0;"></p>
+                <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.65rem;">
+                    <button type="button" class="btn-inscription-reject" onclick="submitDocumentRejection('${safeEmail}', '${safeKey}')" style="padding:0.45rem 0.8rem;">Confirmer le refus</button>
+                    <button type="button" class="btn-secondary" onclick="hideDocumentRejectionForm('${safeKey}')" style="padding:0.45rem 0.8rem;">Annuler</button>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+window.showDocumentRejectionForm = function(documentKey) {
+    const form = document.getElementById(`documentRejectionForm-${documentKey}`);
+    if (!form) return;
+    form.hidden = false;
+    document.getElementById(`documentRejectionComment-${documentKey}`)?.focus();
+};
+
+window.hideDocumentRejectionForm = function(documentKey) {
+    const form = document.getElementById(`documentRejectionForm-${documentKey}`);
+    const error = document.getElementById(`documentRejectionError-${documentKey}`);
+    if (form) form.hidden = true;
+    if (error) error.style.display = 'none';
+};
+
+window.submitDocumentRejection = async function(userEmail, documentKey) {
+    const input = document.getElementById(`documentRejectionComment-${documentKey}`);
+    const error = document.getElementById(`documentRejectionError-${documentKey}`);
+    const comment = String(input?.value || '').trim();
+    if (!comment) {
+        if (error) {
+            error.textContent = 'Indique le motif avant de confirmer.';
+            error.style.display = 'block';
+        }
+        input?.focus();
+        return;
+    }
+    await window.setInscriptionDocumentStatus(userEmail, documentKey, 'rejected', comment);
+};
+
 window.viewInscriptionDocuments = async function(userEmail) {
     try {
-        // D'abord essayer de récupérer depuis inscription_notifications (pour les inscriptions en attente)
-        const { data: notification, error: notifError } = await window.supabaseClient
-            .from('inscription_notifications')
-            .select('*')
-            .eq('user_email', userEmail)
-            .eq('status', 'pending')
-            .order('created_at', { ascending: false })
-            .limit(1)
-            .maybeSingle();
-        
-        console.log('🔍 Notification récupérée:', notification);
-        console.log('📄 Documents dans notification:', notification?.documents);
-        console.log('📊 Type de documents:', typeof notification?.documents);
-        console.log('📦 Documents_count:', notification?.documents_count);
-        
-        let documents = {};
-        let source = '';
-        
-        if (notification && notification.documents) {
-            console.log('✅ Documents trouvés dans inscription_notifications');
-            source = 'notification';
-            
-            // Handle different document formats
-            if (typeof notification.documents === 'string') {
-                try {
-                    documents = JSON.parse(notification.documents);
-                } catch (e) {
-                    console.error('Error parsing documents JSON:', e);
-                }
-            } else if (typeof notification.documents === 'object') {
-                documents = notification.documents;
-            }
-        } else {
-            // Si pas trouvé dans notifications, chercher dans users (compte validé)
-            const { data: user, error: userError } = await window.supabaseClient
-                .from('users')
-                .select('*')
-                .eq('email', userEmail)
-                .maybeSingle();
-            
-            if (userError) {
-                console.error('Error fetching user:', userError);
-                alert('Erreur lors du chargement des documents.');
-                return;
-            }
-            
-            if (!user) {
-                console.log('Aucun document trouvé pour cet utilisateur');
-                // Si la notification existe avec documents_count > 0 mais pas de champ documents
-                if (notification && notification.documents_count > 0) {
-                    alert(`⚠️ Documents non accessibles\n\nCette inscription a ${notification.documents_count} document(s) déclaré(s), mais ils n'ont pas été enregistrés dans la base de données (bug corrigé).\n\n📧 Solution : Demande à l'élève de renvoyer ses documents par email à l'auto-école.\n\n✅ Les futures inscriptions auront leurs documents accessibles directement ici.`);
-                } else {
-                    alert('⚠️ Aucun document trouvé.\n\nCette inscription ne contient pas de documents ou ils n\'ont pas été uploadés.');
-                }
-                return;
-            }
-            
-            console.log('Documents trouvés dans users');
-            source = 'user';
-            
-            // Handle different document formats
-            if (user.documents) {
-                if (typeof user.documents === 'string') {
-                    try {
-                        documents = JSON.parse(user.documents);
-                    } catch (e) {
-                        console.error('Error parsing documents JSON:', e);
-                    }
-                } else if (typeof user.documents === 'object') {
-                    documents = user.documents;
-                }
-            }
-        }
-        
-        console.log('Parsed documents:', documents);
-        console.log('Number of documents:', Object.keys(documents).length);
-        
+        const details = await fetchAdminPlanningData({ type: 'student-details', email: userEmail });
+        const student = details.student || { email: userEmail };
+        const notification = details.notification || (details.notifications || [])[0] || null;
+        const notificationDocs = parseAdminDocumentMap(notification?.documents);
+        const userDocs = parseAdminDocumentMap(student.documents);
+        const documents = Object.keys(userDocs).length ? userDocs : notificationDocs;
+        const ownerEmail = notification?.user_email || student.email || userEmail;
         const modalBody = document.getElementById('inscriptionDocumentsBody');
-        
         if (!modalBody) return;
-        
-        // Utiliser les données de la notification ou du user selon la source
-        const userData = source === 'notification' ? {
-            prenom: notification.user_prenom,
-            nom: notification.user_nom,
-            email: notification.user_email,
-            telephone: notification.user_telephone,
-            forfait: notification.pack
-        } : user;
-        
-        const documentLabels = {
-            pieceIdentite: 'Pièce d\'identité',
-            assr: 'ASSR',
-            jdc: 'Journée Défense et Citoyenneté',
-            justifDomicile: 'Justificatif de domicile',
-            ephoto: 'E-photo',
-            certifHebergement: 'Certificat d\'hébergement',
-            pieceHebergeur: 'Pièce d\'identité hébergeur',
-            codeStudentCardFile: 'Carte étudiant / Certificat de scolarité'
-        };
-        
-        modalBody.innerHTML = `
-            <div style="margin-bottom: 1.5rem;">
-                <h3 style="margin-bottom: 0.5rem;">${userData.prenom} ${userData.nom}</h3>
-                <p style="color: var(--text2); margin: 0;">
-                    <i class="fas fa-envelope"></i> ${userData.email}<br>
-                    <i class="fas fa-phone"></i> ${userData.telephone || '-'}<br>
-                    <i class="fas fa-box"></i> Pack: <strong>${userData.forfait || '-'}</strong>
+
+        const fullName = `${student.prenom || notification?.user_prenom || ''} ${student.nom || notification?.user_nom || ''}`.trim() || ownerEmail;
+        const phone = student.telephone || notification?.user_telephone || '-';
+        const pack = student.forfait || notification?.pack_label || notification?.pack || '-';
+        const note = notification?.notes_admin || student.notes_admin || '';
+        const documentsCount = Number(notification?.documents_count || student.documents_count || 0);
+
+        const header = `
+            <div style="margin-bottom:1.5rem;">
+                <h3 style="margin-bottom:0.5rem;">${escapeHtml(fullName)}</h3>
+                <p style="color:var(--text2);margin:0;">
+                    <i class="fas fa-envelope"></i> ${escapeHtml(ownerEmail)}<br>
+                    <i class="fas fa-phone"></i> ${escapeHtml(phone)}<br>
+                    <i class="fas fa-box"></i> Pack: <strong>${escapeHtml(pack)}</strong>
                 </p>
             </div>
-            
-            ${notification && notification.notes_admin ? `
-                <div style="background: #fff9e6; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; border-left: 4px solid #ffc107;">
-                    <h4 style="margin-bottom: 0.75rem; color: #856404;">
-                        <i class="fas fa-comment-dots"></i> Commentaire de l'élève
-                    </h4>
-                    <p style="margin: 0; color: #856404; white-space: pre-wrap;">${notification.notes_admin}</p>
-                </div>
-            ` : ''}
-            
-            <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 12px;">
-                <h4 style="margin-bottom: 1rem;"><i class="fas fa-file-alt"></i> Documents fournis</h4>
-                ${Object.keys(documents).length === 0 ? 
-                    '<p style="color: var(--text2); font-style: italic;">Aucun document fourni.</p>' :
-                    Object.entries(documents).map(([key, doc]) => `
-                        <div style="background: white; padding: 1rem; border-radius: 8px; margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: space-between;">
-                            <div>
-                                <strong>${documentLabels[key] || key}</strong><br>
-                                <small style="color: var(--text2);">${doc.name}</small>
-                            </div>
-                            <a href="${doc.data}" download="${doc.name}" class="btn-primary" style="padding: 0.5rem 1rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
-                                <i class="fas fa-download"></i> Télécharger
-                            </a>
-                        </div>
-                    `).join('')
-                }
-            </div>
         `;
-        
-        const modal = document.getElementById('inscriptionDocumentsModal');
-        if (modal) {
-            modal.classList.add('active');
+
+        if (!Object.keys(documents).length && documentsCount > 0) {
+            modalBody.innerHTML = `
+                ${header}
+                <div style="background:#fff3cd;border-left:4px solid #ffc107;padding:1rem;border-radius:8px;color:#856404;">
+                    ${documentsCount} document(s) sont indiques pour cette inscription, mais le fichier n'est pas disponible dans la base.
+                </div>
+            `;
+        } else {
+            modalBody.innerHTML = `
+                ${header}
+                ${note ? `
+                    <div style="background:#fff9e6;padding:1.5rem;border-radius:12px;margin-bottom:1.5rem;border-left:4px solid #ffc107;">
+                        <h4 style="margin-bottom:0.75rem;color:#856404;">
+                            <i class="fas fa-comment-dots"></i> Commentaire de l'&eacute;l&egrave;ve
+                        </h4>
+                        <p style="margin:0;color:#856404;white-space:pre-wrap;">${escapeHtml(note)}</p>
+                    </div>
+                ` : ''}
+                <div style="background:#f8f9fa;padding:1.5rem;border-radius:12px;">
+                    <h4 style="margin-bottom:1rem;"><i class="fas fa-file-alt"></i> Documents fournis</h4>
+                    ${Object.keys(documents).length === 0
+                        ? '<p style="color:var(--text2);font-style:italic;">Aucun document fourni.</p>'
+                        : Object.entries(documents).map(([key, doc]) => renderAdminDocumentRow(ownerEmail, key, doc)).join('')
+                    }
+                </div>
+            `;
         }
-        
+
+        const modal = document.getElementById('inscriptionDocumentsModal');
+        if (modal) modal.classList.add('active');
     } catch (err) {
         console.error('Error viewing documents:', err);
-        alert('Erreur lors de l\'affichage des documents.');
+        alert('Erreur lors de l affichage des documents.');
+    }
+};
+
+window.setInscriptionDocumentStatus = async function(userEmail, documentKey, status, providedComment = '') {
+    try {
+        const comment = String(providedComment || '').trim();
+        if (status === 'rejected' && !comment) {
+            window.showDocumentRejectionForm(documentKey);
+            return;
+        }
+
+        const response = await fetch('/.netlify/functions/admin-document-status', {
+            method: 'POST',
+            headers: {
+                ...getAdminAuthHeaders(),
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ userEmail, documentKey, status, comment })
+        });
+        const result = await response.json().catch(() => ({ ok: false }));
+        if (!response.ok || !result.ok) {
+            throw new Error(result.error || 'DOCUMENT_STATUS_FAILED');
+        }
+        alert(status === 'accepted' ? 'Document accepte.' : 'Document marque comme incorrect.');
+        await window.viewInscriptionDocuments(userEmail);
+        await loadDocumentReviewNotifications();
+    } catch (error) {
+        console.error('Erreur statut document:', error);
+        alert('Impossible de mettre a jour ce document pour le moment.');
     }
 };
 
@@ -1576,11 +2598,17 @@ window.closeInscriptionDocuments = function() {
     }
 };
 
-window.handleInscriptionDecision = async function(notificationId, decision) {
+window.legacyHandleInscriptionDecision = async function(notificationId, decision) {
     let rejectionMessage = '';
     
     if (decision === 'rejected') {
-        rejectionMessage = prompt('Veuillez indiquer la raison du refus (ce message sera envoyé par email à l\'utilisateur) :');
+        rejectionMessage = await showAdminChoiceDialog({
+            title: 'Refuser l inscription',
+            message: 'Ce motif sera envoye par e-mail a l eleve.',
+            multiline: true,
+            placeholder: 'Motif du refus',
+            required: true
+        });
         
         if (rejectionMessage === null) return; // User cancelled
         
@@ -1589,7 +2617,7 @@ window.handleInscriptionDecision = async function(notificationId, decision) {
             return;
         }
     } else {
-        const confirmMsg = 'Êtes-vous sûr de vouloir valider cette inscription ?';
+        const confirmMsg = 'Valider cette inscription ?';
         if (!confirm(confirmMsg)) return;
     }
     
@@ -1636,16 +2664,16 @@ window.handleInscriptionDecision = async function(notificationId, decision) {
         
         console.log('Notification updated successfully:', updateData[0]);
         
-        // Si l'inscription est approuvée, créer le compte utilisateur
+        // Si l'inscription est approuv?e, cr?er le compte utilisateur
         if (decision === 'approved') {
-            console.log('✅ Inscription approuvée - Création du compte utilisateur...');
+            console.log('?o. Inscription approuv?e - Cr?ation du compte utilisateur...');
             
             try {
                 // Hasher le mot de passe
                 const passwordHash = await window.hashPassword(notification.user_password);
                 
                 // Calculer hours_goal selon le pack
-                let hoursGoal = 20; // Par défaut
+                let hoursGoal = 20; // Par d?faut
                 if (notification.pack) {
                     if (notification.pack === 'heures-conduite') {
                         hoursGoal = notification.hours_purchased || 0;
@@ -1663,7 +2691,7 @@ window.handleInscriptionDecision = async function(notificationId, decision) {
                     hoursGoal = 0;
                 }
                 
-                // Créer ou mettre à jour le compte utilisateur (upsert pour éviter les doublons)
+                // Cr?er ou mettre à jour le compte utilisateur (upsert pour ?viter les doublons)
                 const { data: userData, error: userError } = await window.supabaseClient
                     .from('users')
                     .upsert({
@@ -1673,6 +2701,7 @@ window.handleInscriptionDecision = async function(notificationId, decision) {
                         password_hash: passwordHash,
                         telephone: notification.user_telephone,
                         date_nais: notification.user_date_naissance,
+                        genre: notification.genre || null,
                         adresse: notification.user_adresse,
                         code_postal: notification.user_code_postal,
                         ville: notification.user_ville,
@@ -1680,26 +2709,27 @@ window.handleInscriptionDecision = async function(notificationId, decision) {
                         forfait: notification.pack || null,
                         hours_goal: hoursGoal,
                         hours_completed_initial: 0,
+                        lesson_unit_minutes: notification.lesson_unit_minutes || 45,
                         notes_admin: notification.notes_admin || null
                     }, { onConflict: 'email' });
                 
                 if (userError) {
-                    console.error('❌ Erreur création compte utilisateur:', userError);
+                    console.error('?O Erreur cr?ation compte utilisateur:', userError);
                     alert(`Erreur lors de la création du compte: ${userError.message}`);
                     return;
                 }
                 
-                console.log('✅ Compte utilisateur créé avec succès');
+                console.log('?o. Compte utilisateur cr?? avec succès');
             } catch (createError) {
-                console.error('❌ Erreur lors de la création du compte:', createError);
+                console.error('Erreur lors de la création du compte:', createError);
                 alert('Erreur lors de la création du compte utilisateur.');
                 return;
             }
         }
         
-        // Si l'inscription est approuvée, créditer l'heure de parrainage si applicable
+        // Si l'inscription est approuv?e, cr?diter l'heure de parrainage si applicable
         if (decision === 'approved' && notification.referral_code) {
-            console.log('🎁 Inscription approuvée avec code de parrainage:', notification.referral_code);
+            console.log('?YZ? Inscription approuv?e avec code de parrainage:', notification.referral_code);
             
             // Récupérer le parrainage correspondant
             const { data: referralData, error: referralError } = await window.supabaseClient
@@ -1710,23 +2740,23 @@ window.handleInscriptionDecision = async function(notificationId, decision) {
                 .maybeSingle();
             
             if (referralError) {
-                console.error('❌ Erreur récupération parrainage:', referralError);
+                console.error('?O Erreur récupération parrainage:', referralError);
             } else if (referralData && !referralData.reward_credited) {
-                console.log('💰 Crédit de l\'heure de parrainage au parrain:', referralData.referrer_email);
+                console.log('Credit de l\'heure de parrainage au parrain:', referralData.referrer_email);
                 
-                // Créditer 1h au parrain
+                // Cr?diter 1h au parrain
                 const { data: creditResult, error: creditError } = await window.supabaseClient
                     .rpc('credit_referral_reward', { referral_id: referralData.id });
                 
                 if (creditError) {
-                    console.error('❌ Erreur crédit parrainage:', creditError);
+                    console.error('?O Erreur cr?dit parrainage:', creditError);
                 } else {
-                    console.log('✅ Heure de parrainage créditée avec succès !', creditResult);
+                    console.log('?o. Heure de parrainage cr?dit?e avec succès !', creditResult);
                 }
             } else if (referralData && referralData.reward_credited) {
-                console.log('ℹ️ Récompense déjà créditée pour ce parrainage');
+                console.log('?"?? R?compense déjà cr?dit?e pour ce parrainage');
             } else {
-                console.log('ℹ️ Aucun parrainage trouvé pour ce code');
+                console.log('?"?? Aucun parrainage trouv? pour ce code');
             }
         }
         
@@ -1748,6 +2778,52 @@ window.handleInscriptionDecision = async function(notificationId, decision) {
     }
 };
 
+window.handleInscriptionDecision = async function(notificationId, decision) {
+    let rejectionMessage = '';
+    if (decision === 'rejected') {
+        rejectionMessage = await showAdminChoiceDialog({
+            title: 'Refuser l inscription',
+            message: 'Ce motif sera envoye par e-mail a l eleve.',
+            multiline: true,
+            placeholder: 'Motif du refus',
+            required: true
+        });
+        if (rejectionMessage === null) return;
+        if (!rejectionMessage.trim()) {
+            alert('Une raison est n&eacute;cessaire pour refuser une inscription.');
+            return;
+        }
+    } else if (!confirm('Valider cette inscription ?')) {
+        return;
+    }
+
+    const token = window.authSession?.getToken();
+    if (!token) {
+        alert('Ta session administrateur a expir&eacute;. Reconnecte-toi.');
+        window.location.href = 'connexion.html';
+        return;
+    }
+
+    try {
+        const response = await fetch('/.netlify/functions/send-registration-decision', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({ notificationId, decision, rejectionMessage })
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || !result.ok) {
+            throw new Error(result.error || 'DECISION_FAILED');
+        }
+        await loadInscriptionNotifications();
+    } catch (error) {
+        console.error('Decision inscription:', error);
+        alert('Impossible de mettre &agrave; jour cette inscription. R&eacute;essaie.');
+    }
+};
+
 async function sendInscriptionEmail(userEmail, userName, decision, rejectionMessage, userPassword = null) {
     try {
         // Toujours utiliser l'URL de production dans les emails
@@ -1756,8 +2832,8 @@ async function sendInscriptionEmail(userEmail, userName, decision, rejectionMess
         
         const isApproved = decision === 'approved';
         const subject = isApproved 
-            ? '✅ Votre inscription a été validée - Auto-École Breteuil'
-            : '❌ Votre inscription a été refusée - Auto-École Breteuil';
+            ? 'Votre inscription a été validée - Auto-École Breteuil'
+            : 'Votre inscription a été refusée - Auto-École Breteuil';
         
         const htmlContent = isApproved ? `
             <!DOCTYPE html>
@@ -1777,17 +2853,17 @@ async function sendInscriptionEmail(userEmail, userName, decision, rejectionMess
             <body>
                 <div class="container">
                     <div class="header">
-                        <h1>🎉 Inscription Validée !</h1>
+                        <h1>Inscription validée !</h1>
                     </div>
                     <div class="content">
                         <p>Bonjour <strong>${userName}</strong>,</p>
                         <p>Nous avons le plaisir de vous informer que votre inscription à l'Auto-École Breteuil a été <strong>validée avec succès</strong> !</p>
                         
                         <div class="credentials-box">
-                            <h3 style="margin-top: 0; color: #11998e;">🔑 Vos identifiants de connexion</h3>
+                            <h3 style="margin-top: 0; color: #11998e;">Vos identifiants de connexion</h3>
                             <p><strong>Email :</strong> ${userEmail}</p>
                             <p><strong>Mot de passe :</strong> ${userPassword || '(voir email précédent)'}</p>
-                            <p style="font-size: 0.9em; color: #666; margin-top: 15px;">⚠️ Conservez ces identifiants en lieu sûr. Vous en aurez besoin pour accéder à votre espace élève.</p>
+                            <p style="font-size: 0.9em; color: #666; margin-top: 15px;">Conservez ces identifiants en lieu sûr. Vous en aurez besoin pour accéder à votre espace élève.</p>
                         </div>
                         
                         <p>Vous pouvez dès maintenant accéder à votre espace élève pour :</p>
@@ -1799,12 +2875,12 @@ async function sendInscriptionEmail(userEmail, userName, decision, rejectionMess
                         <p style="text-align: center;">
                             <a href="${siteUrl}/connexion.html" class="button">Accéder à mon espace</a>
                         </p>
-                        <p>Bienvenue dans notre auto-école ! 🚗</p>
+                        <p>Bienvenue dans notre auto-école !</p>
                     </div>
                     <div class="footer">
                         <p>Auto-École Breteuil<br>
-                        1 Rue Édouard Delanglade, 13006 Marseille<br>
-                        📞 04 91 53 36 98 | ✉️ breteuilautoecole@gmail.com</p>
+                        1A Ruedouard Delanglade, 13006 Marseille<br>
+                        04 91 53 36 98 | breteuilautoecole@gmail.com</p>
                     </div>
                 </div>
             </body>
@@ -1827,7 +2903,7 @@ async function sendInscriptionEmail(userEmail, userName, decision, rejectionMess
             <body>
                 <div class="container">
                     <div class="header">
-                        <h1>Inscription Refusée</h1>
+                        <h1>Inscription refusée</h1>
                     </div>
                     <div class="content">
                         <p>Bonjour <strong>${userName}</strong>,</p>
@@ -1843,8 +2919,8 @@ async function sendInscriptionEmail(userEmail, userName, decision, rejectionMess
                     </div>
                     <div class="footer">
                         <p>Auto-École Breteuil<br>
-                        1 Rue Édouard Delanglade, 13006 Marseille<br>
-                        📞 04 91 53 36 98 | ✉️ breteuilautoecole@gmail.com</p>
+                        1A Ruedouard Delanglade, 13006 Marseille<br>
+                        04 91 53 36 98 | breteuilautoecole@gmail.com</p>
                     </div>
                 </div>
             </body>
@@ -1858,9 +2934,9 @@ async function sendInscriptionEmail(userEmail, userName, decision, rejectionMess
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                service_id: 'service_abc123',
-                template_id: 'template_h7oyhzg',
-                user_id: '8ysJSNqiNmOHg_pxC',
+                service_id: '',
+                template_id: '',
+                user_id: '',
                 template_params: {
                     to_email: userEmail,
                     to_name: userName,
@@ -1883,6 +2959,12 @@ async function sendInscriptionEmail(userEmail, userName, decision, rejectionMess
         throw err;
     }
 }
+
+// Client-side decision emails are disabled. The authenticated server endpoint
+// sends the official decision notification after the database update.
+sendInscriptionEmail = async () => {
+    throw new Error('CLIENT_EMAIL_DISABLED');
+};
 
 // Show student details modal
 window.showStudent = async function(student) {
@@ -1918,11 +3000,11 @@ window.showStudent = async function(student) {
                 const sessionEnd = new Date(res.slots.end_at);
                 const hours = (sessionEnd - sessionStart) / (1000 * 60 * 60);
                 
-                // Compter jusqu'à et incluant cette séance
+                // Compter jusqu'? et incluant cette séance
                 if (sessionStart <= slotDateTime) {
-                    cumulativeHours += hours;
+                    cumulativeHours += lessonUnitsForDuration(student, hours);
                     
-                    // Si c'est exactement cette séance, on s'arrête
+                    // Si c'est exactement cette séance, on s'arr?te
                     if (sessionStart.getTime() === slotDateTime.getTime()) {
                         break;
                     }
@@ -1931,7 +3013,7 @@ window.showStudent = async function(student) {
             
             hourEnd = Math.ceil(cumulativeHours);
             
-            console.log(`📊 ${student.prenom} - Créneau ${student.slotDate} ${student.slotStart}: ${hourEnd}h cumulées`);
+            console.log(`?Y"S ${student.prenom} - Créneau ${student.slotDate} ${student.slotStart}: ${hourEnd}h cumul?es`);
         } catch (err) {
             console.error('Error calculating hours:', err);
         }
@@ -1946,7 +3028,7 @@ window.showStudent = async function(student) {
         slotInfo = `
             <div class="info-row" style="background: #f0f7ff; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
                 <span class="info-label" style="color: #0071e3; font-weight: 600;"><i class="fas fa-calendar-alt"></i> Créneau</span>
-                <span class="info-value" style="color: #0071e3; font-weight: 600;">${dateStr} - ${student.slotStart} à ${student.slotEnd}</span>
+                <span class="info-value" style="color: #0071e3; font-weight: 600;">${dateStr} - ${student.slotStart} ? ${student.slotEnd}</span>
             </div>
             <div class="info-row">
                 <span class="info-label">Moniteur</span>
@@ -1955,10 +3037,15 @@ window.showStudent = async function(student) {
         `;
     }
 
+    const completedBalance = hourEnd > 0 ? hourEnd : (student.hours_completed || 0);
+    const balanceProgressText = `${formatStudentBalance(student, completedBalance)} effectué / ${formatStudentBalance(student, student.hours_goal || 0)} objectif`;
+    const addBalanceLabel = isCourseBasedStudent(student) ? 'Cours ? ajouter (paiement cash)' : 'Heures ? ajouter (paiement cash)';
+    const addBalancePlaceholder = isCourseBasedStudent(student) ? 'Nombre de cours (1-20)' : "Nombre d'heures (1-20)";
+
     details.innerHTML = `
         ${slotInfo}
         <div class="info-row">
-            <span class="info-label">Prénom</span>
+            <span class="info-label">Pr?nom</span>
             <span class="info-value">${student.prenom || '-'}</span>
         </div>
         <div class="info-row">
@@ -1978,12 +3065,9 @@ window.showStudent = async function(student) {
             <span class="info-value" style="color: #856404; font-weight: 600;">${student.forfait || student.pack || '-'}</span>
         </div>
         <div class="info-row" style="background: #d1ecf1; padding: 12px; border-radius: 8px; margin-top: 8px;">
-            <span class="info-label" style="color: #0c5460; font-weight: 600;"><i class="fas fa-clock"></i> Heures de conduite</span>
+            <span class="info-label" style="color: #0c5460; font-weight: 600;"><i class="fas fa-clock"></i> Solde conduite</span>
             <span class="info-value" style="color: #0c5460; font-weight: 600;">
-                ${hourEnd > 0 
-                    ? `${hourEnd}h effectuées / ${student.hours_goal || 0}h objectif`
-                    : `${student.hours_completed || 0}h effectuées / ${student.hours_goal || 0}h objectif`
-                }
+                ${balanceProgressText}
             </span>
         </div>
         ${student.slotUuid ? `
@@ -1999,6 +3083,23 @@ window.showStudent = async function(student) {
                 </p>
             </div>
         ` : ''}
+        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e0e0e0;">
+            <div style="margin-bottom: 12px;">
+                <label style="display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.9rem;">
+                    <i class="fas fa-clock"></i> ${addBalanceLabel}
+                </label>
+                <input type="number" id="addHoursInput" min="1" max="20" placeholder="${addBalancePlaceholder}"
+                    style="width: 100%; padding: 10px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 0.95rem;">
+            </div>
+            <button 
+                onclick="addStudentHours('${student.email}')" 
+                style="width: 100%; background: #0071e3; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.95rem; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s;"
+                onmouseover="this.style.background='#0055b3'"
+                onmouseout="this.style.background='#0071e3'"
+            >
+                <i class="fas fa-check"></i> Ajouter du solde
+            </button>
+        </div>
     `;
 
     modal.classList.add('active');
@@ -2099,7 +3200,7 @@ async function showAvailableStudentsForSlot(slotId) {
                     </a>
                 </div>
                 <div style="background: white; padding: 0.75rem; border-radius: 8px; font-size: 0.85rem;">
-                    <strong style="color: #495057;">Disponibilités :</strong><br>
+                    <strong style="color: #495057;">Disponibilit?s :</strong><br>
                     ${Object.entries(typeof student.availability_slots === 'string' ? JSON.parse(student.availability_slots) : student.availability_slots)
                         .map(([day, times]) => `<span style="color: #6c757d;">${day.charAt(0).toUpperCase() + day.slice(1)}: ${times.join(', ')}</span>`)
                         .join('<br>')}
@@ -2111,7 +3212,7 @@ async function showAvailableStudentsForSlot(slotId) {
             <div style="background: white; border-radius: 16px; padding: 2rem; max-width: 600px; margin: 0 auto;">
                 <div style="text-align: center; margin-bottom: 2rem;">
                     <i class="fas fa-users" style="font-size: 3rem; color: #10b981; margin-bottom: 1rem;"></i>
-                    <h2 style="margin: 0 0 0.5rem 0; color: #1d1d1f;">Élèves disponibles</h2>
+                    <h2 style="margin: 0 0 0.5rem 0; color: #1d1d1f;">élèves disponibles</h2>
                     <p style="color: #6c757d; margin: 0;">
                         ${matchingStudents.length} élève(s) disponible(s) pour ce créneau
                     </p>
@@ -2183,10 +3284,10 @@ window.closeAvailableStudentsModal = function() {
 };
 
 // ============================================
-// PLACEMENT D'ÉLÈVE SUR LE PLANNING
+// PLACEMENT D'??L?^VE SUR LE PLANNING
 // ============================================
 
-// Ouvrir la modal de recherche d'élève pour un créneau spécifique
+// Ouvrir la modal de recherche d'élève pour un créneau sp?cifique
 window.openStudentSearchModal = function(slotInfo) {
     const modalHtml = `
         <div class="student-search-modal" id="studentSearchModalSlot">
@@ -2221,6 +3322,7 @@ window.openStudentSearchModal = function(slotInfo) {
                                 id="slotStudentSearch" 
                                 placeholder="Tapez le nom ou prénom de l'élève..."
                                 autocomplete="off"
+                                oninput="window.showSlotSuggestions && window.showSlotSuggestions(this.value)"
                                 style="width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;"
                             />
                             <i class="fas fa-search" style="position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: #999; pointer-events: none;"></i>
@@ -2236,7 +3338,7 @@ window.openStudentSearchModal = function(slotInfo) {
         </div>
     `;
     
-    // Ajouter le CSS si nécessaire
+    // Ajouter le CSS si n?cessaire
     if (!document.getElementById('studentSearchModalStyles')) {
         const style = document.createElement('style');
         style.id = 'studentSearchModalStyles';
@@ -2379,11 +3481,12 @@ window.openStudentSearchModal = function(slotInfo) {
     // Ajouter la nouvelle modal
     document.body.insertAdjacentHTML('beforeend', modalHtml);
     
-    // Stocker les infos du créneau pour utilisation ultérieure
+    // Stocker les infos du créneau pour utilisation ult?rieure
     window.currentSlotInfo = slotInfo;
     
-    // Ajouter l'événement de recherche
+    // Ajouter l'?v?nement de recherche
     const searchInput = document.getElementById('slotStudentSearch');
+    const suggestions = document.getElementById('slotAutocompleteSuggestions');
     if (searchInput) {
         let searchTimeout = null;
         searchInput.addEventListener('input', (e) => {
@@ -2392,11 +3495,21 @@ window.openStudentSearchModal = function(slotInfo) {
             
             searchTimeout = setTimeout(() => {
                 showSlotSuggestions(searchTerm);
-            }, 300);
+            }, 40);
         });
         
         // Focus automatique sur le champ de recherche
         setTimeout(() => searchInput.focus(), 100);
+    }
+
+    if (suggestions) {
+        suggestions.addEventListener('click', (event) => {
+            const item = event.target.closest('.suggestion-item[data-student-email]');
+            if (!item) return;
+            event.preventDefault();
+            event.stopPropagation();
+            selectStudentForSlot(item.dataset.studentEmail);
+        });
     }
     
     // Fermer au clic sur le fond
@@ -2419,110 +3532,183 @@ window.closeStudentSearchModal = function() {
 };
 
 window.showSlotSuggestions = async function(searchTerm) {
-    const suggestionsContainer = document.getElementById('slotAutocompleteSuggestions');
-    if (!suggestionsContainer) return;
-    
-    if (!searchTerm || searchTerm.length < 2) {
-        suggestionsContainer.classList.remove('active');
-        return;
+    const input = document.getElementById('slotStudentSearch');
+    if (input && typeof searchTerm === 'string' && input.value !== searchTerm) {
+        input.value = searchTerm;
     }
-    
-    try {
-        const { data: users, error } = await window.supabaseClient
-            .from('users')
-            .select('*')
-            .or(`nom.ilike.%${searchTerm}%,prenom.ilike.%${searchTerm}%`)
-            .limit(5);
-        
-        if (error) {
-            console.error('Error fetching suggestions:', error);
-            return;
-        }
-        
-        if (!users || users.length === 0) {
-            suggestionsContainer.innerHTML = `
-                <div style="padding: 16px; text-align: center; color: #666;">
-                    <i class="fas fa-user-slash" style="font-size: 2rem; margin-bottom: 8px; opacity: 0.5;"></i>
-                    <p style="margin: 0;">Aucun élève trouvé</p>
-                    <p style="margin: 8px 0 0 0; font-size: 0.85rem;">Voulez-vous <a href="inscription.html?admin=true" style="color: #667eea; font-weight: 600;">inscrire un nouvel élève</a> ?</p>
-                </div>
-            `;
-            suggestionsContainer.classList.add('active');
-            return;
-        }
-        
-        suggestionsContainer.innerHTML = users.map((user, index) => {
-            const initials = `${user.prenom?.[0] || ''}${user.nom?.[0] || ''}`.toUpperCase();
-            return `
-                <div class="slot-suggestion-item" data-user-index="${index}">
-                    <div class="slot-suggestion-icon">${initials}</div>
-                    <div class="slot-suggestion-info">
-                        <div class="slot-suggestion-name">${user.prenom || ''} ${user.nom || ''}</div>
-                        <div class="slot-suggestion-email">${user.email || ''}</div>
-                    </div>
-                </div>
-            `;
-        }).join('');
-        
-        // Ajouter les événements de clic
-        const suggestionItems = suggestionsContainer.querySelectorAll('.slot-suggestion-item');
-        suggestionItems.forEach((item, index) => {
-            item.addEventListener('click', () => {
-                selectStudentForSlot(users[index]);
-            });
-        });
-        
-        suggestionsContainer.classList.add('active');
-        
-    } catch (err) {
-        console.error('Autocomplete error:', err);
-    }
+    await window.searchStudent();
 };
 
-window.selectStudentForSlot = async function(student) {
+window.selectStudentForSlot = async function(studentEmail) {
     if (!window.currentSlotInfo) {
         alert('Erreur: Informations du créneau manquantes.');
         return;
     }
     
-    const slotInfo = window.currentSlotInfo;
-    
-    // Fermer la modal de recherche
-    closeStudentSearchModal();
-    
-    // Réserver le créneau pour cet élève
-    await bookStudentOnSlot(student, slotInfo);
+    try {
+        const detailsPayload = await fetchAdminPlanningData({ type: 'student-details', email: studentEmail });
+        const student = detailsPayload.student;
+        if (!student) {
+            alert('Ce compte eleve n est pas disponible. Verifiez d abord que son inscription a bien ete validee.');
+            return;
+        }
+        student._reservations = detailsPayload.reservations || [];
+        
+        const slotInfo = window.currentSlotInfo;
+        if (!slotInfo) {
+            alert('Erreur: Informations du creneau manquantes.');
+            return;
+        }
+        
+        // R?server le créneau pour cet élève
+        await bookStudentOnSlot(student, slotInfo);
+        closeStudentSearchModal();
+        
+    } catch (err) {
+        console.error('Error in selectStudentForSlot:', err);
+        alert('Erreur lors de la sélection de l\'élève.');
+    }
 };
 
-window.bookStudentOnSlot = async function(student, slotInfo) {
+// Cr?e (ou met à jour) un compte utilisateur ? partir d'une notification d'inscription
+// Utilis? quand un élève a pay? mais n'a pas encore de compte dans la table users
+async function ensureUserAccountFromNotification(notif) {
     try {
+        // Calculer le total des heures achet?es (somme de toutes les inscriptions)
+        const { data: allNotifs } = await window.supabaseClient
+            .from('inscription_notifications')
+            .select('hours_purchased')
+            .eq('user_email', notif.user_email);
+        
+        const hoursGoal = (allNotifs || []).reduce((sum, n) => sum + (n.hours_purchased || 0), 0);
+        
+        const parts = (notif.user_name || '').split(' ');
+        const payload = {
+            prenom: notif.user_prenom || parts[0] || '',
+            nom: notif.user_nom || parts.slice(1).join(' ') || '',
+            email: notif.user_email,
+            telephone: notif.user_telephone || '',
+            date_nais: notif.user_date_naissance || null,
+            genre: notif.genre || null,
+            adresse: notif.user_adresse || null,
+            code_postal: notif.user_code_postal || null,
+            ville: notif.user_ville || null,
+            numero_neph: notif.numero_neph || null,
+            forfait: notif.pack || null,
+            hours_goal: hoursGoal,
+            hours_completed_initial: 0,
+            lesson_unit_minutes: notif.lesson_unit_minutes || 45,
+            transmission_type: notif.transmission_type || 'manual'
+        };
+        
+        // Hasher le mot de passe si disponible
+        if (notif.user_password && window.hashPassword) {
+            payload.password_hash = await window.hashPassword(notif.user_password);
+        }
+        
+        const { error } = await window.supabaseClient
+            .from('users')
+            .upsert(payload, { onConflict: 'email' });
+        
+        if (error) {
+            console.error('?O Erreur cr?ation compte depuis notification:', error);
+            alert(`Erreur lors de la création du compte de l'élève: ${error.message}`);
+            return null;
+        }
+        
+        console.log('?o. Compte cr?? automatiquement depuis inscription_notifications:', notif.user_email);
+        
+        const { data: created } = await window.supabaseClient
+            .from('users')
+            .select('*')
+            .eq('email', notif.user_email)
+            .maybeSingle();
+        
+        return created;
+    } catch (e) {
+        console.error('?O Exception ensureUserAccountFromNotification:', e);
+        alert('Erreur lors de la création du compte de l\'élève.');
+        return null;
+    }
+}
+
+window.bookStudentOnSlot = async function(student, slotInfo) {
+    const bookingLockKey = student?.email && slotInfo
+        ? `${student.email}|${slotInfo.dateStr}|${slotInfo.start}|${slotInfo.instructor}`
+        : null;
+    try {
+        if (!student || !slotInfo || !slotInfo.instructor || !slotInfo.dateStr || !slotInfo.start || !slotInfo.end) {
+            alert('Erreur: informations de reservation incompletes. Recharge la page puis reessaie.');
+            return;
+        }
+        if (bookingLockKey && adminBookingLocks.has(bookingLockKey)) {
+            console.warn('Reservation deja en cours, double clic ignore:', bookingLockKey);
+            return;
+        }
+        if (bookingLockKey) adminBookingLocks.add(bookingLockKey);
+
+        if (isNailNewPackSlot(slotInfo) && !isCourseBasedStudent(student)) {
+            alert('Ce créneau Nail de 15h00 à 16h30 est réservé aux élèves avec un nouveau pack en cours de conduite.');
+            return;
+        }
+
+        if (!isStudentCompatibleWithInstructor(student, slotInfo.instructor, slotInfo)) {
+            const shouldContinue = confirm(
+                `${planningModeWarning(student, slotInfo.instructor)}\n\n` +
+                `Moniteur selectionne : ${slotInfo.instructor}\n` +
+                `Creneau : ${slotInfo.start} - ${slotInfo.end}\n\n` +
+                `Tu peux continuer quand meme si c'est volontaire. Confirmer ce choix ?`
+            );
+            if (!shouldContinue) return;
+        }
+
         // Vérifier les heures restantes de l'élève
         const hoursGoal = student.hours_goal || 0;
         const hoursCompleted = student.hours_completed_initial || 0;
         
-        // Récupérer le nombre d'heures déjà réservées
-        const { data: reservations, error: resError } = await window.supabaseClient
-            .from('reservations')
-            .select('*, slots(*)')
-            .eq('email', student.email)
-            .in('status', ['upcoming', 'pending']);
-        
-        if (resError) {
-            console.error('Error fetching reservations:', resError);
+        let reservations = student._reservations || [];
+        if (!reservations.length) {
+            try {
+                const { data, error: resError } = await window.supabaseClient
+                    .from('reservations')
+                    .select('*, slots(*)')
+                    .eq('email', student.email)
+                    .in('status', ['upcoming', 'pending']);
+
+                if (resError) {
+                    console.warn('Reservations directes indisponibles, utilisation du serveur uniquement:', resError);
+                } else {
+                    reservations = data || [];
+                }
+            } catch (resErr) {
+                console.warn('Reservations directes indisponibles:', resErr);
+            }
         }
         
-        const hoursReserved = (reservations || []).length * 2;
+        const hoursReserved = (reservations || []).reduce((sum, reservation) => {
+            const slot = reservation.slots;
+            if (!slot?.start_at || !slot?.end_at) return sum;
+            const duration = (new Date(slot.end_at) - new Date(slot.start_at)) / (1000 * 60 * 60);
+            return sum + lessonUnitsForDuration(student, duration);
+        }, 0);
         const hoursRemaining = hoursGoal - hoursCompleted - hoursReserved;
-        const hoursRemainingAfter = Math.max(0, hoursRemaining - 2);
+        const slotDuration = (new Date(`${slotInfo.dateStr}T${slotInfo.end}:00`) - new Date(`${slotInfo.dateStr}T${slotInfo.start}:00`)) / (1000 * 60 * 60);
+        const unitsToBook = lessonUnitsForDuration(student, slotDuration);
+        const hoursRemainingAfter = Math.max(0, hoursRemaining - unitsToBook);
+        const selectedVehicle = await resolveVehicleForBooking(student, slotInfo);
+        if (!selectedVehicle) {
+            alert('Choisis un véhicule pour placer cette séance.');
+            return;
+        }
         
-        if (hoursRemaining < 2) {
+        if (hoursRemaining < unitsToBook) {
             const shouldContinue = confirm(
-                `⚠️ ATTENTION : ${student.prenom} ${student.nom} n'a plus d'heures disponibles dans son forfait.\n\n` +
-                `📊 Heures totales : ${hoursGoal}h\n` +
-                `✅ Heures effectuées : ${hoursCompleted}h\n` +
-                `📅 Heures réservées : ${hoursReserved}h\n` +
-                `⏰ Heures restantes : ${Math.max(0, hoursRemaining)}h\n\n` +
-                `❗ Après cette réservation : ${hoursRemainingAfter}h (forfait épuisé)\n\n` +
+                `ATTENTION : ${student.prenom} ${student.nom} n'a plus assez de ${studentUnitLabel(student)} disponibles dans son forfait.\n\n` +
+                `Total : ${formatStudentBalance(student, hoursGoal)}\n` +
+                `Effectué : ${formatStudentBalance(student, hoursCompleted)}\n` +
+                `Réservé : ${formatStudentBalance(student, hoursReserved)}\n` +
+                `Restant : ${formatStudentBalance(student, Math.max(0, hoursRemaining))}\n\n` +
+                `Après cette réservation : ${formatStudentBalance(student, hoursRemainingAfter)} (forfait épuisé)\n\n` +
                 `Voulez-vous quand même placer cet élève sur ce créneau ?`
             );
             
@@ -2534,12 +3720,13 @@ window.bookStudentOnSlot = async function(student, slotInfo) {
         // Confirmer la réservation
         const slotDate = new Date(slotInfo.dateStr);
         const confirmMsg = `Confirmer la réservation ?\n\n` +
-            `Élève : ${student.prenom} ${student.nom}\n` +
+            `élève : ${student.prenom} ${student.nom}\n` +
             `Email : ${student.email}\n` +
             `Moniteur : ${slotInfo.instructor}\n` +
+            `Véhicule : ${selectedVehicle.name} (${selectedVehicle.label})\n` +
             `Date : ${slotDate.toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })}\n` +
             `Horaire : ${slotInfo.start} - ${slotInfo.end}\n\n` +
-            `⏰ Heures restantes après cette réservation : ${hoursRemainingAfter}h / ${hoursGoal}h`;
+            `Solde restant après cette réservation : ${formatStudentBalance(student, hoursRemainingAfter)} / ${formatStudentBalance(student, hoursGoal)}`;
         
         if (!confirm(confirmMsg)) {
             return;
@@ -2552,8 +3739,8 @@ window.bookStudentOnSlot = async function(student, slotInfo) {
         // Normaliser le nom du moniteur
         const normalizedInstructor = normalizeInstructor(slotInfo.instructor);
         
-        // Réserver le créneau via la fonction book_slot
-        console.log('📅 Tentative de réservation:', {
+        // R?server le créneau via la fonction serveur admin.
+        console.log('?Y". Tentative de réservation:', {
             start: startAt.toISOString(),
             end: endAt.toISOString(),
             instructor: normalizedInstructor,
@@ -2562,42 +3749,50 @@ window.bookStudentOnSlot = async function(student, slotInfo) {
             email: student.email
         });
         
-        const { data: bookingResult, error: bookingError } = await window.supabaseClient
-            .rpc('book_slot', {
-                p_start_at: startAt.toISOString(),
-                p_end_at: endAt.toISOString(),
-                p_instructor: normalizedInstructor,
-                p_email: student.email,
-                p_first_name: student.prenom,
-                p_last_name: student.nom,
-                p_phone: student.telephone || ''
-            });
+        const bookingResult = await postAdminAction('admin-book-slot', {
+            start_at: startAt.toISOString(),
+            end_at: endAt.toISOString(),
+            instructor: normalizedInstructor,
+            email: student.email,
+            first_name: student.prenom,
+            last_name: student.nom,
+            phone: student.telephone || '',
+            forfait: student.forfait || student.pack || '',
+            lesson_unit_minutes: isCourseBasedStudent(student) ? 45 : 120,
+            transmission_type: isAutoStudent(student) ? 'auto' : 'manual',
+            vehicle_id: selectedVehicle.id,
+            vehicle_name: selectedVehicle.name
+        });
         
-        console.log('📊 Résultat de la réservation:', bookingResult, 'Erreur:', bookingError);
+        console.log('?o. Réservation cr??e avec succès! Slot ID:', bookingResult.slot_id, 'Reservation ID:', bookingResult.reservation_id);
         
-        if (bookingError) {
-            console.error('❌ Error booking slot:', bookingError);
-            return;
-        }
-        
-        if (!bookingResult || !bookingResult.ok) {
-            console.error('❌ Booking failed:', bookingResult);
-            alert('Impossible de réserver ce créneau : ' + (bookingResult?.error || 'Erreur inconnue'));
-            return;
-        }
-        
-        console.log('✅ Réservation créée avec succès! Slot ID:', bookingResult.slot_id, 'Reservation ID:', bookingResult.reservation_id);
-        
-        // Mettre à jour l'état pour afficher la semaine et le moniteur du créneau ajouté
+        // Mettre à jour l'?tat pour afficher la semaine et le moniteur du créneau ajouté
         state.instructor = normalizedInstructor;
         state.weekStart = startOfWeek(new Date(slotInfo.dateStr));
         saveState();
         
-        // Rafraîchir le planning sans recharger la page
-        await refresh();
+        // Rafra?chir le planning sans recharger la page
+        if (typeof window.refreshPlanning === 'function') {
+            await window.refreshPlanning();
+        } else {
+            window.location.reload();
+        }
         
     } catch (err) {
         console.error('Error booking student on slot:', err);
+        const messages = {
+            SLOT_NOT_AVAILABLE: 'Ce creneau vient d etre pris ou bloque. Recharge le planning.',
+            STUDENT_TIME_CONFLICT: 'Cet eleve a deja une seance sur ce meme horaire.',
+            VEHICLE_TIME_CONFLICT: 'Ce vehicule est deja utilise sur ce meme horaire. Choisis un autre vehicule ou un autre creneau.',
+            INVALID_VEHICLE: 'Le vehicule choisi n est pas valide pour cette seance.',
+            INCOMPATIBLE_PLANNING_MODE: 'Ce creneau est reserve a un autre type de forfait.',
+            SUNDAY_CLOSED: 'L auto-ecole est fermee le dimanche.',
+            INVALID_SLOT_DATA: 'Les informations du creneau sont incompletes.',
+            AUTH_REQUIRED: 'Ta session admin a expire. Reconnecte-toi.'
+        };
+        alert(messages[err.message] || messages[err.payload?.error] || 'Erreur lors de la reservation. Recharge la page puis reessaie.');
+    } finally {
+        if (bookingLockKey) adminBookingLocks.delete(bookingLockKey);
     }
 };
 
@@ -2640,7 +3835,7 @@ window.showSlotSelectionForStudent = async function(studentEmail, studentFirstNa
             slotsByInstructor[slot.instructor].push(slot);
         });
         
-        // Créer le HTML pour la sélection de créneau
+        // Cr?er le HTML pour la sélection de créneau
         const instructorTabs = Object.keys(slotsByInstructor).map((instructor, index) => `
             <button class="instructor-tab ${index === 0 ? 'active' : ''}" 
                 onclick="switchInstructorTab('${instructor}')" 
@@ -2711,7 +3906,7 @@ window.showSlotSelectionForStudent = async function(studentEmail, studentFirstNa
             </div>
         `;
         
-        // Ajouter le CSS si nécessaire
+        // Ajouter le CSS si n?cessaire
         if (!document.getElementById('slotSelectionStyles')) {
             const style = document.createElement('style');
             style.id = 'slotSelectionStyles';
@@ -2917,7 +4112,7 @@ window.bookSlotForStudent = async function(slotId, studentEmail, studentFirstNam
         const hoursGoal = student.hours_goal || 0;
         const hoursCompleted = student.hours_completed_initial || 0;
         
-        // Récupérer le nombre d'heures déjà réservées
+        // Récupérer le nombre d'heures déjà r?serv?es
         const { data: reservations, error: resError } = await window.supabaseClient
             .from('reservations')
             .select('*, slots(*)')
@@ -2928,16 +4123,23 @@ window.bookSlotForStudent = async function(slotId, studentEmail, studentFirstNam
             console.error('Error fetching reservations:', resError);
         }
         
-        const hoursReserved = (reservations || []).length * 2; // Chaque créneau = 2h
+        const hoursReserved = (reservations || []).reduce((sum, reservation) => {
+            const slot = reservation.slots;
+            if (!slot?.start_at || !slot?.end_at) return sum;
+            const duration = (new Date(slot.end_at) - new Date(slot.start_at)) / (1000 * 60 * 60);
+            return sum + lessonUnitsForDuration(student, duration);
+        }, 0);
         const hoursRemaining = hoursGoal - hoursCompleted - hoursReserved;
+        const slotDuration = (new Date(endAt) - new Date(startAt)) / (1000 * 60 * 60);
+        const unitsToBook = lessonUnitsForDuration(student, slotDuration);
         
-        if (hoursRemaining < 2) {
+        if (hoursRemaining < unitsToBook) {
             const shouldContinue = confirm(
-                `Attention : ${studentFirstName} ${studentLastName} n'a plus d'heures disponibles dans son forfait.\n\n` +
-                `Heures totales : ${hoursGoal}h\n` +
-                `Heures effectuées : ${hoursCompleted}h\n` +
-                `Heures réservées : ${hoursReserved}h\n` +
-                `Heures restantes : ${hoursRemaining}h\n\n` +
+                `Attention : ${studentFirstName} ${studentLastName} n'a plus assez de ${studentUnitLabel(student)} disponibles dans son forfait.\n\n` +
+                `Total : ${formatStudentBalance(student, hoursGoal)}\n` +
+                `Effectué : ${formatStudentBalance(student, hoursCompleted)}\n` +
+                `Réservé : ${formatStudentBalance(student, hoursReserved)}\n` +
+                `Restant : ${formatStudentBalance(student, hoursRemaining)}\n\n` +
                 `Voulez-vous quand même placer cet élève sur ce créneau ?`
             );
             
@@ -2948,12 +4150,12 @@ window.bookSlotForStudent = async function(slotId, studentEmail, studentFirstNam
         
         // Confirmer la réservation
         const confirmMsg = `Confirmer la réservation ?\n\n` +
-            `Élève : ${studentFirstName} ${studentLastName}\n` +
+            `élève : ${studentFirstName} ${studentLastName}\n` +
             `Email : ${studentEmail}\n` +
             `Moniteur : ${instructor}\n` +
             `Date : ${new Date(startAt).toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })}\n` +
             `Horaire : ${new Date(startAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })} - ${new Date(endAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}\n\n` +
-            `Heures restantes après cette réservation : ${hoursRemaining - 2}h`;
+            `Solde restant après cette réservation : ${formatStudentBalance(student, hoursRemaining - unitsToBook)}`;
         
         if (!confirm(confirmMsg)) {
             return;
@@ -2962,7 +4164,7 @@ window.bookSlotForStudent = async function(slotId, studentEmail, studentFirstNam
         // Récupérer le téléphone de l'élève
         const studentPhone = student.telephone || '';
         
-        // Réserver le créneau via la fonction book_slot
+        // R?server le créneau via la fonction book_slot
         const { data: bookingResult, error: bookingError } = await window.supabaseClient
             .rpc('book_slot', {
                 p_start_at: startAt,
@@ -2980,19 +4182,19 @@ window.bookSlotForStudent = async function(slotId, studentEmail, studentFirstNam
         }
         
         if (!bookingResult || !bookingResult.ok) {
-            console.error('Impossible de réserver ce créneau:', bookingResult?.error || 'Erreur inconnue');
+            console.error('Impossible de r?server ce créneau:', bookingResult?.error || 'Erreur inconnue');
             return;
         }
         
         // Fermer la modal de sélection
         closeSlotSelection();
         
-        // Mettre à jour l'état pour afficher la semaine et le moniteur du créneau ajouté
+        // Mettre à jour l'?tat pour afficher la semaine et le moniteur du créneau ajouté
         state.instructor = normalizeInstructor(instructor);
         state.weekStart = startOfWeek(new Date(startAt));
         saveState();
         
-        // Rafraîchir le planning sans recharger la page
+        // Rafra?chir le planning sans recharger la page
         await refresh();
         
     } catch (err) {
@@ -3001,7 +4203,7 @@ window.bookSlotForStudent = async function(slotId, studentEmail, studentFirstNam
 };
 
 // ============================================
-// LISTE D'ATTENTE POUR DÉSISTEMENTS
+// LISTE D'ATTENTE POUR D?SISTEMENTS
 // ============================================
 
 async function loadWaitlist() {
@@ -3009,7 +4211,7 @@ async function loadWaitlist() {
     if (!container) return;
     
     try {
-        // Charger tous les élèves intéressés par les désistements
+        // Charger tous les élèves intéressés par les d?sistements
         const { data: students, error } = await window.supabaseClient
             .from('student_availability')
             .select('*')
@@ -3031,7 +4233,7 @@ async function loadWaitlist() {
             container.innerHTML = `
                 <div style="text-align: center; padding: 2rem; color: var(--text2);">
                     <i class="fas fa-inbox" style="font-size: 2rem; margin-bottom: 1rem;"></i>
-                    <p>Aucun élève n'a configuré ses disponibilités pour le moment</p>
+                    <p>Aucun élève n'a configur? ses disponibilités pour le moment</p>
                 </div>
             `;
             return;
@@ -3085,8 +4287,8 @@ async function loadWaitlist() {
                 </div>
             ` : '';
             
-            // Créer un mini-planning visuel
-            // Les créneaux stockés sont au format '07:00-09:00', '09:00-11:00', etc.
+            // Cr?er un mini-planning visuel
+            // Les créneaux stock?s sont au format '07:00-09:00', '09:00-11:00', etc.
             // Les jours sont en minuscule : 'lundi', 'mardi', etc.
             const miniTimeSlots = [
                 { label: '07-09h', value: '07:00-09:00' },
@@ -3146,7 +4348,7 @@ async function loadWaitlist() {
                         <div>
                             <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; color: var(--text); padding-right: 2.5rem;">
                                 <i class="fas fa-user" style="color: var(--orange);"></i>
-                                ${student.user_name || 'Nom non renseigné'}
+                                ${student.user_name || 'Nom non renseign?'}
                             </h3>
                             <div style="display: flex; flex-direction: column; gap: 0.75rem;">
                                 <div style="display: flex; align-items: center; gap: 0.5rem;">
@@ -3172,15 +4374,15 @@ async function loadWaitlist() {
                             </div>
                         </div>
                         
-                        <!-- Disponibilités -->
+                        <!-- Disponibilit?s -->
                         <div>
                             <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: var(--text);">
                                 <i class="fas fa-calendar-check" style="color: var(--green);"></i>
-                                Disponibilités
+                                Disponibilit?s
                             </h4>
                             <div style="font-size: 0.9rem; color: var(--text);">
                                 ${weeksHTML}
-                                ${availabilityHTML || '<p style="color: var(--text2);">Aucune disponibilité configurée</p>'}
+                                ${availabilityHTML || '<p style="color: var(--text2);">Aucune disponibilit? configur?e</p>'}
                             </div>
                         </div>
                     </div>
@@ -3226,7 +4428,7 @@ window.refreshWaitlist = function() {
 };
 
 window.deleteStudentAvailability = async function(userEmail) {
-    if (!confirm(`Êtes-vous sûr de vouloir supprimer les disponibilités de cet élève ?\n\nEmail: ${userEmail}\n\nCette action est irréversible.`)) {
+    if (!confirm(`Supprimer les disponibilités de cet élève ?\n\nEmail : ${userEmail}\n\nCette action est irréversible.`)) {
         return;
     }
     
@@ -3238,22 +4440,22 @@ window.deleteStudentAvailability = async function(userEmail) {
         
         if (error) {
             console.error('Error deleting availability:', error);
-            alert('❌ Erreur lors de la suppression. Réessaie.');
+            alert('Erreur lors de la suppression. Réessaie.');
             return;
         }
         
-        alert('✅ Disponibilités supprimées avec succès !');
+        alert('Disponibilités supprimées avec succès !');
         loadWaitlist(); // Recharger la liste
         
     } catch (err) {
         console.error('Error deleting availability:', err);
-        alert('❌ Erreur lors de la suppression. Réessaie.');
+        alert('Erreur lors de la suppression. Réessaie.');
     }
 };
 
-// ══════════════════════════════════════════════════════════════════════════════
+// ?.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.?
 // NOTES ADMIN FUNCTIONALITY
-// ══════════════════════════════════════════════════════════════════════════════
+// ?.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.??.?
 
 // Sauvegarder les notes admin pour un élève
 window.saveAdminNotes = async function(studentEmail) {
@@ -3273,7 +4475,7 @@ window.saveAdminNotes = async function(studentEmail) {
         // Notification de succès
         const btn = event.target.closest('button');
         const originalText = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-check"></i> Sauvegardé !';
+        btn.innerHTML = '<i class="fas fa-check"></i> Sauvegard? !';
         btn.style.background = '#218838';
         
         setTimeout(() => {
@@ -3283,13 +4485,13 @@ window.saveAdminNotes = async function(studentEmail) {
         
     } catch (err) {
         console.error('Erreur sauvegarde notes:', err);
-        alert('❌ Erreur lors de la sauvegarde des notes.');
+        alert('Erreur lors de la sauvegarde des notes.');
     }
 };
 
 // Effacer les notes admin pour un élève
 window.clearAdminNotes = async function(studentEmail) {
-    if (!confirm('Êtes-vous sûr de vouloir effacer ces notes ?')) return;
+    if (!confirm('Effacer ces notes ?')) return;
     
     const textarea = document.getElementById('adminNotesTextarea');
     if (!textarea) return;
@@ -3307,7 +4509,7 @@ window.clearAdminNotes = async function(studentEmail) {
         // Notification de succès
         const btn = event.target.closest('button');
         const originalText = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-check"></i> Effacé !';
+        btn.innerHTML = '<i class="fas fa-check"></i> Effac? !';
         btn.style.background = '#c82333';
         
         setTimeout(() => {
@@ -3317,7 +4519,7 @@ window.clearAdminNotes = async function(studentEmail) {
         
     } catch (err) {
         console.error('Erreur effacement notes:', err);
-        alert('❌ Erreur lors de l\'effacement des notes.');
+        alert('Erreur lors de l\'effacement des notes.');
     }
 };
 
@@ -3330,16 +4532,21 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if (myleneBtn && today >= mayFirst2026) {
         myleneBtn.style.display = 'none';
-        console.log('🚫 Mylène masquée - indisponible à partir du 1er mai 2026');
+        console.log('Mylène masquée - indisponible à partir du 1er mai 2026');
     }
     
-    // Attendre un peu pour s'assurer que Supabase est chargé
+    // Attendre un peu pour s'assurer que Supabase est charg?
+    console.log('?? setTimeout d?clench? pour charger les moniteurs...');
     setTimeout(() => {
+        console.log('?o. setTimeout ex?cut?, appel de loadInstructors()...');
+        // Charger les moniteurs depuis Supabase
+        loadInstructors();
+        
         loadWaitlist();
         
-        // Charger les taux de réussite et détecter le moniteur actif
+        // Charger les taux de r?ussite et d?tecter le moniteur actif
         loadInstructorSuccessRates().then(() => {
-            // Détecter le moniteur actif après le chargement des données
+            // D?tecter le moniteur actif après le chargement des données
             const activeBtn = document.querySelector('#instructorSegment button.active');
             const currentInstructor = activeBtn ? activeBtn.dataset.instructor : null;
             
@@ -3350,48 +4557,40 @@ document.addEventListener('DOMContentLoaded', () => {
         
         startSuccessRateAutoRefresh();
         
-        // Ajouter un écouteur sur les boutons de sélection de moniteur
-        const instructorButtons = document.querySelectorAll('#instructorSegment button');
-        instructorButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const instructorName = btn.dataset.instructor;
-                if (window.refreshInstructorDisplay) {
-                    window.refreshInstructorDisplay(instructorName);
-                }
-            });
-        });
+        // Note : la sélection de moniteur (planning + taux de r?ussite) est
+        // g?r?e par la d?l?gation d'?v?nement sur #instructorSegment dans l'IIFE.
+        // Pas besoin d'attacher d'?couteurs individuels ici.
     }, 500);
 });
 
 // ============================================
-// PLANNING DÉSISTEMENTS
+// PLANNING D?SISTEMENTS
 // ============================================
 
 async function loadDesistementsPlanning() {
+    const container = document.getElementById('desistementsPlanning');
     try {
-        console.log('📅 Chargement du planning désistements...');
+        console.log('?Y". Chargement du planning d?sistements...');
         
-        const container = document.getElementById('desistementsPlanning');
         if (!container) return;
         
-        // Récupérer toutes les disponibilités
-        const { data: availabilities, error } = await window.supabaseClient
-            .from('student_availability')
-            .select('*')
-            .eq('wants_cancellation_notifications', true);
+        const payload = await fetchAdminPlanningData({ type: 'student-availabilities' });
+        const enrichedAvailabilities = payload.availabilities || [];
+
+        console.log(`?o. ${enrichedAvailabilities.length} élèves avec disponibilités`);
         
-        if (error) {
-            console.error('Erreur chargement disponibilités:', error);
-            return;
-        }
-        
-        console.log(`✅ ${availabilities?.length || 0} élèves avec disponibilités`);
-        
-        // Générer le planning visuel
-        generateDesistementsGrid(availabilities || [], container);
+        // G?n?rer le planning visuel
+        generateDesistementsGrid(enrichedAvailabilities, container);
         
     } catch (err) {
         console.error('Erreur:', err);
+        if (container) {
+            container.innerHTML = `
+                <div style="padding: 1rem; border: 1px solid #fecdd3; background: #fff1f2; color: #be123c; border-radius: 12px; font-weight: 600;">
+                    Impossible de charger les disponibilités élèves pour le moment.
+                </div>
+            `;
+        }
     }
 }
 
@@ -3399,16 +4598,7 @@ function generateDesistementsGrid(availabilities, container) {
     const daysOfWeek = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
     const daysLabels = { lundi: 'LUN', mardi: 'MAR', mercredi: 'MER', jeudi: 'JEU', vendredi: 'VEN', samedi: 'SAM' };
     
-    const timeSlots = [
-        { label: '07h00', value: '07:00-09:00', end: '09h00' },
-        { label: '09h00', value: '09:00-11:00', end: '11h00' },
-        { label: '11h00', value: '11:00-13:00', end: '13h00' },
-        { label: '13h00', value: '13:00-15:00', end: '15h00' },
-        { label: '15h00', value: '15:00-17:00', end: '17h00' },
-        { label: '17h00', value: '17:00-19:00', end: '19h00' }
-    ];
-    
-    const adminWeekOffset = window.planningState?.weekOffset || 0;
+    const adminWeekOffset = Math.max(0, Number(desistementWeekOffset || 0));
     const targetSemaineKey = `semaine${adminWeekOffset + 1}`;
     
     const today = new Date();
@@ -3430,9 +4620,109 @@ function generateDesistementsGrid(availabilities, container) {
     // Stocker les dispo pour le onclick
     window._desistAvailabilities = availabilities;
     
-    // Couleur unique élégante pour tous les élèves
-    const studentColor = { bg: '#0071e3', shadow: 'rgba(0,113,227,0.25)' };
-    
+    function normalizePackText(value) {
+        return String(value || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
+
+    function isAcceleratedAvailability(student) {
+        const profile = student?._profile || {};
+        return normalizePackText([
+            student.forfait,
+            student.pack,
+            student.pack_label,
+            profile.forfait,
+            profile.pack
+        ].filter(Boolean).join(' ')).includes('accelere');
+    }
+
+    function isCourseBasedAvailability(student) {
+        const profile = student?._profile || {};
+        const explicitUnit = Number(student?.lesson_unit_minutes || profile.lesson_unit_minutes || 0);
+        if (explicitUnit === 45) return true;
+        return [
+            student.forfait,
+            student.pack,
+            student.pack_label,
+            profile.forfait,
+            profile.pack
+        ].some(isCourseBasedPack);
+    }
+
+    function desistementColor(student) {
+        return isAcceleratedAvailability(student)
+            ? { bg: '#ef4444', shadow: 'rgba(239,68,68,0.28)', label: 'Ancien pack accelere prioritaire' }
+            : { bg: '#34c759', shadow: 'rgba(52,199,89,0.24)', label: 'Disponible' };
+    }
+
+    function formatDesistementTime(value) {
+        return String(value || '').replace(':', 'h');
+    }
+
+    function parseDesistementSlot(value) {
+        const match = String(value || '').match(/^(\d{2}:\d{2})-(\d{2}:\d{2})$/);
+        if (!match) return null;
+        const startMinutes = timeToMinutes(match[1]);
+        const endMinutes = timeToMinutes(match[2]);
+        if (endMinutes <= startMinutes) return null;
+        return {
+            label: formatDesistementTime(match[1]),
+            value,
+            end: formatDesistementTime(match[2]),
+            startMinutes,
+            endMinutes
+        };
+    }
+
+    function parseAvailabilityWeeks(avail) {
+        const rawWeeks = avail?.availability_weeks || [];
+        if (Array.isArray(rawWeeks)) return rawWeeks;
+        try {
+            const parsed = JSON.parse(rawWeeks);
+            return Array.isArray(parsed) ? parsed : [];
+        } catch (error) {
+            return String(rawWeeks || '')
+                .split(',')
+                .map((week) => week.trim())
+                .filter(Boolean);
+        }
+    }
+
+    function parseAvailabilitySlots(avail) {
+        const rawSlots = avail?.availability_slots || {};
+        if (rawSlots && typeof rawSlots === 'object') return rawSlots;
+        try {
+            return JSON.parse(rawSlots || '{}') || {};
+        } catch (error) {
+            return {};
+        }
+    }
+
+    function availabilityWeeksMatch(avail) {
+        const weeks = parseAvailabilityWeeks(avail);
+        return weeks.includes(targetSemaineKey) || weeks.includes('toutes');
+    }
+
+    const weekAvailabilities = availabilities.filter(availabilityWeeksMatch);
+    const weekCourseCount = weekAvailabilities.filter(isCourseBasedAvailability).length;
+    const weekHourCount = Math.max(0, weekAvailabilities.length - weekCourseCount);
+    const otherWeekCourseCount = availabilities.filter((avail) => isCourseBasedAvailability(avail) && !availabilityWeeksMatch(avail)).length;
+
+    const timeSlotMap = new Map();
+    weekAvailabilities.forEach((avail) => {
+        const slots = parseAvailabilitySlots(avail);
+        Object.values(slots || {}).forEach((daySlots) => {
+            (Array.isArray(daySlots) ? daySlots : []).forEach((value) => {
+                const slot = parseDesistementSlot(value);
+                if (slot) timeSlotMap.set(value, slot);
+            });
+        });
+    });
+
+    const timeSlots = Array.from(timeSlotMap.values()).sort((a, b) => {
+        const startDiff = a.startMinutes - b.startMinutes;
+        return startDiff || (a.endMinutes - b.endMinutes);
+    });
+
     let html = `
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
             <div style="font-size: 1.05rem; font-weight: 600; color: #1d1d1f; letter-spacing: -0.01em;">
@@ -3447,6 +4737,32 @@ function generateDesistementsGrid(availabilities, container) {
                 </button>
             </div>
         </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1rem;">
+            <span style="display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;background:#f4f4f5;color:#27272a;font-size:0.8rem;font-weight:600;">
+                ${weekAvailabilities.length} élève(s) cette semaine
+            </span>
+            <span style="display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;background:#fff1f2;color:#be123c;font-size:0.8rem;font-weight:700;">
+                ${weekCourseCount} nouveau(x) pack(s) 45 min
+            </span>
+            <span style="display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;background:#f0fdf4;color:#166534;font-size:0.8rem;font-weight:700;">
+                ${weekHourCount} ancien(s) pack(s) 2h
+            </span>
+            ${otherWeekCourseCount > 0 ? `<span style="display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;background:#fff7ed;color:#9a3412;font-size:0.8rem;font-weight:700;">${otherWeekCourseCount} nouveau(x) pack(s) sur une autre semaine</span>` : ''}
+        </div>
+    `;
+
+    if (timeSlots.length === 0) {
+        html += `
+            <div style="padding: 1rem; border: 1px solid #e5e7eb; background: #f8fafc; color: #475569; border-radius: 12px; line-height: 1.45;">
+                <strong>Aucune disponibilité déclarée sur cette semaine.</strong>
+                ${otherWeekCourseCount > 0 ? `<br>${otherWeekCourseCount} élève(s) en nouveau pack ont déclaré des disponibilités sur une autre semaine. Utilise la flèche de droite pour les afficher.` : ''}
+            </div>
+        `;
+        container.innerHTML = html;
+        return;
+    }
+
+    html += `
         <div style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);">
             <table style="width: 100%; border-collapse: collapse; table-layout: fixed;">
                 <colgroup>
@@ -3460,8 +4776,8 @@ function generateDesistementsGrid(availabilities, container) {
                             const isToday = weekDates[i].toDateString() === today.toDateString();
                             return `
                             <th style="padding: 12px 4px; text-align: center; background: white; border-bottom: 1px solid #f0f0f0;">
-                                <div style="font-size: 0.7rem; font-weight: 600; color: ${isToday ? '#0071e3' : '#86868b'}; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">${daysLabels[day]}</div>
-                                <div style="font-size: 1.25rem; font-weight: 700; color: ${isToday ? 'white' : '#1d1d1f'}; width: 34px; height: 34px; line-height: 34px; margin: 0 auto; border-radius: 50%; ${isToday ? 'background: #0071e3;' : ''}">${weekDates[i].getDate()}</div>
+                                <div style="font-size: 0.7rem; font-weight: 600; color: ${isToday ? '#e83e8c' : '#86868b'}; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">${daysLabels[day]}</div>
+                                <div style="font-size: 1.25rem; font-weight: 700; color: ${isToday ? 'white' : '#1d1d1f'}; width: 34px; height: 34px; line-height: 34px; margin: 0 auto; border-radius: 50%; ${isToday ? 'background: #e83e8c;' : ''}">${weekDates[i].getDate()}</div>
                             </th>`;
                         }).join('')}
                     </tr>
@@ -3477,15 +4793,8 @@ function generateDesistementsGrid(availabilities, container) {
         </td>`;
         
         daysOfWeek.forEach((dayName, dayIdx) => {
-            const availableStudents = availabilities.filter(avail => {
-                const weeks = avail.availability_weeks || [];
-                const isWeekOk = weeks.includes(targetSemaineKey) || weeks.includes('toutes');
-                if (!isWeekOk) return false;
-                
-                const slots = typeof avail.availability_slots === 'string' 
-                    ? JSON.parse(avail.availability_slots) 
-                    : avail.availability_slots;
-                
+            const availableStudents = weekAvailabilities.filter(avail => {
+                const slots = parseAvailabilitySlots(avail);
                 if (!slots || !slots[dayName]) return false;
                 return slots[dayName].includes(slot.value);
             });
@@ -3499,13 +4808,16 @@ function generateDesistementsGrid(availabilities, container) {
                 availableStudents.forEach(student => {
                     const escapedEmail = (student.user_email || '').replace(/'/g, "\\'");
                     const initials = (student.user_name || '').split(' ').map(n => n[0]).join('').toUpperCase();
+                    const studentColor = desistementColor(student);
                     html += `
                         <div onclick="showDesistementStudentModal('${escapedEmail}', '${dateStr}', '${creneauStr}')"
+                             title="${studentColor.label}"
                              style="background: ${studentColor.bg}; color: white; padding: 4px 6px; border-radius: 8px; margin: 2px; font-size: 0.72rem; font-weight: 600; cursor: pointer; transition: all 0.15s ease; display: flex; align-items: center; gap: 4px; overflow: hidden;"
                              onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 3px 10px ${studentColor.shadow}';"
                              onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
                             <span style="width: 20px; height: 20px; min-width: 20px; border-radius: 50%; background: rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; font-size: 0.58rem;">${initials}</span>
                             <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${student.user_name}</span>
+                            ${isAcceleratedAvailability(student) ? '<span style="margin-left:auto;font-size:0.58rem;font-weight:800;background:rgba(255,255,255,0.22);border-radius:999px;padding:2px 5px;">30J</span>' : ''}
                         </div>
                     `;
                 });
@@ -3526,7 +4838,7 @@ function generateDesistementsGrid(availabilities, container) {
     container.innerHTML = html;
 }
 
-// Navigation par semaine du planning désistements
+// Navigation par semaine du planning d?sistements
 let desistementWeekOffset = 0;
 
 window.changeDesistementWeek = async function(direction) {
@@ -3542,29 +4854,36 @@ window.changeDesistementWeek = async function(direction) {
 
 // Modal détaillée de l'élève (style Apple)
 window.showDesistementStudentModal = async function(email, dateStr, creneauStr) {
-    // Chercher les infos complètes de l'élève dans la base
-    let studentData = null;
-    try {
-        const { data } = await window.supabaseClient
-            .from('users')
-            .select('prenom, nom, email, telephone, forfait, hours_completed, hours_goal')
-            .eq('email', email)
-            .maybeSingle();
-        studentData = data;
-    } catch (e) {
-        console.error('Erreur récupération élève:', e);
+    const cachedAvailability = (window._desistAvailabilities || []).find((item) => (
+        String(item.user_email || '').toLowerCase() === String(email || '').toLowerCase()
+    ));
+
+    let studentData = cachedAvailability?._profile || null;
+    let availData = cachedAvailability || null;
+
+    if (!studentData && window.supabaseClient) {
+        try {
+            const { data } = await window.supabaseClient
+                .from('users')
+                .select('prenom, nom, email, telephone, forfait, hours_completed, hours_goal, lesson_unit_minutes')
+                .eq('email', email)
+                .maybeSingle();
+            studentData = data;
+        } catch (e) {
+            console.error('Erreur récupération élève:', e);
+        }
     }
     
-    // Chercher aussi dans student_availability
-    let availData = null;
-    try {
-        const { data } = await window.supabaseClient
-            .from('student_availability')
-            .select('user_name, user_phone')
-            .eq('user_email', email)
-            .maybeSingle();
-        availData = data;
-    } catch (e) {}
+    if (!availData && window.supabaseClient) {
+        try {
+            const { data } = await window.supabaseClient
+                .from('student_availability')
+                .select('user_name, user_phone')
+                .eq('user_email', email)
+                .maybeSingle();
+            availData = data;
+        } catch (e) {}
+    }
     
     const prenom = studentData?.prenom || availData?.user_name?.split(' ')[0] || '-';
     const nom = studentData?.nom || availData?.user_name?.split(' ').slice(1).join(' ') || '-';
@@ -3572,6 +4891,7 @@ window.showDesistementStudentModal = async function(email, dateStr, creneauStr) 
     const forfait = studentData?.forfait || '-';
     const hoursCompleted = studentData?.hours_completed || 0;
     const hoursGoal = studentData?.hours_goal || 0;
+    const balanceText = `${formatStudentBalance(studentData, hoursCompleted)} / ${formatStudentBalance(studentData, hoursGoal)}`;
     const initials = `${prenom[0] || ''}${nom[0] || ''}`.toUpperCase();
     
     // Supprimer modal existante
@@ -3630,7 +4950,7 @@ window.showDesistementStudentModal = async function(email, dateStr, creneauStr) 
                     <!-- Heures -->
                     <div style="margin-top: 8px; padding: 12px 16px; background: #e8f5e9; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
                         <span style="font-weight: 700; color: #1d1d1f; font-size: 0.9rem;"><i class="fas fa-clock" style="color: #34c759; margin-right: 6px;"></i> HEURES DE CONDUITE</span>
-                        <span style="font-weight: 600; color: #1d1d1f; font-size: 0.9rem;">${hoursCompleted}h / ${hoursGoal}h</span>
+                        <span style="font-weight: 600; color: #1d1d1f; font-size: 0.9rem;">${balanceText}</span>
                     </div>
                 </div>
                 
@@ -3655,3 +4975,4 @@ window.showDesistementStudentModal = async function(email, dateStr, creneauStr) 
     
     document.body.insertAdjacentHTML('beforeend', modalHTML);
 };
+

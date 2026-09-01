@@ -75,12 +75,12 @@
 </head>
 <body>
     <div class="container">
-        <h1>🚗 Test PayPal</h1>
+        <h1>ðŸš— Test PayPal</h1>
         <p class="subtitle">Paiement en plusieurs fois</p>
         
         <div class="price">995€</div>
         <div class="description">
-            <strong>Forfait Zen</strong><br>
+            <strong>Forfait Chill</strong><br>
             20h de conduite + code de la route<br>
             Paiement en 4 fois sans frais avec PayPal
         </div>
@@ -94,7 +94,7 @@
         <div id="result"></div>
 
         <div class="info">
-            <strong>ℹ️ Mode test</strong><br>
+            <strong>ℹï¸ Mode test</strong><br>
             Utilise un compte PayPal Sandbox pour tester.<br>
             Le paiement en 4x apparaît automatiquement pour les montants entre 30€ et 2000€.
         </div>
@@ -120,7 +120,7 @@
                 await paypal.renderButtons(
                     'paypal-button-container',
                     995, // Montant
-                    'Forfait Zen - Auto-École Breteuil',
+                    'Forfait Chill - Auto-École Breteuil',
                     'test@example.com',
                     'Test User',
                     // Succès
@@ -138,10 +138,10 @@
                     },
                     // Erreur
                     (error) => {
-                        console.error('❌ Erreur:', error);
+                        console.error('âŒ Erreur:', error);
                         resultDiv.innerHTML = `
                             <div class="info error">
-                                <strong>❌ Erreur</strong><br>
+                                <strong>âŒ Erreur</strong><br>
                                 ${error.message}
                             </div>
                         `;
@@ -151,7 +151,7 @@
                 console.error('Erreur initialisation:', error);
                 loadingDiv.innerHTML = `
                     <div class="info error">
-                        <strong>❌ Erreur d'initialisation</strong><br>
+                        <strong>âŒ Erreur d'initialisation</strong><br>
                         ${error.message}
                     </div>
                 `;
@@ -161,5 +161,6 @@
         // Initialiser au chargement
         initPayPal();
     </script>
+    <script src="assets/js/text-encoding-fix.js?v=2"></script>
 </body>
 </html>

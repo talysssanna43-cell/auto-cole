@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fiche Moniteur - Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0071e3;
+            --success: #4CAF50;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --dark: #1d1d1f;
+            --light: #f5f5f7;
+            --border: #d2d2d7;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .instructor-select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            background: white;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.25rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            min-width: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: white;
+        }
+
+        .stat-icon.success { background: var(--success); }
+        .stat-icon.danger { background: var(--danger); }
+        .stat-icon.warning { background: var(--warning); }
+        .stat-icon.info { background: var(--info); }
+        .stat-icon.primary { background: var(--primary); }
+
+        .stat-content h3 {
+            font-size: 0.75rem;
+            color: #86868b;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-content .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            font-size: 1.25rem;
+            color: var(--dark);
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-grid {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            padding: 0.75rem;
+            background: var(--light);
+            border-radius: 8px;
+        }
+
+        .info-item label {
+            font-weight: 600;
+            font-size: 0.75rem;
+            color: #86868b;
+            text-transform: uppercase;
+        }
+
+        .info-item span {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--dark);
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--border);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 0.5rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+
+        .timeline-item.conges::before { background: var(--info); box-shadow: 0 0 0 2px var(--info); }
+        .timeline-item.indisponible::before { background: var(--danger); box-shadow: 0 0 0 2px var(--danger); }
+
+        .timeline-date {
+            font-size: 0.875rem;
+            color: #86868b;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-content {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            display: block;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table th {
+            background: var(--light);
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 700;
+            color: var(--dark);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--dark);
+            font-size: 0.875rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge.success { background: #d4edda; color: #155724; }
+        .badge.danger { background: #f8d7da; color: #721c24; }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,113,227,0.3);
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .chart-container {
+            height: 300px;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 0.5rem;
+            }
+            
+            .header {
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 1.25rem;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stat-card {
+                padding: 1rem;
+            }
+            
+            .stat-icon {
+                width: 45px;
+                height: 45px;
+                min-width: 45px;
+                font-size: 1.1rem;
+            }
+            
+            .stat-content .value {
+                font-size: 1.25rem;
+            }
+            
+            .card {
+                padding: 1rem;
+            }
+            
+            .card h2 {
+                font-size: 1.1rem;
+            }
+            
+            .timeline {
+                padding-left: 1.5rem;
+            }
+            
+            .timeline-item {
+                padding-left: 1rem;
+            }
+            
+            table {
+                font-size: 0.8rem;
+            }
+            
+            table th,
+            table td {
+                padding: 0.5rem;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            .content-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .instructor-select {
+                width: auto;
+                min-width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                <i class="fas fa-user-tie"></i>
+                Fiche Moniteur
+            </h1>
+            <select class="instructor-select" id="instructorSelect" onchange="loadInstructorData()">
+                <option value="">Sélectionner un moniteur</option>
+                <option value="Daho">Daho</option>
+                <option value="Nail">Nail</option>
+            </select>
+        </div>
+
+        <div id="instructorContent" style="display: none;">
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon success">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Taux de réussite</h3>
+                        <div class="value" id="successRate">0%</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon primary">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Élèves actifs</h3>
+                        <div class="value" id="activeStudents">0</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon warning">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Heures effectuées</h3>
+                        <div class="value" id="totalHours">0h</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon info">
+                        <i class="fas fa-umbrella-beach"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Jours de congés</h3>
+                        <div class="value" id="congesDays">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Grid -->
+            <div class="content-grid">
+                <!-- Informations personnelles -->
+                <div class="card">
+                    <h2><i class="fas fa-id-card"></i> Informations personnelles</h2>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>Nom complet</label>
+                            <span id="instructorName">-</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Email</label>
+                            <span id="instructorEmail">-</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Téléphone</label>
+                            <span id="instructorPhone">-</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Date d'embauche</label>
+                            <span id="hireDate">-</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Statut</label>
+                            <span id="instructorStatus">Actif</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Résultats des élèves -->
+                <div class="card">
+                    <h2><i class="fas fa-chart-pie"></i> Résultats des élèves</h2>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>Réussites</label>
+                            <span id="successCount" style="color: var(--success);">0</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Échecs</label>
+                            <span id="failCount" style="color: var(--danger);">0</span>
+                        </div>
+                        <div class="info-item">
+                            <label>En attente</label>
+                            <span id="pendingCount">0</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Total examens</label>
+                            <span id="totalExams">0</span>
+                        </div>
+                    </div>
+                    <div class="chart-container" id="resultsChart"></div>
+                </div>
+
+                <!-- Congés et Indisponibilités -->
+                <div class="card">
+                    <h2><i class="fas fa-calendar-times"></i> Congés et Indisponibilités 2026</h2>
+                    <div class="timeline" id="congesTimeline">
+                        <p style="color: #86868b; text-align: center;">Aucun congé ou indisponibilité</p>
+                    </div>
+                </div>
+
+                <!-- Primes et Rémunération -->
+                <div class="card">
+                    <h2><i class="fas fa-euro-sign"></i> Primes et Rémunération</h2>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>Salaire de base</label>
+                            <span id="baseSalary">-</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Prime de réussite</label>
+                            <span id="successBonus">0 &euro;</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Prime d'ancienneté</label>
+                            <span id="seniorityBonus">0 &euro;</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Total primes</label>
+                            <span id="totalBonus" style="color: var(--success); font-size: 1.25rem;">0 &euro;</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Historique des examens -->
+            <div class="card full-width">
+                <h2><i class="fas fa-history"></i> Historique des examens</h2>
+                <table id="examsTable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Élève</th>
+                            <th>Type</th>
+                            <th>Résultat</th>
+                            <th>Commentaire</th>
+                        </tr>
+                    </thead>
+                    <tbody id="examsTableBody">
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: #86868b;">Aucun examen enregistré</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
+    <script src="assets/js/supabaseClient.js"></script>`r`n    <script src="assets/js/page-auth-guard.js" data-roles="admin"></script>
+    <script src="assets/js/admin-fiche-moniteur.js"></script>
+    <script src="assets/js/text-encoding-fix.js?v=2"></script>
+</body>
+</html>

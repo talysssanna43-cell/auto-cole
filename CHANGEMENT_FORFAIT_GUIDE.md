@@ -25,20 +25,20 @@ Un système complet pour **changer le forfait d'un élève** avec transfert auto
 ### 3. Sélectionner le nouveau forfait
 
 1. Clique sur le forfait souhaité
-2. Si le forfait permet de choisir (AAC, Zen, etc.), sélectionne **BM** ou **BA**
+2. Si le forfait permet de choisir (AAC, Chill, etc.), sélectionne **BM** ou **BA**
 3. Clique sur **"Confirmer le changement"**
 
 ---
 
 ## 🔢 Calcul automatique
 
-### Exemple 1 : Passage de Zen (20h) à AAC (20h)
+### Exemple 1 : Passage de Chill (20h) à AAC (20h)
 - **Heures effectuées** : 8h
 - **Nouveau forfait** : AAC (20h incluses)
 - **Heures restantes** : 20h - 8h = **12h**
 
 ### Exemple 2 : Passage de BM à BA
-- **Ancien forfait** : Zen BM
+- **Ancien forfait** : Chill BM
 - **Nouveau forfait** : Boîte Auto BA
 - **Type de transmission** : Automatiquement mis à jour en **BA**
 - **Planning** : Tous les futurs créneaux seront en BA
@@ -70,7 +70,7 @@ Quand tu changes le forfait :
 | AM (VSP) | 8h | BA (fixe) |
 | Boîte Auto | 13h | BA (fixe) |
 | 20h Conduite | 20h | BM (fixe) |
-| Zen | 20h | BM ou BA (choix) |
+| Chill | 20h | BM ou BA (choix) |
 | Accéléré | 20h | BM ou BA (choix) |
 | AAC | 20h | BM ou BA (choix) |
 | Supervisée | 20h | BM ou BA (choix) |
@@ -92,7 +92,7 @@ Quand tu changes le forfait :
 ## 💡 Cas d'usage
 
 ### Cas 1 : Élève passe de BM à BA
-**Situation** : Un élève en Zen BM a du mal avec la boîte manuelle
+**Situation** : Un élève en Chill BM a du mal avec la boîte manuelle
 
 **Solution** :
 1. Ouvre sa fiche

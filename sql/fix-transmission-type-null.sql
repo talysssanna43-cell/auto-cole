@@ -38,7 +38,7 @@ SET transmission_type = 'manual'
 WHERE transmission_type IS NULL
     AND pack IN ('aac', 'supervisee', 'accelere', 'second-chance');
 
--- Autres packs avec conduite (zen, etc.) → 'manual' (BM par défaut)
+-- Autres packs avec conduite (chill, etc.) → 'manual' (BM par défaut)
 UPDATE inscription_notifications
 SET transmission_type = 'manual'
 WHERE transmission_type IS NULL

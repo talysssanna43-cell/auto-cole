@@ -72,14 +72,14 @@ Le site est entièrement responsive et optimisé pour :
 
 ## 🎯 Packs proposés
 
-### Permis Zen - 599€
+### Permis Chill - 599€
 - Code de la route en ligne
 - 20 heures de conduite
 - Accès application mobile
 - Suivi personnalisé
 
 ### Permis Premium - 799€ ⭐
-- Tout du pack Zen
+- Tout du pack Chill
 - Examen sous 30 jours
 - Priorité de réservation
 - Support prioritaire
@@ -107,7 +107,7 @@ Le site est entièrement responsive et optimisé pour :
 Éditer l'objet `packPrices` dans `assets/js/inscription.js` :
 ```javascript
 const packPrices = {
-    zen: 599,
+    chill: 599,
     premium: 799,
     accelere: 999
 };

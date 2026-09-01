@@ -1,9 +1,9 @@
-// Gestion de la saisie de résultat d'examen par l'admin
+﻿// Gestion de la saisie de resultat d'examen par l'admin
 let adminSelectedRating = 0;
 
-// Ouvrir la modal pour un élève
+// Ouvrir la modal pour un eleve
 window.openAdminExamResultModal = async function(studentEmail, studentName) {
-    // Fermer la modal de profil de l'élève d'abord
+    // Fermer la modal de profil de l'eleve d'abord
     const studentDetailsModal = document.getElementById('studentDetailsModal');
     if (studentDetailsModal) {
         studentDetailsModal.classList.remove('active');
@@ -12,7 +12,7 @@ window.openAdminExamResultModal = async function(studentEmail, studentName) {
     const modal = document.getElementById('adminExamResultModal');
     if (!modal) return;
     
-    // Remplir les infos de l'élève
+    // Remplir les infos de l'eleve
     document.getElementById('adminExamStudentEmail').value = studentEmail;
     document.getElementById('adminExamStudentName').value = studentName;
     document.getElementById('adminExamStudentDisplay').textContent = studentName;
@@ -25,7 +25,7 @@ window.openAdminExamResultModal = async function(studentEmail, studentName) {
     adminSelectedRating = 0;
     updateAdminStarDisplay();
     
-    // Définir la date par défaut à aujourd'hui
+    // Definir la date par defaut a aujourd'hui
     document.getElementById('adminExamDate').valueAsDate = new Date();
     
     modal.style.display = 'flex';
@@ -42,14 +42,14 @@ window.closeAdminExamResultModal = function() {
     }
 };
 
-// Définir la note (étoiles)
+// Definir la note (etoiles)
 window.setAdminRating = function(rating) {
     adminSelectedRating = rating;
     document.getElementById('adminRatingValue').value = rating;
     updateAdminStarDisplay();
 };
 
-// Mettre à jour l'affichage des étoiles
+// Mettre a jour l'affichage des etoiles
 function updateAdminStarDisplay() {
     const stars = document.querySelectorAll('.rating-star-admin');
     stars.forEach((star, index) => {
@@ -65,7 +65,7 @@ function updateAdminStarDisplay() {
     });
 }
 
-// Calculer le moniteur principal de l'élève (75% des heures)
+// Calculer le moniteur principal de l'eleve (75% des heures)
 async function calculateStudentMainInstructor(studentEmail) {
     const instructorDisplay = document.getElementById('adminExamInstructorDisplay');
     const instructorInput = document.getElementById('adminExamInstructor');
@@ -76,7 +76,7 @@ async function calculateStudentMainInstructor(studentEmail) {
     }
     
     try {
-        // Récupérer toutes les séances effectuées de l'élève
+        // Recuperer toutes les seances effectuees de l'eleve
         const { data: reservations, error } = await window.supabaseClient
             .from('reservations')
             .select(`
@@ -121,10 +121,10 @@ async function calculateStudentMainInstructor(studentEmail) {
         const percentage = Math.round((maxHours / totalHours) * 100);
         
         if (percentage >= 75) {
-            instructorDisplay.innerHTML = `Moniteur: <strong>${mainInstructor}</strong> (${maxHours}/${totalHours} séances - ${percentage}%)`;
+            instructorDisplay.innerHTML = `Moniteur: <strong>${mainInstructor}</strong> (${maxHours}/${totalHours} seances - ${percentage}%)`;
             instructorInput.value = mainInstructor;
         } else {
-            // Afficher sélection manuelle si pas de moniteur principal
+            // Afficher selection manuelle si pas de moniteur principal
             showManualInstructorSelection(instructorHours);
         }
         
@@ -134,22 +134,22 @@ async function calculateStudentMainInstructor(studentEmail) {
     }
 }
 
-// Afficher le sélecteur manuel de moniteur
+// Afficher le selecteur manuel de moniteur
 function showManualInstructorSelection(instructorHours = {}) {
     const instructorDisplay = document.getElementById('adminExamInstructorDisplay');
     const instructorInput = document.getElementById('adminExamInstructor');
     
     const instructors = Object.keys(instructorHours).length > 0 
         ? Object.keys(instructorHours) 
-        : ['Mylène', 'Sammy', 'Nail'];
+        : ['Daho', 'Sammy', 'Nail'];
     
-    let html = '<label style="display: block; font-weight: 600; margin-bottom: 6px;">Sélectionne le moniteur :</label>';
+    let html = '<label style="display: block; font-weight: 600; margin-bottom: 6px;">Selectionne le moniteur :</label>';
     html += '<select id="manualInstructorSelect" onchange="document.getElementById(\'adminExamInstructor\').value = this.value" required style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 0.95rem;">';
     html += '<option value="">-- Choisir un moniteur --</option>';
     
     instructors.forEach(instructor => {
         const hours = instructorHours[instructor] || 0;
-        const label = hours > 0 ? `${instructor} (${hours} séances)` : instructor;
+        const label = hours > 0 ? `${instructor} (${hours} seances)` : instructor;
         html += `<option value="${instructor}">${label}</option>`;
     });
     
@@ -159,7 +159,7 @@ function showManualInstructorSelection(instructorHours = {}) {
     instructorInput.value = '';
 }
 
-// Soumettre le résultat d'examen
+// Soumettre le resultat d'examen
 window.submitAdminExamResult = async function(event) {
     event.preventDefault();
     
@@ -167,16 +167,16 @@ window.submitAdminExamResult = async function(event) {
     const submitButton = form.querySelector('button[type="submit"]');
     const originalButtonText = submitButton.innerHTML;
     
-    // Vérifier que la note est définie
+    // Verifier que la note est definie
     if (!adminSelectedRating || adminSelectedRating < 1) {
-        alert('❌ Merci de donner une note au moniteur (1 à 5 étoiles)');
+        alert('Merci de donner une note au moniteur (1 a 5 etoiles)');
         return;
     }
     
-    // Vérifier qu'un moniteur est déterminé
+    // Verifier qu'un moniteur est determine
     const instructor = document.getElementById('adminExamInstructor').value;
     if (!instructor) {
-        alert('❌ Impossible de déterminer le moniteur principal pour cet élève.');
+        alert('Impossible de determiner le moniteur principal pour cet eleve.');
         return;
     }
     
@@ -202,28 +202,36 @@ window.submitAdminExamResult = async function(event) {
             submitted_by_admin: true
         };
         
-        // Enregistrer dans Supabase
-        const { error } = await window.supabaseClient
-            .from('exam_results')
-            .insert([data]);
+        const token = window.authSession?.getToken?.();
+        if (!token) throw new Error('AUTH_REQUIRED');
+        const response = await fetch('/.netlify/functions/admin-submit-exam-result', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify(data)
+        });
+        const payload = await response.json().catch(() => ({ ok: false, error: 'INVALID_SERVER_RESPONSE' }));
+        if (!response.ok || !payload.ok) throw new Error(payload.error || 'EXAM_RESULT_FAILED');
         
-        if (error) throw error;
-        
-        // Succès - fermer la modal et rafraîchir
+        // Succes - fermer la modal et rafraichir
         closeAdminExamResultModal();
         
-        // Rafraîchir les taux de réussite
+        // Rafraichir les taux de reussite
         if (typeof loadInstructorSuccessRates === 'function') {
             await loadInstructorSuccessRates();
         }
         
-        // Notification discrète (optionnel)
-        console.log(`✅ Résultat enregistré: ${studentName} - ${data.result} - ${instructor} - ${adminSelectedRating}/5`);
+        // Notification discrete (optionnel)
+        console.log(`Resultat enregistre: ${studentName} - ${data.result} - ${instructor} - ${adminSelectedRating}/5`);
         
     } catch (err) {
-        console.error('Erreur soumission résultat:', err);
-        alert('❌ Une erreur est survenue. Veuillez réessayer.');
+        console.error('Erreur soumission resultat:', err);
+        alert('Une erreur est survenue. Veuillez reessayer.');
         submitButton.disabled = false;
         submitButton.innerHTML = originalButtonText;
     }
 };
+
+

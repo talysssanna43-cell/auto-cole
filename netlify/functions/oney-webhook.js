@@ -1,12 +1,7 @@
-const { createClient } = require('@supabase/supabase-js');
+// Legacy Oney implementation retained below for history only. The public handler
+// is retired and must not initialize payment or database clients.
 
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
-
-const oneyApiSecret = process.env.ONEY_API_SECRET;
-
-exports.handler = async function handler(event) {
+exports.legacyHandler = async function handler(event) {
     console.log('📨 Webhook Oney reçu');
 
     if (event.httpMethod !== 'POST') {
@@ -191,4 +186,13 @@ exports.handler = async function handler(event) {
             })
         };
     }
+};
+
+// Stripe is the only supported payment workflow.
+exports.handler = async function retiredOneyWebhook() {
+    return {
+        statusCode: 410,
+        headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
+        body: JSON.stringify({ error: 'PAYMENT_METHOD_RETIRED' })
+    };
 };

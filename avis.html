@@ -7,264 +7,519 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css?v=reviews-editorial-v7">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .avis-hero {
-            background: linear-gradient(135deg, #f9a8d4 0%, #ec4899 100%);
-            padding: 6rem 0 4rem;
-            text-align: center;
-            color: #fff;
-            position: relative;
-            overflow: hidden;
+        :root {
+            --avis-pink: #e92b7a;
+            --avis-pink-dark: #c91f65;
+            --avis-pink-soft: #fff2f7;
+            --avis-ink: #202124;
+            --avis-muted: #69707d;
+            --avis-line: #e6e8ec;
+            --avis-star: #f6b800;
+            --avis-green: #10b981;
+            --avis-green-dark: #079669;
         }
 
-        .avis-hero::after {
-            content: '';
-            position: absolute;
-            bottom: -50px;
-            left: 0;
-            right: 0;
-            height: 100px;
+        body { background: #f7f8fa; }
+
+        .avis-hero {
+            padding: 5.5rem 0 2.5rem;
+            background: #f4f5f7;
+            border-top: 5px solid var(--avis-pink);
+            border-bottom: 1px solid #dedfe3;
+        }
+
+        .avis-hero-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.05fr) minmax(380px, 0.95fr);
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .avis-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            color: var(--avis-pink-dark);
+            font-size: 0.84rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 0.45rem 0.7rem;
+            border: 1px solid #e6c4d2;
+            border-radius: 999px;
             background: #fff;
-            border-radius: 50% 50% 0 0;
         }
 
         .avis-hero h1 {
-            font-size: clamp(2rem, 5vw, 3rem);
-            font-weight: 900;
-            margin: 0 0 0.75rem 0;
-            color: #fff;
+            max-width: 720px;
+            margin: 0 0 1rem;
+            color: var(--avis-ink);
+            font-size: clamp(2.15rem, 5vw, 3.2rem);
+            line-height: 1.08;
+            font-weight: 500;
         }
 
         .avis-hero-subtitle {
-            font-size: 1.25rem;
-            opacity: 0.95;
-            margin: 0 0 2.5rem 0;
+            max-width: 680px;
+            margin: 0 0 1.6rem;
+            color: #4c515b;
+            font-size: 1.06rem;
+            line-height: 1.65;
         }
 
-        .avis-hero-stats {
+        .avis-hero-actions {
             display: flex;
-            justify-content: center;
-            gap: 2rem;
             flex-wrap: wrap;
-            position: relative;
-            z-index: 1;
+            align-items: center;
+            gap: 0.75rem 1rem;
         }
 
-        .avis-stat-circle {
-            width: 140px;
-            height: 140px;
-            background: #fff;
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
+        .avis-google-button,
+        .avis-cta-button {
+            display: inline-flex;
+            min-height: 48px;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            gap: 0.65rem;
+            padding: 0.78rem 1.2rem;
+            border: 1px solid var(--avis-pink);
+            border-radius: 8px;
+            background: var(--avis-pink);
+            color: #fff;
+            font-weight: 800;
+            text-decoration: none;
+            transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
         }
 
-        .avis-stat-number {
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: #ec4899;
-            line-height: 1;
+        .avis-google-button:hover,
+        .avis-cta-button:hover {
+            background: var(--avis-pink-dark);
+            border-color: var(--avis-pink-dark);
+            color: #fff;
+            transform: translateY(-1px);
         }
 
-        .avis-stat-number span {
-            font-size: 1.25rem;
+        .avis-jump-link {
+            display: inline-flex;
+            min-height: 48px;
+            align-items: center;
+            justify-content: center;
+            padding: 0.78rem 1.1rem;
+            border: 1px solid var(--avis-ink);
+            border-radius: 8px;
+            color: var(--avis-ink);
+            font-weight: 700;
+            text-decoration: none;
+            transition: background 0.2s ease, color 0.2s ease;
         }
 
-        .avis-stat-label {
-            font-size: 0.8rem;
-            color: var(--text-light);
-            text-align: center;
-            margin-top: 0.25rem;
-            line-height: 1.2;
+        .avis-jump-link:hover {
+            background: var(--avis-ink);
+            color: #fff;
         }
 
-        .avis-mascot {
-            position: absolute;
-            right: 5%;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 150px;
-            opacity: 0.9;
+        .avis-one-review {
+            flex-basis: 100%;
+            margin: 0.35rem 0 0;
+            color: var(--avis-muted);
+            font-size: 0.82rem;
         }
 
-        @media (max-width: 900px) {
-            .avis-mascot {
-                display: none;
-            }
+        .avis-rating-panel {
+            display: grid;
+            min-height: 260px;
+            grid-template-columns: minmax(0, 1fr) 155px;
+            overflow: hidden;
+            border: 1px solid #202124;
+            border-left: 6px solid var(--avis-pink);
+            border-radius: 8px;
+            background: var(--avis-ink);
+            box-shadow: 0 16px 34px rgba(24, 25, 28, 0.18);
         }
 
-        .avis-page {
-            padding: 3rem 0 4rem;
-            background: #fff;
+        .avis-rating-content {
+            display: flex;
+            min-width: 0;
+            flex-direction: column;
+            justify-content: center;
+            padding: 1.5rem;
         }
 
-        .avis-section-header {
+        .avis-google-source {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            flex-wrap: wrap;
             gap: 1rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
+            color: #d2d5da;
+            font-size: 0.86rem;
+            font-weight: 700;
         }
 
-        .avis-section-title {
-            font-size: 1.75rem;
-            font-weight: 900;
-            color: var(--text-dark);
-            margin: 0;
+        .avis-google-source i { color: #fff; font-size: 1.2rem; }
+
+        .avis-rating-row { display: flex; align-items: flex-end; gap: 1rem; }
+        .rating-number { color: #fff; font-size: 3.8rem; line-height: 0.95; font-weight: 900; }
+        .rating-stars-big { color: var(--avis-star); font-size: 1.15rem; white-space: nowrap; }
+        .avis-rating-total { margin-top: 0.3rem; color: #d2d5da; font-size: 0.9rem; font-weight: 600; }
+
+        .avis-rating-secure {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            margin-top: 1.2rem;
+            color: #aeb3bb;
+            font-size: 0.75rem;
         }
 
-        .avis-count {
-            font-size: 1rem;
-            color: var(--text-light);
-            font-weight: 600;
+        .avis-rating-visual {
+            width: 100%;
+            height: 100%;
+            min-height: 260px;
+            object-fit: cover;
+            object-position: center;
+            border-left: 1px solid #4a4c52;
         }
+
+        .avis-kpis {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 2.5rem;
+        }
+
+        .avis-kpi { display: flex; align-items: center; gap: 0.85rem; padding: 1rem; border: 1px solid #dedfe3; border-radius: 8px; background: #fff; }
+        .avis-kpi-icon { display: flex; width: 40px; height: 40px; flex: 0 0 40px; align-items: center; justify-content: center; border-radius: 50%; background: var(--avis-pink-soft); color: var(--avis-pink-dark); }
+        .avis-kpi strong { display: block; color: var(--avis-pink-dark); font-size: 1.55rem; font-weight: 900; }
+        .avis-kpi span { color: var(--avis-muted); font-size: 0.82rem; }
+
+        .avis-page { padding: 3.5rem 0 4.5rem; background: #f7f8fa; }
+
+        .avis-section-header {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .avis-section-title { margin: 0; color: var(--avis-ink); font-size: 1.85rem; font-weight: 900; }
+        .avis-section-subtitle { margin: 0.35rem 0 0; color: var(--avis-muted); font-size: 0.94rem; }
+        .avis-source-badge { display: inline-flex; align-items: center; gap: 0.5rem; color: #4a4f58; font-size: 0.86rem; font-weight: 700; white-space: nowrap; }
+        .avis-source-badge i { color: #5f6368; }
 
         .avis-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 1.5rem;
-            margin-top: 3rem;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1rem;
         }
 
         .avis-card {
+            display: flex;
+            min-width: 0;
+            flex-direction: column;
+            padding: 1.25rem;
+            border: 1px solid var(--avis-line);
+            border-radius: 8px;
             background: #fff;
-            border: 1px solid #e5e7eb;
-            border-radius: 16px;
-            padding: 1.5rem;
-            transition: box-shadow 0.2s ease, transform 0.2s ease;
+            box-shadow: 0 2px 8px rgba(31, 35, 41, 0.04);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
         }
 
-        .avis-card:hover {
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            transform: translateY(-4px);
-        }
+        .avis-card:hover { border-color: #e7a9c4; box-shadow: 0 9px 22px rgba(45, 30, 37, 0.08); transform: translateY(-2px); }
+        .avis-card-header { display: grid; grid-template-columns: 46px minmax(0, 1fr) auto; gap: 0.8rem; align-items: center; margin-bottom: 0.85rem; }
+        .avis-card-avatar { width: 46px; height: 46px; overflow: hidden; border-radius: 50%; background: var(--avis-pink); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 800; }
+        .avis-card-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .avis-card-meta { min-width: 0; }
+        .avis-card-name { overflow: hidden; color: var(--avis-ink); font-size: 0.95rem; font-weight: 800; text-overflow: ellipsis; white-space: nowrap; }
+        .avis-card-date { margin-top: 0.15rem; color: #7b818c; font-size: 0.78rem; }
+        .avis-card-stars { color: var(--avis-star); font-size: 0.82rem; white-space: nowrap; }
+        .avis-card-text { margin: 0; color: #444951; font-size: 0.9rem; line-height: 1.58; white-space: pre-line; }
+        .avis-card-text.is-collapsed { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 7; }
+        .avis-read-more { align-self: flex-start; margin-top: 0.7rem; padding: 0; border: 0; background: transparent; color: var(--avis-pink-dark); font: inherit; font-size: 0.82rem; font-weight: 800; cursor: pointer; }
+        .avis-google-mark { margin-left: 0.3rem; color: #5f6368; font-size: 0.9rem; }
 
-        .avis-card-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .avis-card-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 1.25rem;
-        }
-
-        .avis-card-meta {
-            flex: 1;
-        }
-
-        .avis-card-name {
-            font-weight: 700;
-            color: var(--text-dark);
-            font-size: 1rem;
-        }
-
-        .avis-card-date {
-            font-size: 0.85rem;
-            color: #10b981;
-        }
-
-        .avis-card-stars {
-            color: #f59e0b;
-            font-size: 1rem;
-        }
-
-        .avis-card-text {
-            font-size: 0.95rem;
-            color: var(--text-dark);
-            line-height: 1.6;
-            margin: 0;
-        }
-
-        .avis-pagination {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-top: 3rem;
-        }
-
-        .avis-pagination button {
-            width: 40px;
-            height: 40px;
-            border: 2px solid #e5e7eb;
-            background: #fff;
-            border-radius: 10px;
-            font-weight: 700;
-            color: var(--text-dark);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .avis-pagination button:hover,
-        .avis-pagination button.active {
-            border-color: #10b981;
-            background: #10b981;
-            color: #fff;
-        }
+        .avis-more-wrap { display: flex; flex-direction: column; align-items: center; gap: 0.65rem; margin-top: 2rem; }
+        .avis-more-button { min-height: 44px; padding: 0.7rem 1.15rem; border: 1px solid var(--avis-pink); border-radius: 8px; background: #fff; color: var(--avis-pink-dark); font-weight: 800; cursor: pointer; }
+        .avis-more-button:hover { background: var(--avis-pink-soft); }
+        .avis-visible-count { color: var(--avis-muted); font-size: 0.8rem; }
 
         .avis-cta {
-            text-align: center;
-            margin-top: 4rem;
-            padding: 3rem;
-            background: linear-gradient(135deg, #f9a8d4 0%, #ec4899 100%);
-            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            margin-top: 3.5rem;
+            padding: 2rem;
+            border-radius: 8px;
+            background: var(--avis-ink);
         }
 
-        .avis-cta h2 {
-            color: #fff;
-            font-size: 1.75rem;
-            font-weight: 800;
-            margin: 0 0 1rem 0;
+        .avis-cta h2 { margin: 0 0 0.35rem; color: #fff; font-size: 1.45rem; font-weight: 900; }
+        .avis-cta p { max-width: 680px; margin: 0; color: #c9cdd3; font-size: 0.9rem; line-height: 1.55; }
+        .avis-cta-button { flex: 0 0 auto; }
+
+        @media (max-width: 980px) {
+            .avis-hero-layout { grid-template-columns: 1fr; gap: 2rem; }
+            .avis-rating-panel { max-width: 620px; }
+            .avis-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
 
-        .avis-cta p {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1.1rem;
-            margin: 0 0 1.5rem 0;
+        @media (max-width: 640px) {
+            .avis-hero { padding: 5.25rem 0 2rem; }
+            .avis-hero h1 { font-size: 2.15rem; }
+            .avis-google-button, .avis-jump-link { width: 100%; }
+            .avis-rating-panel { min-height: 210px; grid-template-columns: minmax(0, 1fr) 108px; }
+            .avis-rating-content { padding: 1.1rem; }
+            .avis-google-source { align-items: flex-start; flex-direction: column; gap: 0.25rem; }
+            .avis-rating-row { align-items: flex-start; flex-direction: column; gap: 0.65rem; }
+            .rating-number { font-size: 3.2rem; }
+            .avis-rating-visual { min-height: 210px; }
+            .avis-rating-secure { margin-top: 0.8rem; }
+            .avis-kpis { grid-template-columns: 1fr; gap: 0.9rem; }
+            .avis-section-header { align-items: flex-start; flex-direction: column; }
+            .avis-grid { grid-template-columns: 1fr; }
+            .avis-cta { align-items: flex-start; flex-direction: column; }
+            .avis-cta-button { width: 100%; }
         }
 
-        .avis-cta .btn-white {
-            display: inline-block;
-            padding: 1rem 2rem;
-            background: #fff;
-            color: var(--primary-dark);
+        /* Editorial review page: aligned with the visual language of the main site. */
+        body { background: #fff; }
+
+        .avis-hero {
+            position: relative;
+            overflow: hidden;
+            padding: 5.8rem 0 0;
+            background: #f3f6ff;
+            border-bottom: 0;
+        }
+
+        .avis-hero::after {
+            position: absolute;
+            right: -7rem;
+            bottom: 1.5rem;
+            color: rgba(233, 43, 122, 0.07);
+            content: "\201D";
+            font-family: Georgia, serif;
+            font-size: 25rem;
+            line-height: 0.6;
+            pointer-events: none;
+        }
+
+        .avis-hero-layout {
+            position: relative;
+            z-index: 1;
+            min-height: 570px;
+            grid-template-columns: minmax(0, 0.88fr) minmax(430px, 1.12fr);
+            gap: 4rem;
+        }
+
+        .avis-eyebrow {
+            margin-bottom: 1.15rem;
+            padding: 0;
+            border: 0;
+            border-radius: 0;
+            background: transparent;
+            font-size: 0.8rem;
             font-weight: 700;
-            font-size: 1rem;
-            border-radius: 999px;
-            text-decoration: none;
-            transition: all 0.2s ease;
+            letter-spacing: 0.08em;
         }
 
-        .avis-cta .btn-white:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        .avis-hero h1 {
+            max-width: 620px;
+            margin-bottom: 1.2rem;
+            font-size: clamp(2.6rem, 4.8vw, 4.5rem);
+            line-height: 1.02;
         }
 
-        @media (max-width: 600px) {
-            .avis-stats {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            .avis-stats-divider {
-                width: 60px;
-                height: 2px;
-            }
+        .avis-title-accent { color: var(--avis-pink); }
+        .avis-hero-subtitle { max-width: 600px; margin-bottom: 1.8rem; font-size: 1rem; }
+        .avis-one-review { margin-top: 0.45rem; font-size: 0.78rem; }
+        .avis-google-button, .avis-cta-button { border-color: var(--avis-green); background: var(--avis-green); }
+        .avis-google-button:hover, .avis-cta-button:hover { border-color: var(--avis-green-dark); background: var(--avis-green-dark); }
+        .avis-jump-link { border-color: var(--avis-green); color: var(--avis-green-dark); }
+        .avis-jump-link:hover { border-color: var(--avis-green-dark); background: var(--avis-green-dark); }
+
+        .avis-visual {
+            position: relative;
+            align-self: end;
+            min-height: 525px;
+        }
+
+        .avis-visual-frame {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: min(100%, 520px);
+            height: 500px;
+            overflow: hidden;
+            border-radius: 8px 8px 0 0;
+            background: #f6b4a6;
+            box-shadow: 0 24px 50px rgba(36, 40, 53, 0.16);
+        }
+
+        .avis-visual-frame img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
+
+        .avis-rating-panel {
+            position: absolute;
+            z-index: 2;
+            left: -1.75rem;
+            bottom: 2.2rem;
+            display: block;
+            width: min(365px, 72%);
+            min-height: 0;
+            padding: 1.4rem 1.5rem;
+            overflow: visible;
+            border: 0;
+            border-left: 5px solid var(--avis-pink);
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 18px 38px rgba(24, 25, 28, 0.24);
+        }
+
+        .avis-google-source { margin-bottom: 0.9rem; font-size: 0.74rem; font-weight: 600; letter-spacing: 0.02em; }
+        .rating-number { font-size: 4.1rem; font-weight: 800; }
+        .rating-stars-big { font-size: 1.02rem; }
+        .avis-rating-total { color: #4ade80; }
+        .avis-rating-secure { margin-top: 1rem; }
+        .avis-rating-visual, .avis-kpis { display: none; }
+
+        .avis-proof-strip {
+            position: relative;
+            z-index: 3;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            background: var(--avis-ink);
+        }
+
+        .avis-proof-item {
+            display: flex;
+            min-height: 92px;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            padding: 1rem 1.4rem;
+            border-right: 1px solid #3b3e44;
+        }
+
+        .avis-proof-item:last-child { border-right: 0; }
+        .avis-proof-item i { color: var(--avis-pink); font-size: 1.2rem; }
+        .avis-proof-item strong { display: block; color: #fff; font-size: 1.35rem; font-weight: 700; }
+        .avis-proof-item span { color: #bfc3ca; font-size: 0.78rem; }
+
+        .avis-page { padding: 4.5rem 0 5rem; background: #fff; }
+        .avis-section-header { margin-bottom: 2rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--avis-line); }
+        .avis-section-title { font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 600; }
+
+        .avis-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 1.15rem; }
+
+        .avis-card {
+            grid-column: span 4;
+            padding: 1.4rem;
+            background: #f8f9fb;
+            box-shadow: none;
+        }
+
+        .avis-card:first-child {
+            position: relative;
+            grid-column: span 7;
+            min-height: 310px;
+            justify-content: center;
+            padding: 2.1rem;
+            overflow: hidden;
+            border-color: var(--avis-ink);
+            background: var(--avis-ink);
+        }
+
+        .avis-card:first-child::before {
+            position: absolute;
+            top: -2.6rem;
+            right: 1rem;
+            color: rgba(233, 43, 122, 0.24);
+            content: "\201D";
+            font-family: Georgia, serif;
+            font-size: 13rem;
+            line-height: 1;
+        }
+
+        .avis-card:nth-child(2) { grid-column: span 5; background: var(--avis-pink-soft); }
+        .avis-card:nth-child(6n + 4) { background: var(--avis-pink-soft); }
+        .avis-card:hover { border-color: #e7a9c4; box-shadow: 0 12px 26px rgba(45, 30, 37, 0.09); transform: translateY(-3px); }
+        .avis-card-name { font-weight: 700; }
+        .avis-card:first-child .avis-card-name { color: #fff; }
+        .avis-card:first-child .avis-card-date { color: #aeb3bb; }
+        .avis-card:first-child .avis-card-text { position: relative; color: #f1f2f4; font-size: 1.05rem; line-height: 1.7; }
+        .avis-card:first-child .avis-google-mark { color: #d7dae0; }
+        .avis-card:first-child .avis-read-more { color: #ff79b2; }
+
+        .avis-cta { margin-top: 4rem; padding: 2.2rem 2.5rem; border-left: 6px solid var(--avis-pink); }
+
+        @media (max-width: 980px) {
+            .avis-hero-layout { min-height: auto; grid-template-columns: 1fr; gap: 2.5rem; }
+            .avis-visual { min-height: 480px; }
+            .avis-visual-frame { left: 50%; right: auto; width: min(100%, 520px); transform: translateX(-50%); }
+            .avis-rating-panel { left: calc(50% - 310px); }
+            .avis-card { grid-column: span 6; }
+            .avis-card:first-child, .avis-card:nth-child(2) { grid-column: span 6; }
+        }
+
+        @media (max-width: 640px) {
+            .avis-hero { padding: 5.15rem 0 0; }
+            .avis-hero h1 { font-size: 2.45rem; }
+            .avis-hero-subtitle { font-size: 0.93rem; }
+            .avis-visual { min-height: 390px; }
+            .avis-visual-frame { width: calc(100% + 2rem); height: 370px; }
+            .avis-rating-panel { left: 0.75rem; bottom: 1rem; width: calc(100% - 1.5rem); padding: 1rem; }
+            .avis-google-source { gap: 0.4rem; font-size: 0.65rem; }
+            .rating-number { font-size: 3.2rem; }
+            .avis-rating-row { align-items: center; flex-direction: row; }
+            .avis-proof-strip { grid-template-columns: 1fr; }
+            .avis-proof-item { min-height: 72px; justify-content: flex-start; border-right: 0; border-bottom: 1px solid #3b3e44; }
+            .avis-proof-item:last-child { border-bottom: 0; }
+            .avis-page { padding-top: 3.25rem; }
+            .avis-card, .avis-card:first-child, .avis-card:nth-child(2) { grid-column: 1 / -1; min-height: auto; }
+            .avis-card:first-child { padding: 1.4rem; }
+            .avis-card:first-child .avis-card-text { font-size: 0.94rem; }
+        }
+
+        .avis-eyebrow { color: var(--avis-green-dark); }
+        .avis-hero { padding-bottom: 4.5rem; }
+        .avis-hero-layout { min-height: 500px; }
+        .avis-visual { display: flex; min-height: auto; align-items: center; justify-content: center; align-self: center; }
+        .avis-rating-panel {
+            position: relative;
+            left: auto;
+            bottom: auto;
+            width: min(100%, 440px);
+            padding: 2rem;
+            border-radius: 8px;
+            background: var(--avis-pink);
+        }
+
+        .avis-rating-panel { border-left-color: var(--avis-pink-dark); }
+        .avis-rating-total { color: #fff; }
+        .avis-card:first-child { border-color: var(--avis-line); background: #f8f9fb; }
+        .avis-card:first-child::before { display: none; }
+        .avis-card:first-child .avis-card-name { color: var(--avis-ink); }
+        .avis-card:first-child .avis-card-date { color: #7b818c; }
+        .avis-card:first-child .avis-card-text { color: #444951; }
+        .avis-card:first-child .avis-google-mark { color: #5f6368; }
+        .avis-card:first-child .avis-read-more { color: var(--avis-pink-dark); }
+        .avis-cta { background: var(--avis-pink); border-left-color: var(--avis-pink-dark); }
+        .avis-cta p { color: #fff; }
+
+        @media (max-width: 980px) {
+            .avis-hero-layout { min-height: auto; }
+            .avis-visual { min-height: auto; }
+            .avis-rating-panel { left: auto; }
+        }
+
+        @media (max-width: 640px) {
+            .avis-hero { padding-bottom: 3rem; }
+            .avis-visual { min-height: auto; }
+            .avis-rating-panel { left: auto; bottom: auto; width: 100%; padding: 1.25rem; }
         }
     </style>
 </head>
@@ -301,567 +556,54 @@
 
     <section class="avis-hero">
         <div class="container">
-            <h1>Chez nous, nous sommes transparents</h1>
-            <p class="avis-hero-subtitle">Voici ce que pensent nos élèves</p>
-            
-            <div class="avis-hero-stats">
-                <div class="avis-stat-circle">
-                    <div class="avis-stat-number">94<span>%</span></div>
-                    <div class="avis-stat-label">d'élèves<br>satisfaits</div>
+            <div class="avis-hero-layout">
+                <div>
+                    <span class="avis-eyebrow"><i class="fas fa-shield-halved"></i> Témoignages vérifiés sur Google</span>
+                    <h1>Ce sont nos élèves qui parlent <span class="avis-title-accent">le mieux de nous.</span></h1>
+                    <p class="avis-hero-subtitle">Des expériences vécues, des parcours différents et un même objectif : prendre la route avec confiance.</p>
+                    <div class="avis-hero-actions">
+                        <a href="#" data-google-reviews-link class="avis-google-button" target="_blank" rel="noopener">
+                            <i class="fab fa-google"></i> Se connecter et laisser un avis
+                        </a>
+                        <a href="#avis-google" class="avis-jump-link">Consulter les avis</a>
+                        <p class="avis-one-review"><i class="fas fa-circle-info"></i> Connexion Google obligatoire. Un seul avis par compte, modifiable à tout moment.</p>
+                    </div>
                 </div>
-                <div class="avis-stat-circle">
-                    <div class="avis-stat-number">88<span>%</span></div>
-                    <div class="avis-stat-label">de réussite<br>au code</div>
-                </div>
-                <div class="avis-stat-circle">
-                    <div class="avis-stat-number">86<span>%</span></div>
-                    <div class="avis-stat-label">de réussite<br>au permis</div>
+
+                <div class="avis-visual">
+                    <aside class="avis-rating-panel" aria-label="Note Google de l'auto-école">
+                        <div class="avis-google-source"><span><i class="fab fa-google"></i> Google Business Profile</span><span>Avis vérifiés</span></div>
+                        <div class="avis-rating-row">
+                            <div class="rating-number">4,8</div>
+                            <div>
+                                <div class="rating-stars-big" aria-label="Note sur cinq"></div>
+                                <div class="avis-rating-total avis-count">183 avis Google</div>
+                            </div>
+                        </div>
+                        <div class="avis-rating-secure"><i class="fas fa-lock"></i> Données synchronisées avec Google</div>
+                    </aside>
                 </div>
             </div>
-            
+
         </div>
     </section>
 
-    <main class="avis-page">
+    <main class="avis-page" id="avis-google">
         <div class="container">
             <div class="avis-section-header">
-                <h2 class="avis-section-title">Ce qu'en disent nos élèves</h2>
-                <span class="avis-count">127 avis</span>
+                <div>
+                    <h2 class="avis-section-title">Tous les avis Google</h2>
+                    <p class="avis-section-subtitle">Les avis les plus récents apparaissent en premier.</p>
+                </div>
+                <span class="avis-source-badge"><i class="fab fa-google"></i> Source : Google Maps</span>
             </div>
 
             <div class="avis-grid">
-                <div class="avis-card">
-                    <div class="avis-card-header">
-                        <div class="avis-card-avatar">M</div>
-                        <div class="avis-card-meta">
-                            <div class="avis-card-name">Marie D.</div>
-                            <div class="avis-card-date">15 janvier 2026</div>
-                        </div>
-                        <div class="avis-card-stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                    <p class="avis-card-text">Super auto-école ! J'ai eu mon permis du premier coup grâce à l'accompagnement personnalisé. L'application est vraiment pratique pour gérer ses cours.</p>
-                </div>
-
-                <div class="avis-card">
-                    <div class="avis-card-header">
-                        <div class="avis-card-avatar">T</div>
-                        <div class="avis-card-meta">
-                            <div class="avis-card-name">Thomas M.</div>
-                            <div class="avis-card-date">8 décembre 2025</div>
-                        </div>
-                        <div class="avis-card-stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                    <p class="avis-card-text">Tarifs très compétitifs et moniteurs au top ! La flexibilité des horaires m'a permis de passer mon permis tout en travaillant.</p>
-                </div>
-
-                <div class="avis-card">
-                    <div class="avis-card-header">
-                        <div class="avis-card-avatar">S</div>
-                        <div class="avis-card-meta">
-                            <div class="avis-card-name">Sarah B.</div>
-                            <div class="avis-card-date">22 novembre 2025</div>
-                        </div>
-                        <div class="avis-card-stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                    <p class="avis-card-text">Le pack accéléré m'a permis d'avoir mon permis en 1 mois ! Parfait pour ceux qui ont besoin du permis rapidement.</p>
-                </div>
-
-                <div class="avis-card">
-                    <div class="avis-card-header">
-                        <div class="avis-card-avatar">L</div>
-                        <div class="avis-card-meta">
-                            <div class="avis-card-name">Lison H.</div>
-                            <div class="avis-card-date">3 octobre 2025</div>
-                        </div>
-                        <div class="avis-card-stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </div>
-                    </div>
-                    <p class="avis-card-text">Très satisfaite, mon enseignant faisait au mieux pour s'arranger avec mes horaires. Je recommande !</p>
-                </div>
-
-                <div class="avis-card">
-                    <div class="avis-card-header">
-                        <div class="avis-card-avatar">A</div>
-                        <div class="avis-card-meta">
-                            <div class="avis-card-name">Antoine R.</div>
-                            <div class="avis-card-date">18 septembre 2025</div>
-                        </div>
-                        <div class="avis-card-stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                    <p class="avis-card-text">Excellente auto-école ! Les moniteurs sont patients et pédagogues. J'ai obtenu mon permis avec confiance.</p>
-                </div>
-
-                <div class="avis-card">
-                    <div class="avis-card-header">
-                        <div class="avis-card-avatar">C</div>
-                        <div class="avis-card-meta">
-                            <div class="avis-card-name">Camille P.</div>
-                            <div class="avis-card-date">5 septembre 2025</div>
-                        </div>
-                        <div class="avis-card-stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                    <p class="avis-card-text">Formation au top ! Le code en ligne est super pratique et les créneaux de conduite sont faciles à réserver.</p>
-                </div>
-
-                <div class="avis-card">
-                    <div class="avis-card-header">
-                        <div class="avis-card-avatar">J</div>
-                        <div class="avis-card-meta">
-                            <div class="avis-card-name">Julien F.</div>
-                            <div class="avis-card-date">28 août 2025</div>
-                        </div>
-                        <div class="avis-card-stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                    <p class="avis-card-text">Je recommande à 100% ! Équipe sympa, prix corrects et résultats au rendez-vous. Permis obtenu du premier coup !</p>
-                </div>
-
-                <div class="avis-card">
-                    <div class="avis-card-header">
-                        <div class="avis-card-avatar">E</div>
-                        <div class="avis-card-meta">
-                            <div class="avis-card-name">Emma L.</div>
-                            <div class="avis-card-date">12 août 2025</div>
-                        </div>
-                        <div class="avis-card-stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </div>
-                    </div>
-                    <p class="avis-card-text">Bonne expérience globale. Les moniteurs sont pros et le suivi est bien fait. Petit bémol sur les délais d'examen mais ce n'est pas de leur faute.</p>
-                </div>
-
-                <div class="avis-card">
-                    <div class="avis-card-header">
-                        <div class="avis-card-avatar">N</div>
-                        <div class="avis-card-meta">
-                            <div class="avis-card-name">Nicolas G.</div>
-                            <div class="avis-card-date">30 juillet 2025</div>
-                        </div>
-                        <div class="avis-card-stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                    <p class="avis-card-text">Auto-école moderne et efficace. L'application pour réserver les heures est vraiment bien faite. Merci à toute l'équipe !</p>
-                </div>
-
-                <div class="avis-card">
-                    <div class="avis-card-header">
-                        <div class="avis-card-avatar">P</div>
-                        <div class="avis-card-meta">
-                            <div class="avis-card-name">Pierre V.</div>
-                            <div class="avis-card-date">15 juillet 2025</div>
-                        </div>
-                        <div class="avis-card-stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                    <p class="avis-card-text">Très bonne auto-école, je recommande vivement ! Les moniteurs sont à l'écoute et très pédagogues.</p>
-                </div>
-
-                <div class="avis-card">
-                    <div class="avis-card-header">
-                        <div class="avis-card-avatar">L</div>
-                        <div class="avis-card-meta">
-                            <div class="avis-card-name">Laura K.</div>
-                            <div class="avis-card-date">2 juillet 2025</div>
-                        </div>
-                        <div class="avis-card-stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </div>
-                    </div>
-                    <p class="avis-card-text">Bon rapport qualité/prix. J'ai apprécié la flexibilité des horaires et la qualité de l'enseignement.</p>
-                </div>
-
-                <div class="avis-card">
-                    <div class="avis-card-header">
-                        <div class="avis-card-avatar">M</div>
-                        <div class="avis-card-meta">
-                            <div class="avis-card-name">Maxime B.</div>
-                            <div class="avis-card-date">20 juin 2025</div>
-                        </div>
-                        <div class="avis-card-stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                    <p class="avis-card-text">Permis obtenu rapidement grâce au pack accéléré. Les moniteurs sont vraiment compétents !</p>
-                </div>
-
-                <div class="avis-card">
-                    <div class="avis-card-header">
-                        <div class="avis-card-avatar">C</div>
-                        <div class="avis-card-meta">
-                            <div class="avis-card-name">Clara S.</div>
-                            <div class="avis-card-date">8 juin 2025</div>
-                        </div>
-                        <div class="avis-card-stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                    <p class="avis-card-text">Super expérience ! L'équipe est très professionnelle et sympathique. Je recommande à 100%.</p>
-                </div>
-
-                <div class="avis-card">
-                    <div class="avis-card-header">
-                        <div class="avis-card-avatar">R</div>
-                        <div class="avis-card-meta">
-                            <div class="avis-card-name">Romain T.</div>
-                            <div class="avis-card-date">25 mai 2025</div>
-                        </div>
-                        <div class="avis-card-stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                    <p class="avis-card-text">Excellente formation ! J'ai eu mon permis du premier coup grâce à leur méthode d'enseignement.</p>
-                </div>
-
-                <div class="avis-card">
-                    <div class="avis-card-header">
-                        <div class="avis-card-avatar">I</div>
-                        <div class="avis-card-meta">
-                            <div class="avis-card-name">Inès M.</div>
-                            <div class="avis-card-date">10 mai 2025</div>
-                        </div>
-                        <div class="avis-card-stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </div>
-                    </div>
-                    <p class="avis-card-text">Très satisfaite de ma formation. Les cours de code en ligne sont très bien faits.</p>
-                </div>
-
-                <div class="avis-card">
-                    <div class="avis-card-header">
-                        <div class="avis-card-avatar">D</div>
-                        <div class="avis-card-meta">
-                            <div class="avis-card-name">David L.</div>
-                            <div class="avis-card-date">28 avril 2025</div>
-                        </div>
-                        <div class="avis-card-stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                    <p class="avis-card-text">Auto-école au top ! Les moniteurs sont patients et expliquent très bien. Merci pour tout !</p>
-                </div>
-
-                <div class="avis-card">
-                    <div class="avis-card-header">
-                        <div class="avis-card-avatar">S</div>
-                        <div class="avis-card-meta">
-                            <div class="avis-card-name">Sophie H.</div>
-                            <div class="avis-card-date">12 avril 2025</div>
-                        </div>
-                        <div class="avis-card-stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                    <p class="avis-card-text">Je recommande cette auto-école ! Ambiance conviviale et enseignement de qualité.</p>
-                </div>
-
-                <div class="avis-card">
-                    <div class="avis-card-header">
-                        <div class="avis-card-avatar">A</div>
-                        <div class="avis-card-meta">
-                            <div class="avis-card-name">Alexandre P.</div>
-                            <div class="avis-card-date">5 avril 2025</div>
-                        </div>
-                        <div class="avis-card-stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                    <p class="avis-card-text">Formation complète et efficace. Les tarifs sont très compétitifs pour la qualité proposée.</p>
-                </div>
-
-                <div class="avis-card">
-                    <div class="avis-card-header">
-                        <div class="avis-card-avatar">V</div>
-                        <div class="avis-card-meta">
-                            <div class="avis-card-name">Valérie D.</div>
-                            <div class="avis-card-date">22 mars 2025</div>
-                        </div>
-                        <div class="avis-card-stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </div>
-                    </div>
-                    <p class="avis-card-text">Bonne auto-école avec des moniteurs compétents. Petit bémol sur les délais de réservation en haute saison.</p>
-                </div>
-
-                <div class="avis-card">
-                    <div class="avis-card-header">
-                        <div class="avis-card-avatar">F</div>
-                        <div class="avis-card-meta">
-                            <div class="avis-card-name">Florian G.</div>
-                            <div class="avis-card-date">8 mars 2025</div>
-                        </div>
-                        <div class="avis-card-stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                    <p class="avis-card-text">Permis obtenu en 2 mois avec le pack accéléré ! Équipe au top, je recommande vivement.</p>
-                </div>
-
-                <div class="avis-card">
-                    <div class="avis-card-header">
-                        <div class="avis-card-avatar">O</div>
-                        <div class="avis-card-meta">
-                            <div class="avis-card-name">Océane R.</div>
-                            <div class="avis-card-date">25 février 2025</div>
-                        </div>
-                        <div class="avis-card-stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                    <p class="avis-card-text">Super auto-école ! Les moniteurs sont très pédagogues et mettent en confiance. Merci !</p>
-                </div>
-
-                <div class="avis-card">
-                    <div class="avis-card-header">
-                        <div class="avis-card-avatar">K</div>
-                        <div class="avis-card-meta">
-                            <div class="avis-card-name">Karim B.</div>
-                            <div class="avis-card-date">10 février 2025</div>
-                        </div>
-                        <div class="avis-card-stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                    <p class="avis-card-text">Excellente expérience ! Formation de qualité et résultats au rendez-vous. Je recommande à 100%.</p>
-                </div>
-
-                <div class="avis-card">
-                    <div class="avis-card-header">
-                        <div class="avis-card-avatar">Z</div>
-                        <div class="avis-card-meta">
-                            <div class="avis-card-name">Zoé F.</div>
-                            <div class="avis-card-date">28 janvier 2025</div>
-                        </div>
-                        <div class="avis-card-stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </div>
-                    </div>
-                    <p class="avis-card-text">Très bonne auto-école. Les cours sont bien organisés et l'application mobile est pratique.</p>
-                </div>
-
-                <div class="avis-card">
-                    <div class="avis-card-header">
-                        <div class="avis-card-avatar">H</div>
-                        <div class="avis-card-meta">
-                            <div class="avis-card-name">Hugo M.</div>
-                            <div class="avis-card-date">15 janvier 2025</div>
-                        </div>
-                        <div class="avis-card-stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                    <p class="avis-card-text">Formation complète et moniteurs très professionnels. J'ai eu mon permis du premier coup !</p>
-                </div>
-
-                <div class="avis-card">
-                    <div class="avis-card-header">
-                        <div class="avis-card-avatar">Y</div>
-                        <div class="avis-card-meta">
-                            <div class="avis-card-name">Yasmine L.</div>
-                            <div class="avis-card-date">3 janvier 2025</div>
-                        </div>
-                        <div class="avis-card-stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                    <p class="avis-card-text">Auto-école moderne avec une équipe dynamique. Les tarifs sont transparents et compétitifs.</p>
-                </div>
-
-                <div class="avis-card">
-                    <div class="avis-card-header">
-                        <div class="avis-card-avatar">B</div>
-                        <div class="avis-card-meta">
-                            <div class="avis-card-name">Baptiste C.</div>
-                            <div class="avis-card-date">20 décembre 2024</div>
-                        </div>
-                        <div class="avis-card-stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                    <p class="avis-card-text">Je recommande cette auto-école ! Moniteurs patients et pédagogues, ambiance conviviale.</p>
-                </div>
-
-                <div class="avis-card">
-                    <div class="avis-card-header">
-                        <div class="avis-card-avatar">G</div>
-                        <div class="avis-card-meta">
-                            <div class="avis-card-name">Gabrielle N.</div>
-                            <div class="avis-card-date">5 décembre 2024</div>
-                        </div>
-                        <div class="avis-card-stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </div>
-                    </div>
-                    <p class="avis-card-text">Bonne formation avec des moniteurs compétents. L'application de réservation est très pratique.</p>
-                </div>
-
-                <div class="avis-card">
-                    <div class="avis-card-header">
-                        <div class="avis-card-avatar">Q</div>
-                        <div class="avis-card-meta">
-                            <div class="avis-card-name">Quentin A.</div>
-                            <div class="avis-card-date">22 novembre 2024</div>
-                        </div>
-                        <div class="avis-card-stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                    <p class="avis-card-text">Excellent accompagnement du début à la fin. Permis obtenu rapidement grâce à leur expertise !</p>
-                </div>
-
-                <div class="avis-card">
-                    <div class="avis-card-header">
-                        <div class="avis-card-avatar">W</div>
-                        <div class="avis-card-meta">
-                            <div class="avis-card-name">Wendy J.</div>
-                            <div class="avis-card-date">8 novembre 2024</div>
-                        </div>
-                        <div class="avis-card-stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                    <p class="avis-card-text">Super auto-école ! Les moniteurs sont à l'écoute et très professionnels. Je recommande vivement.</p>
+                <div class="review-card google-review-summary">
+                    <p class="review-text">Chargement des avis Google...</p>
                 </div>
             </div>
-
-            <div class="avis-pagination">
-                <div id="avisPagination" aria-label="Pagination des avis"></div>
-            </div>
-
-            <div class="avis-cta">
-                <h2>Prêt à nous rejoindre ?</h2>
-                <p>Rejoins nos élèves satisfaits et passe ton permis avec nous</p>
-                <a href="inscription.html" class="btn-white">S'inscrire maintenant</a>
-            </div>
+            <div class="avis-more-wrap" id="avisMoreWrap" hidden></div>
         </div>
     </main>
 
@@ -876,9 +618,9 @@
                 <div class="footer-col">
                     <h4>Formations</h4>
                     <ul>
-                        <li><a href="permis-b.html">Permis B</a></li>
+                        <li><a href="tarifs.html#permis-b">Permis B</a></li>
                         <li><a href="qui-sommes-nous.html">Qui sommes-nous</a></li>
-                        <li><a href="conduite-accompagnee.html">Conduite accompagnée</a></li>
+                        <li><a href="tarifs.html#conduite-accompagnee">Conduite accompagnée</a></li>
                     </ul>
                 </div>
 
@@ -892,7 +634,7 @@
 
                 <div class="footer-col">
                     <h4>Notre localisation</h4>
-                    <p style="margin-bottom: 1rem;">1 Rue Édouard Delanglade<br>13006 Marseille</p>
+                    <p style="margin-bottom: 1rem;">1A Rue Édouard Delanglade, 13006 Marseille</p>
                     <h4 style="margin-top: 1.5rem;">Contact</h4>
                     <ul>
                         <li><i class="fas fa-phone"></i> 04 91 53 36 98</li>
@@ -912,72 +654,10 @@
         </div>
     </footer>
 
-    <script src="assets/js/main.js"></script>
-    <script src="assets/js/april-notice.js"></script>
-    <script>
-        // Pagination des avis
-        const avisCards = document.querySelectorAll('.avis-card');
-        const paginationRoot = document.getElementById('avisPagination');
-        const itemsPerPage = 9;
-        let currentPage = 1;
-
-        function getTotalPages() {
-            return Math.max(1, Math.ceil(avisCards.length / itemsPerPage));
-        }
-
-        function clampPage(page) {
-            const totalPages = getTotalPages();
-            if (!Number.isFinite(page)) return 1;
-            return Math.min(Math.max(1, page), totalPages);
-        }
-
-        function renderPagination() {
-            if (!paginationRoot) return;
-
-            const totalPages = getTotalPages();
-            if (totalPages <= 1) {
-                paginationRoot.innerHTML = '';
-                return;
-            }
-
-            const buttons = [];
-            for (let i = 1; i <= totalPages; i += 1) {
-                buttons.push(`<button type="button" data-page="${i}" class="${i === currentPage ? 'active' : ''}">${i}</button>`);
-            }
-
-            paginationRoot.innerHTML = buttons.join('');
-
-            paginationRoot.querySelectorAll('button[data-page]').forEach((button) => {
-                button.addEventListener('click', () => {
-                    const page = clampPage(parseInt(button.dataset.page, 10));
-                    currentPage = page;
-                    showPage(page);
-                });
-            });
-        }
-
-        function showPage(page) {
-            const safePage = clampPage(page);
-            const start = (safePage - 1) * itemsPerPage;
-            const end = start + itemsPerPage;
-
-            avisCards.forEach((card, index) => {
-                if (index >= start && index < end) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-
-            currentPage = safePage;
-            renderPagination();
-
-            // Scroll to top of reviews
-            document.querySelector('.avis-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-
-        // Show first page on load
-        showPage(1);
-    </script>
+        <script src="assets/js/main.js"></script>
+    <script src="assets/js/april-notice.js?v=2"></script>
+    <script src="assets/js/reviews.js?v=9"></script>
+    <script src="assets/js/site-footer.js"></script>
+    <script src="assets/js/text-encoding-fix.js?v=2"></script>
 </body>
 </html>

@@ -1,6 +1,54 @@
-﻿node_modules/
-.env
-.DS_Store
-
 # Local Netlify folder
 .netlify
+.env
+.env.*
+!.env.example
+
+# Local Google API credentials
+api/.env
+
+# Dependencies and local runtime output
+node_modules/
+api/node_modules/
+.codex_work/
+*.log
+
+# Local diagnostic pages and one-off database helpers
+/auto-*.html
+/check-*.html
+/debug-*.html
+/fix-*.html
+/generate-*.html
+/migrate-*.html
+/setup-*.html
+/sync-*.html
+/test-*.html
+/verify-*.html
+/add-missing-payment.html
+/check-*.sql
+/clean-*.sql
+/drop-*.sql
+/find-*.sql
+/fix-*.sql
+/migrate-*.sql
+/recreate-*.sql
+/test-*.sql
+/verify-*.sql
+/add-instructor-schedule-columns.sql
+/create-instructors-table.sql
+/instructors-rls-policies.sql
+/final-test3-check.sql
+/auto ecole ok
+/TEST-COMPLET-*.md
+/clean-incomplete-inscriptions.html
+/force-refresh-hours.html
+/debug-load-instructors.sql
+/admin-instructors.html
+/admin-planning-v2.html
+/connexion-moniteur.html
+/connexion-moniteur-simple.html
+/instructor-dashboard.html
+/instructor-login.html
+/assets/js/admin-planning-new.js
+/assets/js/admin-planning-v2.js
+/assets/js/migrate-sammy-to-nail.js

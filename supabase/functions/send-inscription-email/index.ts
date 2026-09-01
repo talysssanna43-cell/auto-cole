@@ -57,7 +57,7 @@ serve(async (req) => {
           </div>
           <div class="footer">
             <p>Auto-École Breteuil<br>
-            1 Rue Édouard Delanglade, 13006 Marseille<br>
+            1A Rue Édouard Delanglade, 13006 Marseille<br>
             📞 04 91 53 36 98 | ✉️ a.e.breteuil@gmail.com</p>
           </div>
         </div>
@@ -97,7 +97,7 @@ serve(async (req) => {
           </div>
           <div class="footer">
             <p>Auto-École Breteuil<br>
-            1 Rue Édouard Delanglade, 13006 Marseille<br>
+            1A Rue Édouard Delanglade, 13006 Marseille<br>
             📞 04 91 53 36 98 | ✉️ a.e.breteuil@gmail.com</p>
           </div>
         </div>

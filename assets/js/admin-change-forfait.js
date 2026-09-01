@@ -1,41 +1,89 @@
-// ===== CHANGEMENT DE FORFAIT ÉLÈVE =====
+// ===== CHANGEMENT DE FORFAIT ELEVE =====
 
-// Prix des packs
-const packPrices = {
-    code: 20,
-    am: 350,
-    'boite-auto': 859,
-    '20h': 900,
-    zen: 995,
-    accelere: 999,
-    aac: 1190,
-    supervisee: 1190,
-    'second-chance': 569
-};
+const changeForfaitCatalog = Object.freeze({
+    'tarif-chill-5': { label: 'Chill boite manuelle', price: 249, courses: 5, transmission: 'manual', group: 'Permis Chill' },
+    'tarif-chill-10': { label: 'Chill boite manuelle', price: 499, courses: 10, transmission: 'manual', group: 'Permis Chill' },
+    'tarif-chill-20': { label: 'Chill boite manuelle', price: 649, courses: 20, transmission: 'manual', group: 'Permis Chill' },
+    'tarif-chill-30': { label: 'Chill boite manuelle', price: 1149, courses: 30, transmission: 'manual', group: 'Permis Chill' },
+    'tarif-premium-5': { label: 'Premium boite manuelle', price: 395, courses: 5, transmission: 'manual', group: 'Permis Premium' },
+    'tarif-premium-10': { label: 'Premium boite manuelle', price: 599, courses: 10, transmission: 'manual', group: 'Permis Premium' },
+    'tarif-premium-20': { label: 'Premium boite manuelle', price: 749, courses: 20, transmission: 'manual', group: 'Permis Premium' },
+    'tarif-premium-30': { label: 'Premium boite manuelle', price: 1249, courses: 30, transmission: 'manual', group: 'Permis Premium' },
+    'tarif-accelere-5': { label: 'Accelere boite manuelle', price: 499, courses: 5, transmission: 'manual', group: 'Permis Accelere' },
+    'tarif-accelere-10': { label: 'Accelere boite manuelle', price: 749, courses: 10, transmission: 'manual', group: 'Permis Accelere' },
+    'tarif-accelere-20': { label: 'Accelere boite manuelle', price: 899, courses: 20, transmission: 'manual', group: 'Permis Accelere' },
+    'tarif-accelere-30': { label: 'Accelere boite manuelle', price: 1399, courses: 30, transmission: 'manual', group: 'Permis Accelere' },
+    'tarif-chill-auto-5': { label: 'Chill boite automatique', price: 269, courses: 5, transmission: 'auto', group: 'Chill BA' },
+    'tarif-chill-auto-13': { label: 'Chill boite automatique', price: 499, courses: 13, transmission: 'auto', group: 'Chill BA' },
+    'tarif-premium-auto-5': { label: 'Premium boite automatique', price: 379, courses: 5, transmission: 'auto', group: 'Premium BA' },
+    'tarif-premium-auto-13': { label: 'Premium boite automatique', price: 599, courses: 13, transmission: 'auto', group: 'Premium BA' },
+    'tarif-accelere-auto-5': { label: 'Accelere boite automatique', price: 499, courses: 5, transmission: 'auto', group: 'Accelere BA' },
+    'tarif-accelere-auto-13': { label: 'Accelere boite automatique', price: 749, courses: 13, transmission: 'auto', group: 'Accelere BA' },
+    'tarif-aac-20': { label: 'Conduite accompagnee', price: 889, courses: 20, transmission: 'manual', group: 'AAC' },
+    'tarif-supervisee-20': { label: 'Conduite supervisee', price: 889, courses: 20, transmission: 'manual', group: 'Supervisee' },
+    'tarif-aac-auto-13': { label: 'AAC boite automatique', price: 639, courses: 13, transmission: 'auto', group: 'AAC BA' },
+    'tarif-supervisee-auto-13': { label: 'Supervisee boite automatique', price: 639, courses: 13, transmission: 'auto', group: 'Supervisee BA' },
+    code: { label: 'Code classique', price: 20, courses: 0, transmission: 'none', group: 'Code' },
+    'code-etudiant': { label: 'Code etudiant', price: 15, courses: 0, transmission: 'none', group: 'Code' },
+    am: { label: 'Voiture sans permis AM', price: 350, courses: 8, transmission: 'auto', group: 'AM' },
+    'second-chance': { label: 'Forfait Second Chance', price: 569, courses: 6, transmission: 'manual', group: 'Second Chance' },
+    'boite-auto': { label: 'Chill boite automatique', price: 499, courses: 13, transmission: 'auto', group: 'Ancien alias' },
+    '20h': { label: 'Chill boite manuelle', price: 649, courses: 20, transmission: 'manual', group: 'Ancien alias' },
+    chill: { label: 'Chill boite manuelle', price: 649, courses: 20, transmission: 'manual', group: 'Ancien alias' },
+    zen: { label: 'Chill boite manuelle', price: 649, courses: 20, transmission: 'manual', group: 'Ancien alias' },
+    accelere: { label: 'Accelere boite manuelle', price: 899, courses: 20, transmission: 'manual', group: 'Ancien alias' },
+    aac: { label: 'Conduite accompagnee', price: 889, courses: 20, transmission: 'manual', group: 'Ancien alias' },
+    supervisee: { label: 'Conduite supervisee', price: 889, courses: 20, transmission: 'manual', group: 'Ancien alias' }
+});
 
-// Heures incluses dans chaque pack
-const packHours = {
-    code: 0,
-    am: 8,
-    'boite-auto': 13,
-    '20h': 20,
-    zen: 20,
-    accelere: 20,
-    aac: 20,
-    supervisee: 20,
-    'second-chance': 6
-};
+function changeForfaitEuro(value) {
+    return `${Number(value || 0).toLocaleString('fr-FR')} EUR`;
+}
 
-// Type de transmission par pack
-const packTransmission = {
-    'boite-auto': 'auto',
-    '20h': 'manual',
-    'am': 'auto',
-    // Les autres packs permettent de choisir
-};
+function selectedChangeForfaitPack() {
+    const selected = document.querySelector('.change-pack-card.selected');
+    return selected ? selected.dataset.pack : null;
+}
 
-window.openChangeForfaitModal = function(email, prenom, nom, currentForfait, heuresEffectuees) {
-    // Créer la modal
+function renderChangeForfaitSummary(doneCourses) {
+    const packId = selectedChangeForfaitPack();
+    const currentPackId = document.getElementById('changeForfaitCurrentPack')?.value || '';
+    const summary = document.getElementById('changeForfaitSummary');
+    const confirmBtn = document.getElementById('confirmChangeForfait');
+    if (!summary || !confirmBtn) return;
+
+    const nextPack = changeForfaitCatalog[packId];
+    const currentPack = changeForfaitCatalog[currentPackId] || { price: 0, courses: 0, label: currentPackId || 'Forfait actuel' };
+    if (!nextPack) {
+        summary.innerHTML = '';
+        confirmBtn.disabled = true;
+        return;
+    }
+
+    const alreadyDone = Math.max(0, Number(doneCourses || 0));
+    const remainingAfter = Math.max(0, nextPack.courses - alreadyDone);
+    const amountDue = Math.max(0, nextPack.price - Number(currentPack.price || 0));
+    const sameOrLower = nextPack.price <= Number(currentPack.price || 0);
+
+    summary.innerHTML = `
+        <div class="change-forfait-summary">
+            <div><span>Forfait actuel</span><strong>${currentPack.label}</strong></div>
+            <div><span>Nouveau forfait</span><strong>${nextPack.label} - ${nextPack.courses} cours</strong></div>
+            <div><span>Cours deja realises</span><strong>${alreadyDone}</strong></div>
+            <div><span>Cours restants apres changement</span><strong>${remainingAfter}</strong></div>
+            <div class="${amountDue > 0 ? 'due' : 'free'}">
+                <span>${amountDue > 0 ? 'Difference a regler' : 'Complement a regler'}</span>
+                <strong>${changeForfaitEuro(amountDue)}</strong>
+            </div>
+        </div>
+        <p class="change-forfait-note">
+            Les cours deja realises restent deduits du nouveau pack. ${sameOrLower ? "Aucun remboursement automatique n'est applique." : "Confirme seulement une fois la difference reglee."}
+        </p>
+    `;
+    confirmBtn.disabled = false;
+}
+
+window.openChangeForfaitModal = function(email, prenom, nom, currentForfait, coursEffectues) {
     let modal = document.getElementById('changeForfaitModal');
     if (!modal) {
         modal = document.createElement('div');
@@ -43,9 +91,23 @@ window.openChangeForfaitModal = function(email, prenom, nom, currentForfait, heu
         modal.className = 'student-details-modal';
         document.body.appendChild(modal);
     }
-    
+
+    const doneCourses = Math.max(0, Number(coursEffectues || 0));
+    const currentPack = changeForfaitCatalog[currentForfait] || { label: currentForfait || 'Non defini', price: 0 };
+    const safeEmail = String(email || '').replace(/'/g, '&#39;');
+    const cards = Object.entries(changeForfaitCatalog)
+        .filter(([id]) => id.startsWith('tarif-') || ['code', 'code-etudiant', 'am', 'second-chance'].includes(id))
+        .map(([id, pack]) => `
+            <button type="button" class="change-pack-card" data-pack="${id}">
+                <span>${pack.group}</span>
+                <strong>${pack.label}</strong>
+                <small>${pack.courses} cours</small>
+                <b>${changeForfaitEuro(pack.price)}</b>
+            </button>
+        `).join('');
+
     modal.innerHTML = `
-        <div class="student-details-content" style="max-width: 800px;">
+        <div class="student-details-content change-forfait-content">
             <div class="student-details-header">
                 <h2><i class="fas fa-exchange-alt"></i> Changer de forfait</h2>
                 <button class="close-btn" onclick="closeChangeForfaitModal()">
@@ -53,276 +115,237 @@ window.openChangeForfaitModal = function(email, prenom, nom, currentForfait, heu
                 </button>
             </div>
             <div class="student-details-body">
-                <div class="info-section">
-                    <h3><i class="fas fa-user"></i> Élève</h3>
-                    <p style="font-size: 1.1rem; font-weight: 600;">${prenom} ${nom}</p>
-                    <p style="color: #666; margin-top: 0.5rem;">
-                        <strong>Forfait actuel :</strong> ${currentForfait || 'Non défini'}<br>
-                        <strong>Heures effectuées :</strong> <span style="color: #28a745; font-weight: 700;">${heuresEffectuees}h</span>
-                    </p>
-                </div>
-                
-                <div class="info-section">
-                    <h3><i class="fas fa-box"></i> Nouveau forfait</h3>
-                    <p style="color: #666; margin-bottom: 1rem;">
-                        <strong>${heuresEffectuees}h</strong> ont déjà été effectuées par cet élève.
-                    </p>
-                    
-                    <div id="packSelection" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
-                        ${generatePackCards(heuresEffectuees)}
+                <input type="hidden" id="changeForfaitCurrentPack" value="${String(currentForfait || '').replace(/"/g, '&quot;')}">
+                <div class="change-forfait-student">
+                    <div>
+                        <span>Eleve</span>
+                        <strong>${prenom || ''} ${nom || ''}</strong>
+                        <small>${email}</small>
+                    </div>
+                    <div>
+                        <span>Forfait actuel</span>
+                        <strong>${currentPack.label}</strong>
+                        <small>${changeForfaitEuro(currentPack.price)}</small>
+                    </div>
+                    <div>
+                        <span>Deja realise</span>
+                        <strong>${doneCourses} cours</strong>
+                        <small>conserve dans le nouveau calcul</small>
                     </div>
                 </div>
-                
-                <div id="heuresSection" style="display: none; margin-top: 1.5rem;">
-                    <div class="info-section">
-                        <h3><i class="fas fa-clock"></i> Heures de conduite disponibles</h3>
-                        <p style="color: #666; margin-bottom: 1rem;">
-                            Combien d'heures de conduite seront disponibles sur ce nouveau forfait ?
-                        </p>
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <input type="number" id="heuresDisponibles" min="0" max="100" 
-                                style="flex: 1; padding: 0.75rem; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem; font-weight: 600;"
-                                placeholder="Ex: 20">
-                            <span style="font-size: 1.2rem; font-weight: 600; color: #667eea;">heures</span>
-                        </div>
-                        <p id="heuresInfo" style="margin-top: 0.75rem; padding: 0.75rem; background: #f0f4ff; border-left: 4px solid #667eea; border-radius: 4px; font-size: 0.9rem;">
-                            <i class="fas fa-info-circle"></i> Ces heures seront disponibles sur le compte de l'élève.
-                        </p>
-                    </div>
-                </div>
-                
-                <div id="transmissionSection" style="display: none; margin-top: 1.5rem;">
-                    <div class="info-section">
-                        <h3><i class="fas fa-car"></i> Type de transmission</h3>
-                        <div style="display: flex; gap: 1rem;">
-                            <label style="flex: 1; cursor: pointer;">
-                                <input type="radio" name="newTransmission" value="manual" checked>
-                                <span style="margin-left: 0.5rem; font-weight: 600;">Boîte manuelle (BM)</span>
-                            </label>
-                            <label style="flex: 1; cursor: pointer;">
-                                <input type="radio" name="newTransmission" value="auto">
-                                <span style="margin-left: 0.5rem; font-weight: 600;">Boîte automatique (BA)</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                
-                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-                    <button onclick="closeChangeForfaitModal()" 
-                        style="flex: 1; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; background: white; font-weight: 600; cursor: pointer;">
-                        Annuler
-                    </button>
-                    <button id="confirmChangeForfait" onclick="confirmChangeForfait('${email}', '${prenom}', '${nom}', ${heuresEffectuees})" 
-                        style="flex: 1; padding: 0.75rem; border: none; border-radius: 8px; background: #28a745; color: white; font-weight: 600; cursor: pointer;" disabled>
-                        <i class="fas fa-check"></i> Confirmer le changement
+
+                <h3 class="change-forfait-title">Choisir le nouveau pack</h3>
+                <div class="change-pack-grid">${cards}</div>
+                <div id="changeForfaitSummary"></div>
+
+                <div class="change-forfait-actions">
+                    <button type="button" class="btn-secondary" onclick="closeChangeForfaitModal()">Annuler</button>
+                    <button type="button" id="confirmChangeForfait" class="btn-primary" onclick="confirmChangeForfait('${safeEmail}', ${doneCourses})" disabled>
+                        <i class="fas fa-check"></i> Confirmer apres reglement
                     </button>
                 </div>
             </div>
         </div>
     `;
-    
+
     modal.style.display = 'flex';
-    
-    // Ajouter les event listeners pour la sélection de pack
-    document.querySelectorAll('.pack-card').forEach(card => {
-        card.addEventListener('click', function() {
-            document.querySelectorAll('.pack-card').forEach(c => c.classList.remove('selected'));
-            this.classList.add('selected');
-            
-            const packId = this.dataset.pack;
-            
-            // Afficher la section heures
-            const heuresSection = document.getElementById('heuresSection');
-            heuresSection.style.display = 'block';
-            
-            // Afficher la section transmission si nécessaire
-            const transmissionSection = document.getElementById('transmissionSection');
-            if (['aac', 'supervisee', 'accelere', 'second-chance', 'zen'].includes(packId)) {
-                transmissionSection.style.display = 'block';
-            } else {
-                transmissionSection.style.display = 'none';
-            }
-            
-            // Désactiver le bouton jusqu'à ce que les heures soient saisies
-            const confirmBtn = document.getElementById('confirmChangeForfait');
-            confirmBtn.disabled = true;
+    document.querySelectorAll('.change-pack-card').forEach((card) => {
+        card.addEventListener('click', () => {
+            document.querySelectorAll('.change-pack-card').forEach((item) => item.classList.remove('selected'));
+            card.classList.add('selected');
+            renderChangeForfaitSummary(doneCourses);
         });
     });
-    
-    // Ajouter event listener pour le champ heures
-    const heuresInput = document.getElementById('heuresDisponibles');
-    if (heuresInput) {
-        heuresInput.addEventListener('input', function() {
-            const confirmBtn = document.getElementById('confirmChangeForfait');
-            const heuresValue = parseInt(this.value);
-            
-            if (heuresValue > 0) {
-                confirmBtn.disabled = false;
-            } else {
-                confirmBtn.disabled = true;
-            }
-        });
-    }
 };
-
-function generatePackCards(heuresEffectuees) {
-    const packs = [
-        { id: 'code', name: 'Code', icon: 'book' },
-        { id: 'am', name: 'AM (VSP)', icon: 'motorcycle' },
-        { id: 'boite-auto', name: 'Boîte Auto', icon: 'car' },
-        { id: '20h', name: '20h Conduite', icon: 'road' },
-        { id: 'zen', name: 'Zen', icon: 'smile' },
-        { id: 'accelere', name: 'Accéléré', icon: 'bolt' },
-        { id: 'aac', name: 'AAC', icon: 'users' },
-        { id: 'supervisee', name: 'Supervisée', icon: 'user-graduate' },
-        { id: 'second-chance', name: 'Second Chance', icon: 'redo' }
-    ];
-    
-    return packs.map(pack => {
-        const prix = packPrices[pack.id];
-        
-        return `
-            <div class="pack-card" data-pack="${pack.id}" style="border: 2px solid #ddd; border-radius: 12px; padding: 1rem; cursor: pointer; transition: all 0.2s; text-align: center;">
-                <i class="fas fa-${pack.icon}" style="font-size: 2rem; color: #667eea; margin-bottom: 0.5rem;"></i>
-                <h4 style="margin: 0.5rem 0; font-size: 1rem;">${pack.name}</h4>
-                <p style="font-weight: 700; color: #667eea; margin: 0.5rem 0; font-size: 1.1rem;">${prix}€</p>
-            </div>
-        `;
-    }).join('');
-}
 
 window.closeChangeForfaitModal = function() {
     const modal = document.getElementById('changeForfaitModal');
-    if (modal) {
-        modal.style.display = 'none';
-    }
+    if (modal) modal.style.display = 'none';
 };
 
-window.confirmChangeForfait = async function(email, prenom, nom, heuresEffectuees) {
-    const selectedCard = document.querySelector('.pack-card.selected');
-    if (!selectedCard) {
-        alert('Veuillez sélectionner un forfait');
+window.confirmChangeForfait = async function(email, coursEffectues) {
+    const newPack = selectedChangeForfaitPack();
+    if (!newPack) {
+        alert('Selectionne un nouveau forfait.');
         return;
     }
-    
-    const newPack = selectedCard.dataset.pack;
-    
-    // Récupérer les heures saisies par l'admin
-    const heuresInput = document.getElementById('heuresDisponibles');
-    const heuresDisponibles = parseInt(heuresInput.value);
-    
-    if (!heuresDisponibles || heuresDisponibles <= 0) {
-        alert('Veuillez saisir le nombre d\'heures disponibles');
-        return;
-    }
-    
-    // Déterminer le type de transmission
-    let transmission = packTransmission[newPack];
-    if (!transmission) {
-        const transmissionRadio = document.querySelector('input[name="newTransmission"]:checked');
-        transmission = transmissionRadio ? transmissionRadio.value : 'manual';
-    }
-    
+
     const confirmBtn = document.getElementById('confirmChangeForfait');
     confirmBtn.disabled = true;
-    confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Changement en cours...';
-    
+    confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enregistrement...';
+
     try {
-        // Mettre à jour le forfait dans la base de données
-        // D'abord essayer avec transmission_type
-        let updateData = {
-            forfait: newPack,
-            transmission_type: transmission
-        };
-        
-        let { error: updateError } = await window.supabaseClient
-            .from('users')
-            .update(updateData)
-            .eq('email', email);
-        
-        // Si erreur car la colonne transmission_type n'existe pas, réessayer sans
-        if (updateError && updateError.code === 'PGRST204') {
-            console.warn('⚠️ Colonne transmission_type non trouvée, mise à jour sans cette colonne');
-            updateData = {
-                forfait: newPack
-            };
-            
-            const retry = await window.supabaseClient
-                .from('users')
-                .update(updateData)
-                .eq('email', email);
-            
-            updateError = retry.error;
-        }
-        
-        if (updateError) {
-            console.error('Erreur update users:', updateError);
-            throw updateError;
-        }
-        
-        // Créer une nouvelle entrée dans inscription_notifications pour enregistrer le changement
-        const { error: notifError } = await window.supabaseClient
-            .from('inscription_notifications')
-            .insert({
-                user_email: email,
-                user_name: `${prenom} ${nom}`,
-                pack: newPack,
-                hours_purchased: heuresDisponibles,
-                amount_paid: packPrices[newPack] || 0,
-                transmission_type: transmission,
-                status: 'approved',
-                created_at: new Date().toISOString()
-            });
-        
-        if (notifError) {
-            console.error('Erreur création notification:', notifError);
-            // Ne pas bloquer si l'insertion échoue
-        }
-        
-        console.log(`✅ Forfait changé pour ${prenom} ${nom}: ${newPack} (${transmission}) - ${heuresDisponibles}h disponibles`);
-        
-        // Fermer la modal
+        const token = window.authSession?.getToken?.();
+        if (!token) throw new Error('AUTH_REQUIRED');
+
+        const response = await fetch('/.netlify/functions/admin-change-forfait', {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email,
+                new_pack: newPack,
+                completed_courses: Number(coursEffectues || 0)
+            }),
+            cache: 'no-store'
+        });
+        const payload = await response.json().catch(() => ({ ok: false, error: 'INVALID_SERVER_RESPONSE' }));
+        if (!response.ok || !payload.ok) throw new Error(payload.error || 'CHANGE_FORFAIT_FAILED');
+
+        const info = payload.change || {};
+        alert(
+            `Forfait change avec succes.\n\n` +
+            `Difference facturee : ${changeForfaitEuro(info.amount_due || 0)}\n` +
+            `Cours restants : ${info.remaining_courses_after_change ?? 0}`
+        );
+
         closeChangeForfaitModal();
-        
-        // Rafraîchir les détails de l'élève
-        const { data: updatedStudent } = await window.supabaseClient
-            .from('users')
-            .select('*')
-            .eq('email', email)
-            .single();
-        
-        if (updatedStudent) {
-            await displayStudentDetails(updatedStudent);
+        if (typeof window.displayStudentDetails === 'function' && payload.student) {
+            await window.displayStudentDetails(payload.student);
         }
-        
-        // Rafraîchir le planning si la fonction existe
-        if (typeof window.refresh === 'function') {
-            await window.refresh();
-        } else if (typeof refresh === 'function') {
-            await refresh();
-        }
-        
+        if (typeof window.refresh === 'function') await window.refresh();
     } catch (error) {
         console.error('Erreur changement forfait:', error);
-        alert('Erreur lors du changement de forfait: ' + error.message);
+        alert("Impossible de changer le forfait : " + error.message);
         confirmBtn.disabled = false;
-        confirmBtn.innerHTML = '<i class="fas fa-check"></i> Confirmer le changement';
+        confirmBtn.innerHTML = '<i class="fas fa-check"></i> Confirmer apres reglement';
     }
 };
 
-// Styles CSS pour les cartes de pack
-const style = document.createElement('style');
-style.textContent = `
-    .pack-card:hover {
-        border-color: #667eea !important;
-        transform: translateY(-4px);
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+const changeForfaitStyle = document.createElement('style');
+changeForfaitStyle.textContent = `
+    .change-forfait-content { max-width: 980px; }
+    .change-forfait-student,
+    .change-forfait-summary {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+        gap: 0.8rem;
+        margin-bottom: 1.2rem;
     }
-    
-    .pack-card.selected {
-        border-color: #667eea !important;
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-        box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+    .change-forfait-student > div,
+    .change-forfait-summary > div {
+        background: #f7f9fc;
+        border: 1px solid #e8edf5;
+        border-radius: 12px;
+        padding: 0.9rem;
+    }
+    .change-forfait-student span,
+    .change-forfait-summary span {
+        display: block;
+        color: #6b7280;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-bottom: 0.35rem;
+    }
+    .change-forfait-student strong,
+    .change-forfait-summary strong {
+        display: block;
+        color: #111827;
+        font-size: 1.05rem;
+    }
+    .change-forfait-student small {
+        display: block;
+        color: #6b7280;
+        margin-top: 0.25rem;
+    }
+    .change-forfait-title {
+        color: #111827;
+        margin: 1.2rem 0 0.9rem;
+    }
+    .change-pack-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 0.85rem;
+        max-height: 340px;
+        overflow: auto;
+        padding: 0.2rem;
+    }
+    .change-pack-card {
+        text-align: left;
+        border: 2px solid #e5e7eb;
+        background: #fff;
+        border-radius: 14px;
+        padding: 0.95rem;
+        cursor: pointer;
+        transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .change-pack-card:hover,
+    .change-pack-card.selected {
+        border-color: #ff5bb8;
+        box-shadow: 0 10px 24px rgba(255, 91, 184, 0.16);
+        transform: translateY(-2px);
+    }
+    .change-pack-card span {
+        color: #ff5bb8;
+        display: block;
+        font-size: 0.78rem;
+        font-weight: 800;
+        text-transform: uppercase;
+    }
+    .change-pack-card strong {
+        display: block;
+        color: #111827;
+        margin: 0.35rem 0;
+    }
+    .change-pack-card small {
+        color: #6b7280;
+        display: block;
+    }
+    .change-pack-card b {
+        color: #12b76a;
+        display: block;
+        font-size: 1.2rem;
+        margin-top: 0.5rem;
+    }
+    .change-forfait-summary {
+        margin-top: 1.2rem;
+    }
+    .change-forfait-summary .due {
+        background: #fff7ed;
+        border-color: #fdba74;
+    }
+    .change-forfait-summary .due strong { color: #ea580c; }
+    .change-forfait-summary .free {
+        background: #ecfdf3;
+        border-color: #86efac;
+    }
+    .change-forfait-summary .free strong { color: #16a34a; }
+    .change-forfait-note {
+        background: #eff6ff;
+        border-left: 4px solid #0071e3;
+        border-radius: 10px;
+        color: #1f3b67;
+        padding: 0.8rem 1rem;
+        margin: 0.8rem 0 0;
+        font-weight: 600;
+    }
+    .change-forfait-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.6rem;
+    }
+    .change-forfait-actions button {
+        flex: 1;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 800;
+        padding: 0.9rem 1rem;
+    }
+    .change-forfait-actions .btn-secondary {
+        background: #f3f4f6;
+        color: #374151;
+    }
+    .change-forfait-actions .btn-primary {
+        background: #12b76a;
+        color: white;
+    }
+    .change-forfait-actions .btn-primary:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
     }
 `;
-document.head.appendChild(style);
+document.head.appendChild(changeForfaitStyle);

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des Candidatures - Admin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/admin-mobile.css">
+    <link rel="stylesheet" href="assets/css/admin-mobile.css?v=3">
     <style>
         * {
             margin: 0;
@@ -353,16 +353,18 @@
                 <a href="admin-planning.html">Planning</a>
                 <a href="admin-candidatures.html" class="active">Candidatures <span class="notif-badge" id="candidaturesBadge" style="display: none;">0</span></a>
                 <a href="admin-analytics.html">Analytics</a>
+                <a href="admin-comptabilite.html">Comptabilit&eacute;</a>
+                <a href="admin-moniteurs.html">Moniteurs</a>
                 <a href="admin-support.html">Support <span class="notif-badge" id="supportBadge" style="display: none;">0</span></a>
                 <a href="admin-contact.html">Contact <span class="notif-badge" id="contactBadge" style="display: none;">0</span></a>
                 <a href="admin-code-rousseau.html">Code Rousseau <span class="notif-badge" id="codeRousseuBadge" style="display: none;">0</span></a>
+                <a href="admin-reviews.html">Avis <span class="notif-badge" id="reviewsBadge" style="display: none;">0</span></a>
             </div>
             <div class="topbar-right">
                 <a href="inscription.html?admin=true" class="btn-inscription">
                     <i class="fas fa-user-plus"></i> Nouvelle inscription
                 </a>
-                <a href="index.html" style="color: #86868b; text-decoration: none; font-size: 14px;"><i class="fas fa-arrow-left"></i> Retour au site</a>
-                <button class="btn-logout" id="logoutBtn" style="background: none; border: none; color: #86868b; cursor: pointer; font-size: 14px;"><i class="fas fa-right-from-bracket"></i> Quitter</button>
+                <button class="btn-logout" id="logoutBtn" type="button"><i class="fas fa-right-from-bracket"></i> Quitter</button>
             </div>
         </div>
     </nav>
@@ -389,7 +391,22 @@
 
     <script src="https://unpkg.com/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
     <script src="assets/js/supabaseClient.js"></script>
+    <script src="assets/js/page-auth-guard.js" data-roles="admin"></script>
     <script>
+        let loadedCandidatures = [];
+
+        function escapeHtml(value) {
+            return String(value || '').replace(/[&<>"']/g, (character) => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            })[character]);
+        }
+
+        function isSafeCandidateDocument(value) {
+            const data = String(value || '');
+            return /^data:(application\/(pdf|msword|vnd\.openxmlformats-officedocument\.wordprocessingml\.document|rtf)|text\/rtf|image\/(png|jpe?g|webp));base64,/i.test(data)
+                && data.length <= 2100000;
+        }
+
         async function loadCandidatures() {
             try {
                 console.log('Chargement des candidatures...');
@@ -419,12 +436,13 @@
                 console.log('Première candidature:', candidatures?.[0]);
 
                 // Update stats
-                document.getElementById('totalCandidatures').textContent = candidatures.length;
+                loadedCandidatures = Array.isArray(candidatures) ? candidatures : [];
+                document.getElementById('totalCandidatures').textContent = loadedCandidatures.length;
 
                 // Display candidatures
                 const container = document.getElementById('candidaturesList');
                 
-                if (candidatures.length === 0) {
+                if (loadedCandidatures.length === 0) {
                     container.innerHTML = `
                         <div class="empty-state">
                             <i class="fas fa-inbox"></i>
@@ -434,7 +452,7 @@
                     return;
                 }
 
-                container.innerHTML = candidatures.map(candidature => {
+                container.innerHTML = loadedCandidatures.map((candidature, index) => {
                     const date = new Date(candidature.created_at);
                     const dateStr = date.toLocaleDateString('fr-FR', {
                         day: '2-digit',
@@ -447,11 +465,11 @@
                     return `
                         <div class="candidature-card">
                             <div class="candidature-header">
-                                <button class="btn-delete" onclick="deleteCandidature('${candidature.email}', '${candidature.created_at}', '${candidature.prenom}', '${candidature.nom}')" title="Supprimer cette candidature">
+                                <button class="btn-delete" data-index="${index}" title="Supprimer cette candidature">
                                     <i class="fas fa-times"></i>
                                 </button>
                                 <div class="candidature-info">
-                                    <h3>${candidature.prenom} ${candidature.nom}</h3>
+                                    <h3>${escapeHtml(candidature.prenom)} ${escapeHtml(candidature.nom)}</h3>
                                     <p><i class="far fa-clock"></i> ${dateStr}</p>
                                 </div>
                             </div>
@@ -459,11 +477,11 @@
                             <div class="candidature-details">
                                 <div class="detail-item">
                                     <i class="fas fa-envelope"></i>
-                                    <span>${candidature.email}</span>
+                                    <span>${escapeHtml(candidature.email)}</span>
                                 </div>
                                 <div class="detail-item">
                                     <i class="fas fa-phone"></i>
-                                    <span>${candidature.telephone}</span>
+                                    <span>${escapeHtml(candidature.telephone)}</span>
                                 </div>
                                 <div class="detail-item">
                                     <i class="fas fa-calendar"></i>
@@ -474,20 +492,20 @@
                             ${candidature.message ? `
                                 <div class="candidature-message">
                                     <strong>MESSAGE</strong>
-                                    <p>${candidature.message}</p>
+                                    <p>${escapeHtml(candidature.message)}</p>
                                 </div>
                             ` : ''}
 
                             <div class="candidature-actions">
-                                ${candidature.cv_url && candidature.cv_url.includes('base64') ? `
-                                    <button class="btn btn-download" onclick="downloadFile(\`${candidature.cv_url}\`, 'CV_${candidature.nom}_${candidature.prenom}.pdf')">
+                                ${isSafeCandidateDocument(candidature.cv_url) ? `
+                                    <button class="btn btn-download" data-index="${index}" data-document="cv">
                                         <i class="fas fa-download"></i>
                                         Télécharger CV
                                     </button>
                                 ` : '<span style="color: #6c757d;">Pas de CV</span>'}
                                 
-                                ${candidature.lettre_url && candidature.lettre_url.includes('base64') ? `
-                                    <button class="btn btn-download" onclick="downloadFile(\`${candidature.lettre_url}\`, 'Lettre_${candidature.nom}_${candidature.prenom}.pdf')">
+                                ${isSafeCandidateDocument(candidature.lettre_url) ? `
+                                    <button class="btn btn-download" data-index="${index}" data-document="lettre">
                                         <i class="fas fa-download"></i>
                                         Télécharger Lettre
                                     </button>
@@ -497,6 +515,19 @@
                     `;
                 }).join('');
 
+                container.querySelectorAll('.btn-delete').forEach((button) => {
+                    button.addEventListener('click', () => deleteCandidatureByIndex(Number(button.dataset.index)));
+                });
+                container.querySelectorAll('.btn-download').forEach((button) => {
+                    button.addEventListener('click', () => {
+                        const candidature = loadedCandidatures[Number(button.dataset.index)];
+                        const isCv = button.dataset.document === 'cv';
+                        const documentData = isCv ? candidature?.cv_url : candidature?.lettre_url;
+                        if (!isSafeCandidateDocument(documentData)) return;
+                        downloadFile(documentData, isCv ? 'CV-candidature' : 'Lettre-de-motivation');
+                    });
+                });
+
             } catch (err) {
                 console.error('Erreur complète:', err);
                 console.error('Message:', err.message);
@@ -505,7 +536,7 @@
                     <div class="empty-state">
                         <i class="fas fa-exclamation-triangle"></i>
                         <p>Erreur lors du chargement</p>
-                        <p style="font-size: 0.9rem; margin-top: 1rem; color: #dc3545;">${err.message}</p>
+                        <p style="font-size: 0.9rem; margin-top: 1rem; color: #dc3545;">${escapeHtml(err.message)}</p>
                     </div>
                 `;
             }
@@ -513,6 +544,7 @@
 
         function downloadFile(base64Data, filename) {
             try {
+                if (!isSafeCandidateDocument(base64Data)) throw new Error('Fichier invalide');
                 // Create a link and trigger download
                 const link = document.createElement('a');
                 link.href = base64Data;
@@ -526,8 +558,19 @@
             }
         }
 
+        function deleteCandidatureByIndex(index) {
+            const candidature = loadedCandidatures[index];
+            if (!candidature) return;
+            return deleteCandidature(
+                candidature.email,
+                candidature.created_at,
+                candidature.prenom,
+                candidature.nom
+            );
+        }
+
         async function deleteCandidature(email, createdAt, prenom, nom) {
-            if (!confirm(`Êtes-vous sûr de vouloir supprimer la candidature de ${prenom} ${nom} ?`)) {
+            if (!confirm(`ï¿½Stes-vous sûr de vouloir supprimer la candidature de ${prenom} ${nom} ?`)) {
                 return;
             }
 
@@ -560,8 +603,11 @@
         // Load candidatures on page load
         document.addEventListener('DOMContentLoaded', loadCandidatures);
     </script>
-    <script src="assets/js/admin-candidatures.js"></script>
     <script src="assets/js/admin-notif-badge.js"></script>
-    <script src="assets/js/admin-mobile-menu.js"></script>
+    <script src="assets/js/admin-mobile-menu.js?v=3"></script>
+    <script src="assets/js/text-encoding-fix.js?v=2"></script>
 </body>
 </html>
+
+
+

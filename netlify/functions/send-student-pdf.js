@@ -1,116 +1,74 @@
-const fetch = require('node-fetch');
+const {
+    assertSessionActive,
+    getBearerToken,
+    getEnv,
+    getSupabaseAdmin,
+    verifySession
+} = require('./_lib/auth');
+const { handleOptions, parseJsonBody, response } = require('./_lib/http');
+
+function escapeHtml(value) {
+    return String(value || '').replace(/[&<>"']/g, (character) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+    })[character]);
+}
 
 exports.handler = async (event) => {
-    if (event.httpMethod !== 'POST') {
-        return {
-            statusCode: 405,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ok: false, error: 'METHOD_NOT_ALLOWED' })
-        };
-    }
+    const options = handleOptions(event);
+    if (options) return options;
+    if (event.httpMethod !== 'POST') return response(405, { ok: false, error: 'METHOD_NOT_ALLOWED' });
 
     try {
-        const apiKey = process.env.RESEND_API_KEY;
-        const from = process.env.RESEND_FROM_EMAIL;
+        const session = verifySession(getBearerToken(event), ['admin']);
+        const supabase = getSupabaseAdmin();
+        await assertSessionActive(session, supabase);
 
-        if (!apiKey || !from) {
-            console.error('Missing RESEND_API_KEY or RESEND_FROM_EMAIL');
-            return {
-                statusCode: 500,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ok: false, error: 'EMAIL_NOT_CONFIGURED' })
-            };
+        const body = parseJsonBody(event);
+        const studentEmail = String(body?.studentEmail || '').trim().toLowerCase();
+        const pdfBase64 = String(body?.pdfBase64 || '');
+        if (!studentEmail || !/^[A-Za-z0-9+/]+={0,2}$/.test(pdfBase64) || pdfBase64.length > 5_000_000) {
+            return response(400, { ok: false, error: 'INVALID_PDF' });
         }
 
-        const { studentEmail, studentName, pdfBase64 } = JSON.parse(event.body || '{}');
+        const { data: student, error } = await supabase
+            .from('users')
+            .select('prenom,nom,email')
+            .ilike('email', studentEmail)
+            .maybeSingle();
+        if (error) throw error;
+        if (!student) return response(404, { ok: false, error: 'STUDENT_NOT_FOUND' });
 
-        if (!studentEmail || !pdfBase64) {
-            return {
-                statusCode: 400,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ok: false, error: 'MISSING_EMAIL_OR_PDF' })
-            };
-        }
+        const apiKey = getEnv('RESEND_API_KEY');
+        const from = getEnv('RESEND_FROM_EMAIL');
+        if (!apiKey || !from) return response(503, { ok: false, error: 'EMAIL_NOT_CONFIGURED' });
 
-        console.log('📧 Sending PDF to:', studentEmail);
-
-        // HTML de l'email
-        const html = `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                <div style="background: #000; padding: 20px; text-align: center;">
-                    <h1 style="color: #EC4899; margin: 0;">AUTO ECOLE BRETEUIL</h1>
-                </div>
-                
-                <div style="padding: 30px; background: #f9f9f9;">
-                    <h2 style="color: #333;">Bonjour ${studentName || ''},</h2>
-                    
-                    <p style="color: #666; line-height: 1.6;">
-                        Vous trouverez ci-joint votre fiche recapitulative contenant toutes vos informations 
-                        et l'historique de vos seances de conduite.
-                    </p>
-                    
-                    <p style="color: #666; line-height: 1.6;">
-                        Si vous avez des questions, n'hesitez pas a nous contacter.
-                    </p>
-                    
-                    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd;">
-                        <p style="color: #999; font-size: 14px; margin: 5px 0;">
-                            <strong>Auto Ecole Breteuil</strong><br>
-                            1A rue Edouard Delanglade, 13006 Marseille<br>
-                            Tel: 04 91 53 36 98<br>
-                            Email: breteuilautoecole@gmail.com
-                        </p>
-                    </div>
-                </div>
-            </div>
-        `;
-
-        // Envoyer l'email avec Resend
-        const resp = await fetch('https://api.resend.com/emails', {
+        const studentName = `${student.prenom || ''} ${student.nom || ''}`.trim();
+        const mailResponse = await fetch('https://api.resend.com/emails', {
             method: 'POST',
-            headers: {
-                Authorization: `Bearer ${apiKey}`,
-                'Content-Type': 'application/json'
-            },
+            headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 from,
-                to: studentEmail,
-                subject: 'Votre fiche recapitulative - Auto Ecole Breteuil',
-                html,
-                attachments: [
-                    {
-                        filename: `Fiche_${studentName.replace(/\s+/g, '_')}.pdf`,
-                        content: pdfBase64
-                    }
-                ]
+                to: student.email,
+                subject: 'Votre fiche r&eacute;capitulative - Auto-Ecole Breteuil',
+                html: `
+                    <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;color:#17172a">
+                        <h1 style="color:#ec4899">Auto-Ecole Breteuil</h1>
+                        <p>Bonjour ${escapeHtml(studentName)},</p>
+                        <p>Vous trouverez en pi&egrave;ce jointe votre fiche r&eacute;capitulative avec les informations utiles au suivi de votre formation.</p>
+                        <p>Pour toute question, contactez-nous au <strong>04 91 53 36 98</strong>.</p>
+                    </div>`,
+                attachments: [{
+                    filename: `Fiche_${studentName.replace(/[^A-Za-z0-9_-]+/g, '_') || 'eleve'}.pdf`,
+                    content: pdfBase64
+                }]
             })
         });
-
-        const data = await resp.json().catch(() => ({}));
-
-        if (!resp.ok) {
-            console.error('Resend API error:', data);
-            return {
-                statusCode: 502,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ok: false, error: 'EMAIL_PROVIDER_ERROR', details: data })
-            };
-        }
-
-        console.log('✅ Email sent successfully:', data.id);
-
-        return {
-            statusCode: 200,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ok: true, provider: 'resend', id: data.id || null })
-        };
-
+        if (!mailResponse.ok) throw new Error('EMAIL_PROVIDER_ERROR');
+        return response(200, { ok: true });
     } catch (error) {
-        console.error('❌ Erreur envoi email:', error);
-        return {
-            statusCode: 500,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ok: false, error: 'INTERNAL_ERROR', details: error.message })
-        };
+        const authErrors = ['AUTH_REQUIRED', 'INVALID_SESSION', 'SESSION_EXPIRED', 'FORBIDDEN', 'ACCOUNT_DISABLED'];
+        const status = authErrors.includes(error.message) ? 401 : 500;
+        console.error('send-student-pdf:', error.message);
+        return response(status, { ok: false, error: status === 401 ? 'AUTH_REQUIRED' : 'EMAIL_FAILED' });
     }
 };

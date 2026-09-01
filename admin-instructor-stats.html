@@ -220,7 +220,7 @@
     </div>
 
     <script src="https://unpkg.com/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
-    <script src="assets/js/supabaseClient.js"></script>
+    <script src="assets/js/supabaseClient.js"></script>`r`n    <script src="assets/js/page-auth-guard.js" data-roles="admin"></script>
     <script>
         async function loadInstructorStats() {
             try {
@@ -324,7 +324,7 @@
 
                             <div class="bonus-section">
                                 <div style="font-size: 1.1rem; font-weight: 600; opacity: 0.9;">Prime actuelle</div>
-                                <div class="bonus-amount">${bonus.bonus_amount}€</div>
+                                <div class="bonus-amount">${bonus.bonus_amount} &euro;</div>
                                 <div class="bonus-details">
                                     <div>
                                         <i class="fas fa-check-circle"></i> ${bonus.passed_students} réussis
@@ -402,13 +402,13 @@
 
         function getBonusMessage(successRate) {
             if (successRate >= 100) {
-                return '🎉 Taux de réussite parfait ! Prime de 300€';
+                return 'Taux de réussite parfait ! Prime de 300 €';
             } else if (successRate >= 90) {
-                return '🌟 Excellent taux de réussite ! Prime de 200€';
+                return 'Excellent taux de réussite ! Prime de 200 €';
             } else if (successRate >= 80) {
-                return '✅ Bon taux de réussite ! Prime de 120€';
+                return 'Bon taux de réussite ! Prime de 120 €';
             } else {
-                return '💪 Continue comme ça ! Prime à partir de 80% de réussite';
+                return 'Continue comme ça ! Prime à partir de 80% de réussite';
             }
         }
 
@@ -418,5 +418,6 @@
         // Rafraîchir toutes les 30 secondes
         setInterval(loadInstructorStats, 30000);
     </script>
+    <script src="assets/js/text-encoding-fix.js?v=2"></script>
 </body>
 </html>

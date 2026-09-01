@@ -24,7 +24,7 @@ async function getPayPalAccessToken() {
   return data.access_token;
 }
 
-exports.handler = async (event) => {
+exports.legacyHandler = async (event) => {
   // CORS headers
   const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -122,4 +122,13 @@ exports.handler = async (event) => {
       body: JSON.stringify({ error: error.message }),
     };
   }
+};
+
+// Stripe is the only supported payment workflow.
+exports.handler = async function retiredPayPalOrder() {
+  return {
+    statusCode: 410,
+    headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
+    body: JSON.stringify({ error: 'PAYMENT_METHOD_RETIRED' }),
+  };
 };

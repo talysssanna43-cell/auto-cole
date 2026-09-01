@@ -422,7 +422,7 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;">
                 <!-- Mascotte -->
                 <div style="display: flex; justify-content: center;">
-                    <img src="assets/recrutement.png" alt="Mascotte Auto-École Breteuil" style="max-width: 380px; width: 100%; height: auto;">
+                    <img src="assets/recrutement-mascotte-breteuil.png?v=1" alt="Mascotte officielle Auto-École Breteuil accueillant les candidats" style="max-width: 380px; width: 100%; height: auto;">
                 </div>
                 <!-- Texte -->
                 <div>
@@ -721,13 +721,13 @@
                             <label class="full">
                                 CV *
                                 <input type="file" name="cv" accept=".pdf,.doc,.docx,.rtf,image/*" required>
-                                <span class="file-note">1 fichier. 10 Mo max.</span>
+                                <span class="file-note">1 fichier. 1,5 Mo max.</span>
                             </label>
 
                             <label class="full">
                                 Lettre de motivation (optionnel)
                                 <input type="file" name="lettre" accept=".pdf,.doc,.docx,.rtf,image/*">
-                                <span class="file-note">Optionnel. 10 Mo max.</span>
+                                <span class="file-note">Optionnel. 1,5 Mo max.</span>
                             </label>
 
                             <label class="full">
@@ -758,9 +758,9 @@
                 <div class="footer-col">
                     <h4>Formations</h4>
                     <ul>
-                        <li><a href="permis-b.html">Permis B</a></li>
+                        <li><a href="tarifs.html#permis-b">Permis B</a></li>
                         <li><a href="qui-sommes-nous.html">Qui sommes-nous</a></li>
-                        <li><a href="conduite-accompagnee.html">Conduite accompagnée</a></li>
+                        <li><a href="tarifs.html#conduite-accompagnee">Conduite accompagnée</a></li>
                     </ul>
                 </div>
 
@@ -774,7 +774,7 @@
 
                 <div class="footer-col">
                     <h4>Notre localisation</h4>
-                    <p style="margin-bottom: 1rem;">1 Rue Édouard Delanglade<br>13006 Marseille</p>
+                    <p style="margin-bottom: 1rem;">1A Rue Édouard Delanglade, 13006 Marseille</p>
                     <h4 style="margin-top: 1.5rem;">Contact</h4>
                     <ul>
                         <li><i class="fas fa-phone"></i> 04 91 53 36 98</li>
@@ -798,8 +798,11 @@
     <script src="assets/js/supabaseClient.js"></script>
     <script src="assets/js/main.js"></script>
     <script src="assets/js/support-ticket.js?v=6"></script>
+    <script src="assets/js/recruitment-submit.js?v=1"></script>
     <script>
         (function () {
+            // Replaced by assets/js/recruitment-submit.js, which sends data only to the secured endpoint.
+            return;
             const form = document.querySelector('form[name="recrutement"]');
             if (!form) return;
 
@@ -905,9 +908,9 @@
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify({
-                                service_id: 'service_abc123',
-                                template_id: 'template_h7oyhzg',
-                                user_id: '8ysJSNqiNmOHg_pxC',
+                                service_id: '',
+                                template_id: '',
+                                user_id: '',
                                 template_params: {
                                     to_email: 'breteuilautoecole@gmail.com',
                                     to_name: 'Auto-École Breteuil',
@@ -976,5 +979,7 @@
             }
         }
     </script>
+    <script src="assets/js/site-footer.js"></script>
+    <script src="assets/js/text-encoding-fix.js?v=2"></script>
 </body>
 </html>

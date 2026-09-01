@@ -26,3 +26,20 @@ if (adminMenuToggle && adminTabs) {
         });
     });
 }
+
+const adminLogoutBtn = document.getElementById('logoutBtn');
+if (adminLogoutBtn && !adminLogoutBtn.dataset.logoutBound) {
+    adminLogoutBtn.dataset.logoutBound = 'true';
+    adminLogoutBtn.addEventListener('click', async () => {
+        try {
+            await window.authSession?.logout?.();
+        } catch (error) {
+            console.warn('Admin logout session cleanup failed:', error);
+        }
+        localStorage.removeItem('ae_user');
+        localStorage.removeItem('ae_access_token');
+        sessionStorage.removeItem('ae_user');
+        sessionStorage.removeItem('ae_access_token');
+        window.location.href = 'index.html';
+    });
+}

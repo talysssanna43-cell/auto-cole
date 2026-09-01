@@ -25,6 +25,64 @@ window.closeIndisponibleModal = function() {
     }
 };
 
+function unavailableTimeToMinutes(value) {
+    const parts = String(value || '00:00').split(':').map(Number);
+    return ((parts[0] || 0) * 60) + (parts[1] || 0);
+}
+
+function unavailableSlotStart(value) {
+    return String(value || '').split('|')[0];
+}
+
+function unavailableSlotEnd(value) {
+    return String(value || '').split('|')[1] || '';
+}
+
+function buildUnavailableSlots(date, startTime, endTime, instructor, reason) {
+    const requestedStart = unavailableTimeToMinutes(startTime);
+    const requestedEnd = unavailableTimeToMinutes(endTime);
+    const rows = typeof window.getTimeRows === 'function'
+        ? window.getTimeRows(instructor)
+        : [];
+
+    const planningSlots = rows
+        .map((row) => {
+            const start = unavailableSlotStart(row);
+            const end = unavailableSlotEnd(row) || (typeof window.getEndForStart === 'function' ? window.getEndForStart(instructor, row, date) : '');
+            return { start, end };
+        })
+        .filter((slot) => slot.start && slot.end)
+        .filter((slot) => unavailableTimeToMinutes(slot.start) >= requestedStart && unavailableTimeToMinutes(slot.end) <= requestedEnd);
+
+    if (planningSlots.length) {
+        return planningSlots.map((slot) => ({
+            date,
+            start_time: slot.start,
+            end_time: slot.end,
+            instructor,
+            reason
+        }));
+    }
+
+    const slots = [];
+    let currentTime = startTime;
+    while (currentTime < endTime) {
+        const parts = currentTime.split(':').map(Number);
+        const nextHours = parts[0] + 2;
+        const nextTime = `${String(nextHours).padStart(2, '0')}:${String(parts[1] || 0).padStart(2, '0')}`;
+        if (nextTime > endTime) break;
+        slots.push({
+            date,
+            start_time: currentTime,
+            end_time: nextTime,
+            instructor,
+            reason
+        });
+        currentTime = nextTime;
+    }
+    return slots;
+}
+
 window.submitIndisponibleBlock = async function(event) {
     event.preventDefault();
     
@@ -43,27 +101,7 @@ window.submitIndisponibleBlock = async function(event) {
     }
     
     try {
-        // Créer les créneaux à bloquer (toutes les 2 heures entre start et end)
-        const slots = [];
-        let currentTime = startTime;
-        
-        while (currentTime < endTime) {
-            const [hours, minutes] = currentTime.split(':').map(Number);
-            const nextHours = hours + 2;
-            const nextTime = `${String(nextHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-            
-            if (nextTime > endTime) break;
-            
-            slots.push({
-                date: date,
-                start_time: currentTime,
-                end_time: nextTime,
-                instructor: instructor,
-                reason: reason
-            });
-            
-            currentTime = nextTime;
-        }
+        const slots = buildUnavailableSlots(date, startTime, endTime, instructor, reason);
         
         console.log('🔒 Créneaux à bloquer:', slots);
         
@@ -144,26 +182,36 @@ window.submitIndisponibleBlock = async function(event) {
 
 window.openDeleteIndisponibleModal = async function() {
     try {
-        const { data: indisponibleSlots, error } = await window.supabaseClient
-            .from('slots')
-            .select('id, start_at, end_at, instructor, notes')
-            .eq('status', 'indisponible')
-            .order('start_at', { ascending: true });
-        
-        if (error) {
-            alert('❌ Erreur lors de la récupération: ' + error.message);
+        const token = window.authSession?.getToken?.();
+        if (!token) {
+            alert('Session admin expirée. Reconnecte-toi.');
             return;
         }
+        const instructor = window.state?.instructor || document.querySelector('#instructorSegment button.active')?.dataset?.instructor || '';
+        const params = new URLSearchParams();
+        if (instructor) params.set('instructor', instructor);
+        const res = await fetch(`/.netlify/functions/admin-delete-unavailable-slot?${params.toString()}`, {
+            headers: { Authorization: `Bearer ${token}` },
+            cache: 'no-store'
+        });
+        const payload = await res.json().catch(() => ({ ok: false, error: 'INVALID_SERVER_RESPONSE' }));
+        if (!res.ok || !payload.ok) {
+            alert('❌ Erreur lors de la récupération: ' + (payload.error || 'DELETE_UNAVAILABLE_SLOT_FAILED'));
+            return;
+        }
+        const indisponibleSlots = payload.slots || [];
         
         if (!indisponibleSlots || indisponibleSlots.length === 0) {
             alert('ℹ️ Aucun créneau indisponible à supprimer.');
             return;
         }
         
-        // Filtrer pour ne garder que les créneaux à venir
+        // Garder les créneaux d'aujourd'hui et à venir, même si l'heure de début est déjà passée.
         const now = new Date();
+        now.setHours(0, 0, 0, 0);
         const futureIndisponibleSlots = indisponibleSlots.filter(slot => {
             const slotDate = new Date(slot.start_at);
+            slotDate.setHours(0, 0, 0, 0);
             return slotDate >= now;
         });
         
@@ -181,7 +229,7 @@ window.openDeleteIndisponibleModal = async function() {
             });
             const startTime = `${String(startDate.getHours()).padStart(2, '0')}h${String(startDate.getMinutes()).padStart(2, '0')}`;
             const endTime = `${String(endDate.getHours()).padStart(2, '0')}h${String(endDate.getMinutes()).padStart(2, '0')}`;
-            const reason = slot.notes ? slot.notes.replace('INDISPONIBLE - ', '') : 'Non renseigné';
+            const reason = slot.notes ? slot.notes.replace('INDISPONIBLE - ', '').replace('CONGÉS - ', '') : 'Non renseigné';
             
             return `
                 <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; background: rgba(220, 53, 69, 0.08);">
@@ -247,20 +295,34 @@ window.deleteIndisponibleSlot = async function(slotId) {
     }
     
     try {
-        const { error } = await window.supabaseClient
-            .from('slots')
-            .delete()
-            .eq('id', slotId);
+        const token = window.authSession?.getToken?.();
+        if (!token) {
+            alert('Session admin expirée. Reconnecte-toi.');
+            return;
+        }
+
+        const res = await fetch('/.netlify/functions/admin-delete-unavailable-slot', {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ slot_id: slotId }),
+            cache: 'no-store'
+        });
+        const payload = await res.json().catch(() => ({ ok: false, error: 'INVALID_SERVER_RESPONSE' }));
         
-        if (error) {
-            alert('❌ Erreur lors de la suppression: ' + error.message);
+        if (!res.ok || !payload.ok) {
+            alert('Erreur lors de la suppression: ' + (payload.error || 'DELETE_UNAVAILABLE_SLOT_FAILED'));
             return;
         }
         
-        alert('✅ Créneau supprimé ! Il est à nouveau disponible.');
+        alert('Créneau supprimé. Il est à nouveau disponible.');
         closeDeleteIndisponibleModal();
-        if (typeof window.loadWeekSlots === 'function') {
-            window.loadWeekSlots();
+        if (typeof window.refreshPlanning === 'function') {
+            await window.refreshPlanning();
+        } else if (typeof window.loadWeekSlots === 'function') {
+            await window.loadWeekSlots();
         } else {
             location.reload();
         }

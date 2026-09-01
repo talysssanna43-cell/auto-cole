@@ -1,22 +1,52 @@
-// Fonction pour télécharger la fiche élève en PDF
+async function getStudentForPdf(studentEmail) {
+    const email = String(studentEmail || '').trim();
+    if (!email || !window.supabaseClient) return null;
+
+    const { data: user, error: userError } = await window.supabaseClient
+        .from('users')
+        .select('*')
+        .ilike('email', email)
+        .maybeSingle();
+    if (userError) console.warn('PDF eleve, users indisponible:', userError);
+    if (user) return user;
+
+    const { data: notification, error: notificationError } = await window.supabaseClient
+        .from('inscription_notifications')
+        .select('user_email,user_prenom,user_nom,user_name,user_telephone,telephone,pack,forfait,created_at,numero_neph')
+        .ilike('user_email', email)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+    if (notificationError) console.warn('PDF eleve, inscription_notifications indisponible:', notificationError);
+
+    if (!notification) {
+        return { email, prenom: '', nom: '', telephone: '', forfait: '', created_at: null, numero_neph: '' };
+    }
+
+    const parts = String(notification.user_name || '').trim().split(/\s+/).filter(Boolean);
+    return {
+        email: notification.user_email || email,
+        prenom: notification.user_prenom || parts.slice(0, -1).join(' ') || parts[0] || '',
+        nom: notification.user_nom || parts.slice(-1).join('') || '',
+        telephone: notification.user_telephone || notification.telephone || '',
+        forfait: notification.forfait || notification.pack || '',
+        created_at: notification.created_at,
+        numero_neph: notification.numero_neph || ''
+    };
+}
+// Telecharge la fiche eleve en PDF.
 window.downloadStudentPDF = async function(studentEmail) {
     try {
-        console.log('📄 Génération du PDF pour:', studentEmail);
+        console.log('Generation du PDF pour:', studentEmail);
         
-        // Récupérer les données de l'élève
-        const { data: student, error: studentError } = await window.supabaseClient
-            .from('users')
-            .select('*')
-            .eq('email', studentEmail)
-            .single();
-        
-        if (studentError || !student) {
-            console.error('Erreur récupération élève:', studentError);
-            alert('Erreur lors de la récupération des données de l\'élève.');
+        // Recuperer les donnees de l'eleve, avec fallback si la table users ne contient pas le profil.
+        const student = await getStudentForPdf(studentEmail);
+        if (!student) {
+            alert("Impossible de recuperer les donnees de l'eleve.");
             return;
         }
         
-        // Récupérer les réservations
+        // Recuperer les reservations
         const { data: reservations, error: resError } = await window.supabaseClient
             .from('reservations')
             .select('*, slots(*)')
@@ -24,7 +54,7 @@ window.downloadStudentPDF = async function(studentEmail) {
             .order('created_at', { ascending: false });
         
         if (resError) {
-            console.error('Erreur récupération réservations:', resError);
+            console.error('Erreur recuperation reservations:', resError);
         }
         
         // Calculer les statistiques
@@ -42,7 +72,7 @@ window.downloadStudentPDF = async function(studentEmail) {
             return r.status === 'upcoming' && isFuture;
         });
         
-        // Récupérer les annulations
+        // Recuperer les annulations
         const { data: cancellations } = await window.supabaseClient
             .from('cancellation_requests')
             .select('*')
@@ -52,14 +82,14 @@ window.downloadStudentPDF = async function(studentEmail) {
             c.status === 'accepted' || c.status === 'approved'
         ).length;
         
-        // Générer le PDF
+        // Generer le PDF
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
         
-        // Couleurs de l'auto-école
+        // Couleurs de l'auto-ecole
         const blackColor = [0, 0, 0]; // Noir
         const fuchsiaColor = [236, 72, 153]; // Rose fuchsia
-        const darkGray = [55, 65, 81]; // Gris foncé
+        const darkGray = [55, 65, 81]; // Gris fonce
         const lightGray = [243, 244, 246]; // Gris clair
         const whiteColor = [255, 255, 255]; // Blanc
         const greenColor = [34, 197, 94]; // Vert pour "Effectue"
@@ -67,7 +97,7 @@ window.downloadStudentPDF = async function(studentEmail) {
         
         let yPos = 15;
         
-        // En-tête avec fond noir
+        // En-tete avec fond noir
         doc.setFillColor(...blackColor);
         doc.rect(0, 0, 210, 28, 'F');
         
@@ -79,7 +109,7 @@ window.downloadStudentPDF = async function(studentEmail) {
         doc.setFontSize(9);
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(...whiteColor);
-        doc.text('1A rue Edouard Delanglade   13006 Marseille', 15, 20);
+        doc.text('1A Rue Edouard Delanglade, 13006 Marseille', 15, 20);
         doc.text('04 91 53 36 98   breteuilautoecole@gmail.com', 15, 25);
         
         yPos = 38;
@@ -107,8 +137,8 @@ window.downloadStudentPDF = async function(studentEmail) {
         const infoData = [
             ['NOM COMPLET', `${student.prenom || ''} ${student.nom || ''}`],
             ['EMAIL', student.email || '-'],
-            ['TÉLÉPHONE', student.telephone || '-'],
-            ['NUMÉRO NEPH', student.numero_neph || '-']
+            ['TELEPHONE', student.telephone || '-'],
+            ['NUMERO NEPH', student.numero_neph || '-']
         ];
         
         infoData.forEach(([label, value]) => {
@@ -175,7 +205,7 @@ window.downloadStudentPDF = async function(studentEmail) {
         
         yPos += 18;
         
-        // Historique des séances
+        // Historique des seances
         doc.setFontSize(11);
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(...fuchsiaColor);
@@ -188,7 +218,7 @@ window.downloadStudentPDF = async function(studentEmail) {
             doc.setTextColor(...darkGray);
             doc.text('Aucune seance enregistree.', 15, yPos);
         } else {
-            // En-tête du tableau avec fond noir
+            // En-tete du tableau avec fond noir
             doc.setFillColor(...blackColor);
             doc.rect(15, yPos - 5, 180, 8, 'F');
             
@@ -206,7 +236,7 @@ window.downloadStudentPDF = async function(studentEmail) {
             doc.setTextColor(...blackColor);
             doc.setFont('helvetica', 'normal');
             
-            const sessionsToShow = completedSessions.slice(0, 15); // Limiter à 15 séances
+            const sessionsToShow = completedSessions.slice(0, 15); // Limiter a 15 seances
             
             sessionsToShow.forEach((res, index) => {
                 if (yPos > 270) {
@@ -214,7 +244,7 @@ window.downloadStudentPDF = async function(studentEmail) {
                     yPos = 20;
                 }
                 
-                // Fond alterné gris clair
+                // Fond alterne gris clair
                 if (index % 2 === 0) {
                     doc.setFillColor(...lightGray);
                     doc.rect(15, yPos - 5, 180, 7, 'F');
@@ -265,29 +295,29 @@ window.downloadStudentPDF = async function(studentEmail) {
             doc.setTextColor(...darkGray);
             doc.setFont('helvetica', 'italic');
             doc.text(
-                `Document genere le ${new Date().toLocaleDateString('fr-FR')}   Auto Ecole Breteuil   1A rue Edouard Delanglade, 13006 Marseille`,
+                `Document genere le ${new Date().toLocaleDateString('fr-FR')}   Auto Ecole Breteuil   1A Rue Edouard Delanglade, 13006 Marseille`,
                 105,
                 290,
                 { align: 'center' }
             );
         }
         
-        // Télécharger le PDF
+        // Telecharger le PDF
         const fileName = `Fiche_${student.prenom}_${student.nom}_${new Date().toLocaleDateString('fr-FR').replace(/\//g, '-')}.pdf`;
         doc.save(fileName);
         
-        console.log('✅ PDF généré avec succès:', fileName);
+        console.log('PDF genere avec succes:', fileName);
         
     } catch (error) {
-        console.error('❌ Erreur génération PDF:', error);
-        alert('Erreur lors de la génération du PDF.');
+        console.error('Erreur generation PDF:', error);
+        alert('Erreur lors de la generation du PDF.');
     }
 };
 
-// Fonction pour envoyer le PDF par email à l'élève automatiquement
+// Envoie la fiche PDF par email a l'eleve.
 window.sendStudentPDFByEmail = async function(studentEmail) {
     try {
-        console.log('📧 Envoi du PDF par email à:', studentEmail);
+        console.log('Envoi du PDF par email a:', studentEmail);
         
         // Afficher un message de chargement
         const loadingMsg = document.createElement('div');
@@ -296,18 +326,13 @@ window.sendStudentPDFByEmail = async function(studentEmail) {
         loadingMsg.innerHTML = '<i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 1rem;"></i><br><strong>Envoi du PDF en cours...</strong>';
         document.body.appendChild(loadingMsg);
         
-        // Récupérer les données de l'élève
-        const { data: student, error: studentError } = await window.supabaseClient
-            .from('users')
-            .select('*')
-            .eq('email', studentEmail)
-            .single();
-        
-        if (studentError || !student) {
-            throw new Error('Erreur lors de la récupération des données de l\'élève');
+        // Recuperer les donnees de l'eleve, avec fallback si la table users ne contient pas le profil.
+        const student = await getStudentForPdf(studentEmail);
+        if (!student) {
+            throw new Error("Impossible de recuperer les donnees de l'eleve");
         }
         
-        // Récupérer les réservations
+        // Recuperer les reservations
         const { data: reservations } = await window.supabaseClient
             .from('reservations')
             .select('*, slots(*)')
@@ -339,11 +364,11 @@ window.sendStudentPDFByEmail = async function(studentEmail) {
         
         const totalHours = completedSessions.length * 2;
         
-        // Générer le PDF
+        // Generer le PDF
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
         
-        // Générer le contenu du PDF
+        // Generer le contenu du PDF
         await generatePDFContent(doc, student, completedSessions, upcomingSessions, totalHours, totalCancellations, now);
         
         // Convertir le PDF en base64
@@ -353,7 +378,8 @@ window.sendStudentPDFByEmail = async function(studentEmail) {
         const response = await fetch('/.netlify/functions/send-student-pdf', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${window.authSession?.getToken() || ''}`
             },
             body: JSON.stringify({
                 studentEmail: student.email,
@@ -368,22 +394,22 @@ window.sendStudentPDFByEmail = async function(studentEmail) {
         document.body.removeChild(loadingMsg);
         
         if (response.ok && result.ok) {
-            alert(`✅ Email envoyé avec succès à ${student.email}`);
+            alert(`Email envoye avec succes a ${student.email}`);
         } else {
             throw new Error(result.error || 'Erreur lors de l\'envoi de l\'email');
         }
         
     } catch (error) {
-        console.error('❌ Erreur envoi email:', error);
+        console.error('Erreur envoi email:', error);
         const loadingMsg = document.getElementById('emailLoadingMsg');
         if (loadingMsg) document.body.removeChild(loadingMsg);
         alert('Erreur lors de l\'envoi de l\'email: ' + error.message);
     }
 };
 
-// Fonction commune pour générer le contenu du PDF
+// Fonction commune pour generer le contenu du PDF
 async function generatePDFContent(doc, student, completedSessions, upcomingSessions, totalHours, totalCancellations, now) {
-    // Couleurs de l'auto-école
+    // Couleurs de l'auto-ecole
     const blackColor = [0, 0, 0];
     const fuchsiaColor = [236, 72, 153];
     const darkGray = [55, 65, 81];
@@ -394,7 +420,7 @@ async function generatePDFContent(doc, student, completedSessions, upcomingSessi
     
     let yPos = 15;
     
-    // En-tête
+    // En-tete
     doc.setFillColor(...blackColor);
     doc.rect(0, 0, 210, 28, 'F');
     doc.setTextColor(...fuchsiaColor);
@@ -404,7 +430,7 @@ async function generatePDFContent(doc, student, completedSessions, upcomingSessi
     doc.setFontSize(9);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(...whiteColor);
-    doc.text('1A rue Edouard Delanglade   13006 Marseille', 15, 20);
+    doc.text('1A Rue Edouard Delanglade, 13006 Marseille', 15, 20);
     doc.text('04 91 53 36 98   breteuilautoecole@gmail.com', 15, 25);
     
     yPos = 38;
@@ -574,10 +600,11 @@ async function generatePDFContent(doc, student, completedSessions, upcomingSessi
         doc.setTextColor(...darkGray);
         doc.setFont('helvetica', 'italic');
         doc.text(
-            `Document genere le ${new Date().toLocaleDateString('fr-FR')}   Auto Ecole Breteuil   1A rue Edouard Delanglade, 13006 Marseille`,
+            `Document genere le ${new Date().toLocaleDateString('fr-FR')}   Auto Ecole Breteuil   1A Rue Edouard Delanglade, 13006 Marseille`,
             105,
             290,
             { align: 'center' }
         );
     }
 }
+

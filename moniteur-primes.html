@@ -339,7 +339,7 @@
                     <div style="position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%); animation: shine 3s infinite;"></div>
                     
                     <!-- Icône Trophée -->
-                    <div style="font-size: 3rem; margin-bottom: 0.5rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)); position: relative; z-index: 1;">🏆</div>
+                    <div style="font-size: 3rem; margin-bottom: 0.5rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)); position: relative; z-index: 1;">ðŸ†</div>
                     
                     <div class="center-score-label" style="color: #8b6914; font-weight: 700; position: relative; z-index: 1;">Score Final</div>
                     <div class="center-score-value" id="finalScoreValue" style="color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,0.3), 0 0 20px rgba(255,215,0,0.5); position: relative; z-index: 1;">0%</div>
@@ -590,10 +590,10 @@
         }
         
         function getBonusMessage(successRate) {
-            if (successRate >= 100) return '🎉 Taux de réussite parfait !';
-            if (successRate >= 90) return '🌟 Excellent travail !';
+            if (successRate >= 100) return 'ðŸŽ‰ Taux de réussite parfait !';
+            if (successRate >= 90) return 'ðŸŒŸ Excellent travail !';
             if (successRate >= 80) return '✅ Très bon taux de réussite !';
-            return '💪 Continue comme ça !';
+            return 'ðŸ’ª Continue comme ça !';
         }
         
         function generateStars(rating) {
@@ -701,5 +701,6 @@
             loadBonusHistory();
         });
     </script>
+    <script src="assets/js/text-encoding-fix.js?v=2"></script>
 </body>
 </html>

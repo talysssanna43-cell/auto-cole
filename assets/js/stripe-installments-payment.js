@@ -1,5 +1,5 @@
 // Fonction pour traiter le paiement en plusieurs fois via Stripe
-async function processStripeInstallmentsPayment(formData) {
+async function processStripeInstallmentsPayment(formData, documents = {}) {
     const feedback = document.getElementById('installmentsPaymentFeedback');
     const submitButton = document.querySelector('button[type="submit"]');
     const originalButtonText = submitButton.innerHTML;
@@ -11,26 +11,50 @@ async function processStripeInstallmentsPayment(formData) {
     
     try {
         const selectedPack = document.querySelector('input[name="pack"]:checked');
-        const packName = selectedPack.value;
-        const basePrice = packPrices[packName];
+        const purchase = window.getSelectedPurchaseDetails();
+        if (!selectedPack || !purchase || !Number.isInteger(purchase.amountCents)) {
+            throw new Error('Le tarif du forfait est indisponible.');
+        }
         
         // Récupérer le nombre de mensualités et calculer le montant avec frais de 3%
         const installments = parseInt(document.getElementById('installmentsCount')?.value || '3');
-        const feeRate = 1.03;  // +3%
-        const totalWithFees = Math.round(basePrice * feeRate);
-        const amountInCents = totalWithFees * 100;
+        if (![2, 3].includes(installments)) {
+            throw new Error('Choisis un paiement en 2 ou 3 fois.');
+        }
+        if (!document.getElementById('installmentsMandate')?.checked) {
+            throw new Error('L autorisation de prelevement est requise.');
+        }
+        const amountInCents = Math.round(purchase.amountCents * 1.03);
         
         const paymentIntentResponse = await fetch('/.netlify/functions/create-payment-intent', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
+                source: 'registration',
                 amount: amountInCents,
                 currency: 'eur',
-                packId: packName,
-                packLabel: selectedPack.parentElement.querySelector('h3').textContent,
+                packId: purchase.packId,
+                packLabel: purchase.packLabel,
+                hours: purchase.hours,
+                transmission: purchase.transmission,
                 customerEmail: formData.email,
                 description: `Inscription Auto-École - ${selectedPack.parentElement.querySelector('h3').textContent} (${installments}x)`,
-                installments: installments
+                installments: installments,
+                installmentConsent: document.getElementById('installmentsMandate')?.checked === true,
+                registration: {
+                    prenom: formData.prenom,
+                    nom: formData.nom,
+                    email: formData.email,
+                    telephone: formData.telephone,
+                    password: formData.password,
+                    dateNaissance: formData.dateNaissance,
+                    adresse: formData.adresse,
+                    codePostal: formData.codePostal,
+                    ville: formData.ville,
+                    numeroNeph: formData.numeroNeph,
+                    referralCode: window.referralCode || null,
+                    documents
+                }
             })
         });
         
@@ -68,9 +92,9 @@ async function processStripeInstallmentsPayment(formData) {
             feedback.textContent = '✓ Paiement réussi ! Finalisation de ton inscription...';
             return {
                 stripe_payment_intent_id: paymentIntent.id,
-                amount_eur: totalWithFees,
-                pack_id: packName,
-                pack_label: selectedPack.parentElement.querySelector('h3').textContent,
+                amount_eur: amountInCents / 100,
+                pack_id: purchase.packId,
+                pack_label: purchase.packLabel,
                 installments_count: installments
             };
         } else {

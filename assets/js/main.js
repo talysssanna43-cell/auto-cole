@@ -21,6 +21,9 @@ function bindLoginLinks(scope = document) {
 }
 
 function getStoredUser() {
+    if (window.authSession) {
+        return window.authSession.getCachedUser();
+    }
     try {
         // Essayer localStorage d'abord
         const stored = localStorage.getItem(AUTH_STORAGE_KEY);
@@ -43,6 +46,9 @@ function getStoredUser() {
 }
 
 function logoutUser() {
+    if (window.authSession) {
+        window.authSession.logout();
+    }
     try {
         localStorage.removeItem(AUTH_STORAGE_KEY);
     } catch (e) {
@@ -114,6 +120,9 @@ function updateAuthUI() {
 document.addEventListener('DOMContentLoaded', () => {
     updateAuthUI();
     bindLoginLinks(document);
+    if (window.authSession?.getToken()) {
+        window.authSession.verify().then(() => updateAuthUI());
+    }
 });
 
 // In case the script is loaded after DOMContentLoaded (e.g., placed at the end of body)
@@ -320,8 +329,9 @@ console.log('%cBienvenue sur notre site !', 'font-size: 14px; color: #004E89;');
 // ===== PERFORMANCE MONITORING =====
 if ('performance' in window) {
     window.addEventListener('load', () => {
-        const perfData = window.performance.timing;
-        const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
-        console.log(`⚡ Page loaded in ${pageLoadTime}ms`);
+        const navigation = window.performance.getEntriesByType('navigation')[0];
+        if (navigation && Number.isFinite(navigation.duration)) {
+            console.log(`Page loaded in ${Math.round(navigation.duration)}ms`);
+        }
     });
 }

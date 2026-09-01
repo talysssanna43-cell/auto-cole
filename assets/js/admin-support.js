@@ -5,27 +5,43 @@
     let currentFilter = 'all';
     let tickets = [];
 
+    function escapeHtml(value) {
+        return String(value || '').replace(/[&<>"']/g, (character) => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        })[character]);
+    }
+
+    function safeAttachmentUrl(value) {
+        const url = String(value || '');
+        return /^(https:\/\/|data:(image\/(png|jpe?g|webp)|application\/pdf);base64,)/i.test(url) ? url : '';
+    }
+
     // Vérifier l'authentification admin
-    function checkAuth() {
-        const user = JSON.parse(localStorage.getItem('ae_user') || '{}');
-        if (!user.email || !user.is_admin) {
-            window.location.href = 'connexion.html';
-            return false;
+    async function adminRequest(resource, options = {}) {
+        const token = window.authSession?.getToken?.();
+        if (!token) throw new Error('AUTH_REQUIRED');
+        const response = await fetch(`/.netlify/functions/admin-page-data?resource=${encodeURIComponent(resource)}`, {
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+                ...(options.headers || {})
+            }
+        });
+        const result = await response.json().catch(() => ({ ok: false, error: 'INVALID_SERVER_RESPONSE' }));
+        if (!response.ok || !result.ok) {
+            const error = new Error(result.error || 'ADMIN_REQUEST_FAILED');
+            error.status = response.status;
+            throw error;
         }
-        return true;
+        return result;
     }
 
     // Charger les tickets
     async function loadTickets() {
         try {
-            const { data, error } = await window.supabaseClient
-                .from('support_tickets')
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            if (error) throw error;
-
-            tickets = data || [];
+            const result = await adminRequest('support');
+            tickets = result.items || [];
             renderTickets();
         } catch (err) {
             console.error('Error loading tickets:', err);
@@ -76,7 +92,7 @@
                     <!-- Header: Name + Status -->
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
                         <h3 style="margin: 0; color: #1d1d1f; font-size: 1rem; font-weight: 600;">
-                            <i class="fas fa-user" style="color: #86868b; margin-right: 0.5rem;"></i>${ticket.user_name || 'Utilisateur'}
+                            <i class="fas fa-user" style="color: #86868b; margin-right: 0.5rem;"></i>${escapeHtml(ticket.user_name || 'Utilisateur')}
                         </h3>
                         <span style="padding: 0.35rem 0.75rem; background: ${ticket.status === 'pending' ? 'rgba(255,193,7,0.15)' : 'rgba(52,199,89,0.15)'}; color: ${ticket.status === 'pending' ? '#a07000' : '#0a8e47'}; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">
                             ${statusText}
@@ -86,7 +102,7 @@
                     <!-- Contact Info -->
                     <div style="display: flex; flex-direction: column; gap: 0.25rem; margin-bottom: 0.75rem; padding-left: 1.5rem;">
                         <p style="margin: 0; color: #86868b; font-size: 0.85rem; word-break: break-all;">
-                            ${ticket.user_email}
+                            ${escapeHtml(ticket.user_email)}
                         </p>
                         <p style="margin: 0; color: #86868b; font-size: 0.8rem;">
                             ${dateStr}
@@ -96,12 +112,12 @@
                     <!-- Message -->
                     <div style="background: #f5f5f7; padding: 0.875rem; border-radius: 12px; margin-bottom: 0.875rem;">
                         <p style="margin: 0 0 0.25rem 0; font-size: 0.75rem; color: #86868b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em;">Message</p>
-                        <p style="margin: 0; white-space: pre-wrap; color: #1d1d1f; font-size: 0.9rem; line-height: 1.5;">${ticket.message}</p>
+                        <p style="margin: 0; white-space: pre-wrap; color: #1d1d1f; font-size: 0.9rem; line-height: 1.5;">${escapeHtml(ticket.message)}</p>
                     </div>
 
-                    ${ticket.attachment_url ? `
+                    ${safeAttachmentUrl(ticket.attachment_url) ? `
                         <div style="margin-bottom: 0.875rem;">
-                            <a href="${ticket.attachment_url}" target="_blank" style="display: inline-flex; align-items: center; gap: 0.5rem; color: #0071e3; text-decoration: none; font-weight: 500; font-size: 0.85rem;">
+                            <a href="${escapeHtml(safeAttachmentUrl(ticket.attachment_url))}" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 0.5rem; color: #0071e3; text-decoration: none; font-weight: 500; font-size: 0.85rem;">
                                 <i class="fas fa-paperclip"></i> Pièce jointe
                             </a>
                         </div>
@@ -153,12 +169,10 @@
                 updateData.resolved_at = null;
             }
 
-            const { error } = await window.supabaseClient
-                .from('support_tickets')
-                .update(updateData)
-                .eq('id', ticketId);
-
-            if (error) throw error;
+            await adminRequest('support', {
+                method: 'POST',
+                body: JSON.stringify({ action: 'update', id: ticketId, ...updateData })
+            });
 
             await loadTickets();
         } catch (err) {
@@ -174,12 +188,10 @@
         }
 
         try {
-            const { error } = await window.supabaseClient
-                .from('support_tickets')
-                .delete()
-                .eq('id', ticketId);
-
-            if (error) throw error;
+            await adminRequest('support', {
+                method: 'POST',
+                body: JSON.stringify({ action: 'delete', id: ticketId })
+            });
 
             await loadTickets();
         } catch (err) {
@@ -190,8 +202,6 @@
 
     // Initialiser
     async function init() {
-        if (!checkAuth()) return;
-
         // Filtres
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.addEventListener('click', function() {
@@ -212,8 +222,12 @@
 
         // Déconnexion
         document.getElementById('logoutBtn').addEventListener('click', function() {
-            localStorage.removeItem('user');
-            window.location.href = 'connexion.html';
+            window.authSession?.logout?.();
+            localStorage.removeItem('ae_user');
+            localStorage.removeItem('ae_access_token');
+            sessionStorage.removeItem('ae_user');
+            sessionStorage.removeItem('ae_access_token');
+            window.location.href = 'index.html';
         });
 
         // Charger les tickets
@@ -223,9 +237,5 @@
         setInterval(loadTickets, 30000);
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
-    }
+    window.addEventListener('auth-session-ready', init, { once: true });
 })();

@@ -1,4 +1,4 @@
-exports.handler = async function(event, context) {
+exports.legacyHandler = async function(event, context) {
     if (event.httpMethod !== 'POST') {
         return { statusCode: 405, body: 'Method not allowed' };
     }
@@ -27,4 +27,13 @@ exports.handler = async function(event, context) {
             body: JSON.stringify({ error: error.message })
         };
     }
+};
+
+// Stripe is the only supported payment workflow.
+exports.handler = async function retiredAlmaWebhook() {
+    return {
+        statusCode: 410,
+        headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
+        body: JSON.stringify({ error: 'PAYMENT_METHOD_RETIRED' })
+    };
 };

@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion Moniteurs - Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/admin-mobile.css?v=3">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #f5f5f7;
+            --card: #ffffff;
+            --border: rgba(0,0,0,0.06);
+            --text: #1d1d1f;
+            --text2: #86868b;
+            --blue: #0071e3;
+            --green: #34c759;
+            --orange: #ff9500;
+            --red: #ff3b30;
+            --purple: #af52de;
+            --radius: 14px;
+            --shadow: 0 4px 24px rgba(0,0,0,0.06);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Topbar */
+        .topbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            height: 52px;
+            background: rgba(255,255,255,0.72);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; padding: 0 24px;
+        }
+        .topbar-inner {
+            max-width: 1440px; width: 100%; margin: 0 auto;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .topbar-brand { font-size: 1.05rem; font-weight: 600; color: var(--text); text-decoration: none; }
+        .topbar-tabs {
+            display: flex; gap: 4px; background: rgba(0,0,0,0.04); border-radius: 8px; padding: 3px;
+        }
+        .topbar-tabs a {
+            padding: 6px 12px; border-radius: 6px; font-size: 0.78rem; font-weight: 500;
+            color: var(--text2); text-decoration: none; transition: all 0.15s;
+            white-space: nowrap;
+        }
+        .topbar-tabs a:hover { color: var(--text); }
+        .topbar-tabs a.active {
+            background: var(--card); color: var(--text); font-weight: 600;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        .notif-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 5px;
+            background: var(--red);
+            color: white;
+            border-radius: 9px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+        .btn-inscription {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 14px; border-radius: 8px; border: none;
+            background: var(--green); color: white; font-size: 0.82rem; font-weight: 500;
+            cursor: pointer; text-decoration: none; transition: all 0.2s;
+        }
+        .btn-inscription:hover { background: #2fb04f; transform: translateY(-1px); }
+        .admin-menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+        .admin-menu-toggle span {
+            width: 20px;
+            height: 2px;
+            background: var(--text);
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+        @media (max-width: 1024px) {
+            .admin-menu-toggle { display: flex; }
+            .topbar-tabs { display: none; }
+        }
+        .topbar-right { display: flex; align-items: center; gap: 14px; }
+        .btn-logout {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 5px 12px; border-radius: 980px; border: none; background: none;
+            font-size: 0.82rem; font-weight: 500; color: var(--text2); cursor: pointer;
+        }
+        .btn-logout:hover { color: var(--red); background: rgba(255,59,48,0.06); }
+
+        /* Layout */
+        .main { padding: 72px 24px 48px; max-width: 1440px; margin: 0 auto; }
+
+        /* Header */
+        .header-row {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 32px; flex-wrap: wrap; gap: 16px;
+        }
+        .header-row h1 {
+            font-size: 2rem; font-weight: 700; letter-spacing: -0.025em;
+        }
+        .btn-add {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 10px 20px; border-radius: 12px; border: none;
+            background: var(--blue); color: white; font-size: 0.9rem; font-weight: 600;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .btn-add:hover { background: #0077ed; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,113,227,0.3); }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 20px;
+        }
+
+        .instructor-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .instructor-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--blue), var(--purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .card-info h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-badge.active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-badge.inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .card-details {
+            margin: 16px 0;
+            padding: 16px;
+            background: var(--bg);
+            border-radius: 10px;
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px 0;
+            font-size: 0.9rem;
+        }
+
+        .detail-row i {
+            color: var(--blue);
+            width: 20px;
+            text-align: center;
+        }
+
+        .specialites {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .spec-badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .spec-badge.manual {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .spec-badge.auto {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-edit {
+            background: var(--blue);
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #0077ed;
+            transform: translateY(-2px);
+        }
+
+        .btn-delete {
+            background: var(--red);
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #ff1f1f;
+            transform: translateY(-2px);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 20px;
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text2);
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: rgba(0,0,0,0.06);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--blue);
+            box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: var(--bg);
+            transition: all 0.2s;
+        }
+
+        .checkbox-label:hover {
+            background: #e8e8ed;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            width: auto;
+            cursor: pointer;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: var(--blue);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-submit:hover {
+            background: #0077ed;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,113,227,0.3);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--text2);
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            color: var(--text2);
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            color: var(--text2);
+            font-size: 0.9rem;
+        }
+    
+        /* En-tete admin unifie */
+        .topbar { height: 52px !important; background: rgba(255,255,255,0.78) !important; display: flex !important; align-items: center !important; padding: 0 24px !important; }
+        .topbar-inner { max-width: 1440px !important; width: 100% !important; margin: 0 auto !important; display: flex !important; align-items: center !important; justify-content: space-between !important; gap: 16px !important; padding: 0 !important; height: auto !important; }
+        .topbar-brand { font-size: 1.05rem !important; font-weight: 700 !important; color: var(--text) !important; text-decoration: none !important; white-space: nowrap !important; }
+        .topbar-tabs { display: flex !important; flex: 1 1 auto !important; min-width: 0 !important; gap: 4px !important; background: rgba(0,0,0,0.04) !important; border-radius: 8px !important; padding: 3px !important; overflow-x: auto !important; flex-wrap: nowrap !important; scrollbar-width: thin !important; }
+        .topbar-tabs a { padding: 6px 12px !important; border-radius: 6px !important; font-size: 0.78rem !important; font-weight: 500 !important; color: var(--text2) !important; text-decoration: none !important; white-space: nowrap !important; }
+        .topbar-tabs a.active { background: var(--card) !important; color: var(--text) !important; font-weight: 700 !important; box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important; }
+        .topbar-right { display: flex !important; align-items: center !important; gap: 12px !important; flex: 0 0 auto !important; white-space: nowrap !important; }
+        .btn-inscription { display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 8px 16px !important; border-radius: 8px !important; background: var(--green) !important; color: #fff !important; font-size: 0.82rem !important; font-weight: 800 !important; text-decoration: none !important; border: none !important; }
+        .btn-logout { display: inline-flex !important; align-items: center !important; gap: 6px !important; border: none !important; background: rgba(0,0,0,0.04) !important; color: var(--text2) !important; font-size: 0.82rem !important; font-weight: 800 !important; cursor: pointer !important; padding: 8px 14px !important; border-radius: 999px !important; white-space: nowrap !important; }
+        .btn-logout:hover { color: var(--red) !important; background: rgba(255,59,48,0.08) !important; }
+        .admin-menu-toggle { display: none; flex-direction: column; gap: 4px; background: none; border: none; cursor: pointer; padding: 8px; }
+        .admin-menu-toggle span { width: 20px; height: 2px; background: var(--text); border-radius: 2px; }
+        @media (max-width: 900px) {
+            .topbar { padding: 0 12px !important; }
+            .admin-menu-toggle { display: flex !important; }
+            .topbar-tabs { display: none !important; }
+            .topbar-right { gap: 8px !important; }
+            .btn-inscription { padding: 8px 10px !important; font-size: 0.74rem !important; }
+            .btn-logout { padding: 8px 10px !important; font-size: 0.74rem !important; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="topbar">
+        <div class="topbar-inner">
+            <a href="index.html" class="topbar-brand">Auto-Ecole Breteuil</a>
+            <button class="admin-menu-toggle" id="adminMenuToggle" type="button" aria-label="Menu admin">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="topbar-tabs" id="adminTabs">
+                <a href="admin-planning.html">Planning</a>
+                <a href="admin-candidatures.html">Candidatures <span class="notif-badge" id="candidaturesBadge" style="display: none;">0</span></a>
+                <a href="admin-analytics.html">Analytics</a>
+                <a href="admin-comptabilite.html">Comptabilit&eacute;</a>
+                <a href="admin-moniteurs.html" class="active">Moniteurs</a>
+                <a href="admin-support.html">Support <span class="notif-badge" id="supportBadge" style="display: none;">0</span></a>
+                <a href="admin-contact.html">Contact <span class="notif-badge" id="contactBadge" style="display: none;">0</span></a>
+                <a href="admin-code-rousseau.html">Code Rousseau <span class="notif-badge" id="codeRousseuBadge" style="display: none;">0</span></a>
+                <a href="admin-reviews.html">Avis <span class="notif-badge" id="reviewsBadge" style="display: none;">0</span></a>
+            </div>
+            <div class="topbar-right">
+                <a href="inscription.html?admin=true" class="btn-inscription">
+                    <i class="fas fa-user-plus"></i> Nouvelle inscription
+                </a>
+                <button class="btn-logout" id="logoutBtn" type="button"><i class="fas fa-right-from-bracket"></i> Quitter</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main">
+        <div class="header-row">
+            <h1><i class="fas fa-chalkboard-teacher" style="color: var(--blue); margin-right: 12px;"></i>Gestion des Moniteurs</h1>
+            <button class="btn-add" onclick="openAddModal()">
+                <i class="fas fa-plus"></i> Ajouter un moniteur
+            </button>
+        </div>
+
+        <div id="instructorsGrid" class="cards-grid">
+            <!-- Les cartes seront inserees ici -->
+        </div>
+
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <i class="fas fa-user-slash"></i>
+            <h3>Aucun moniteur</h3>
+            <p>Commencez par ajouter votre premier moniteur</p>
+        </div>
+    </main>
+
+    <!-- Modal Ajouter/Modifier -->
+    <div id="instructorModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modalTitle">Ajouter un moniteur</h2>
+                <button class="modal-close" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="instructorForm" onsubmit="saveInstructor(event)">
+                <input type="hidden" id="instructorId">
+
+                <div class="form-group">
+                    <label for="prenom">Prenom *</label>
+                    <input type="text" id="prenom" required placeholder="Jean">
+                </div>
+
+                <div class="form-group">
+                    <label for="nom">Nom *</label>
+                    <input type="text" id="nom" required placeholder="Dupont">
+                </div>
+
+                <div class="form-group">
+                    <label for="gender">Genre *</label>
+                    <select id="gender" required>
+                        <option value="">Selectionner</option>
+                        <option value="male">Homme</option>
+                        <option value="female">Femme</option>
+                    </select>
+                    <small style="color: var(--text2); font-size: 0.8rem;">L'avatar sera adapte selon le genre</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" required placeholder="jean.dupont@exemple.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="telephone">Telephone</label>
+                    <input type="tel" id="telephone" placeholder="06 12 34 56 78">
+                </div>
+
+                <div class="form-group">
+                    <label for="monthlySalaryCharges">Salaire + charges mensuelles</label>
+                    <input type="number" id="monthlySalaryCharges" min="0" step="1" value="2200" placeholder="2200">
+                    <small style="color: var(--text2); font-size: 0.8rem;">Utilise dans Analytics pour calculer la rentabilite mensuelle du moniteur.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Mot de passe *</label>
+                    <input type="password" id="password" required placeholder="Mot de passe">
+                    <small style="color: var(--text2); font-size: 0.8rem;">Le moniteur utilisera cet email et ce mot de passe pour se connecter</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Specialites</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="specialite" value="manual" checked>
+                            <span>Boite Manuelle (BM)</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="specialite" value="auto">
+                            <span>Boite Automatique (BA)</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="specialite" value="moto">
+                            <span>Moto</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-label" style="background: none; padding: 0;">
+                        <input type="checkbox" id="isActive" checked>
+                        <span>Moniteur actif (peut recevoir des reservations)</span>
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-label" style="background: none; padding: 0;">
+                        <input type="checkbox" id="visibleToStudents">
+                        <span>Planning visible aux eleves (reservation automatique)</span>
+                    </label>
+                    <small style="color: var(--text2); font-size: 0.8rem; display: block; margin-top: 8px;">
+                        Si active, les eleves pourront voir les creneaux libres de ce moniteur et reserver automatiquement sans intervention de l'admin
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label for="workSchedule">Horaires de travail</label>
+                    <select id="workSchedule" onchange="toggleScheduleDetails()">
+                        <option value="full_time">Temps plein (7h-19h tous les jours)</option>
+                        <option value="part_time">Mi-temps (horaires personnalises)</option>
+                    </select>
+                </div>
+
+                <div id="scheduleDetails" style="display: none;">
+                    <div class="form-group">
+                        <label style="font-weight: 600; margin-bottom: 12px; display: block;">Horaires par jour</label>
+                        
+                        <div style="background: var(--bg); padding: 16px; border-radius: 10px; margin-bottom: 12px;">
+                            <label style="font-weight: 500; margin-bottom: 8px; display: block;">
+                                <i class="fas fa-calendar-day" style="color: var(--blue); margin-right: 6px;"></i>Lundi
+                            </label>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <select id="lundi_start" style="flex: 1;">
+                                    <option value="">Ferme</option>
+                                    <option value="07:00">07:00</option>
+                                    <option value="09:00">09:00</option>
+                                    <option value="11:00">11:00</option>
+                                    <option value="13:00">13:00</option>
+                                    <option value="15:00">15:00</option>
+                                    <option value="17:00">17:00</option>
+                                </select>
+                                <span>a</span>
+                                <select id="lundi_end" style="flex: 1;">
+                                    <option value="">Ferme</option>
+                                    <option value="13:00">13:00</option>
+                                    <option value="15:00">15:00</option>
+                                    <option value="17:00">17:00</option>
+                                    <option value="19:00">19:00</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div style="background: var(--bg); padding: 16px; border-radius: 10px; margin-bottom: 12px;">
+                            <label style="font-weight: 500; margin-bottom: 8px; display: block;">
+                                <i class="fas fa-calendar-day" style="color: var(--blue); margin-right: 6px;"></i>Mardi
+                            </label>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <select id="mardi_start" style="flex: 1;">
+                                    <option value="">Ferme</option>
+                                    <option value="07:00">07:00</option>
+                                    <option value="09:00">09:00</option>
+                                    <option value="11:00">11:00</option>
+                                    <option value="13:00">13:00</option>
+                                    <option value="15:00">15:00</option>
+                                    <option value="17:00">17:00</option>
+                                </select>
+                                <span>a</span>
+                                <select id="mardi_end" style="flex: 1;">
+                                    <option value="">Ferme</option>
+                                    <option value="13:00">13:00</option>
+                                    <option value="15:00">15:00</option>
+                                    <option value="17:00">17:00</option>
+                                    <option value="19:00">19:00</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div style="background: var(--bg); padding: 16px; border-radius: 10px; margin-bottom: 12px;">
+                            <label style="font-weight: 500; margin-bottom: 8px; display: block;">
+                                <i class="fas fa-calendar-day" style="color: var(--blue); margin-right: 6px;"></i>Mercredi
+                            </label>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <select id="mercredi_start" style="flex: 1;">
+                                    <option value="">Ferme</option>
+                                    <option value="07:00">07:00</option>
+                                    <option value="09:00">09:00</option>
+                                    <option value="11:00">11:00</option>
+                                    <option value="13:00">13:00</option>
+                                    <option value="15:00">15:00</option>
+                                    <option value="17:00">17:00</option>
+                                </select>
+                                <span>a</span>
+                                <select id="mercredi_end" style="flex: 1;">
+                                    <option value="">Ferme</option>
+                                    <option value="13:00">13:00</option>
+                                    <option value="15:00">15:00</option>
+                                    <option value="17:00">17:00</option>
+                                    <option value="19:00">19:00</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div style="background: var(--bg); padding: 16px; border-radius: 10px; margin-bottom: 12px;">
+                            <label style="font-weight: 500; margin-bottom: 8px; display: block;">
+                                <i class="fas fa-calendar-day" style="color: var(--blue); margin-right: 6px;"></i>Jeudi
+                            </label>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <select id="jeudi_start" style="flex: 1;">
+                                    <option value="">Ferme</option>
+                                    <option value="07:00">07:00</option>
+                                    <option value="09:00">09:00</option>
+                                    <option value="11:00">11:00</option>
+                                    <option value="13:00">13:00</option>
+                                    <option value="15:00">15:00</option>
+                                    <option value="17:00">17:00</option>
+                                </select>
+                                <span>a</span>
+                                <select id="jeudi_end" style="flex: 1;">
+                                    <option value="">Ferme</option>
+                                    <option value="13:00">13:00</option>
+                                    <option value="15:00">15:00</option>
+                                    <option value="17:00">17:00</option>
+                                    <option value="19:00">19:00</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div style="background: var(--bg); padding: 16px; border-radius: 10px; margin-bottom: 12px;">
+                            <label style="font-weight: 500; margin-bottom: 8px; display: block;">
+                                <i class="fas fa-calendar-day" style="color: var(--blue); margin-right: 6px;"></i>Vendredi
+                            </label>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <select id="vendredi_start" style="flex: 1;">
+                                    <option value="">Ferme</option>
+                                    <option value="07:00">07:00</option>
+                                    <option value="09:00">09:00</option>
+                                    <option value="11:00">11:00</option>
+                                    <option value="13:00">13:00</option>
+                                    <option value="15:00">15:00</option>
+                                    <option value="17:00">17:00</option>
+                                </select>
+                                <span>a</span>
+                                <select id="vendredi_end" style="flex: 1;">
+                                    <option value="">Ferme</option>
+                                    <option value="13:00">13:00</option>
+                                    <option value="15:00">15:00</option>
+                                    <option value="17:00">17:00</option>
+                                    <option value="19:00">19:00</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div style="background: var(--bg); padding: 16px; border-radius: 10px; margin-bottom: 12px;">
+                            <label style="font-weight: 500; margin-bottom: 8px; display: block;">
+                                <i class="fas fa-calendar-day" style="color: var(--blue); margin-right: 6px;"></i>Samedi
+                            </label>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <select id="samedi_start" style="flex: 1;">
+                                    <option value="">Ferme</option>
+                                    <option value="07:00">07:00</option>
+                                    <option value="09:00">09:00</option>
+                                    <option value="11:00">11:00</option>
+                                    <option value="13:00">13:00</option>
+                                    <option value="15:00">15:00</option>
+                                    <option value="17:00">17:00</option>
+                                </select>
+                                <span>a</span>
+                                <select id="samedi_end" style="flex: 1;">
+                                    <option value="">Ferme</option>
+                                    <option value="13:00">13:00</option>
+                                    <option value="15:00">15:00</option>
+                                    <option value="17:00">17:00</option>
+                                    <option value="19:00">19:00</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div style="background: var(--bg); padding: 16px; border-radius: 10px;">
+                            <label style="font-weight: 500; margin-bottom: 8px; display: block;">
+                                <i class="fas fa-calendar-day" style="color: var(--blue); margin-right: 6px;"></i>Dimanche
+                            </label>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <select id="dimanche_start" style="flex: 1;">
+                                    <option value="">Ferme</option>
+                                    <option value="07:00">07:00</option>
+                                    <option value="09:00">09:00</option>
+                                    <option value="11:00">11:00</option>
+                                    <option value="13:00">13:00</option>
+                                    <option value="15:00">15:00</option>
+                                    <option value="17:00">17:00</option>
+                                </select>
+                                <span>a</span>
+                                <select id="dimanche_end" style="flex: 1;">
+                                    <option value="">Ferme</option>
+                                    <option value="13:00">13:00</option>
+                                    <option value="15:00">15:00</option>
+                                    <option value="17:00">17:00</option>
+                                    <option value="19:00">19:00</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-save"></i> Enregistrer
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
+    <script src="assets/js/supabaseClient.js?v=8"></script>
+    <script src="assets/js/page-auth-guard.js" data-roles="admin"></script>
+    <script>
+        window.onload = loadInstructors;
+
+        async function adminInstructorsRequest(path = '', options = {}) {
+            const token = window.authSession?.getToken?.();
+            if (!token) {
+                window.location.href = 'connexion.html?redirect=admin-moniteurs.html';
+                throw new Error('AUTH_REQUIRED');
+            }
+            const response = await fetch(`/.netlify/functions/admin-instructors${path}`, {
+                ...options,
+                headers: {
+                    ...(options.headers || {}),
+                    Authorization: `Bearer ${token}`
+                },
+                cache: 'no-store'
+            });
+            const result = await response.json().catch(() => ({ ok: false, error: 'INVALID_SERVER_RESPONSE' }));
+            if (!response.ok || !result.ok) {
+                const error = new Error(result.error || 'ADMIN_INSTRUCTORS_FAILED');
+                error.status = response.status;
+                throw error;
+            }
+            return result;
+        }
+
+        function toggleScheduleDetails() {
+            const workSchedule = document.getElementById('workSchedule').value;
+            const scheduleDetails = document.getElementById('scheduleDetails');
+            scheduleDetails.style.display = workSchedule === 'part_time' ? 'block' : 'none';
+        }
+
+        async function loadInstructors() {
+            try {
+                const { instructors } = await adminInstructorsRequest();
+
+                const grid = document.getElementById('instructorsGrid');
+                const emptyState = document.getElementById('emptyState');
+
+                if (!instructors || instructors.length === 0) {
+                    grid.style.display = 'none';
+                    emptyState.style.display = 'block';
+                    return;
+                }
+
+                grid.style.display = 'grid';
+                emptyState.style.display = 'none';
+
+                grid.innerHTML = instructors.map(instructor => {
+                    const initials = `${instructor.prenom[0]}${instructor.nom[0]}`.toUpperCase();
+                    const specialites = instructor.specialites || [];
+                    const monthlySalaryCharges = Number(instructor.monthly_salary_charges || 2200);
+                    
+                    const specBadges = specialites.map(s => {
+                        if (s === 'manual') return '<span class="spec-badge manual">BM</span>';
+                        if (s === 'auto') return '<span class="spec-badge auto">BA</span>';
+                        if (s === 'moto') return '<span class="spec-badge" style="background: #d4edda; color: #155724;">Moto</span>';
+                        return '';
+                    }).join('');
+
+                    return `
+                        <div class="instructor-card">
+                            <div class="card-header">
+                                <div class="avatar">${initials}</div>
+                                <div class="card-info">
+                                    <h3>${instructor.prenom} ${instructor.nom}</h3>
+                                    <span class="status-badge ${instructor.is_active ? 'active' : 'inactive'}">
+                                        <i class="fas fa-circle" style="font-size: 0.5rem;"></i>
+                                        ${instructor.is_active ? 'Actif' : 'Inactif'}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="card-details">
+                                <div class="detail-row">
+                                    <i class="fas fa-envelope"></i>
+                                    <span>${instructor.email}</span>
+                                </div>
+                                ${instructor.telephone ? `
+                                <div class="detail-row">
+                                    <i class="fas fa-phone"></i>
+                                    <span>${instructor.telephone}</span>
+                                </div>
+                                ` : ''}
+                                <div class="detail-row">
+                                    <i class="fas fa-euro-sign"></i>
+                                    <span>Salaire + charges : ${monthlySalaryCharges.toLocaleString('fr-FR')}€/mois</span>
+                                </div>
+                                ${specBadges ? `
+                                <div class="specialites">
+                                    ${specBadges}
+                                </div>
+                                ` : ''}
+                            </div>
+
+                            <div class="card-actions">
+                                <button class="btn btn-edit" onclick="editInstructor('${instructor.id}')">
+                                    <i class="fas fa-edit"></i> Modifier
+                                </button>
+                                <button class="btn btn-delete" onclick="deleteInstructor('${instructor.id}', '${instructor.prenom} ${instructor.nom}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (err) {
+                console.error('Erreur:', err);
+            }
+        }
+
+        function openAddModal() {
+            document.getElementById('modalTitle').textContent = 'Ajouter un moniteur';
+            document.getElementById('instructorForm').reset();
+            document.getElementById('instructorId').value = '';
+            document.getElementById('password').required = true;
+            document.getElementById('monthlySalaryCharges').value = '2200';
+            document.getElementById('instructorModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('instructorModal').classList.remove('active');
+        }
+
+        async function saveInstructor(event) {
+            event.preventDefault();
+
+            const id = document.getElementById('instructorId').value;
+            const prenom = document.getElementById('prenom').value.trim();
+            const nom = document.getElementById('nom').value.trim();
+            const gender = document.getElementById('gender').value;
+            const email = document.getElementById('email').value.trim();
+            const telephone = document.getElementById('telephone').value.trim();
+            const password = document.getElementById('password').value;
+            const monthlySalaryCharges = Number(document.getElementById('monthlySalaryCharges').value || 2200);
+            const isActive = document.getElementById('isActive').checked;
+            const visibleToStudents = document.getElementById('visibleToStudents').checked;
+            const workSchedule = document.getElementById('workSchedule').value;
+
+            const specialites = Array.from(document.querySelectorAll('input[name="specialite"]:checked'))
+                .map(cb => cb.value);
+
+            // Recuperer les horaires personnalises si mi-temps
+            let customSchedule = null;
+            if (workSchedule === 'part_time') {
+                customSchedule = {
+                    lundi: {
+                        start: document.getElementById('lundi_start').value || null,
+                        end: document.getElementById('lundi_end').value || null
+                    },
+                    mardi: {
+                        start: document.getElementById('mardi_start').value || null,
+                        end: document.getElementById('mardi_end').value || null
+                    },
+                    mercredi: {
+                        start: document.getElementById('mercredi_start').value || null,
+                        end: document.getElementById('mercredi_end').value || null
+                    },
+                    jeudi: {
+                        start: document.getElementById('jeudi_start').value || null,
+                        end: document.getElementById('jeudi_end').value || null
+                    },
+                    vendredi: {
+                        start: document.getElementById('vendredi_start').value || null,
+                        end: document.getElementById('vendredi_end').value || null
+                    },
+                    samedi: {
+                        start: document.getElementById('samedi_start').value || null,
+                        end: document.getElementById('samedi_end').value || null
+                    },
+                    dimanche: {
+                        start: document.getElementById('dimanche_start').value || null,
+                        end: document.getElementById('dimanche_end').value || null
+                    }
+                };
+            }
+
+            try {
+                const instructorData = {
+                    id,
+                    prenom,
+                    nom,
+                    gender,
+                    email,
+                    telephone: telephone || null,
+                    password,
+                    monthly_salary_charges: Number.isFinite(monthlySalaryCharges) && monthlySalaryCharges >= 0 ? monthlySalaryCharges : 2200,
+                    specialites,
+                    is_active: isActive,
+                    visible_to_students: visibleToStudents,
+                    work_schedule: workSchedule,
+                    custom_schedule: customSchedule
+                };
+
+                await adminInstructorsRequest('', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(instructorData)
+                });
+
+                alert('OK Moniteur enregistre avec succes !');
+                closeModal();
+                loadInstructors();
+
+            } catch (err) {
+                console.error('Erreur:', err);
+                if (err.message === 'INSTRUCTOR_SALARY_COLUMN_MISSING') {
+                    alert("La colonne salaire des moniteurs manque dans Supabase. Execute la migration sql/profitability-storage.sql puis recommence.");
+                } else {
+                    alert('Erreur lors de l\'enregistrement');
+                }
+            }
+        }
+
+        async function editInstructor(id) {
+            try {
+                const { instructor } = await adminInstructorsRequest(`?id=${encodeURIComponent(id)}`);
+                if (!instructor) {
+                    alert('Moniteur introuvable.');
+                    return;
+                }
+
+                document.getElementById('modalTitle').textContent = 'Modifier le moniteur';
+                document.getElementById('instructorId').value = instructor.id;
+                document.getElementById('prenom').value = instructor.prenom;
+                document.getElementById('nom').value = instructor.nom;
+                document.getElementById('gender').value = instructor.gender || 'male';
+                document.getElementById('email').value = instructor.email;
+                document.getElementById('telephone').value = instructor.telephone || '';
+                document.getElementById('password').value = '';
+                document.getElementById('password').required = false;
+                document.getElementById('monthlySalaryCharges').value = instructor.monthly_salary_charges || 2200;
+                document.getElementById('isActive').checked = instructor.is_active;
+                document.getElementById('visibleToStudents').checked = instructor.visible_to_students || false;
+                document.getElementById('workSchedule').value = instructor.work_schedule || 'full_time';
+
+                document.querySelectorAll('input[name="specialite"]').forEach(cb => {
+                    cb.checked = (instructor.specialites || []).includes(cb.value);
+                });
+
+                // Charger les horaires personnalises si mi-temps
+                toggleScheduleDetails();
+                if (instructor.work_schedule === 'part_time' && instructor.custom_schedule) {
+                    const schedule = instructor.custom_schedule;
+                    ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'].forEach(day => {
+                        if (schedule[day]) {
+                            document.getElementById(`${day}_start`).value = schedule[day].start || '';
+                            document.getElementById(`${day}_end`).value = schedule[day].end || '';
+                        }
+                    });
+                }
+
+                document.getElementById('instructorModal').classList.add('active');
+
+            } catch (err) {
+                console.error('Erreur:', err);
+            }
+        }
+
+        async function deleteInstructor(id, name) {
+            if (!confirm(`Etes-vous sur de vouloir supprimer ${name} ?\n\nCette action est irreversible.`)) {
+                return;
+            }
+
+            try {
+                await adminInstructorsRequest(`?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
+
+                alert('OK Moniteur supprime');
+                loadInstructors();
+
+            } catch (err) {
+                console.error('Erreur:', err);
+            }
+        }
+
+        function logout() {
+            document.getElementById('logoutBtn')?.click();
+        }
+    </script>
+    <script src="assets/js/admin-notif-badge.js"></script>
+    <script src="assets/js/admin-mobile-menu.js?v=3"></script>
+    <script src="assets/js/text-encoding-fix.js?v=2"></script>
+</body>
+</html>
+
+
+

@@ -6,7 +6,7 @@
     <title>Analytics - Auto-Ecole Breteuil</title>
     <meta name="robots" content="noindex,nofollow">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/admin-mobile.css">
+    <link rel="stylesheet" href="assets/css/admin-mobile.css?v=3">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -35,7 +35,7 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ── Top Navigation ── */
+        /* ?"??"? Top Navigation ?"??"? */
         .topbar {
             position: fixed; top: 0; left: 0; right: 0; z-index: 100;
             height: 52px;
@@ -86,14 +86,14 @@
         }
         .btn-logout:hover { color: var(--apple-red); background: rgba(255,59,48,0.06); }
 
-        /* ── Main Content ── */
+        /* ?"??"? Main Content ?"??"? */
         .admin-main {
             padding: 76px 24px 48px;
             max-width: 1400px;
             margin: 0 auto;
         }
 
-        /* ── Page Header ── */
+        /* ?"??"? Page Header ?"??"? */
         .page-header {
             display: flex;
             align-items: flex-end;
@@ -150,7 +150,7 @@
             text-align: center;
         }
 
-        /* ── KPI Cards ── */
+        /* KPI Cards */
         .kpi-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -213,7 +213,7 @@
             line-height: 1;
         }
 
-        /* ── Chart Cards ── */
+        /* Chart Cards */
         .charts {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -235,7 +235,7 @@
             margin-bottom: 12px;
         }
 
-        /* ── Dashboard ── */
+        /* ?"??"? Dashboard ?"??"? */
         .dashboard {
             display: none;
         }
@@ -244,7 +244,7 @@
             display: block;
         }
 
-        /* ── Feedback ── */
+        /* ?"??"? Feedback ?"??"? */
         .feedback {
             font-size: 0.85rem;
             font-weight: 500;
@@ -255,12 +255,474 @@
         .feedback.error { color: var(--apple-red); }
         .feedback.success { color: var(--apple-green); }
 
-        /* ── Responsive ── */
+        .profitability-section {
+            margin-top: 24px;
+            display: grid;
+            gap: 22px;
+        }
+
+        .profitability-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+
+        .profitability-header h2 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 4px;
+        }
+
+        .profitability-header p {
+            color: var(--apple-secondary);
+            font-size: 0.92rem;
+        }
+
+        .profitability-rate {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--apple-secondary);
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+
+        .profitability-rate input {
+            width: 86px;
+            height: 36px;
+            border: 1px solid var(--apple-border);
+            border-radius: 9px;
+            padding: 0 10px;
+            font: inherit;
+            color: var(--apple-text);
+            background: white;
+        }
+
+        .profitability-legend {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .profitability-legend span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--apple-secondary);
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        .profitability-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .profitability-list {
+            display: grid;
+            gap: 14px;
+        }
+
+        .profitability-panel {
+            background: var(--apple-card);
+            border: 1px solid var(--apple-border);
+            border-radius: var(--apple-radius-lg);
+            padding: 22px;
+            box-shadow: var(--apple-shadow-lg);
+        }
+
+        .profitability-panel.vehicle-panel {
+            border-color: rgba(0,113,227,0.22);
+        }
+
+        .profitability-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .profitability-subtitle {
+            font-size: 1.08rem;
+            font-weight: 900;
+            color: var(--apple-text);
+            margin: 0 0 4px;
+        }
+
+        .profitability-panel-copy {
+            color: var(--apple-secondary);
+            font-size: 0.86rem;
+            margin: 0;
+        }
+
+        .profitability-scale {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--apple-secondary);
+            font-size: 0.78rem;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .profitability-total {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin: 0;
+        }
+
+        .profitability-total-card {
+            border: 1px solid var(--apple-border);
+            border-radius: 14px;
+            padding: 14px;
+            background: #fbfbfd;
+        }
+
+        .profitability-total-card.total {
+            border-color: rgba(0,113,227,0.28);
+            background: rgba(0,113,227,0.06);
+        }
+
+        .profitability-total-card span {
+            display: block;
+            color: var(--apple-secondary);
+            font-size: 0.78rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .profitability-total-card strong {
+            display: block;
+            font-size: 1.45rem;
+            font-weight: 900;
+        }
+
+        .profitability-total-card strong.green,
+        .profitability-values strong.green { color: #15803d; }
+
+        .profitability-total-card strong.red,
+        .profitability-values strong.red { color: var(--apple-red); }
+
+        .profitability-card {
+            border: 1px solid var(--apple-border);
+            border-radius: 14px;
+            padding: 16px;
+            background: #fbfbfd;
+        }
+
+        .vehicle-profitability-card {
+            background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+            border-color: rgba(0,113,227,0.16);
+        }
+
+        .vehicle-tag {
+            display: inline-flex;
+            vertical-align: middle;
+            align-items: center;
+            margin-left: 8px;
+            padding: 3px 8px;
+            border-radius: 999px;
+            font-size: 0.72rem;
+            font-weight: 900;
+        }
+
+        .vehicle-tag.manual {
+            color: #b86200;
+            background: rgba(255,149,0,0.14);
+        }
+
+        .vehicle-tag.auto {
+            color: var(--apple-blue);
+            background: rgba(0,113,227,0.12);
+        }
+
+        .profitability-card-top {
+            display: grid;
+            grid-template-columns: minmax(160px, 1fr) auto;
+            gap: 12px;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .profitability-name {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--apple-text);
+        }
+
+        .profitability-meta {
+            margin-top: 3px;
+            color: var(--apple-secondary);
+            font-size: 0.82rem;
+        }
+
+        .profitability-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            border-radius: 999px;
+            padding: 7px 10px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .profitability-status.red { background: rgba(255,59,48,0.1); color: var(--apple-red); }
+        .profitability-status.orange { background: rgba(255,149,0,0.12); color: #b86200; }
+        .profitability-status.green { background: rgba(52,199,89,0.12); color: #15803d; }
+        .profitability-status.gray { background: rgba(142,142,147,0.12); color: var(--apple-secondary); }
+
+        .profitability-data-btn {
+            border: 1px solid rgba(0,113,227,0.25);
+            background: rgba(0,113,227,0.08);
+            color: var(--apple-blue);
+            border-radius: 999px;
+            padding: 7px 11px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .profitability-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .profitability-gauge-row {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 18px;
+            align-items: center;
+            margin: 10px 0 14px;
+        }
+
+        .profitability-gauge {
+            position: relative;
+            width: 214px;
+            height: 122px;
+            overflow: hidden;
+        }
+
+        .profitability-gauge-arc {
+            position: absolute;
+            left: 0;
+            bottom: -80px;
+            width: 214px;
+            height: 214px;
+            border-radius: 50%;
+            background:
+                radial-gradient(circle at center, #fbfbfd 0 50px, transparent 51px),
+                conic-gradient(from 270deg, #ff3b30 0deg 60deg, #ff9500 60deg 120deg, #34c759 120deg 180deg, #e5e5ea 180deg 360deg);
+            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08);
+        }
+
+        .profitability-needle {
+            position: absolute;
+            left: 50%;
+            bottom: 18px;
+            width: 5px;
+            height: 88px;
+            border-radius: 999px;
+            background: #2c2c2e;
+            transform-origin: 50% 100%;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.22);
+            transition: transform 0.35s ease;
+        }
+
+        .profitability-needle.red { background: var(--apple-red); }
+        .profitability-needle.orange { background: #ff9500; }
+        .profitability-needle.green { background: #34c759; }
+
+        .profitability-hub {
+            position: absolute;
+            left: 50%;
+            bottom: 7px;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: #f5f5f7;
+            border: 9px solid #4b5563;
+            transform: translateX(-50%);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+        }
+
+        .profitability-gauge-labels {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 2px;
+            display: flex;
+            justify-content: space-between;
+            color: var(--apple-secondary);
+            font-size: 0.66rem;
+            font-weight: 800;
+            pointer-events: none;
+        }
+
+        .profitability-result span {
+            display: block;
+            color: var(--apple-secondary);
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .profitability-result strong {
+            display: block;
+            font-size: clamp(1.65rem, 3vw, 2.35rem);
+            line-height: 1;
+            font-weight: 900;
+        }
+
+        .profitability-result strong.red { color: var(--apple-red); }
+        .profitability-result strong.orange { color: #b86200; }
+        .profitability-result strong.green { color: #15803d; }
+        .profitability-result strong.gray { color: var(--apple-secondary); }
+
+        .profitability-values {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            gap: 10px;
+            color: var(--apple-secondary);
+            font-size: 0.82rem;
+        }
+
+        .profitability-values strong {
+            display: block;
+            color: var(--apple-text);
+            font-size: 0.98rem;
+            margin-bottom: 2px;
+        }
+
+        .profitability-empty {
+            color: var(--apple-secondary);
+            padding: 18px;
+            border: 1px dashed var(--apple-border);
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .profitability-note {
+            display: none;
+        }
+
+        .profitability-modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.38);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+        }
+
+        .profitability-modal-backdrop.open { display: flex; }
+
+        .profitability-modal {
+            width: min(560px, 100%);
+            background: white;
+            border-radius: 20px;
+            padding: 22px;
+            box-shadow: 0 24px 70px rgba(0,0,0,0.24);
+        }
+
+        .profitability-modal-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 14px;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .profitability-modal-header h3 {
+            font-size: 1.15rem;
+            margin: 0 0 4px;
+        }
+
+        .profitability-modal-header p {
+            color: var(--apple-secondary);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .profitability-modal-close {
+            border: 0;
+            background: #f2f2f7;
+            color: var(--apple-text);
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: 900;
+        }
+
+        .profitability-form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .profitability-form-grid label {
+            display: grid;
+            gap: 6px;
+            color: var(--apple-secondary);
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        .profitability-form-grid input {
+            height: 40px;
+            border: 1px solid var(--apple-border);
+            border-radius: 10px;
+            padding: 0 10px;
+            font: inherit;
+            color: var(--apple-text);
+        }
+
+        .profitability-modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .profitability-modal-actions button {
+            border: 0;
+            border-radius: 12px;
+            padding: 11px 16px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .profitability-modal-actions .secondary { background: #f2f2f7; color: var(--apple-text); }
+        .profitability-modal-actions .primary { background: var(--apple-blue); color: white; }
+
+        /* ?"??"? Responsive ?"??"? */
         @media (max-width: 960px) {
             .kpi-grid { grid-template-columns: 1fr; }
             .charts { grid-template-columns: 1fr; }
             .admin-main { padding: 68px 16px 32px; }
             .page-header-left h1 { font-size: 1.5rem; }
+            .profitability-gauge-row { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+            .profitability-form-grid { grid-template-columns: 1fr; }
+            .profitability-total,
+            .profitability-values { grid-template-columns: 1fr 1fr; }
+            .profitability-panel-header { display: grid; }
         }
 
         @media (max-width: 600px) {
@@ -282,16 +744,18 @@
                 <a href="admin-planning.html">Planning</a>
                 <a href="admin-candidatures.html">Candidatures <span class="notif-badge" id="candidaturesBadge" style="display: none;">0</span></a>
                 <a href="admin-analytics.html" class="active">Analytics</a>
+                <a href="admin-comptabilite.html">Comptabilit&eacute;</a>
+                <a href="admin-moniteurs.html">Moniteurs</a>
                 <a href="admin-support.html">Support <span class="notif-badge" id="supportBadge" style="display: none;">0</span></a>
                 <a href="admin-contact.html">Contact <span class="notif-badge" id="contactBadge" style="display: none;">0</span></a>
                 <a href="admin-code-rousseau.html">Code Rousseau <span class="notif-badge" id="codeRousseuBadge" style="display: none;">0</span></a>
+                <a href="admin-reviews.html">Avis <span class="notif-badge" id="reviewsBadge" style="display: none;">0</span></a>
             </div>
             <div class="topbar-right">
                 <a href="inscription.html?admin=true" class="btn-inscription">
                     <i class="fas fa-user-plus"></i> Nouvelle inscription
                 </a>
-                <a href="index.html"><i class="fas fa-arrow-left"></i> Retour au site</a>
-                <button class="btn-logout" id="logoutBtn"><i class="fas fa-right-from-bracket"></i> Quitter</button>
+                <button class="btn-logout" id="logoutBtn" type="button"><i class="fas fa-right-from-bracket"></i> Quitter</button>
             </div>
         </div>
     </nav>
@@ -301,7 +765,7 @@
         <div class="page-header">
             <div class="page-header-left">
                 <h1>Analytics</h1>
-                <p>Indicateurs essentiels et évolution</p>
+                <p>Indicateurs essentiels et evolution</p>
             </div>
             <div class="year-nav">
                 <button type="button" id="prevRangeBtn"><i class="fas fa-chevron-left"></i></button>
@@ -314,76 +778,93 @@
             <!-- KPI 1: Inscriptions + son graphique -->
             <div class="kpi">
                 <div class="kpi-icon"><i class="fas fa-user-plus"></i></div>
-                <div class="label">Inscriptions cette année</div>
+                <div class="label">Inscriptions cette annee</div>
                 <div class="value" id="kpiSignups">0</div>
             </div>
             <div class="chart-card">
                 <h3>Inscriptions / mois</h3>
-                <div style="margin-bottom: 30px;">
-                    <h4 style="font-size: 15px; color: #1d1d1f; font-weight: 600; margin-bottom: 10px;">Total</h4>
-                    <canvas id="chartSignupsTotal" height="160"></canvas>
-                </div>
-                <div style="margin-bottom: 20px;">
-                    <h4 style="font-size: 14px; color: #86868b; margin-bottom: 10px;">Boîte manuelle</h4>
-                    <canvas id="chartSignupsManual" height="120"></canvas>
-                </div>
-                <div style="margin-bottom: 20px;">
-                    <h4 style="font-size: 14px; color: #86868b; margin-bottom: 10px;">Boîte auto</h4>
-                    <canvas id="chartSignupsAuto" height="120"></canvas>
-                </div>
-                <div>
-                    <h4 style="font-size: 14px; color: #86868b; margin-bottom: 10px;">Sans permis (AM)</h4>
-                    <canvas id="chartSignupsAm" height="120"></canvas>
-                </div>
+                <canvas id="chartSignupsTotal" height="210"></canvas>
+                <canvas id="chartSignupsManual" style="display:none;"></canvas>
+                <canvas id="chartSignupsAuto" style="display:none;"></canvas>
+                <canvas id="chartSignupsAm" style="display:none;"></canvas>
             </div>
 
             <!-- KPI 2: Chiffre d'affaires + son graphique -->
             <div class="kpi">
                 <div class="kpi-icon"><i class="fas fa-euro-sign"></i></div>
                 <div class="label">Chiffre d'affaires</div>
-                <div class="value" id="kpiRevenue">0€</div>
+                <div class="value" id="kpiRevenue">0&euro;</div>
             </div>
             <div class="chart-card">
                 <h3>Chiffre d'affaires / mois</h3>
-                <div style="margin-bottom: 30px;">
-                    <h4 style="font-size: 15px; color: #1d1d1f; font-weight: 600; margin-bottom: 10px;">💰 CA Total (en ligne + admin)</h4>
-                    <canvas id="chartRevenueTotal" height="160"></canvas>
-                </div>
-                <div style="margin-bottom: 20px;">
-                    <h4 style="font-size: 14px; color: #4CAF50; font-weight: 600; margin-bottom: 10px;">🌐 CA en ligne (paiements Stripe)</h4>
-                    <canvas id="chartRevenueOnline" height="140"></canvas>
-                </div>
-                <div style="margin-bottom: 20px;">
-                    <h4 style="font-size: 14px; color: #FF9800; font-weight: 600; margin-bottom: 10px;">👤 CA admin (paiements cash)</h4>
-                    <canvas id="chartRevenueAdmin" height="140"></canvas>
-                </div>
+                <canvas id="chartRevenueTotal" height="210"></canvas>
+                <canvas id="chartRevenueOnline" style="display:none;"></canvas>
+                <canvas id="chartRevenueAdmin" style="display:none;"></canvas>
             </div>
 
-            <!-- KPI 3: Heures réalisées + son graphique -->
+            <!-- KPI 3: Heures realisees + son graphique -->
             <div class="kpi">
                 <div class="kpi-icon"><i class="fas fa-clock"></i></div>
-                <div class="label">Heures réalisées</div>
+                <div class="label">Heures realisees</div>
                 <div class="value" id="kpiHours">0h</div>
             </div>
             <div class="chart-card">
-                <h3>Heures réalisées / mois</h3>
-                <div style="margin-bottom: 30px;">
-                    <h4 style="font-size: 15px; color: #1d1d1f; font-weight: 600; margin-bottom: 10px;">Total</h4>
-                    <canvas id="chartHoursTotal" height="160"></canvas>
-                </div>
-                <div style="margin-bottom: 20px;">
-                    <h4 style="font-size: 14px; color: #86868b; margin-bottom: 10px;">Boîte manuelle</h4>
-                    <canvas id="chartHoursManual" height="120"></canvas>
-                </div>
-                <div style="margin-bottom: 20px;">
-                    <h4 style="font-size: 14px; color: #86868b; margin-bottom: 10px;">Boîte auto</h4>
-                    <canvas id="chartHoursAuto" height="120"></canvas>
-                </div>
-                <div>
-                    <h4 style="font-size: 14px; color: #86868b; margin-bottom: 10px;">Sans permis (AM)</h4>
-                    <canvas id="chartHoursAm" height="120"></canvas>
-                </div>
+                <h3>Heures realisees / mois</h3>
+                <canvas id="chartHoursTotal" height="210"></canvas>
+                <canvas id="chartHoursManual" style="display:none;"></canvas>
+                <canvas id="chartHoursAuto" style="display:none;"></canvas>
+                <canvas id="chartHoursAm" style="display:none;"></canvas>
             </div>
+
+            <section class="profitability-section" id="profitabilitySection">
+                <div class="profitability-header">
+                    <div>
+                        <h2>Rentabilit&eacute;</h2>
+                        <p>Moniteurs et v&eacute;hicules sont calcul&eacute;s s&eacute;par&eacute;ment, puis additionn&eacute;s dans la renta totale.</p>
+                    </div>
+                    <label class="profitability-rate">
+                        Mois
+                        <input type="month" id="profitabilityMonth">
+                    </label>
+                    <label class="profitability-rate">
+                        Tarif moyen / h
+                        <input type="number" id="profitabilityHourlyRate" min="0" step="1" value="45">
+                    </label>
+                </div>
+                <div class="profitability-legend">
+                    <span><i class="profitability-dot" style="background:#ff3b30;"></i> Rouge : marge faible ou n&eacute;gative</span>
+                    <span><i class="profitability-dot" style="background:#ff9500;"></i> Orange : &agrave; optimiser</span>
+                    <span><i class="profitability-dot" style="background:#34c759;"></i> Vert : bonne rentabilit&eacute;</span>
+                </div>
+                <div class="profitability-panel">
+                    <div class="profitability-total" id="profitabilityTotal"></div>
+                </div>
+                <div class="profitability-panel">
+                    <div class="profitability-panel-header">
+                        <div>
+                            <h3 class="profitability-subtitle">Rentabilit&eacute; moniteurs</h3>
+                            <p class="profitability-panel-copy">Salaires, charges, frais saisis et bonus sont suivis par profil moniteur.</p>
+                        </div>
+                        <span class="profitability-scale" id="instructorProfitabilityScale"></span>
+                    </div>
+                    <div class="profitability-list" id="profitabilityList">
+                        <div class="profitability-empty">Chargement de la rentabilit&eacute;...</div>
+                    </div>
+                </div>
+                <div class="profitability-panel vehicle-panel">
+                    <div class="profitability-panel-header">
+                        <div>
+                            <h3 class="profitability-subtitle">Rentabilit&eacute; v&eacute;hicules</h3>
+                            <p class="profitability-panel-copy">Assurance, essence, r&eacute;parations et production sont calcul&eacute;es par v&eacute;hicule.</p>
+                        </div>
+                        <span class="profitability-scale" id="vehicleProfitabilityScale"></span>
+                    </div>
+                    <div class="profitability-list" id="vehicleProfitabilityList">
+                        <div class="profitability-empty">Chargement de la rentabilit&eacute; v&eacute;hicules...</div>
+                    </div>
+                </div>
+                <p class="profitability-note" id="profitabilityNote"></p>
+            </section>
 
             <p class="feedback" id="analyticsFeedback"></p>
         </section>
@@ -391,9 +872,12 @@
 
     <script src="https://unpkg.com/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-    <script src="assets/js/supabaseClient.js?v=3"></script>
-    <script src="assets/js/admin-analytics.js?v=17"></script>
+    <script src="assets/js/supabaseClient.js?v=8"></script>
+    <script src="assets/js/page-auth-guard.js?v=2" data-roles="admin"></script>
+    <script src="assets/js/admin-analytics.js?v=25"></script>
     <script src="assets/js/admin-notif-badge.js"></script>
-    <script src="assets/js/admin-mobile-menu.js"></script>
+    <script src="assets/js/admin-mobile-menu.js?v=3"></script>
+    <script src="assets/js/text-encoding-fix.js?v=2"></script>
 </body>
 </html>
+

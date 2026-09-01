@@ -1,5 +1,15 @@
 // Gestion du modal de résultat d'examen
 let selectedRating = 0;
+let selectedScheduledExam = null;
+
+function fileToDataUrl(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(reader.error || new Error('FILE_READ_FAILED'));
+        reader.readAsDataURL(file);
+    });
+}
 
 // Ouvrir le modal
 window.openExamResultModal = async function() {
@@ -14,6 +24,35 @@ window.openExamResultModal = async function() {
 };
 
 // Fermer le modal
+async function loadScheduledExamFromUrl() {
+    const id = new URLSearchParams(window.location.search).get('exam_result');
+    if (!id || !window.supabaseClient || !window.authSession?.getToken()) return;
+    try {
+        const { data, error } = await window.supabaseClient
+            .from('driving_exam_dates')
+            .select('id,exam_date,instructor,location,result')
+            .eq('id', id)
+            .maybeSingle();
+        if (error || !data || data.result) return;
+        selectedScheduledExam = data;
+        setTimeout(async () => {
+            await openExamResultModal();
+            const dateInput = document.querySelector('#examResultForm input[name="examDate"]');
+            const idInput = document.getElementById('examDateId');
+            const instructorInput = document.getElementById('selectedInstructor');
+            const instructorInfo = document.getElementById('instructorInfo');
+            if (dateInput) dateInput.value = data.exam_date;
+            if (idInput) idInput.value = data.id;
+            if (instructorInput) instructorInput.value = data.instructor;
+            if (instructorInfo) {
+                instructorInfo.innerHTML = `<div style="font-weight:700;color:#333;">${data.instructor}</div><div style="font-size:0.85rem;color:#666;">Examen a ${data.location}</div>`;
+            }
+        }, 600);
+    } catch (error) {
+        console.error('Chargement date examen:', error);
+    }
+}
+
 window.closeExamResultModal = function() {
     const modal = document.getElementById('examResultModal');
     if (modal) {
@@ -135,7 +174,7 @@ function showManualInstructorSelection(message = '', instructorHours = {}) {
     // Liste des moniteurs disponibles
     const availableInstructors = Object.keys(instructorHours).length > 0 
         ? Object.keys(instructorHours) 
-        : ['Mylène', 'Sammy', 'Nail'];
+        : ['Daho', 'Sammy', 'Nail'];
     
     let html = '';
     if (message) {
@@ -170,14 +209,14 @@ window.submitExamResult = async function(event) {
     
     // Vérifier que la note est définie
     if (!selectedRating || selectedRating < 1) {
-        alert('❌ Merci de donner une note au moniteur (1 à 5 étoiles)');
+        alert('Merci de donner une note au moniteur (1 a 5 etoiles).');
         return;
     }
     
     // Vérifier qu'un moniteur est sélectionné
     const instructor = document.getElementById('selectedInstructor').value;
     if (!instructor) {
-        alert('❌ Impossible de déterminer le moniteur principal. Tu dois avoir effectué au moins 75% de tes heures avec un même moniteur.');
+        alert('Impossible de determiner le moniteur principal. Tu dois avoir effectue au moins 75% de tes heures avec un meme moniteur.');
         return;
     }
     
@@ -186,34 +225,68 @@ window.submitExamResult = async function(event) {
     
     try {
         const formData = new FormData(form);
+        const pdfFile = document.getElementById('resultPdf')?.files?.[0] || null;
+        if (pdfFile && pdfFile.type && pdfFile.type !== 'application/pdf') {
+            alert('Merci de joindre uniquement une fiche resultat en PDF.');
+            submitButton.disabled = false;
+            submitButton.innerHTML = originalButtonText;
+            return;
+        }
+        if (pdfFile && pdfFile.size > 4.5 * 1024 * 1024) {
+            alert('Le PDF est trop lourd. Merci de joindre un fichier de moins de 4,5 Mo.');
+            submitButton.disabled = false;
+            submitButton.innerHTML = originalButtonText;
+            return;
+        }
         const data = {
             student_email: dashboardState.user.email,
             student_name: `${dashboardState.user.prenom || ''} ${dashboardState.user.nom || ''}`.trim(),
             result: formData.get('examResult'),
             exam_date: formData.get('examDate'),
+            exam_date_id: formData.get('examDateId') || selectedScheduledExam?.id || '',
             instructor: instructor,
             rating: parseInt(selectedRating),
             appreciation: formData.get('appreciation') || null,
             submitted_at: new Date().toISOString()
         };
+        if (pdfFile) {
+            data.result_pdf = {
+                name: pdfFile.name,
+                type: pdfFile.type || 'application/pdf',
+                size: pdfFile.size,
+                data: await fileToDataUrl(pdfFile)
+            };
+        }
         
-        // Enregistrer dans Supabase
-        const { error } = await window.supabaseClient
-            .from('exam_results')
-            .insert([data]);
-        
-        if (error) throw error;
+        const token = window.authSession?.getToken();
+        if (!token) throw new Error('AUTH_REQUIRED');
+        const response = await fetch('/.netlify/functions/submit-exam-result', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify(data)
+        });
+        const resultResponse = await response.json().catch(() => ({}));
+        if (!response.ok || !resultResponse.ok) {
+            throw new Error(resultResponse.error || 'EXAM_RESULT_FAILED');
+        }
         
         // Succès
         closeExamResultModal();
         
-        const resultText = data.result === 'passed' ? 'Félicitations ! 🎉' : 'Courage pour la prochaine fois ! 💪';
-        alert(`✅ ${resultText}\n\nTon résultat a été enregistré avec succès.\n\nMerci pour ton retour sur ${instructor} !`);
+        const resultText = data.result === 'passed' ? 'Felicitations !' : 'Courage pour la prochaine fois !';
+        alert(`${resultText}\n\nTon resultat a ete enregistre avec succes.\n\nMerci pour ton retour sur ${instructor} !`);
         
     } catch (err) {
         console.error('Erreur soumission résultat:', err);
-        alert('❌ Une erreur est survenue. Veuillez réessayer.');
+        alert('Une erreur est survenue. Veuillez reessayer.');
         submitButton.disabled = false;
         submitButton.innerHTML = originalButtonText;
     }
 };
+
+document.addEventListener('auth-session-ready', loadScheduledExamFromUrl);
+
+
