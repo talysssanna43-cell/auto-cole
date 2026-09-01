@@ -164,6 +164,33 @@
         .quote-note i {
             margin-top: 0.1rem;
         }
+        .quote-feedback {
+            display: none;
+            margin: 1rem 0 0;
+            padding: 0.9rem 1rem;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            font-weight: 650;
+            line-height: 1.5;
+        }
+        .quote-feedback.is-visible {
+            display: block;
+        }
+        .quote-feedback.is-error {
+            color: #991b1b;
+            background: #fef2f2;
+            border-color: #fecaca;
+        }
+        .quote-feedback.is-success {
+            color: #065f46;
+            background: #ecfdf5;
+            border-color: #a7f3d0;
+        }
+        .quote-feedback a {
+            color: inherit;
+            font-weight: 800;
+            text-decoration: underline;
+        }
         .hidden-field {
             position: absolute;
             left: -10000px;
@@ -200,7 +227,7 @@
             <div class="quote-shell">
                 <div class="quote-header">
                     <h1>Demander un devis permis à Marseille</h1>
-                    <p>Remplis ce formulaire. Nous te renvoyons un devis par email <strong>sous 48h</strong> pour que tu puisses le transmettre à ton organisme.</p>
+                    <p>Remplis ce formulaire. Ton devis PDF est envoyé <strong>immédiatement par e-mail</strong> pour que tu puisses le transmettre à ton organisme.</p>
                 </div>
 
                 <div class="stepper" id="quoteStepper">
@@ -213,11 +240,7 @@
                 <form
                     class="quote-form"
                     name="demande-devis"
-                    data-netlify="true"
-                    data-netlify-honeypot="bot-field"
-                    action="devis-envoye.html"
                 >
-                    <input type="hidden" name="form-name" value="demande-devis">
                     <div class="hidden-field">
                         <label>Ne pas remplir: <input name="bot-field"></label>
                     </div>
@@ -373,9 +396,10 @@
                             <i class="fas fa-circle-check"></i>
                             <div>
                                 <div style="font-weight:800; margin-bottom: 0.25rem;">Dernière étape</div>
-                                <div>En cliquant sur <strong>Envoyer</strong>, ta demande est transmise à l'auto-école. Tu recevras ton devis par email sous 48h.</div>
+                                <div>En cliquant sur <strong>Envoyer</strong>, ta demande est transmise à l'auto-école et ton devis PDF est envoyé immédiatement à l'adresse indiquée.</div>
                             </div>
                         </div>
+                        <p id="quoteFeedback" class="quote-feedback" role="status" aria-live="polite"></p>
 
                         <div class="quote-actions">
                             <button type="button" class="btn-secondary" data-prev-step>Précédent</button>
@@ -399,6 +423,7 @@
             const financementSelect = document.getElementById('financement');
             const financementSource = document.getElementById('financementSource');
             const form = document.querySelector('.quote-form');
+            const quoteFeedback = document.getElementById('quoteFeedback');
 
             let currentStep = 1;
 
@@ -448,65 +473,65 @@
                     submitButton.disabled = true;
                     submitButton.textContent = 'Envoi en cours...';
 
+                    quoteFeedback.className = 'quote-feedback';
+                    quoteFeedback.textContent = '';
+
                     const formData = new FormData(form);
+                    const selectedOption = document.getElementById('forfait')?.selectedOptions?.[0];
                     const data = {
                         nom: formData.get('nom'),
                         prenom: formData.get('prenom'),
+                        age: Number(formData.get('age')),
+                        nationalite: formData.get('nationalite'),
                         email: formData.get('email'),
                         telephone: formData.get('telephone'),
-                        date_naissance: formData.get('date_naissance'),
                         financement: formData.get('financement'),
                         organisme: formData.get('organisme'),
-                        forfait: formData.get('forfait'),
-                        message: formData.get('message')
+                        organisme_email: formData.get('organisme_email'),
+                        pack_id: selectedOption?.dataset.packId || '',
+                        amount: Math.round(Number(selectedOption?.dataset.price || 0) * 100),
+                        hours: Number(selectedOption?.dataset.hours || 0),
+                        transmission: selectedOption?.dataset.transmission || '',
+                        disponibilite: formData.get('disponibilite'),
+                        objectif: formData.get('objectif'),
+                        message: formData.get('message'),
+                        'bot-field': formData.get('bot-field')
                     };
 
                     try {
-                        // 1. Enregistrer dans Supabase
-                        const { error: supabaseError } = await window.supabaseClient
-                            .from('demandes_devis')
-                            .insert([data]);
+                        const request = await fetch('/.netlify/functions/submit-quote', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(data)
+                        });
+                        const result = await request.json().catch(() => ({}));
 
-                        if (supabaseError) {
-                            console.error('Erreur Supabase:', supabaseError);
-                        }
-
-                        // 2. Envoyer via FormSubmit pour notification email (uniquement en production)
-                        const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
-                        
-                        if (isProduction) {
-                            const formSubmitData = new FormData();
-                            formSubmitData.append('_subject', `Nouvelle demande de devis - ${data.prenom} ${data.nom}`);
-                            formSubmitData.append('_template', 'table');
-                            formSubmitData.append('Nom', data.nom);
-                            formSubmitData.append('Prénom', data.prenom);
-                            formSubmitData.append('Email', data.email);
-                            formSubmitData.append('Téléphone', data.telephone);
-                            formSubmitData.append('Date de naissance', data.date_naissance || 'Non renseignée');
-                            formSubmitData.append('Financement', data.financement || 'Non renseigné');
-                            formSubmitData.append('Organisme', data.organisme || 'Non renseigné');
-                            formSubmitData.append('Forfait', data.forfait || 'Non renseigné');
-                            formSubmitData.append('Message', data.message || 'Aucun message');
-
-                            const formSubmitResponse = await fetch('https://formsubmit.co/breteuilautoecole@gmail.com', {
-                                method: 'POST',
-                                body: formSubmitData
-                            });
-
-                            if (!formSubmitResponse.ok) {
-                                console.error('Erreur FormSubmit:', await formSubmitResponse.text());
+                        if (!request.ok || !result.ok) {
+                            if (result.requestSaved) {
+                                const reference = result.reference ? ` (${result.reference})` : '';
+                                quoteFeedback.innerHTML = `Ta demande est bien enregistrée${reference}, mais le PDF n'a pas pu être envoyé. Ne renvoie pas le formulaire : vérifie ton adresse et contacte l'auto-école au <a href="tel:+33491533698">04 91 53 36 98</a>.`;
+                                quoteFeedback.className = 'quote-feedback is-visible is-error';
+                                submitButton.textContent = 'Demande enregistrée';
+                                return;
                             }
-                        } else {
-                            console.log('Mode local : email non envoyé (FormSubmit désactivé)');
+
+                            const messages = {
+                                INVALID_OFFER: 'Cette offre vient d’être mise à jour. Recharge la page puis sélectionne-la à nouveau.',
+                                INVALID_QUOTE_REQUEST: 'Certaines informations sont incomplètes ou incorrectes. Vérifie le formulaire.',
+                                TOO_MANY_REQUESTS: 'Plusieurs demandes ont déjà été envoyées. Attends un moment ou appelle-nous au 04 91 53 36 98.',
+                                QUOTE_STORAGE_FAILED: 'La demande ne peut pas être enregistrée pour le moment. Réessaie ou appelle-nous au 04 91 53 36 98.'
+                            };
+                            throw new Error(messages[result.error] || 'Le devis n’a pas pu être envoyé. Réessaie ou contacte-nous directement.');
                         }
 
-                        // Rediriger vers la page de confirmation
-                        window.location.href = 'devis-envoye.html';
+                        window.location.href = `devis-envoye.html?reference=${encodeURIComponent(result.reference || '')}`;
                     } catch (err) {
                         console.error('Erreur:', err);
                         submitButton.disabled = false;
                         submitButton.textContent = originalText;
-                        alert('Une erreur est survenue. Réessaie ou contacte-nous directement.');
+                        quoteFeedback.textContent = err.message || 'Une erreur est survenue. Réessaie ou contacte-nous directement.';
+                        quoteFeedback.className = 'quote-feedback is-visible is-error';
+                        quoteFeedback.focus?.();
                     }
                 });
             }

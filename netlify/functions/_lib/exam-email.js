@@ -56,10 +56,13 @@ function genderWords(value) {
     };
 }
 
-async function sendResendEmail({ to, subject, html, attachments = [] }) {
+async function sendResendEmail({ to, subject, html, attachments = [], replyTo = '' }) {
     const apiKey = getEnv('RESEND_API_KEY');
     const from = getEnv('RESEND_FROM_EMAIL');
     if (!apiKey || !from) throw new Error('EMAIL_NOT_CONFIGURED');
+
+    const body = { from, to, subject, html, attachments };
+    if (replyTo) body.reply_to = replyTo;
 
     const providerResponse = await fetch('https://api.resend.com/emails', {
         method: 'POST',
@@ -67,7 +70,7 @@ async function sendResendEmail({ to, subject, html, attachments = [] }) {
             Authorization: `Bearer ${apiKey}`,
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ from, to, subject, html, attachments })
+        body: JSON.stringify(body)
     });
     const result = await providerResponse.json().catch(() => ({}));
     if (!providerResponse.ok) throw new Error(`EMAIL_PROVIDER_ERROR:${JSON.stringify(result)}`);

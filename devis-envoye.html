@@ -43,7 +43,19 @@
         .success-card p {
             color: var(--text-light);
             font-size: 1.1rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
+        }
+        .success-reference {
+            display: none;
+            width: fit-content;
+            margin: 0.75rem auto 2rem;
+            padding: 0.55rem 0.85rem;
+            border: 1px solid #d1fae5;
+            border-radius: 8px;
+            background: #ecfdf5;
+            color: #065f46;
+            font-size: 0.95rem;
+            font-weight: 750;
         }
         .success-actions {
             display: flex;
@@ -78,7 +90,8 @@
             <div class="success-card">
                 <div class="success-icon"><i class="fas fa-check"></i></div>
                 <h1>Votre demande a bien été envoyée</h1>
-                <p>Merci ! Nous avons bien reçu ta demande de devis. Tu recevras ton devis par email <strong>sous 48h</strong>.</p>
+                <p>Merci ! Ton devis PDF vient d'être envoyé à l'adresse e-mail indiquée. Pense à vérifier le dossier des courriers indésirables.</p>
+                <p id="quoteReference" class="success-reference"></p>
                 <div class="success-actions">
                     <a href="index.html" class="btn-primary"><i class="fas fa-house"></i> Retour à l'accueil</a>
                     <a href="tarifs.html" class="btn-secondary"><i class="fas fa-tags"></i> Voir les tarifs</a>
@@ -86,6 +99,15 @@
             </div>
         </div>
     </main>
+    <script>
+        (function() {
+            const reference = new URLSearchParams(window.location.search).get('reference');
+            const target = document.getElementById('quoteReference');
+            if (!target || !/^DEV-\d{8}-[A-F0-9]{6}$/.test(reference || '')) return;
+            target.textContent = `Référence : ${reference}`;
+            target.style.display = 'block';
+        })();
+    </script>
     <script src="assets/js/site-footer.js"></script>
     <script src="assets/js/text-encoding-fix.js?v=2"></script>
 </body>
