@@ -25,6 +25,15 @@
     function injectNavigationStyles() {
         if (document.getElementById('siteNavigationStyles')) return;
 
+        var userAgentDataMobile = navigator.userAgentData && navigator.userAgentData.mobile;
+        var mobileUserAgent = /Android|iPhone|iPad|iPod|IEMobile|Opera Mini|Mobile/i.test(navigator.userAgent);
+        var iPadDesktopMode = navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
+        var mobileNavigationDevice = Boolean(userAgentDataMobile || mobileUserAgent || iPadDesktopMode);
+        var desktopHoverMedia = mobileNavigationDevice ? '(min-width: 1681px)' : 'all';
+        var desktopZoomMedia = mobileNavigationDevice ? 'not all' : '(max-width: 1680px)';
+        var mobileNavigationMedia = mobileNavigationDevice ? '(max-width: 1680px)' : 'not all';
+        var compactPhoneMedia = mobileNavigationDevice ? '(max-width: 560px)' : 'not all';
+
         var style = document.createElement('style');
         style.id = 'siteNavigationStyles';
         style.textContent = `
@@ -320,7 +329,7 @@
                 font-weight: 650;
             }
 
-            @media (min-width: 1681px), (min-device-width: 1025px) {
+            @media ${desktopHoverMedia} {
                 .nav-menu > .site-training-menu:hover .site-training-panel {
                     opacity: 1;
                     visibility: visible;
@@ -328,7 +337,7 @@
                 }
             }
 
-            @media (max-width: 1680px) and (min-device-width: 1025px) {
+            @media ${desktopZoomMedia} {
                 .navbar.site-unified-navigation .nav-wrapper,
                 .formation-nav.site-unified-navigation .formation-nav-inner {
                     flex-wrap: nowrap !important;
@@ -442,7 +451,7 @@
                 }
             }
 
-            @media (max-width: 1680px) and (max-device-width: 1024px) {
+            @media ${mobileNavigationMedia} {
                 .navbar.site-unified-navigation .container,
                 .formation-nav.site-unified-navigation .formation-container {
                     padding-inline: 20px;
@@ -562,7 +571,7 @@
                 }
             }
 
-            @media (max-width: 1680px) and (max-device-width: 1024px) {
+            @media ${mobileNavigationMedia} {
                 .navbar.site-unified-navigation .mobile-menu-toggle {
                     display: flex;
                     flex-direction: column;
@@ -683,7 +692,7 @@
                 }
             }
 
-            @media (max-width: 560px) and (max-device-width: 1024px) {
+            @media ${compactPhoneMedia} {
                 .navbar.site-unified-navigation .container,
                 .formation-nav.site-unified-navigation .formation-container {
                     padding-inline: 14px;

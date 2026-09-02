@@ -199,8 +199,8 @@ test('toutes les pages publiques utilisent les proportions communes de l en-tete
     assert.doesNotMatch(navigation, /min-width:\s*1401px/);
     assert.doesNotMatch(navigation, /min-width:\s*981px/);
     assert.match(navigation, /max-width:\s*1680px/);
-    assert.match(navigation, /min-device-width:\s*1025px/);
-    assert.match(navigation, /max-device-width:\s*1024px/);
+    assert.match(navigation, /userAgentDataMobile/);
+    assert.match(navigation, /mobileNavigationDevice/);
 
     for (const file of [
         'connexion.html',
@@ -212,7 +212,7 @@ test('toutes les pages publiques utilisent les proportions communes de l en-tete
     ]) {
         const html = fs.readFileSync(path.join(root, file), 'utf8');
         assert.match(html, /class="(?:navbar|formation-nav)"/, `${file}: en-tete absent`);
-        assert.match(html, /site-footer\.js\?v=18/, `${file}: navigation commune absente`);
+        assert.match(html, /site-footer\.js\?v=19/, `${file}: navigation commune absente`);
     }
 });
 
