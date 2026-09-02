@@ -86,6 +86,7 @@ a {
 }
 
 .formation-brand strong {
+    display: block;
     color: #ff69b4;
 }
 

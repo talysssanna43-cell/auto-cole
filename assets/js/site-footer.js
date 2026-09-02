@@ -59,6 +59,7 @@
 
             .navbar.site-unified-navigation .logo strong,
             .formation-nav.site-unified-navigation .formation-brand strong {
+                display: block;
                 color: #ff69b4;
             }
 
@@ -152,6 +153,7 @@
             }
 
             .formation-nav .formation-brand strong {
+                display: block;
                 color: #ff69b4;
             }
 
