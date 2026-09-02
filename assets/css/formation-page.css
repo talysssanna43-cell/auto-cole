@@ -43,42 +43,68 @@ a {
     position: sticky;
     top: 0;
     z-index: 1000;
-    background: rgba(255, 255, 255, 0.97);
-    border-bottom: 1px solid var(--line);
-    backdrop-filter: blur(14px);
+    background: #fff;
+    border-bottom: 0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.formation-nav .formation-container {
+    width: 100%;
+    max-width: 1600px;
+    padding-inline: 24px;
 }
 
 .formation-nav-inner {
-    min-height: 76px;
     display: flex;
     align-items: center;
-    gap: 28px;
+    justify-content: space-between;
+    gap: clamp(16px, 2vw, 32px);
+    min-height: 0;
+    padding-block: 16px;
 }
 
 .formation-brand {
     display: inline-flex;
     align-items: center;
-    flex: 0 0 auto;
+    gap: 8px;
+    flex: 0 1 auto;
+    color: #1a1a2e;
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.15;
+    text-decoration: none;
+}
+
+.formation-brand span {
+    min-width: 0;
 }
 
 .formation-brand img {
-    width: 96px;
-    height: 58px;
+    width: auto;
+    height: 28px;
     object-fit: contain;
+}
+
+.formation-brand strong {
+    color: #ff69b4;
 }
 
 .formation-links {
     display: flex;
     align-items: center;
-    gap: 22px;
-    margin-left: auto;
+    justify-content: flex-end;
+    flex: 1 1 auto;
+    min-width: 0;
+    gap: clamp(14px, 1.45vw, 24px);
+    margin-left: 0;
 }
 
 .formation-links a {
     text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 650;
-    color: #3e4046;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #1a1a2e;
+    white-space: nowrap;
 }
 
 .formation-links a:hover,
@@ -88,7 +114,55 @@ a {
 
 .formation-nav-actions {
     display: flex;
-    gap: 10px;
+    align-items: center;
+    flex: 0 0 auto;
+    gap: 16px;
+    margin-left: 4px;
+    padding-left: clamp(16px, 1.8vw, 24px);
+    border-left: 1px solid #e3e4e8;
+}
+
+.formation-nav .formation-button {
+    min-height: 0;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.formation-nav .formation-button-primary {
+    background: linear-gradient(135deg, #ff69b4 0%, #e91e63 100%);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.formation-nav .formation-button-secondary {
+    color: #ff69b4;
+    border-color: #ff69b4;
+}
+
+@media (min-width: 981px) and (max-width: 1400px) {
+    .formation-nav-inner {
+        gap: 10px;
+    }
+
+    .formation-links {
+        gap: 9px;
+    }
+
+    .formation-links a,
+    .formation-links .site-training-trigger {
+        font-size: 0.84rem;
+    }
+
+    .formation-nav-actions {
+        gap: 7px;
+        padding-left: 10px;
+    }
+
+    .formation-nav .formation-button {
+        padding: 10px 12px;
+        font-size: 0.82rem;
+    }
 }
 
 .formation-button {
@@ -546,12 +620,13 @@ a {
     }
 
     .formation-nav-inner {
-        min-height: 66px;
+        min-height: 0;
+        padding-block: 12px;
     }
 
     .formation-brand img {
-        width: 78px;
-        height: 48px;
+        width: auto;
+        height: 28px;
     }
 
     .formation-nav-actions .formation-button-secondary {

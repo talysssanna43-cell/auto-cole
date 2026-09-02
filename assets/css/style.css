@@ -142,6 +142,10 @@ h4 { font-size: 1.5rem; }
     transition: all var(--transition-base);
 }
 
+.navbar .container {
+    max-width: 1600px;
+}
+
 .nav-wrapper {
     display: flex;
     align-items: center;
@@ -257,7 +261,7 @@ h4 { font-size: 1.5rem; }
     border-left: 1px solid #e3e4e8;
 }
 
-@media (min-width: 769px) and (max-width: 1180px) {
+@media (min-width: 769px) and (max-width: 1400px) {
     .nav-wrapper {
         gap: 0.65rem;
     }
