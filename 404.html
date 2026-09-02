@@ -9,9 +9,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/formation-page.css?v=1">
+    <link rel="stylesheet" href="assets/css/formation-page.css?v=6">
     <style>
-        .not-found { min-height: 100vh; display: grid; place-items: center; padding: 32px; background: #f5f6f8; }
+        .not-found { min-height: calc(100vh - 132px); display: grid; place-items: center; padding: 32px; background: #f5f6f8; }
         .not-found-inner { width: min(640px, 100%); text-align: center; }
         .not-found img { width: 120px; margin-bottom: 24px; }
         .not-found strong { display: block; color: #ec4899; font-size: 1rem; }
@@ -21,6 +21,7 @@
     </style>
 </head>
 <body>
+    <header class="formation-nav"><div class="formation-container formation-nav-inner"><a class="formation-brand" href="index.html" aria-label="Accueil Auto-Ecole Breteuil"><img src="assets/logo.png" alt="Auto-Ecole Breteuil"><span>Auto-Ecole <strong>Breteuil</strong></span></a><nav class="formation-links" aria-label="Navigation principale"><a href="index.html">Accueil</a><a href="recrutement.html">Recrutement</a><a href="qui-sommes-nous.html">Qui sommes-nous</a><a href="tarifs.html">Tarifs</a><a href="contact.html">Contact</a></nav><div class="formation-nav-actions"><a class="formation-button formation-button-secondary" href="connexion.html">Se connecter</a><a class="formation-button formation-button-primary" href="inscription.html">S'inscrire</a></div></div></header>
     <main class="not-found"><div class="not-found-inner">
         <img src="assets/logo.png" alt="Auto-Ecole Breteuil">
         <strong>Erreur 404</strong>
@@ -28,5 +29,6 @@
         <p>Le lien a peut-être changé. Retrouvez les formations et les tarifs depuis les pages principales.</p>
         <div class="not-found-actions"><a class="formation-button formation-button-primary" href="index.html">Retour à l'accueil</a><a class="formation-button formation-button-secondary" href="tarifs.html">Voir les tarifs</a></div>
     </div></main>
+    <script src="assets/js/site-footer.js?v=9" defer></script>
 </body>
 </html>

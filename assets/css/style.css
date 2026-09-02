@@ -150,7 +150,8 @@ h4 { font-size: 1.5rem; }
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--spacing-sm) 0;
+    min-height: 132px;
+    padding: 0;
     gap: clamp(1rem, 2vw, 2rem);
     flex-wrap: nowrap;
 }
@@ -158,15 +159,15 @@ h4 { font-size: 1.5rem; }
 .logo {
     display: flex;
     align-items: center;
-    gap: var(--spacing-xs);
-    font-size: 1.25rem;
+    gap: 12px;
+    font-size: 1.65rem;
     font-weight: 700;
     color: var(--text-dark);
     text-decoration: none;
 }
 
 .logo img {
-    height: 28px;
+    height: 46px;
     width: auto;
     object-fit: contain;
 }

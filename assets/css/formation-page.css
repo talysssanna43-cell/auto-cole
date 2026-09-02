@@ -50,7 +50,7 @@ a {
 
 .formation-nav .formation-container {
     width: 100%;
-    max-width: 1600px;
+    max-width: 1760px;
     padding-inline: 24px;
 }
 
@@ -58,20 +58,20 @@ a {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: clamp(16px, 2vw, 32px);
-    min-height: 0;
-    padding-block: 16px;
+    gap: clamp(24px, 2vw, 36px);
+    min-height: 132px;
+    padding-block: 0;
 }
 
 .formation-brand {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
     flex: 0 1 auto;
     color: #1a1a2e;
-    font-size: 1.25rem;
+    font-size: 1.65rem;
     font-weight: 700;
-    line-height: 1.15;
+    line-height: 1.2;
     text-decoration: none;
 }
 
@@ -81,7 +81,7 @@ a {
 
 .formation-brand img {
     width: auto;
-    height: 28px;
+    height: 46px;
     object-fit: contain;
 }
 
