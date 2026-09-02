@@ -320,7 +320,7 @@
                 font-weight: 650;
             }
 
-            @media (min-width: 769px) {
+            @media (min-width: 1681px) {
                 .nav-menu > .site-training-menu:hover .site-training-panel {
                     opacity: 1;
                     visibility: visible;
@@ -328,7 +328,7 @@
                 }
             }
 
-            @media (max-width: 980px) {
+            @media (max-width: 1680px) {
                 .navbar.site-unified-navigation .container,
                 .formation-nav.site-unified-navigation .formation-container {
                     padding-inline: 20px;
@@ -390,6 +390,9 @@
                     border-radius: 0 0 8px 8px;
                     background: #fff;
                     box-shadow: 0 18px 35px rgba(26, 26, 46, 0.16);
+                    max-height: calc(100vh - 86px);
+                    max-height: calc(100dvh - 86px);
+                    overflow-y: auto;
                 }
 
                 .formation-links.site-enhanced-links.is-mobile-open {
@@ -435,12 +438,17 @@
 
                 .formation-links.site-enhanced-links .site-mobile-nav-actions > * {
                     flex: 1 1 0;
+                    min-width: 0;
+                    min-height: 48px;
+                    padding: 0.75rem;
+                    font-size: 0.95rem;
                     justify-content: center;
                     text-align: center;
+                    white-space: nowrap;
                 }
             }
 
-            @media (max-width: 768px) {
+            @media (max-width: 1680px) {
                 .navbar.site-unified-navigation .mobile-menu-toggle {
                     display: flex;
                     flex-direction: column;
@@ -466,12 +474,13 @@
                     z-index: 1100;
                     width: 100%;
                     height: calc(100vh - 86px);
+                    height: calc(100dvh - 86px);
                     flex-direction: column;
                     align-items: stretch;
                     justify-content: flex-start;
                     gap: 0.25rem;
                     margin: 0;
-                    padding: 1.25rem;
+                    padding: 1.25rem 1.25rem 6.75rem;
                     overflow-y: auto;
                     list-style: none;
                     background: #fff;
@@ -509,9 +518,11 @@
                 .navbar.site-unified-navigation .nav-menu.active ~ .nav-actions > .btn-primary,
                 .navbar.site-unified-navigation .nav-menu.active ~ .nav-actions > .btn-secondary {
                     flex: 1 1 0;
+                    min-width: 0;
                     min-height: 48px;
                     padding: 0.75rem;
                     font-size: 0.95rem;
+                    white-space: nowrap;
                 }
 
                 .nav-menu > .site-training-menu {
@@ -559,8 +570,61 @@
             }
 
             @media (max-width: 560px) {
+                .navbar.site-unified-navigation .container,
+                .formation-nav.site-unified-navigation .formation-container {
+                    padding-inline: 14px;
+                }
+
+                .navbar.site-unified-navigation .nav-wrapper,
+                .formation-nav.site-unified-navigation .formation-nav-inner {
+                    min-height: 78px;
+                }
+
+                .navbar.site-unified-navigation .logo,
+                .formation-nav.site-unified-navigation .formation-brand {
+                    gap: 7px;
+                    font-size: clamp(1rem, 5.5vw, 1.25rem);
+                }
+
+                .navbar.site-unified-navigation .logo img,
+                .formation-nav.site-unified-navigation .formation-brand img {
+                    height: 28px;
+                }
+
+                .navbar.site-unified-navigation .nav-menu {
+                    top: 78px;
+                    height: calc(100vh - 78px);
+                    height: calc(100dvh - 78px);
+                    padding-inline: 14px;
+                }
+
+                .navbar.site-unified-navigation .nav-menu.active ~ .nav-actions {
+                    gap: 8px;
+                    padding: 10px 14px max(10px, env(safe-area-inset-bottom));
+                }
+
+                .navbar.site-unified-navigation .nav-menu.active ~ .nav-actions > .btn-primary,
+                .navbar.site-unified-navigation .nav-menu.active ~ .nav-actions > .btn-secondary {
+                    padding-inline: 8px;
+                    font-size: clamp(0.78rem, 3.8vw, 0.95rem);
+                }
+
                 .formation-nav-inner {
                     gap: 10px;
+                }
+
+                .formation-links.site-enhanced-links {
+                    max-height: calc(100vh - 78px);
+                    max-height: calc(100dvh - 78px);
+                }
+
+                .formation-links.site-enhanced-links .site-mobile-nav-actions {
+                    gap: 8px;
+                }
+
+                .formation-links.site-enhanced-links .site-mobile-nav-actions > * {
+                    padding-inline: 8px;
+                    font-size: clamp(0.78rem, 3.8vw, 0.95rem);
                 }
 
                 .site-formation-menu-toggle {
@@ -838,6 +902,33 @@
             if (formationLinks) formationLinks.classList.remove('is-mobile-open');
             if (formationToggle) formationToggle.setAttribute('aria-expanded', 'false');
         });
+
+        var desktopNavigationQuery = window.matchMedia('(min-width: 1681px)');
+        var resetNavigationAfterBreakpointChange = function () {
+            var classicMenu = document.querySelector('.navbar.site-unified-navigation .nav-menu');
+            var classicToggle = document.querySelector('.navbar.site-unified-navigation .mobile-menu-toggle');
+            var formationLinks = document.querySelector('.formation-links.site-enhanced-links');
+            var formationToggle = document.querySelector('.site-formation-menu-toggle');
+
+            if (classicMenu) classicMenu.classList.remove('active');
+            if (classicToggle) {
+                classicToggle.classList.remove('active');
+                classicToggle.setAttribute('aria-expanded', 'false');
+                classicToggle.setAttribute('aria-label', 'Ouvrir le menu');
+            }
+            if (formationLinks) formationLinks.classList.remove('is-mobile-open');
+            if (formationToggle) {
+                formationToggle.setAttribute('aria-expanded', 'false');
+                formationToggle.setAttribute('aria-label', 'Ouvrir le menu des formations');
+                formationToggle.innerHTML = '<i class="fas fa-bars" aria-hidden="true"></i>';
+            }
+        };
+
+        if (desktopNavigationQuery.addEventListener) {
+            desktopNavigationQuery.addEventListener('change', resetNavigationAfterBreakpointChange);
+        } else {
+            desktopNavigationQuery.addListener(resetNavigationAfterBreakpointChange);
+        }
     }
 
     function injectFooterStyles() {
