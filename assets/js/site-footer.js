@@ -12,6 +12,422 @@
         }
     }
 
+    function injectNavigationStyles() {
+        if (document.getElementById('siteNavigationStyles')) return;
+
+        var style = document.createElement('style');
+        style.id = 'siteNavigationStyles';
+        style.textContent = `
+            .site-training-menu {
+                position: relative;
+            }
+
+            .site-training-trigger {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.45rem;
+                border: 0;
+                background: transparent;
+                color: #1a1a2e;
+                font: inherit;
+                font-weight: 600;
+                line-height: 1.3;
+                cursor: pointer;
+                white-space: nowrap;
+            }
+
+            .site-training-trigger i {
+                color: #ed2b7b;
+                font-size: 0.72rem;
+                transition: transform 160ms ease;
+            }
+
+            .site-training-menu.is-open .site-training-trigger i {
+                transform: rotate(180deg);
+            }
+
+            .site-training-panel {
+                position: absolute;
+                top: calc(100% + 14px);
+                left: 50%;
+                z-index: 1200;
+                width: min(340px, calc(100vw - 32px));
+                padding: 0.65rem;
+                border: 1px solid #dedfe4;
+                border-top: 4px solid #ed2b7b;
+                border-radius: 8px;
+                background: #fff;
+                box-shadow: 0 18px 45px rgba(26, 26, 46, 0.18);
+                opacity: 0;
+                visibility: hidden;
+                transform: translate(-50%, 8px);
+                transition: opacity 160ms ease, transform 160ms ease, visibility 160ms ease;
+            }
+
+            .site-training-menu.is-open .site-training-panel,
+            .site-training-menu:focus-within .site-training-panel {
+                opacity: 1;
+                visibility: visible;
+                transform: translate(-50%, 0);
+            }
+
+            .site-training-heading,
+            .site-training-link {
+                display: flex;
+                align-items: center;
+                gap: 0.7rem;
+                width: 100%;
+                color: #292a31 !important;
+                text-decoration: none;
+            }
+
+            .site-training-heading {
+                padding: 0.8rem 0.9rem;
+                font-size: 1rem;
+                font-weight: 750;
+            }
+
+            .site-training-heading i {
+                color: #ed2b7b;
+            }
+
+            .site-training-link {
+                min-height: 40px;
+                padding: 0.55rem 0.9rem 0.55rem 2.45rem;
+                border-radius: 5px;
+                font-size: 0.92rem;
+                font-weight: 550;
+                line-height: 1.35;
+            }
+
+            .site-training-link:hover,
+            .site-training-link[aria-current="page"] {
+                background: #fff0f6 !important;
+                color: #c91662 !important;
+                transform: none !important;
+            }
+
+            .site-training-separator {
+                height: 1px;
+                margin: 0.55rem 0.35rem;
+                background: #e5e6ea;
+            }
+
+            .site-training-link-secondary {
+                padding-left: 0.9rem;
+                font-weight: 650;
+            }
+
+            .site-training-link-secondary i {
+                width: 1rem;
+                color: #70727b;
+                text-align: center;
+            }
+
+            .site-formation-menu-toggle {
+                display: none;
+                align-items: center;
+                justify-content: center;
+                width: 42px;
+                height: 42px;
+                flex: 0 0 42px;
+                border: 1px solid #dedfe4;
+                border-radius: 6px;
+                background: #fff;
+                color: #1a1a2e;
+                cursor: pointer;
+            }
+
+            .formation-links.site-enhanced-links .site-training-trigger {
+                color: #3e4046;
+                font-size: 0.9rem;
+                font-weight: 650;
+            }
+
+            @media (min-width: 769px) {
+                .nav-menu > .site-training-menu:hover .site-training-panel {
+                    opacity: 1;
+                    visibility: visible;
+                    transform: translate(-50%, 0);
+                }
+            }
+
+            @media (max-width: 980px) {
+                .formation-nav-inner {
+                    position: relative;
+                }
+
+                .site-formation-menu-toggle {
+                    display: inline-flex;
+                    margin-left: auto;
+                }
+
+                .formation-links.site-enhanced-links {
+                    display: none;
+                    position: absolute;
+                    top: calc(100% + 1px);
+                    left: 0;
+                    right: 0;
+                    z-index: 1200;
+                    flex-direction: column;
+                    align-items: stretch;
+                    gap: 0.25rem;
+                    margin: 0;
+                    padding: 0.8rem;
+                    border: 1px solid #dedfe4;
+                    border-top: 3px solid #ed2b7b;
+                    border-radius: 0 0 8px 8px;
+                    background: #fff;
+                    box-shadow: 0 18px 35px rgba(26, 26, 46, 0.16);
+                }
+
+                .formation-links.site-enhanced-links.is-mobile-open {
+                    display: flex;
+                }
+
+                .formation-links.site-enhanced-links > a,
+                .formation-links.site-enhanced-links > .site-training-menu > .site-training-trigger {
+                    width: 100%;
+                    min-height: 44px;
+                    justify-content: flex-start;
+                    padding: 0.7rem 0.8rem;
+                }
+
+                .formation-links.site-enhanced-links .site-training-panel {
+                    position: static;
+                    width: 100%;
+                    margin-top: 0.2rem;
+                    border-top-width: 1px;
+                    box-shadow: none;
+                    opacity: 1;
+                    visibility: visible;
+                    transform: none;
+                    display: none;
+                }
+
+                .formation-links.site-enhanced-links .site-training-menu.is-open .site-training-panel {
+                    display: block;
+                }
+
+                .formation-nav-actions {
+                    margin-left: 0;
+                }
+            }
+
+            @media (max-width: 768px) {
+                .nav-menu > .site-training-menu {
+                    width: 100%;
+                }
+
+                .nav-menu > .site-training-menu > .site-training-trigger {
+                    width: 100%;
+                    min-height: 52px;
+                    justify-content: space-between;
+                    padding: 1rem 1.25rem;
+                    border-radius: 5px;
+                    background: #f8f9fa;
+                    color: #1a1a2e;
+                    text-align: left;
+                }
+
+                .nav-menu > .site-training-menu .site-training-panel {
+                    position: static;
+                    display: none;
+                    width: 100%;
+                    margin-top: 0.4rem;
+                    border-top-width: 1px;
+                    box-shadow: none;
+                    opacity: 1;
+                    visibility: visible;
+                    transform: none;
+                }
+
+                .nav-menu > .site-training-menu.is-open .site-training-panel {
+                    display: block;
+                }
+
+                .nav-menu > .site-training-menu .site-training-heading,
+                .nav-menu > .site-training-menu .site-training-link {
+                    min-height: 42px;
+                    padding-top: 0.6rem;
+                    padding-bottom: 0.6rem;
+                    background: transparent;
+                }
+
+                .nav-menu > .site-training-menu .site-training-link:not(.site-training-link-secondary) {
+                    padding-left: 2.45rem;
+                }
+            }
+
+            @media (max-width: 560px) {
+                .formation-nav-inner {
+                    gap: 10px;
+                }
+
+                .site-formation-menu-toggle {
+                    margin-left: auto;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    function trainingMenuMarkup() {
+        return `
+            <button class="site-training-trigger" type="button" aria-expanded="false" aria-haspopup="true">
+                <span>Permis B</span>
+                <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            <div class="site-training-panel">
+                <a class="site-training-heading" href="permis-b.html">
+                    <i class="fas fa-car-side" aria-hidden="true"></i>
+                    <span>Permis B : voiture</span>
+                </a>
+                <a class="site-training-link" href="tarifs.html#permis-b">Packs classiques</a>
+                <a class="site-training-link" href="permis-boite-manuelle.html">Boîte manuelle</a>
+                <a class="site-training-link" href="permis-boite-automatique.html">Boîte automatique</a>
+                <a class="site-training-link" href="permis-accelere.html">Permis accéléré</a>
+                <a class="site-training-link" href="conduite-accompagnee.html">Conduite accompagnée</a>
+                <div class="site-training-separator" aria-hidden="true"></div>
+                <a class="site-training-link site-training-link-secondary" href="financement-permis.html"><i class="fas fa-wallet" aria-hidden="true"></i>Financement du permis</a>
+                <a class="site-training-link site-training-link-secondary" href="tarifs.html"><i class="fas fa-tags" aria-hidden="true"></i>Nos tarifs</a>
+                <a class="site-training-link site-training-link-secondary" href="conseiller.html"><i class="fas fa-headset" aria-hidden="true"></i>Contacter un conseiller</a>
+            </div>
+        `;
+    }
+
+    function createTrainingMenu(tagName) {
+        var menu = document.createElement(tagName || 'div');
+        menu.className = 'site-training-menu';
+        menu.innerHTML = trainingMenuMarkup();
+        return menu;
+    }
+
+    function markCurrentNavigationLink(root) {
+        var currentFile = window.location.pathname.split('/').pop() || 'index.html';
+        root.querySelectorAll('a[href]').forEach(function (link) {
+            var linkedFile = link.getAttribute('href').split(/[?#]/)[0];
+            if (linkedFile === currentFile) link.setAttribute('aria-current', 'page');
+        });
+    }
+
+    function bindTrainingMenu(menu) {
+        var trigger = menu.querySelector('.site-training-trigger');
+        if (!trigger) return;
+
+        trigger.addEventListener('click', function (event) {
+            event.stopPropagation();
+            var willOpen = !menu.classList.contains('is-open');
+            document.querySelectorAll('.site-training-menu.is-open').forEach(function (openMenu) {
+                openMenu.classList.remove('is-open');
+                var openTrigger = openMenu.querySelector('.site-training-trigger');
+                if (openTrigger) openTrigger.setAttribute('aria-expanded', 'false');
+            });
+            menu.classList.toggle('is-open', willOpen);
+            trigger.setAttribute('aria-expanded', String(willOpen));
+        });
+
+        menu.querySelectorAll('a').forEach(function (link) {
+            link.addEventListener('click', function () {
+                menu.classList.remove('is-open');
+                trigger.setAttribute('aria-expanded', 'false');
+            });
+        });
+    }
+
+    function enhanceClassicNavigation() {
+        var navMenu = document.querySelector('.nav-menu');
+        if (!navMenu || navMenu.querySelector(':scope > .site-training-menu')) return;
+
+        var menu = createTrainingMenu('li');
+        var tariffItem = Array.from(navMenu.children).find(function (item) {
+            var link = item.querySelector(':scope > a[href]');
+            return link && link.getAttribute('href').split(/[?#]/)[0] === 'tarifs.html';
+        });
+        navMenu.insertBefore(menu, tariffItem || null);
+        markCurrentNavigationLink(menu);
+        bindTrainingMenu(menu);
+    }
+
+    function enhanceFormationNavigation() {
+        var links = document.querySelector('.formation-links');
+        var navInner = document.querySelector('.formation-nav-inner');
+        var actions = document.querySelector('.formation-nav-actions');
+        if (!links || !navInner || links.classList.contains('site-enhanced-links')) return;
+
+        var menu = createTrainingMenu('div');
+        links.classList.add('site-enhanced-links');
+        links.innerHTML = '';
+        links.appendChild(menu);
+        links.insertAdjacentHTML('beforeend', '<a href="code.html">Code</a><a href="tarifs.html">Tarifs</a><a href="contact.html">Contact</a>');
+
+        var toggle = document.createElement('button');
+        toggle.className = 'site-formation-menu-toggle';
+        toggle.type = 'button';
+        toggle.setAttribute('aria-label', 'Ouvrir le menu des formations');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.innerHTML = '<i class="fas fa-bars" aria-hidden="true"></i>';
+        navInner.insertBefore(toggle, actions || null);
+
+        toggle.addEventListener('click', function (event) {
+            event.stopPropagation();
+            var willOpen = !links.classList.contains('is-mobile-open');
+            links.classList.toggle('is-mobile-open', willOpen);
+            toggle.setAttribute('aria-expanded', String(willOpen));
+            toggle.setAttribute('aria-label', willOpen ? 'Fermer le menu des formations' : 'Ouvrir le menu des formations');
+            toggle.innerHTML = willOpen
+                ? '<i class="fas fa-xmark" aria-hidden="true"></i>'
+                : '<i class="fas fa-bars" aria-hidden="true"></i>';
+        });
+
+        links.querySelectorAll('a').forEach(function (link) {
+            link.addEventListener('click', function () {
+                links.classList.remove('is-mobile-open');
+                toggle.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        markCurrentNavigationLink(links);
+        bindTrainingMenu(menu);
+    }
+
+    function enhanceNavigation() {
+        injectNavigationStyles();
+        enhanceClassicNavigation();
+        enhanceFormationNavigation();
+
+        document.addEventListener('click', function (event) {
+            if (!event.target.closest('.site-training-menu')) {
+                document.querySelectorAll('.site-training-menu.is-open').forEach(function (menu) {
+                    menu.classList.remove('is-open');
+                    var trigger = menu.querySelector('.site-training-trigger');
+                    if (trigger) trigger.setAttribute('aria-expanded', 'false');
+                });
+            }
+
+            var formationLinks = document.querySelector('.formation-links.site-enhanced-links');
+            var formationToggle = document.querySelector('.site-formation-menu-toggle');
+            if (formationLinks && formationToggle && !event.target.closest('.formation-nav-inner')) {
+                formationLinks.classList.remove('is-mobile-open');
+                formationToggle.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key !== 'Escape') return;
+            document.querySelectorAll('.site-training-menu.is-open').forEach(function (menu) {
+                menu.classList.remove('is-open');
+                var trigger = menu.querySelector('.site-training-trigger');
+                if (trigger) trigger.setAttribute('aria-expanded', 'false');
+            });
+            var formationLinks = document.querySelector('.formation-links.site-enhanced-links');
+            var formationToggle = document.querySelector('.site-formation-menu-toggle');
+            if (formationLinks) formationLinks.classList.remove('is-mobile-open');
+            if (formationToggle) formationToggle.setAttribute('aria-expanded', 'false');
+        });
+    }
+
     function injectFooterStyles() {
         if (document.getElementById('siteFooterStyles')) return;
 
@@ -261,6 +677,7 @@
 
     function renderSiteFooter() {
         ensureFooterAssets();
+        enhanceNavigation();
         injectFooterStyles();
 
         document.querySelectorAll('footer').forEach(function (footer) {

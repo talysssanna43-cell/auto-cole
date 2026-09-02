@@ -161,3 +161,22 @@ test('la preuve sociale Google reste cohérente dans les affichages de secours',
         assert.match(content, /total:\s*184/, `${file}: nombre de secours`);
     }
 });
+
+test('la navigation publique regroupe clairement les formations du permis B', () => {
+    const navigation = fs.readFileSync(path.join(root, 'assets/js/site-footer.js'), 'utf8');
+    for (const destination of [
+        'permis-b.html',
+        'tarifs.html#permis-b',
+        'permis-boite-manuelle.html',
+        'permis-boite-automatique.html',
+        'permis-accelere.html',
+        'conduite-accompagnee.html',
+        'financement-permis.html',
+        'conseiller.html'
+    ]) {
+        assert.match(navigation, new RegExp(destination.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), `menu sans ${destination}`);
+    }
+    assert.match(navigation, /aria-expanded/);
+    assert.match(navigation, /site-formation-menu-toggle/);
+    assert.doesNotMatch(navigation, /stych\.fr/i);
+});
