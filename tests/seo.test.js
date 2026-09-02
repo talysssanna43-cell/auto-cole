@@ -132,13 +132,24 @@ test('les pages privées restent hors index', () => {
     const robots = fs.readFileSync(path.join(root, 'robots.txt'), 'utf8');
     const netlify = fs.readFileSync(path.join(root, 'netlify.toml'), 'utf8');
     for (const privatePath of ['/admin-', '/espace-', '/connexion', '/inscription']) {
-        assert.ok(robots.includes(`Disallow: ${privatePath}`), `robots sans ${privatePath}`);
+        assert.ok(!robots.includes(`Disallow: ${privatePath}`), `robots masque le noindex de ${privatePath}`);
     }
     assert.match(robots, new RegExp(`Sitemap: ${config.site.baseUrl}/sitemap\\.xml`));
     assert.match(netlify, /X-Robots-Tag\s*=\s*"noindex,[^"]*noarchive"/);
+    for (const file of ['admin-inscription.html', 'espace-eleve.html', 'inscription.html']) {
+        const html = fs.readFileSync(path.join(root, file), 'utf8');
+        assert.match(html, /<meta name="robots" content="noindex,nofollow,noarchive">/, `${file}: noindex absent`);
+    }
     for (const sourcePath of ['/scripts/*', '/seo/*', '/docs/*', '/netlify/*', '/netlify.toml', '/.env*']) {
         assert.ok(netlify.includes(`from = "${sourcePath}"`), `source technique exposée: ${sourcePath}`);
     }
+});
+
+test('la page Tarifs ne conserve aucun ancien pied de page dans son HTML', () => {
+    const pricingPage = fs.readFileSync(path.join(root, 'tarifs.html'), 'utf8');
+    assert.doesNotMatch(pricingPage, /<footer\b/i);
+    assert.doesNotMatch(pricingPage, /04 91 37 28 28|contact@auto-ecole-breteuil\.fr/i);
+    assert.match(pricingPage, /assets\/js\/site-footer\.js\?v=22/);
 });
 
 test('la preuve sociale Google reste cohérente dans les affichages de secours', () => {
