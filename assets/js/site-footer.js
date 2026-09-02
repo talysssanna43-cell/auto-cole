@@ -29,6 +29,9 @@
         var mobileUserAgent = /Android|iPhone|iPad|iPod|IEMobile|Opera Mini|Mobile/i.test(navigator.userAgent);
         var iPadDesktopMode = navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
         var coarsePointer = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+        var compactTouchViewport = window.innerWidth <= 1024
+            && navigator.maxTouchPoints > 0
+            && coarsePointer;
         var compactTouchScreen = window.screen
             && window.screen.width <= 1024
             && window.screen.height <= 1366
@@ -38,6 +41,7 @@
             userAgentDataMobile
             || mobileUserAgent
             || iPadDesktopMode
+            || compactTouchViewport
             || compactTouchScreen
         );
         var desktopHoverMedia = mobileNavigationDevice ? '(min-width: 1681px)' : 'all';
