@@ -88,10 +88,6 @@
                 font-weight: 750;
             }
 
-            .site-training-heading-static {
-                cursor: default;
-            }
-
             .site-training-heading i {
                 color: #ed2b7b;
             }
@@ -126,18 +122,6 @@
             .site-training-link-secondary i {
                 width: 1rem;
                 color: #70727b;
-                text-align: center;
-            }
-
-            .site-training-link-main {
-                padding-left: 0.9rem;
-                border-left: 3px solid #ed2b7b;
-                font-weight: 700;
-            }
-
-            .site-training-link-main i {
-                width: 1rem;
-                color: #ed2b7b;
                 text-align: center;
             }
 
@@ -296,21 +280,18 @@
                 <i class="fas fa-chevron-down" aria-hidden="true"></i>
             </button>
             <div class="site-training-panel">
-                <div class="site-training-heading site-training-heading-static">
+                <a class="site-training-heading" href="tarifs.html?formation=permis&transmission=manual#permis-b">
                     <i class="fas fa-car-side" aria-hidden="true"></i>
                     <span>Permis B</span>
-                </div>
-                <a class="site-training-link" href="permis-b.html">Formation traditionnelle</a>
-                <a class="site-training-link" href="permis-boite-manuelle.html">Boîte manuelle</a>
-                <a class="site-training-link" href="permis-boite-automatique.html">Boîte automatique</a>
-                <a class="site-training-link" href="permis-accelere.html">Permis accéléré</a>
+                </a>
+                <a class="site-training-link" href="tarifs.html?formation=permis&transmission=manual#permis-b">Boîte manuelle</a>
+                <a class="site-training-link" href="tarifs.html?formation=permis&transmission=auto#permis-b">Boîte automatique</a>
+                <a class="site-training-link" href="tarifs.html?formation=accelere#permis-b">Permis accéléré</a>
                 <div class="site-training-separator" aria-hidden="true"></div>
-                <a class="site-training-link site-training-link-main" href="conduite-accompagnee.html"><i class="fas fa-people-roof" aria-hidden="true"></i>Conduite accompagnée</a>
-                <a class="site-training-link site-training-link-main" href="tarifs.html?formation=vsp#vsp-section"><i class="fas fa-car-rear" aria-hidden="true"></i>Voiture sans permis</a>
-                <div class="site-training-separator" aria-hidden="true"></div>
+                <a class="site-training-link site-training-link-secondary" href="tarifs.html?formation=aac&transmission=manual#conduite-accompagnee"><i class="fas fa-people-roof" aria-hidden="true"></i>Conduite accompagnée</a>
                 <a class="site-training-link site-training-link-secondary" href="financement-permis.html"><i class="fas fa-wallet" aria-hidden="true"></i>Financement du permis</a>
+                <a class="site-training-link site-training-link-secondary" href="devis.html"><i class="fas fa-file-signature" aria-hidden="true"></i>Demander un devis</a>
                 <a class="site-training-link site-training-link-secondary" href="tarifs.html"><i class="fas fa-tags" aria-hidden="true"></i>Nos tarifs</a>
-                <a class="site-training-link site-training-link-secondary" href="conseiller.html"><i class="fas fa-headset" aria-hidden="true"></i>Contacter un conseiller</a>
             </div>
         `;
     }
@@ -325,8 +306,13 @@
     function markCurrentNavigationLink(root) {
         var currentFile = window.location.pathname.split('/').pop() || 'index.html';
         root.querySelectorAll('a[href]').forEach(function (link) {
-            var linkedFile = link.getAttribute('href').split(/[?#]/)[0];
-            if (linkedFile === currentFile) link.setAttribute('aria-current', 'page');
+            var linkedUrl = new URL(link.getAttribute('href'), window.location.href);
+            var linkedFile = linkedUrl.pathname.split('/').pop() || 'index.html';
+            var samePage = linkedFile === currentFile;
+            var sameView = linkedUrl.search
+                ? linkedUrl.search === window.location.search
+                : !window.location.search;
+            if (samePage && sameView) link.setAttribute('aria-current', 'page');
         });
     }
 
@@ -363,7 +349,11 @@
             var link = item.querySelector(':scope > a[href]');
             return link && link.getAttribute('href').split(/[?#]/)[0] === 'tarifs.html';
         });
-        navMenu.insertBefore(menu, tariffItem || null);
+        if (tariffItem) {
+            tariffItem.replaceWith(menu);
+        } else {
+            navMenu.appendChild(menu);
+        }
         markCurrentNavigationLink(menu);
         bindTrainingMenu(menu);
     }
@@ -375,10 +365,15 @@
         if (!links || !navInner || links.classList.contains('site-enhanced-links')) return;
 
         var menu = createTrainingMenu('div');
+        var tariffLink = Array.from(links.children).find(function (item) {
+            return item.matches('a[href]') && item.getAttribute('href').split(/[?#]/)[0] === 'tarifs.html';
+        });
         links.classList.add('site-enhanced-links');
-        links.innerHTML = '';
-        links.appendChild(menu);
-        links.insertAdjacentHTML('beforeend', '<a href="code.html">Code</a><a href="tarifs.html">Tarifs</a><a href="contact.html">Contact</a>');
+        if (tariffLink) {
+            tariffLink.replaceWith(menu);
+        } else {
+            links.appendChild(menu);
+        }
 
         var toggle = document.createElement('button');
         toggle.className = 'site-formation-menu-toggle';

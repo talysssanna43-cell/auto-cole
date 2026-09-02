@@ -1355,10 +1355,10 @@
     <!-- Tabs -->
     <div class="tabs-container" style="text-align: center;">
         <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('manual')">
+            <button class="tab-btn active" data-transmission="manual" onclick="switchTab('manual', this)">
                 Boîte Manuelle
             </button>
-            <button class="tab-btn" onclick="switchTab('auto')">
+            <button class="tab-btn" data-transmission="auto" onclick="switchTab('auto', this)">
                 Boîte Automatique
             </button>
         </div>
@@ -1717,10 +1717,10 @@
         <!-- AAC Tabs -->
         <div style="text-align: center; margin-bottom: 3rem;">
             <div class="tabs">
-                <button class="tab-btn active" onclick="switchAACTab('manual')">
+                <button class="tab-btn active" data-aac-transmission="manual" onclick="switchAACTab('manual', this)">
                     Boîte Manuelle
                 </button>
-                <button class="tab-btn" onclick="switchAACTab('auto')">
+                <button class="tab-btn" data-aac-transmission="auto" onclick="switchAACTab('auto', this)">
                     Boîte Automatique
                 </button>
             </div>
@@ -2163,13 +2163,14 @@
             }
         }
 
-        function switchTab(type) {
-            const tabs = document.querySelectorAll('.tab-btn');
+        function switchTab(type, trigger) {
+            const tabs = document.querySelectorAll('.tabs-container .tab-btn');
             const manualSection = document.getElementById('manual-pricing');
             const autoSection = document.getElementById('auto-pricing');
 
             tabs.forEach(tab => tab.classList.remove('active'));
-            event.target.classList.add('active');
+            const activeTab = trigger || document.querySelector(`.tab-btn[data-transmission="${type}"]`);
+            if (activeTab) activeTab.classList.add('active');
 
             if (type === 'manual') {
                 manualSection.style.display = 'block';
@@ -2180,13 +2181,14 @@
             }
         }
 
-        function switchAACTab(type) {
+        function switchAACTab(type, trigger) {
             const aacManual = document.getElementById('aac-manual');
             const aacAuto = document.getElementById('aac-auto');
             const aacBtns = document.querySelectorAll('#aac-section .tab-btn');
 
             aacBtns.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+            const activeTab = trigger || document.querySelector(`#aac-section .tab-btn[data-aac-transmission="${type}"]`);
+            if (activeTab) activeTab.classList.add('active');
 
             if (type === 'manual') {
                 aacManual.style.display = 'grid';
@@ -2300,9 +2302,29 @@
                 });
             });
 
-            const requestedFormation = new URLSearchParams(window.location.search).get('formation');
-            if (['permis', 'aac', 'vsp', 'code'].includes(requestedFormation)) {
+            const requestedParams = new URLSearchParams(window.location.search);
+            const requestedFormation = requestedParams.get('formation');
+            const requestedTransmission = requestedParams.get('transmission');
+
+            if (requestedFormation === 'accelere') {
+                showSection('permis');
+                document.querySelector('.tabs-container').style.display = 'none';
+                const manualGrid = document.querySelector('#manual-pricing .pricing-grid');
+                const automaticAcceleratedCard = Array.from(document.querySelectorAll('#auto-pricing .pricing-card')).find(function (card) {
+                    return /accéléré/i.test(card.querySelector('.card-header h3')?.textContent || '');
+                });
+                document.querySelectorAll('#manual-pricing .pricing-card').forEach(function (card) {
+                    card.style.display = /accéléré/i.test(card.querySelector('.card-header h3')?.textContent || '') ? '' : 'none';
+                });
+                if (manualGrid && automaticAcceleratedCard) manualGrid.appendChild(automaticAcceleratedCard);
+            } else if (['permis', 'aac', 'vsp', 'code'].includes(requestedFormation)) {
                 showSection(requestedFormation);
+                if (requestedFormation === 'permis' && ['manual', 'auto'].includes(requestedTransmission)) {
+                    switchTab(requestedTransmission);
+                }
+                if (requestedFormation === 'aac' && ['manual', 'auto'].includes(requestedTransmission)) {
+                    switchAACTab(requestedTransmission);
+                }
             }
         });
     </script>

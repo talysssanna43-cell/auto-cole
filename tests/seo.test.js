@@ -165,16 +165,14 @@ test('la preuve sociale Google reste cohérente dans les affichages de secours',
 test('la navigation publique regroupe clairement les formations au permis de conduire', () => {
     const navigation = fs.readFileSync(path.join(root, 'assets/js/site-footer.js'), 'utf8');
     assert.match(navigation, /Permis de conduire/);
-    assert.match(navigation, /Formation traditionnelle/);
     for (const destination of [
-        'permis-b.html',
-        'permis-boite-manuelle.html',
-        'permis-boite-automatique.html',
-        'permis-accelere.html',
-        'conduite-accompagnee.html',
-        'tarifs.html?formation=vsp#vsp-section',
+        'tarifs.html?formation=permis&transmission=manual#permis-b',
+        'tarifs.html?formation=permis&transmission=auto#permis-b',
+        'tarifs.html?formation=accelere#permis-b',
+        'tarifs.html?formation=aac&transmission=manual#conduite-accompagnee',
         'financement-permis.html',
-        'conseiller.html'
+        'devis.html',
+        'tarifs.html',
     ]) {
         assert.match(navigation, new RegExp(destination.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), `menu sans ${destination}`);
     }
@@ -183,22 +181,14 @@ test('la navigation publique regroupe clairement les formations au permis de con
     assert.doesNotMatch(navigation, /stych\.fr/i);
 });
 
-test('les pages de formation affichent immédiatement les prix officiels', () => {
-    const expectedPrices = {
-        'permis-boite-manuelle.html': ['699 €', '799 €', '899 €'],
-        'permis-boite-automatique.html': ['499 €', '599 €', '749 €'],
-        'conduite-accompagnee.html': ['639 €', '889 €'],
-        'permis-accelere.html': ['749 €', '899 €']
-    };
-
-    for (const [file, prices] of Object.entries(expectedPrices)) {
-        const html = fs.readFileSync(path.join(root, file), 'utf8');
-        assert.match(html, /formation-offers-section/, `${file}: résumé des offres absent`);
-        assert.match(html, /formation-details/, `${file}: détails non repliables`);
-        for (const price of prices) assert.ok(html.includes(price), `${file}: prix ${price} absent`);
-    }
-
+test('les sous-liens de formation réutilisent les cartes existantes de la page tarifs', () => {
     const pricingPage = fs.readFileSync(path.join(root, 'tarifs.html'), 'utf8');
-    assert.match(pricingPage, /data-formation="vsp"/);
-    assert.match(pricingPage, /new URLSearchParams\(window\.location\.search\)\.get\('formation'\)/);
+    assert.match(pricingPage, /data-transmission="manual"/);
+    assert.match(pricingPage, /data-transmission="auto"/);
+    assert.match(pricingPage, /const requestedParams = new URLSearchParams\(window\.location\.search\)/);
+    assert.match(pricingPage, /requestedFormation === 'accelere'/);
+    assert.match(pricingPage, /automaticAcceleratedCard/);
+    for (const price of [699, 799, 899, 499, 599, 749, 889, 639]) {
+        assert.match(pricingPage, new RegExp(`>${price}<`), `tarif ${price} absent`);
+    }
 });
