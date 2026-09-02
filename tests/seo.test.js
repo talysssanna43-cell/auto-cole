@@ -191,10 +191,11 @@ test('la navigation publique regroupe clairement les formations au permis de con
 test('toutes les pages publiques utilisent les proportions communes de l en-tete', () => {
     const navigation = fs.readFileSync(path.join(root, 'assets/js/site-footer.js'), 'utf8');
     assert.match(navigation, /min-height:\s*132px/);
-    assert.match(navigation, /font-size:\s*1\.65rem/);
-    assert.match(navigation, /font-size:\s*1\.35rem/);
+    assert.match(navigation, /font-size:\s*1\.85rem/);
+    assert.match(navigation, /font-size:\s*1\.55rem/);
     assert.match(navigation, /min-height:\s*80px/);
-    assert.match(navigation, /max-width:\s*1760px/);
+    assert.match(navigation, /padding-inline:\s*80px/);
+    assert.match(navigation, /width:\s*225px/);
 
     for (const file of [
         'connexion.html',
@@ -206,7 +207,7 @@ test('toutes les pages publiques utilisent les proportions communes de l en-tete
     ]) {
         const html = fs.readFileSync(path.join(root, file), 'utf8');
         assert.match(html, /class="(?:navbar|formation-nav)"/, `${file}: en-tete absent`);
-        assert.match(html, /site-footer\.js\?v=9/, `${file}: navigation commune absente`);
+        assert.match(html, /site-footer\.js\?v=12/, `${file}: navigation commune absente`);
     }
 });
 

@@ -1,8 +1,18 @@
 (function () {
     function ensureFooterAssets() {
+        var hasPoppins = Array.from(document.querySelectorAll('link[rel="stylesheet"]')).some(function (link) {
+            return link.href.indexOf('family=Poppins') !== -1;
+        });
         var hasFontAwesome = Array.from(document.querySelectorAll('link[rel="stylesheet"]')).some(function (link) {
             return link.href.indexOf('font-awesome') !== -1 || link.href.indexOf('fontawesome') !== -1;
         });
+
+        if (!hasPoppins) {
+            var fontLink = document.createElement('link');
+            fontLink.rel = 'stylesheet';
+            fontLink.href = 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap';
+            document.head.appendChild(fontLink);
+        }
 
         if (!hasFontAwesome) {
             var link = document.createElement('link');
@@ -32,9 +42,9 @@
             .navbar.site-unified-navigation .container,
             .formation-nav.site-unified-navigation .formation-container {
                 width: 100%;
-                max-width: 1760px;
+                max-width: none;
                 margin-inline: auto;
-                padding-inline: 24px;
+                padding-inline: 80px;
             }
 
             .navbar.site-unified-navigation .nav-wrapper,
@@ -42,7 +52,7 @@
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                gap: clamp(24px, 2vw, 36px);
+                gap: 24px;
                 min-height: 132px;
                 padding-block: 0;
             }
@@ -50,12 +60,13 @@
             .navbar.site-unified-navigation .logo,
             .formation-nav.site-unified-navigation .formation-brand {
                 display: flex;
-                flex: 0 1 auto;
+                flex: 0 0 225px;
+                width: 225px;
                 align-items: center;
                 gap: 12px;
                 color: #1a1a2e;
                 font-family: 'Poppins', sans-serif;
-                font-size: 1.65rem;
+                font-size: 1.85rem;
                 font-weight: 700;
                 line-height: 1.2;
                 text-decoration: none;
@@ -64,7 +75,7 @@
             .navbar.site-unified-navigation .logo img,
             .formation-nav.site-unified-navigation .formation-brand img {
                 width: auto;
-                height: 46px;
+                height: 34px;
                 object-fit: contain;
             }
 
@@ -79,9 +90,9 @@
                 display: flex;
                 flex: 1 1 auto;
                 align-items: center;
-                justify-content: flex-end;
+                justify-content: flex-start;
                 min-width: 0;
-                gap: clamp(22px, 1.7vw, 32px);
+                gap: 28px;
                 margin-left: 0;
             }
 
@@ -95,7 +106,7 @@
             .formation-nav.site-unified-navigation .site-training-trigger {
                 color: #1a1a2e;
                 font-family: 'Poppins', sans-serif;
-                font-size: 1.35rem;
+                font-size: 1.55rem;
                 font-weight: 500;
                 line-height: 1.3;
                 text-decoration: none;
@@ -108,8 +119,8 @@
                 flex: 0 0 auto;
                 align-items: center;
                 gap: 24px;
-                margin-left: 8px;
-                padding-left: clamp(28px, 2vw, 36px);
+                margin-left: auto;
+                padding-left: 34px;
                 border-left: 1px solid #e3e4e8;
                 white-space: nowrap;
             }
@@ -125,7 +136,7 @@
                 border: 2px solid transparent;
                 border-radius: 20px !important;
                 font-family: 'Poppins', sans-serif;
-                font-size: 1.35rem;
+                font-size: 1.45rem;
                 font-weight: 600;
                 line-height: 1.5;
                 text-decoration: none;
@@ -137,6 +148,16 @@
                 color: #fff;
                 background: linear-gradient(135deg, #ff69b4 0%, #e91e63 100%);
                 box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            }
+
+            .navbar.site-unified-navigation .nav-actions > .btn-secondary,
+            .formation-nav.site-unified-navigation .formation-nav-actions > .formation-button-secondary {
+                min-width: 238px;
+            }
+
+            .navbar.site-unified-navigation .nav-actions > .btn-primary,
+            .formation-nav.site-unified-navigation .formation-nav-actions > .formation-button-primary {
+                min-width: 190px;
             }
 
             .navbar.site-unified-navigation .nav-actions > .btn-secondary,
@@ -295,7 +316,7 @@
 
             .formation-links.site-enhanced-links .site-training-trigger {
                 color: #3e4046;
-                font-size: 1.35rem;
+                font-size: 1.55rem;
                 font-weight: 650;
             }
 
@@ -307,7 +328,67 @@
                 }
             }
 
+            @media (min-width: 1401px) and (max-width: 1650px) {
+                .navbar.site-unified-navigation .container,
+                .formation-nav.site-unified-navigation .formation-container {
+                    padding-inline: 32px;
+                }
+
+                .navbar.site-unified-navigation .nav-wrapper,
+                .formation-nav.site-unified-navigation .formation-nav-inner {
+                    min-height: 112px;
+                    gap: 14px;
+                }
+
+                .navbar.site-unified-navigation .logo,
+                .formation-nav.site-unified-navigation .formation-brand {
+                    flex: 0 1 auto;
+                    width: auto;
+                    gap: 8px;
+                    font-size: 1.45rem;
+                }
+
+                .navbar.site-unified-navigation .logo img,
+                .formation-nav.site-unified-navigation .formation-brand img {
+                    height: 32px;
+                }
+
+                .navbar.site-unified-navigation .nav-menu,
+                .formation-nav.site-unified-navigation .formation-links {
+                    gap: 16px;
+                }
+
+                .navbar.site-unified-navigation .nav-menu a,
+                .formation-nav.site-unified-navigation .formation-links > a,
+                .navbar.site-unified-navigation .site-training-trigger,
+                .formation-nav.site-unified-navigation .site-training-trigger,
+                .formation-links.site-enhanced-links .site-training-trigger {
+                    font-size: 1.05rem;
+                }
+
+                .navbar.site-unified-navigation .nav-actions,
+                .formation-nav.site-unified-navigation .formation-nav-actions {
+                    gap: 12px;
+                    padding-left: 18px;
+                }
+
+                .navbar.site-unified-navigation .nav-actions > .btn-primary,
+                .navbar.site-unified-navigation .nav-actions > .btn-secondary,
+                .formation-nav.site-unified-navigation .formation-nav-actions > .formation-button {
+                    min-width: 0;
+                    min-height: 58px;
+                    padding: 14px 18px;
+                    border-radius: 14px !important;
+                    font-size: 1.05rem;
+                }
+            }
+
             @media (min-width: 981px) and (max-width: 1400px) {
+                .navbar.site-unified-navigation .container,
+                .formation-nav.site-unified-navigation .formation-container {
+                    padding-inline: 24px;
+                }
+
                 .navbar.site-unified-navigation .nav-wrapper,
                 .formation-nav.site-unified-navigation .formation-nav-inner {
                     min-height: 108px;
@@ -316,6 +397,8 @@
 
                 .navbar.site-unified-navigation .logo,
                 .formation-nav.site-unified-navigation .formation-brand {
+                    flex: 0 1 auto;
+                    width: auto;
                     gap: 8px;
                     font-size: 1.25rem;
                 }
@@ -347,12 +430,18 @@
                 .navbar.site-unified-navigation .nav-actions > .btn-secondary,
                 .formation-nav.site-unified-navigation .formation-nav-actions > .formation-button {
                     min-height: 52px;
+                    min-width: 0;
                     padding: 10px 12px;
                     font-size: 0.82rem;
                 }
             }
 
             @media (max-width: 980px) {
+                .navbar.site-unified-navigation .container,
+                .formation-nav.site-unified-navigation .formation-container {
+                    padding-inline: 20px;
+                }
+
                 .navbar.site-unified-navigation .nav-wrapper,
                 .formation-nav.site-unified-navigation .formation-nav-inner {
                     min-height: 86px;
@@ -360,6 +449,8 @@
 
                 .navbar.site-unified-navigation .logo,
                 .formation-nav.site-unified-navigation .formation-brand {
+                    flex: 0 1 auto;
+                    width: auto;
                     gap: 8px;
                     font-size: 1.25rem;
                 }
