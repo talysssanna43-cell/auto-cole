@@ -2291,7 +2291,11 @@ section {
         height: calc(100vh - 70px);
         background: #ffffff;
         flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+        gap: 0.25rem;
         padding: var(--spacing-lg);
+        padding-bottom: 11rem;
         transform: translateX(-100%);
         transition: transform var(--transition-base);
         box-shadow: var(--shadow-lg);

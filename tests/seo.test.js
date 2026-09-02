@@ -178,6 +178,13 @@ test('la navigation publique regroupe clairement les formations au permis de con
     }
     assert.match(navigation, /aria-expanded/);
     assert.match(navigation, /site-formation-menu-toggle/);
+    assert.match(navigation, /normalizeClassicNavigation/);
+    assert.match(navigation, /normalizeFormationNavigation/);
+    for (const item of ['Accueil', 'Recrutement', 'Qui sommes-nous', 'Tarifs', 'Contact']) {
+        const occurrences = navigation.match(new RegExp(`>${item}<`, 'g')) || [];
+        assert.ok(occurrences.length >= 2, `navigation commune sans ${item}`);
+    }
+    assert.match(navigation, /cleanToggle\.setAttribute\('aria-expanded'/);
     assert.doesNotMatch(navigation, /stych\.fr/i);
 });
 

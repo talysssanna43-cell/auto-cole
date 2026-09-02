@@ -18,6 +18,33 @@
         var style = document.createElement('style');
         style.id = 'siteNavigationStyles';
         style.textContent = `
+            .formation-nav .formation-brand {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.75rem;
+                color: #1a1a2e;
+                font-size: 1.15rem;
+                font-weight: 750;
+                line-height: 1.15;
+                text-decoration: none;
+                white-space: nowrap;
+            }
+
+            .formation-nav .formation-brand img {
+                width: 52px;
+                height: 52px;
+                object-fit: contain;
+            }
+
+            .formation-nav .formation-brand strong {
+                display: block;
+                color: #ed2b7b;
+            }
+
+            .site-mobile-nav-actions {
+                display: none;
+            }
+
             .site-training-menu {
                 position: relative;
             }
@@ -211,7 +238,22 @@
                 }
 
                 .formation-nav-actions {
+                    display: none;
                     margin-left: 0;
+                }
+
+                .formation-links.site-enhanced-links .site-mobile-nav-actions {
+                    display: flex;
+                    gap: 0.75rem;
+                    margin-top: 0.55rem;
+                    padding-top: 0.8rem;
+                    border-top: 1px solid #e5e5e5;
+                }
+
+                .formation-links.site-enhanced-links .site-mobile-nav-actions > * {
+                    flex: 1 1 0;
+                    justify-content: center;
+                    text-align: center;
                 }
             }
 
@@ -271,6 +313,99 @@
             }
         `;
         document.head.appendChild(style);
+    }
+
+    function primaryNavigationMarkup() {
+        return `
+            <li><a href="index.html">Accueil</a></li>
+            <li><a href="recrutement.html">Recrutement</a></li>
+            <li><a href="qui-sommes-nous.html">Qui sommes-nous</a></li>
+            <li><a href="tarifs.html">Tarifs</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        `;
+    }
+
+    function formationNavigationMarkup() {
+        return `
+            <a href="index.html">Accueil</a>
+            <a href="recrutement.html">Recrutement</a>
+            <a href="qui-sommes-nous.html">Qui sommes-nous</a>
+            <a href="tarifs.html">Tarifs</a>
+            <a href="contact.html">Contact</a>
+        `;
+    }
+
+    function normalizeClassicNavigation() {
+        var navMenu = document.querySelector('.navbar .nav-menu');
+        if (!navMenu) return;
+
+        navMenu.innerHTML = primaryNavigationMarkup();
+        navMenu.dataset.unifiedNavigation = 'true';
+
+        var wrapper = navMenu.closest('.nav-wrapper');
+        var toggle = wrapper ? wrapper.querySelector('.mobile-menu-toggle') : null;
+        if (!toggle && wrapper) {
+            toggle = document.createElement('button');
+            toggle.className = 'mobile-menu-toggle';
+            toggle.id = 'mobileMenuToggle';
+            toggle.innerHTML = '<span></span><span></span><span></span>';
+            wrapper.insertBefore(toggle, navMenu);
+        }
+        if (!toggle) return;
+
+        var cleanToggle = toggle.cloneNode(true);
+        toggle.replaceWith(cleanToggle);
+        cleanToggle.setAttribute('aria-label', 'Ouvrir le menu');
+        cleanToggle.setAttribute('aria-expanded', 'false');
+
+        function closeMenu() {
+            navMenu.classList.remove('active');
+            cleanToggle.classList.remove('active');
+            cleanToggle.setAttribute('aria-expanded', 'false');
+            cleanToggle.setAttribute('aria-label', 'Ouvrir le menu');
+        }
+
+        cleanToggle.addEventListener('click', function (event) {
+            event.stopPropagation();
+            var willOpen = !navMenu.classList.contains('active');
+            navMenu.classList.toggle('active', willOpen);
+            cleanToggle.classList.toggle('active', willOpen);
+            cleanToggle.setAttribute('aria-expanded', String(willOpen));
+            cleanToggle.setAttribute('aria-label', willOpen ? 'Fermer le menu' : 'Ouvrir le menu');
+        });
+        navMenu.addEventListener('click', function (event) {
+            if (event.target.closest('a')) closeMenu();
+        });
+        document.addEventListener('click', function (event) {
+            if (!event.target.closest('.navbar')) closeMenu();
+        });
+    }
+
+    function normalizeFormationNavigation() {
+        var header = document.querySelector('.formation-nav');
+        if (!header) return;
+
+        var brand = header.querySelector('.formation-brand');
+        var links = header.querySelector('.formation-links');
+        var actions = header.querySelector('.formation-nav-actions');
+        if (brand) {
+            brand.innerHTML = '<img src="assets/logo.png" alt="Auto-Ecole Breteuil"><span>Auto-Ecole <strong>Breteuil</strong></span>';
+        }
+        if (links) {
+            links.innerHTML = formationNavigationMarkup();
+            links.dataset.unifiedNavigation = 'true';
+            if (actions) {
+                var mobileActions = actions.cloneNode(true);
+                mobileActions.className = 'site-mobile-nav-actions';
+                mobileActions.removeAttribute('aria-hidden');
+                links.appendChild(mobileActions);
+            }
+        }
+    }
+
+    function normalizeNavigation() {
+        normalizeClassicNavigation();
+        normalizeFormationNavigation();
     }
 
     function trainingMenuMarkup() {
@@ -407,8 +542,12 @@
 
     function enhanceNavigation() {
         injectNavigationStyles();
+        normalizeNavigation();
         enhanceClassicNavigation();
         enhanceFormationNavigation();
+
+        var currentNavigation = document.querySelector('.nav-menu, .formation-links');
+        if (currentNavigation) markCurrentNavigationLink(currentNavigation);
 
         document.addEventListener('click', function (event) {
             if (!event.target.closest('.site-training-menu')) {
