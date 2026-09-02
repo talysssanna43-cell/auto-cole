@@ -22,87 +22,143 @@
     <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"LocalBusiness","@id":"https://autoecolebreteuil.com/#business","name":"Auto-Ecole Breteuil","url":"https://autoecolebreteuil.com","image":"https://autoecolebreteuil.com/assets/acceuil-hero.png","logo":"https://autoecolebreteuil.com/assets/logo.png","telephone":"+33491533698","email":"breteuilautoecole@gmail.com","priceRange":"€€","address":{"@type":"PostalAddress","streetAddress":"1A Rue Édouard Delanglade","postalCode":"13006","addressLocality":"Marseille","addressCountry":"FR"},"geo":{"@type":"GeoCoordinates","latitude":43.2892337,"longitude":5.3758786},"hasMap":"https://www.google.com/maps/place/Auto-Ecole+Breteuil/@43.2892337,5.3758786,17z","areaServed":{"@type":"City","name":"Marseille"},"openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens":"17:00","closes":"19:00"}],"hasOfferCatalog":{"@type":"OfferCatalog","name":"Formations au permis de conduire","itemListElement":[{"@type":"Offer","url":"https://autoecolebreteuil.com/permis-b.html","itemOffered":{"@type":"Service","name":"Formation au permis B","provider":{"@id":"https://autoecolebreteuil.com/#business"},"areaServed":{"@type":"City","name":"Marseille"}}},{"@type":"Offer","url":"https://autoecolebreteuil.com/permis-boite-manuelle.html","itemOffered":{"@type":"Service","name":"Permis B en boîte manuelle","provider":{"@id":"https://autoecolebreteuil.com/#business"},"areaServed":{"@type":"City","name":"Marseille"}}},{"@type":"Offer","url":"https://autoecolebreteuil.com/permis-boite-automatique.html","itemOffered":{"@type":"Service","name":"Permis B en boîte automatique","provider":{"@id":"https://autoecolebreteuil.com/#business"},"areaServed":{"@type":"City","name":"Marseille"}}},{"@type":"Offer","url":"https://autoecolebreteuil.com/permis-accelere.html","itemOffered":{"@type":"Service","name":"Formation au permis accéléré","provider":{"@id":"https://autoecolebreteuil.com/#business"},"areaServed":{"@type":"City","name":"Marseille"}}},{"@type":"Offer","url":"https://autoecolebreteuil.com/conduite-accompagnee.html","itemOffered":{"@type":"Service","name":"Conduite accompagnée AAC","provider":{"@id":"https://autoecolebreteuil.com/#business"},"areaServed":{"@type":"City","name":"Marseille"}}},{"@type":"Offer","url":"https://autoecolebreteuil.com/code.html","itemOffered":{"@type":"Service","name":"Formation au code de la route","provider":{"@id":"https://autoecolebreteuil.com/#business"},"areaServed":{"@type":"City","name":"Marseille"}}}]}},{"@type":"WebSite","@id":"https://autoecolebreteuil.com/#website","url":"https://autoecolebreteuil.com","name":"Auto-Ecole Breteuil","inLanguage":"fr-FR","publisher":{"@id":"https://autoecolebreteuil.com/#business"}},{"@type":"WebPage","@id":"https://autoecolebreteuil.com/devis.html#webpage","url":"https://autoecolebreteuil.com/devis.html","name":"Devis formation permis à Marseille | Breteuil","description":"Demandez un devis personnalisé pour votre permis à Marseille : formule, financement et organisme. Réponse de l'Auto-Ecole Breteuil sous 48 h.","inLanguage":"fr-FR","isPartOf":{"@id":"https://autoecolebreteuil.com/#website"},"about":{"@id":"https://autoecolebreteuil.com/#business"}},{"@type":"BreadcrumbList","@id":"https://autoecolebreteuil.com/devis.html#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Accueil","item":"https://autoecolebreteuil.com/"},{"@type":"ListItem","position":2,"name":"Devis formation permis à Marseille","item":"https://autoecolebreteuil.com/devis.html"}]}]}</script>
     <script src="/assets/js/seo-runtime.js?v=1" data-seo-page="/devis.html" defer></script>
     <!-- AUTO-SEO:END -->
-<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/style.css?v=header-layout-v3">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .quote-page {
-            padding: 4rem 0;
-            background: linear-gradient(180deg, rgba(255,105,180,0.08), rgba(233,30,99,0.02));
+            padding: 8rem 0 4rem;
+            background: #f2f3f5;
             min-height: 100vh;
         }
         .quote-shell {
-            max-width: 880px;
+            max-width: 1160px;
             margin: 0 auto;
+            display: grid;
+            grid-template-columns: minmax(280px, 0.72fr) minmax(0, 1.55fr);
+            overflow: hidden;
             background: #fff;
-            border-radius: 24px;
-            padding: 2.5rem;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.08);
+            border: 1px solid #dfe1e5;
+            border-radius: 8px;
+            box-shadow: 0 18px 45px rgba(27, 28, 33, 0.09);
         }
-        .quote-header {
+        .quote-intro {
+            padding: 3rem 2.4rem;
+            color: #fff;
+            background: #202126;
+        }
+        .quote-kicker {
+            display: block;
+            margin-bottom: 1.25rem;
+            color: #ff69ac;
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+        .quote-intro h1 {
+            margin-bottom: 1rem;
+            color: #fff;
+            font-size: clamp(2rem, 3vw, 3rem);
+            line-height: 1.08;
+        }
+        .quote-intro > p {
+            color: #d8d9dd;
+            font-size: 1rem;
+            line-height: 1.65;
+        }
+        .quote-trust-list {
+            display: grid;
+            gap: 0;
+            margin: 2.5rem 0 0;
+            padding: 0;
+            list-style: none;
+            border-top: 1px solid #3d3e44;
+        }
+        .quote-trust-list li {
+            display: grid;
+            grid-template-columns: 28px 1fr;
+            gap: 0.8rem;
+            align-items: center;
+            padding: 1rem 0;
+            color: #f7f7f8;
+            border-bottom: 1px solid #3d3e44;
+            line-height: 1.4;
+        }
+        .quote-trust-list i {
+            color: #ff4f9d;
             text-align: center;
-            margin-bottom: 2rem;
         }
-        .quote-header h1 {
-            font-size: 2.25rem;
-            margin-bottom: 0.75rem;
+        .quote-trust-list a {
+            color: inherit;
+            text-decoration: none;
         }
-        .quote-header p {
-            color: var(--text-light);
-            font-size: 1.05rem;
+        .quote-panel {
+            min-width: 0;
+            padding: 2.5rem 2.75rem 3rem;
         }
         .stepper {
-            display: flex;
-            gap: 0.75rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin: 1.5rem 0 2.5rem;
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            margin: 0 0 2.25rem;
         }
         .step-pill {
-            display: inline-flex;
+            display: flex;
+            gap: 0.55rem;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 0.9rem;
-            border-radius: 999px;
-            border: 1px solid rgba(0,0,0,0.1);
-            color: var(--text-light);
-            font-weight: 600;
-            background: #fff;
+            justify-content: center;
+            min-width: 0;
+            padding: 0 0.3rem 0.85rem;
+            color: #747781;
+            font-size: 0.86rem;
+            font-weight: 700;
+            border-bottom: 3px solid #dedfe3;
         }
         .step-pill.is-active {
-            border-color: rgba(233,30,99,0.35);
-            color: var(--primary-dark);
-            background: rgba(233,30,99,0.06);
+            color: #c51664;
+            border-color: #ef2a82;
         }
         .step-pill .step-number {
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            flex: 0 0 28px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            background: rgba(0,0,0,0.06);
-            color: var(--text-dark);
-            font-size: 0.9rem;
+            color: #35363b;
+            background: #e9eaed;
+            border-radius: 50%;
+            font-size: 0.84rem;
         }
         .step-pill.is-active .step-number {
-            background: rgba(233,30,99,0.15);
-            color: var(--primary-dark);
+            color: #fff;
+            background: #ef2a82;
         }
         .quote-form {
-            display: grid;
-            gap: 1.75rem;
+            display: block;
         }
         .form-step {
             display: none;
         }
         .form-step.is-active {
             display: block;
-            animation: fadeInUp 0.35s ease-out;
+        }
+        .quote-step-heading {
+            margin-bottom: 1.6rem;
+        }
+        .quote-step-heading h2 {
+            margin-bottom: 0.35rem;
+            color: #1f2024;
+            font-size: 1.55rem;
+            line-height: 1.2;
+        }
+        .quote-step-heading p {
+            margin: 0;
+            color: #696c75;
+            line-height: 1.5;
         }
         .quote-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 1.25rem;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1.15rem 1.25rem;
         }
         .quote-field {
             display: flex;
@@ -119,20 +175,21 @@
         .quote-field input,
         .quote-field select,
         .quote-field textarea {
-            border: 2px solid rgba(0,0,0,0.08);
-            border-radius: 16px;
-            padding: 1rem 1.1rem;
+            min-height: 50px;
+            border: 1px solid #d4d6db;
+            border-radius: 6px;
+            padding: 0.8rem 0.95rem;
             font-size: 1rem;
             font-family: inherit;
             background: white;
-            transition: all 0.3s ease;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
         .quote-field input:focus,
         .quote-field select:focus,
         .quote-field textarea:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 4px rgba(233,30,99,0.1);
+            box-shadow: 0 0 0 3px rgba(233,30,99,0.1);
         }
         .quote-field textarea {
             min-height: 110px;
@@ -143,20 +200,20 @@
             gap: 1rem;
             justify-content: space-between;
             flex-wrap: wrap;
-            margin-top: 1rem;
+            margin-top: 1.8rem;
         }
         .quote-actions .btn-secondary,
         .quote-actions .btn-primary {
-            min-width: 220px;
+            min-width: 170px;
             text-align: center;
+            border-radius: 6px;
         }
         .quote-note {
-            background: rgba(16,185,129,0.08);
-            border: 1px solid rgba(16,185,129,0.2);
-            padding: 1rem 1.25rem;
-            border-radius: 18px;
-            color: #065f46;
-            font-weight: 600;
+            background: #f7f7f8;
+            border-left: 4px solid #ef2a82;
+            padding: 1.1rem 1.2rem;
+            border-radius: 6px;
+            color: #3b3c42;
             display: flex;
             gap: 0.75rem;
             align-items: flex-start;
@@ -199,6 +256,68 @@
             height: 1px;
             overflow: hidden;
         }
+        @media (max-width: 900px) {
+            .quote-page {
+                padding-top: 6.5rem;
+            }
+            .quote-shell {
+                grid-template-columns: 1fr;
+            }
+            .quote-intro {
+                padding: 2.25rem 2rem;
+            }
+            .quote-trust-list {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 1rem;
+                margin-top: 1.75rem;
+                border: 0;
+            }
+            .quote-trust-list li {
+                align-content: start;
+                border: 0;
+                padding: 0;
+            }
+        }
+        @media (max-width: 600px) {
+            .quote-page {
+                padding: 5.5rem 0 2rem;
+            }
+            .quote-page .container {
+                padding-inline: 0.75rem;
+            }
+            .quote-intro,
+            .quote-panel {
+                padding: 1.75rem 1.2rem;
+            }
+            .quote-intro h1 {
+                font-size: 2rem;
+            }
+            .quote-trust-list {
+                grid-template-columns: 1fr;
+            }
+            .quote-trust-list li {
+                grid-template-columns: 24px 1fr;
+            }
+            .stepper {
+                margin-bottom: 1.75rem;
+            }
+            .step-pill {
+                flex-direction: column;
+                gap: 0.3rem;
+                padding-inline: 0.1rem;
+                font-size: 0.68rem;
+            }
+            .quote-grid {
+                grid-template-columns: 1fr;
+            }
+            .quote-actions {
+                flex-direction: column-reverse;
+            }
+            .quote-actions > * {
+                width: 100%;
+                min-width: 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -209,8 +328,17 @@
                     <img src="assets/logo.png" alt="Auto-Ecole Breteuil">
                     <span>Auto-Ecole <strong>Breteuil</strong></span>
                 </a>
+
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Ouvrir le menu" aria-expanded="false">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
                 <ul class="nav-menu" id="navMenu">
                     <li><a href="index.html">Accueil</a></li>
+                    <li><a href="recrutement.html">Recrutement</a></li>
+                    <li><a href="qui-sommes-nous.html">Qui sommes-nous</a></li>
                     <li><a href="tarifs.html">Tarifs</a></li>
                     <li><a href="contact.html">Contact</a></li>
                 </ul>
@@ -225,16 +353,24 @@
     <main class="quote-page">
         <div class="container">
             <div class="quote-shell">
-                <div class="quote-header">
+                <aside class="quote-intro">
+                    <span class="quote-kicker">Devis personnalisé</span>
                     <h1>Demander un devis permis à Marseille</h1>
                     <p>Remplis ce formulaire. Ton devis PDF est envoyé <strong>immédiatement par e-mail</strong> pour que tu puisses le transmettre à ton organisme.</p>
-                </div>
+                    <ul class="quote-trust-list">
+                        <li><i class="fas fa-file-pdf" aria-hidden="true"></i><span>PDF envoyé immédiatement par e-mail</span></li>
+                        <li><i class="fas fa-list-check" aria-hidden="true"></i><span>Toutes nos formules officielles disponibles</span></li>
+                        <li><i class="fas fa-phone" aria-hidden="true"></i><a href="tel:+33491533698">Besoin d'aide ? 04 91 53 36 98</a></li>
+                    </ul>
+                </aside>
+
+                <div class="quote-panel">
 
                 <div class="stepper" id="quoteStepper">
-                    <div class="step-pill is-active" data-step-pill="1"><span class="step-number">1</span> Profil</div>
-                    <div class="step-pill" data-step-pill="2"><span class="step-number">2</span> Financement</div>
-                    <div class="step-pill" data-step-pill="3"><span class="step-number">3</span> Forfait</div>
-                    <div class="step-pill" data-step-pill="4"><span class="step-number">4</span> Envoi</div>
+                    <div class="step-pill is-active" data-step-pill="1"><span class="step-number">1</span><span class="step-label">Profil</span></div>
+                    <div class="step-pill" data-step-pill="2"><span class="step-number">2</span><span class="step-label">Financement</span></div>
+                    <div class="step-pill" data-step-pill="3"><span class="step-number">3</span><span class="step-label">Forfait</span></div>
+                    <div class="step-pill" data-step-pill="4"><span class="step-number">4</span><span class="step-label">Envoi</span></div>
                 </div>
 
                 <form
@@ -249,6 +385,10 @@
                     <input type="hidden" name="financement_source" id="financementSource" value="">
 
                     <section class="form-step is-active" data-step="1">
+                        <div class="quote-step-heading">
+                            <h2>Vos informations</h2>
+                            <p>Indiquez les coordonnées de la personne concernée par la formation.</p>
+                        </div>
                         <div class="quote-grid">
                             <div class="quote-field">
                                 <label for="prenom"><i class="fas fa-user"></i> Prénom *</label>
@@ -283,6 +423,10 @@
                     </section>
 
                     <section class="form-step" data-step="2">
+                        <div class="quote-step-heading">
+                            <h2>Votre financement</h2>
+                            <p>Précisez l'organisme qui doit recevoir ou prendre en charge le devis.</p>
+                        </div>
                         <div class="quote-grid">
                             <div class="quote-field" style="grid-column: 1 / -1;">
                                 <label for="financement"><i class="fas fa-hand-holding-heart"></i> Financement souhaité *</label>
@@ -312,6 +456,10 @@
                     </section>
 
                     <section class="form-step" data-step="3">
+                        <div class="quote-step-heading">
+                            <h2>Votre formule</h2>
+                            <p>Choisissez l'offre qui correspond à votre formation.</p>
+                        </div>
                         <div class="quote-grid">
                             <div class="quote-field" style="grid-column: 1 / -1;">
                                 <label for="forfait"><i class="fas fa-car"></i> Forfait souhaité *</label>
@@ -392,6 +540,10 @@
                     </section>
 
                     <section class="form-step" data-step="4">
+                        <div class="quote-step-heading">
+                            <h2>Envoi du devis</h2>
+                            <p>Votre devis est prêt à être généré et envoyé à l'adresse indiquée.</p>
+                        </div>
                         <div class="quote-note">
                             <i class="fas fa-circle-check"></i>
                             <div>
@@ -407,9 +559,10 @@
                         </div>
                     </section>
                 </form>
+                </div>
             </div>
         </div>
-    </section>
+    </main>
 
     <script src="https://unpkg.com/@supabase/supabase-js@2.43.4/dist/umd/supabase.js"></script>
     <script src="assets/js/supabaseClient.js"></script>
@@ -558,7 +711,7 @@
             setActiveStep(1);
         })();
     </script>
-    <script src="assets/js/site-footer.js"></script>
+    <script src="assets/js/site-footer.js?v=4"></script>
     <script src="assets/js/text-encoding-fix.js?v=2"></script>
 </body>
 </html>

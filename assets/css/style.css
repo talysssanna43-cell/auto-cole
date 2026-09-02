@@ -147,7 +147,7 @@ h4 { font-size: 1.5rem; }
     align-items: center;
     justify-content: space-between;
     padding: var(--spacing-sm) 0;
-    gap: var(--spacing-md);
+    gap: clamp(1rem, 2vw, 2rem);
     flex-wrap: nowrap;
 }
 
@@ -179,10 +179,10 @@ h4 { font-size: 1.5rem; }
 .nav-menu {
     display: flex;
     list-style: none;
-    gap: var(--spacing-md);
+    gap: clamp(0.85rem, 1.45vw, var(--spacing-md));
     align-items: center;
     flex: 1 1 auto;
-    justify-content: center;
+    justify-content: flex-end;
     flex-wrap: nowrap;
     min-width: 0;
 }
@@ -252,6 +252,35 @@ h4 { font-size: 1.5rem; }
     align-items: center;
     white-space: nowrap;
     flex-shrink: 0;
+    margin-left: 0.25rem;
+    padding-left: clamp(1rem, 1.8vw, 1.5rem);
+    border-left: 1px solid #e3e4e8;
+}
+
+@media (min-width: 769px) and (max-width: 1180px) {
+    .nav-wrapper {
+        gap: 0.65rem;
+    }
+
+    .nav-menu {
+        gap: 0.55rem;
+    }
+
+    .nav-menu a,
+    .site-training-trigger {
+        font-size: 0.84rem;
+    }
+
+    .nav-actions {
+        gap: 0.45rem;
+        padding-left: 0.65rem;
+    }
+
+    .nav-actions .btn-primary,
+    .nav-actions .btn-secondary {
+        padding: 0.65rem 0.75rem;
+        font-size: 0.82rem;
+    }
 }
 
 .nav-welcome {
@@ -2304,6 +2333,9 @@ section {
     
     .nav-actions {
         display: none !important;
+        margin-left: 0;
+        padding-left: 0;
+        border-left: 0;
     }
 
     .nav-welcome {
