@@ -28,7 +28,18 @@
         var userAgentDataMobile = navigator.userAgentData && navigator.userAgentData.mobile;
         var mobileUserAgent = /Android|iPhone|iPad|iPod|IEMobile|Opera Mini|Mobile/i.test(navigator.userAgent);
         var iPadDesktopMode = navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
-        var mobileNavigationDevice = Boolean(userAgentDataMobile || mobileUserAgent || iPadDesktopMode);
+        var coarsePointer = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+        var compactTouchScreen = window.screen
+            && window.screen.width <= 1024
+            && window.screen.height <= 1366
+            && navigator.maxTouchPoints > 0
+            && coarsePointer;
+        var mobileNavigationDevice = Boolean(
+            userAgentDataMobile
+            || mobileUserAgent
+            || iPadDesktopMode
+            || compactTouchScreen
+        );
         var desktopHoverMedia = mobileNavigationDevice ? '(min-width: 1681px)' : 'all';
         var desktopZoomMedia = mobileNavigationDevice ? 'not all' : '(max-width: 1680px)';
         var mobileNavigationMedia = mobileNavigationDevice ? '(max-width: 1680px)' : 'not all';
