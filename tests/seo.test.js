@@ -162,15 +162,17 @@ test('la preuve sociale Google reste cohérente dans les affichages de secours',
     }
 });
 
-test('la navigation publique regroupe clairement les formations du permis B', () => {
+test('la navigation publique regroupe clairement les formations au permis de conduire', () => {
     const navigation = fs.readFileSync(path.join(root, 'assets/js/site-footer.js'), 'utf8');
+    assert.match(navigation, /Permis de conduire/);
+    assert.match(navigation, /Formation traditionnelle/);
     for (const destination of [
         'permis-b.html',
-        'tarifs.html#permis-b',
         'permis-boite-manuelle.html',
         'permis-boite-automatique.html',
         'permis-accelere.html',
         'conduite-accompagnee.html',
+        'tarifs.html?formation=vsp#vsp-section',
         'financement-permis.html',
         'conseiller.html'
     ]) {
@@ -179,4 +181,24 @@ test('la navigation publique regroupe clairement les formations du permis B', ()
     assert.match(navigation, /aria-expanded/);
     assert.match(navigation, /site-formation-menu-toggle/);
     assert.doesNotMatch(navigation, /stych\.fr/i);
+});
+
+test('les pages de formation affichent immédiatement les prix officiels', () => {
+    const expectedPrices = {
+        'permis-boite-manuelle.html': ['699 €', '799 €', '899 €'],
+        'permis-boite-automatique.html': ['499 €', '599 €', '749 €'],
+        'conduite-accompagnee.html': ['639 €', '889 €'],
+        'permis-accelere.html': ['749 €', '899 €']
+    };
+
+    for (const [file, prices] of Object.entries(expectedPrices)) {
+        const html = fs.readFileSync(path.join(root, file), 'utf8');
+        assert.match(html, /formation-offers-section/, `${file}: résumé des offres absent`);
+        assert.match(html, /formation-details/, `${file}: détails non repliables`);
+        for (const price of prices) assert.ok(html.includes(price), `${file}: prix ${price} absent`);
+    }
+
+    const pricingPage = fs.readFileSync(path.join(root, 'tarifs.html'), 'utf8');
+    assert.match(pricingPage, /data-formation="vsp"/);
+    assert.match(pricingPage, /new URLSearchParams\(window\.location\.search\)\.get\('formation'\)/);
 });

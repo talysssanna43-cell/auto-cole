@@ -1336,16 +1336,16 @@
     <section class="category-tabs-section">
         <div class="category-tabs-container">
             <div class="category-tabs-row">
-                <a href="#permis-conduire" class="category-tab active" onclick="showSection('permis'); return false;" style="padding: 1.25rem 0; border-bottom: 3px solid #ec4899; color: #ec4899; text-decoration: none; font-weight: 600; white-space: nowrap; transition: all 0.3s;">
+                <a href="#permis-conduire" class="category-tab active" data-formation="permis" onclick="showSection('permis', this); return false;" style="padding: 1.25rem 0; border-bottom: 3px solid #ec4899; color: #ec4899; text-decoration: none; font-weight: 600; white-space: nowrap; transition: all 0.3s;">
                     Permis de conduire
                 </a>
-                <a href="#aac" class="category-tab" onclick="showSection('aac'); return false;" style="padding: 1.25rem 0; border-bottom: 3px solid transparent; color: #64748b; text-decoration: none; font-weight: 500; white-space: nowrap; transition: all 0.3s;">
+                <a href="#aac" class="category-tab" data-formation="aac" onclick="showSection('aac', this); return false;" style="padding: 1.25rem 0; border-bottom: 3px solid transparent; color: #64748b; text-decoration: none; font-weight: 500; white-space: nowrap; transition: all 0.3s;">
                     Conduite accompagnée/supervisée
                 </a>
-                <a href="#vsp" class="category-tab" onclick="showSection('vsp'); return false;" style="padding: 1.25rem 0; border-bottom: 3px solid transparent; color: #64748b; text-decoration: none; font-weight: 500; white-space: nowrap; transition: all 0.3s;">
+                <a href="#vsp" class="category-tab" data-formation="vsp" onclick="showSection('vsp', this); return false;" style="padding: 1.25rem 0; border-bottom: 3px solid transparent; color: #64748b; text-decoration: none; font-weight: 500; white-space: nowrap; transition: all 0.3s;">
                     Voiture sans permis
                 </a>
-                <a href="#" class="category-tab" onclick="showSection('code')" style="padding: 1.25rem 0; border-bottom: 3px solid transparent; color: #64748b; text-decoration: none; font-weight: 500; white-space: nowrap; transition: all 0.3s;">
+                <a href="#" class="category-tab" data-formation="code" onclick="showSection('code', this); return false;" style="padding: 1.25rem 0; border-bottom: 3px solid transparent; color: #64748b; text-decoration: none; font-weight: 500; white-space: nowrap; transition: all 0.3s;">
                     Code
                 </a>
             </div>
@@ -2119,7 +2119,7 @@
     </footer>
 
     <script>
-        function showSection(section) {
+        function showSection(section, trigger) {
             const categoryTabs = document.querySelectorAll('.category-tab');
             const permisSection = document.getElementById('manual-pricing');
             const autoSection = document.getElementById('auto-pricing');
@@ -2135,10 +2135,13 @@
                 tab.style.color = '#64748b';
                 tab.style.fontWeight = '500';
             });
-            event.target.classList.add('active');
-            event.target.style.borderBottomColor = '#ec4899';
-            event.target.style.color = '#ec4899';
-            event.target.style.fontWeight = '600';
+            const activeTab = trigger || document.querySelector(`.category-tab[data-formation="${section}"]`);
+            if (activeTab) {
+                activeTab.classList.add('active');
+                activeTab.style.borderBottomColor = '#ec4899';
+                activeTab.style.color = '#ec4899';
+                activeTab.style.fontWeight = '600';
+            }
 
             // Hide all
             permisSection.style.display = 'none';
@@ -2296,11 +2299,16 @@
                     cta.href = 'inscription.html?' + params.toString();
                 });
             });
+
+            const requestedFormation = new URLSearchParams(window.location.search).get('formation');
+            if (['permis', 'aac', 'vsp', 'code'].includes(requestedFormation)) {
+                showSection(requestedFormation);
+            }
         });
     </script>
     <script src="assets/js/navbar.js"></script>
     <script src="assets/js/mobile-menu.js"></script>
-    <script src="assets/js/site-footer.js"></script>
+    <script src="assets/js/site-footer.js?v=3"></script>
     <script src="assets/js/text-encoding-fix.js?v=2"></script>
 </body>
 </html>

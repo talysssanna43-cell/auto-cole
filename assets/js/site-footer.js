@@ -88,6 +88,10 @@
                 font-weight: 750;
             }
 
+            .site-training-heading-static {
+                cursor: default;
+            }
+
             .site-training-heading i {
                 color: #ed2b7b;
             }
@@ -122,6 +126,18 @@
             .site-training-link-secondary i {
                 width: 1rem;
                 color: #70727b;
+                text-align: center;
+            }
+
+            .site-training-link-main {
+                padding-left: 0.9rem;
+                border-left: 3px solid #ed2b7b;
+                font-weight: 700;
+            }
+
+            .site-training-link-main i {
+                width: 1rem;
+                color: #ed2b7b;
                 text-align: center;
             }
 
@@ -276,19 +292,21 @@
     function trainingMenuMarkup() {
         return `
             <button class="site-training-trigger" type="button" aria-expanded="false" aria-haspopup="true">
-                <span>Permis B</span>
+                <span>Permis de conduire</span>
                 <i class="fas fa-chevron-down" aria-hidden="true"></i>
             </button>
             <div class="site-training-panel">
-                <a class="site-training-heading" href="permis-b.html">
+                <div class="site-training-heading site-training-heading-static">
                     <i class="fas fa-car-side" aria-hidden="true"></i>
-                    <span>Permis B : voiture</span>
-                </a>
-                <a class="site-training-link" href="tarifs.html#permis-b">Packs classiques</a>
+                    <span>Permis B</span>
+                </div>
+                <a class="site-training-link" href="permis-b.html">Formation traditionnelle</a>
                 <a class="site-training-link" href="permis-boite-manuelle.html">Boîte manuelle</a>
                 <a class="site-training-link" href="permis-boite-automatique.html">Boîte automatique</a>
                 <a class="site-training-link" href="permis-accelere.html">Permis accéléré</a>
-                <a class="site-training-link" href="conduite-accompagnee.html">Conduite accompagnée</a>
+                <div class="site-training-separator" aria-hidden="true"></div>
+                <a class="site-training-link site-training-link-main" href="conduite-accompagnee.html"><i class="fas fa-people-roof" aria-hidden="true"></i>Conduite accompagnée</a>
+                <a class="site-training-link site-training-link-main" href="tarifs.html?formation=vsp#vsp-section"><i class="fas fa-car-rear" aria-hidden="true"></i>Voiture sans permis</a>
                 <div class="site-training-separator" aria-hidden="true"></div>
                 <a class="site-training-link site-training-link-secondary" href="financement-permis.html"><i class="fas fa-wallet" aria-hidden="true"></i>Financement du permis</a>
                 <a class="site-training-link site-training-link-secondary" href="tarifs.html"><i class="fas fa-tags" aria-hidden="true"></i>Nos tarifs</a>
