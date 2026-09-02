@@ -22,9 +22,7 @@
         }
     }
 
-    function injectNavigationStyles() {
-        if (document.getElementById('siteNavigationStyles')) return;
-
+    function isMobileNavigationDevice() {
         var userAgentDataMobile = navigator.userAgentData && navigator.userAgentData.mobile;
         var mobileUserAgent = /Android|iPhone|iPad|iPod|IEMobile|Opera Mini|Mobile/i.test(navigator.userAgent);
         var iPadDesktopMode = navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
@@ -37,13 +35,21 @@
             && window.screen.height <= 1366
             && navigator.maxTouchPoints > 0
             && coarsePointer;
-        var mobileNavigationDevice = Boolean(
+        return Boolean(
             userAgentDataMobile
             || mobileUserAgent
             || iPadDesktopMode
             || compactTouchViewport
             || compactTouchScreen
         );
+    }
+
+    function injectNavigationStyles(forceRefresh) {
+        var existingStyles = document.getElementById('siteNavigationStyles');
+        if (existingStyles && !forceRefresh) return;
+        if (existingStyles) existingStyles.remove();
+
+        var mobileNavigationDevice = isMobileNavigationDevice();
         var desktopHoverMedia = mobileNavigationDevice ? '(min-width: 1681px)' : 'all';
         var desktopZoomMedia = mobileNavigationDevice ? 'not all' : '(max-width: 1680px)';
         var mobileNavigationMedia = mobileNavigationDevice ? '(max-width: 1680px)' : 'not all';
@@ -1067,6 +1073,19 @@
         } else {
             desktopNavigationQuery.addListener(resetNavigationAfterBreakpointChange);
         }
+
+        var lastMobileNavigationMode = isMobileNavigationDevice();
+        var navigationResizeTimer;
+        window.addEventListener('resize', function () {
+            window.clearTimeout(navigationResizeTimer);
+            navigationResizeTimer = window.setTimeout(function () {
+                var nextMobileNavigationMode = isMobileNavigationDevice();
+                if (nextMobileNavigationMode === lastMobileNavigationMode) return;
+                lastMobileNavigationMode = nextMobileNavigationMode;
+                resetNavigationAfterBreakpointChange();
+                injectNavigationStyles(true);
+            }, 80);
+        });
     }
 
     function injectFooterStyles() {
