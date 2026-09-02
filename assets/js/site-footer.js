@@ -320,7 +320,7 @@
                 font-weight: 650;
             }
 
-            @media (min-width: 1681px) {
+            @media (min-width: 1681px), (min-device-width: 1025px) {
                 .nav-menu > .site-training-menu:hover .site-training-panel {
                     opacity: 1;
                     visibility: visible;
@@ -328,7 +328,121 @@
                 }
             }
 
-            @media (max-width: 1680px) {
+            @media (max-width: 1680px) and (min-device-width: 1025px) {
+                .navbar.site-unified-navigation .nav-wrapper,
+                .formation-nav.site-unified-navigation .formation-nav-inner {
+                    flex-wrap: nowrap !important;
+                }
+
+                .navbar.site-unified-navigation .mobile-menu-toggle,
+                .formation-nav.site-unified-navigation .site-formation-menu-toggle {
+                    display: none !important;
+                }
+
+                .navbar.site-unified-navigation .nav-menu,
+                .formation-nav.site-unified-navigation .formation-links.site-enhanced-links {
+                    display: flex !important;
+                    position: static !important;
+                    width: auto;
+                    height: auto;
+                    flex-direction: row;
+                    flex-wrap: nowrap !important;
+                    align-items: center;
+                    padding: 0 !important;
+                    overflow: visible;
+                    background: transparent;
+                    box-shadow: none;
+                    transform: none;
+                }
+
+                .navbar.site-unified-navigation .nav-actions,
+                .formation-nav.site-unified-navigation .formation-nav-actions {
+                    display: flex !important;
+                    position: static !important;
+                    width: auto !important;
+                    flex-direction: row !important;
+                    flex-wrap: nowrap !important;
+                    margin-top: 0 !important;
+                }
+
+                .navbar.site-unified-navigation .nav-menu > li > a,
+                .navbar.site-unified-navigation .nav-menu > .site-training-menu > .site-training-trigger,
+                .formation-nav.site-unified-navigation .formation-links > a,
+                .formation-nav.site-unified-navigation .site-training-trigger {
+                    width: auto;
+                    min-height: 0;
+                    padding: 0 !important;
+                    background: transparent;
+                }
+
+                .formation-links.site-enhanced-links .site-mobile-nav-actions {
+                    display: none !important;
+                }
+
+                .navbar.site-unified-navigation .container,
+                .formation-nav.site-unified-navigation .formation-container {
+                    padding-inline: 4.22vw;
+                }
+
+                .navbar.site-unified-navigation .nav-wrapper,
+                .formation-nav.site-unified-navigation .formation-nav-inner {
+                    gap: 1.27vw;
+                    min-height: 6.97vw;
+                }
+
+                .navbar.site-unified-navigation .logo,
+                .formation-nav.site-unified-navigation .formation-brand {
+                    flex-basis: 11.88vw;
+                    width: 11.88vw;
+                    gap: 0.63vw;
+                    font-size: 1.56vw;
+                }
+
+                .navbar.site-unified-navigation .logo img,
+                .formation-nav.site-unified-navigation .formation-brand img {
+                    height: 1.8vw;
+                }
+
+                .navbar.site-unified-navigation .nav-menu,
+                .formation-nav.site-unified-navigation .formation-links {
+                    gap: 1.48vw;
+                }
+
+                .navbar.site-unified-navigation .nav-menu a,
+                .formation-nav.site-unified-navigation .formation-links > a,
+                .navbar.site-unified-navigation .site-training-trigger,
+                .formation-nav.site-unified-navigation .site-training-trigger,
+                .formation-links.site-enhanced-links .site-training-trigger {
+                    font-size: 1.31vw;
+                }
+
+                .navbar.site-unified-navigation .nav-actions,
+                .formation-nav.site-unified-navigation .formation-nav-actions {
+                    gap: 1.27vw;
+                    padding-left: 1.8vw;
+                }
+
+                .navbar.site-unified-navigation .nav-actions > .btn-primary,
+                .navbar.site-unified-navigation .nav-actions > .btn-secondary,
+                .formation-nav.site-unified-navigation .formation-nav-actions > .formation-button {
+                    min-height: 4.22vw;
+                    padding: 1.06vw 1.8vw;
+                    border-radius: 1.06vw !important;
+                    font-size: 1.225vw;
+                }
+
+                .navbar.site-unified-navigation .nav-actions > .btn-secondary,
+                .formation-nav.site-unified-navigation .formation-nav-actions > .formation-button-secondary {
+                    min-width: 12.57vw;
+                }
+
+                .navbar.site-unified-navigation .nav-actions > .btn-primary,
+                .formation-nav.site-unified-navigation .formation-nav-actions > .formation-button-primary {
+                    min-width: 10.03vw;
+                }
+            }
+
+            @media (max-width: 1680px) and (max-device-width: 1024px) {
                 .navbar.site-unified-navigation .container,
                 .formation-nav.site-unified-navigation .formation-container {
                     padding-inline: 20px;
@@ -448,7 +562,7 @@
                 }
             }
 
-            @media (max-width: 1680px) {
+            @media (max-width: 1680px) and (max-device-width: 1024px) {
                 .navbar.site-unified-navigation .mobile-menu-toggle {
                     display: flex;
                     flex-direction: column;
@@ -569,7 +683,7 @@
                 }
             }
 
-            @media (max-width: 560px) {
+            @media (max-width: 560px) and (max-device-width: 1024px) {
                 .navbar.site-unified-navigation .container,
                 .formation-nav.site-unified-navigation .formation-container {
                     padding-inline: 14px;
